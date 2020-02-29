@@ -91,11 +91,10 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
     "lint": "npm-run-all lint:*",
     "lint:eslint": "eslint --ignore-path .gitignore --fix . --ext .ts --ext .tsx",
     "lint:prettier": "prettier --ignore-path .gitignore --write \"**/*.{js,json,jsx,md,yml}\"",
-    "start": "next start",
+    "start": "next dev",
     "test": "jest --coverage"
   },
   "version": "0.1.0"
