@@ -1,16 +1,4 @@
 {
-  "name": "camera.calmery.moe",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "lint": "npm-run-all lint:*",
-    "lint:eslint": "eslint --ignore-path .gitignore --fix . --ext .js --ext .jsx --ext .ts --ext .tsx",
-    "lint:prettier": "prettier --ignore-path .gitignore --write \"**/*.{json,md,yml}\"",
-    "start": "next start",
-    "test": "jest --coverage"
-  },
   "dependencies": {
     "next": "9.2.2",
     "react": "16.13.0",
@@ -36,24 +24,6 @@
     "react-test-renderer": "16.13.0",
     "ts-jest": "25.2.1",
     "typescript": "3.8.3"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "<rootDir>/{pages,public}/**/*.{js,jsx,ts,tsx}"
-    ],
-    "globals": {
-      "ts-jest": {
-        "tsConfig": {
-          "jsx": "react"
-        }
-      }
-    },
-    "moduleNameMapper": {
-      "^~/(.+)": "<rootDir>/$1"
-    },
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    }
   },
   "eslintConfig": {
     "env": {
@@ -91,12 +61,42 @@
       "pre-commit": "lint-staged"
     }
   },
-  "lint-staged": {
-    "**/*.{json,md,yml}": [
-      "npm run lint:prettier"
+  "jest": {
+    "collectCoverageFrom": [
+      "<rootDir>/{pages,public}/**/*.{js,jsx,ts,tsx}"
     ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": {
+          "jsx": "react"
+        }
+      }
+    },
+    "moduleNameMapper": {
+      "^~/(.+)": "<rootDir>/$1"
+    },
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    }
+  },
+  "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
       "npm run lint:eslint"
+    ],
+    "**/*.{json,md,yml}": [
+      "npm run lint:prettier"
     ]
-  }
+  },
+  "name": "camera.calmery.moe",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "npm-run-all lint:*",
+    "lint:eslint": "eslint --ignore-path .gitignore --fix . --ext .js --ext .jsx --ext .ts --ext .tsx",
+    "lint:prettier": "prettier --ignore-path .gitignore --write \"**/*.{json,md,yml}\"",
+    "start": "next start",
+    "test": "jest --coverage"
+  },
+  "version": "0.1.0"
 }
