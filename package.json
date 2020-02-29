@@ -37,7 +37,7 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "<rootDir>/**/*.{js,jsx,ts,tsx}"
+      "<rootDir>/{pages,public}/**/*.{js,jsx,ts,tsx}"
     ],
     "globals": {
       "ts-jest": {
@@ -46,10 +46,9 @@
         }
       }
     },
-    "roots": [
-      "<rootDir>/pages",
-      "<rootDir>/public"
-    ],
+    "moduleNameMapper": {
+      "^~/(.+)": "<rootDir>/$1"
+    },
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     }
