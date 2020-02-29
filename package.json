@@ -11,5 +11,10 @@
     "next": "9.2.2",
     "react": "16.13.0",
     "react-dom": "16.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "13.7.7",
+    "@types/react": "16.9.23",
+    "typescript": "3.8.3"
   }
 }
