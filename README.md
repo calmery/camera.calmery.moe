@@ -28,4 +28,4 @@ $ npm test
 
 | Alias Path | Original Path |  Example  |
 | :--------: | :-----------: | :-------: |
-|     ~/     |  `__dirname`  | `~/pages` |
+|     ~/     |     src/      | `~/pages` |

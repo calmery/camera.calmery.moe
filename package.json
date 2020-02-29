@@ -63,7 +63,7 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "<rootDir>/{pages,public}/**/*.{ts,tsx}"
+      "<rootDir>/src/**/*.{ts,tsx}"
     ],
     "globals": {
       "ts-jest": {
@@ -73,7 +73,7 @@
       }
     },
     "moduleNameMapper": {
-      "^~/(.+)": "<rootDir>/$1"
+      "^~/(.+)": "<rootDir>/src/$1"
     },
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
