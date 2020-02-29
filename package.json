@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "lint": "npm-run-all lint:*",
-    "lint:static": "prettier --ignore-path .gitignore --write \"**/*.{html,json,md,scss,yml}\"",
-    "lint:typescript": "eslint --ignore-path .gitignore --fix . --ext .ts --ext .tsx",
+    "lint:eslint": "eslint --ignore-path .gitignore --fix . --ext .js --ext .jsx --ext .ts --ext .tsx",
+    "lint:prettier": "prettier --ignore-path .gitignore --write \"**/*.{html,json,md,scss,yml}\"",
     "start": "next start",
     "test": "jest --coverage"
   },
