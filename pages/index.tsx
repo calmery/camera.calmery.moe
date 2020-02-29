@@ -1,7 +1,8 @@
-import React from 'react'
-import Head from 'next/head'
+import React from "react";
+import { NextPage } from "next";
+import Head from "next/head";
 
-const Home = () => (
+const Home: NextPage = () => (
   <div className="container">
     <Head>
       <title>Create Next App</title>
@@ -199,6 +200,6 @@ const Home = () => (
       }
     `}</style>
   </div>
-)
+);
 
-export default Home
+export default Home;
