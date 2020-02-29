@@ -63,7 +63,7 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "<rootDir>/{pages,public}/**/*.{js,jsx,ts,tsx}"
+      "<rootDir>/{pages,public}/**/*.{ts,tsx}"
     ],
     "globals": {
       "ts-jest": {
@@ -80,10 +80,10 @@
     }
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
+    "**/*.{ts,tsx}": [
       "npm run lint:eslint"
     ],
-    "**/*.{json,md,yml}": [
+    "**/*.{js,json,jsx,md,yml}": [
       "npm run lint:prettier"
     ]
   },
@@ -93,8 +93,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "npm-run-all lint:*",
-    "lint:eslint": "eslint --ignore-path .gitignore --fix . --ext .js --ext .jsx --ext .ts --ext .tsx",
-    "lint:prettier": "prettier --ignore-path .gitignore --write \"**/*.{json,md,yml}\"",
+    "lint:eslint": "eslint --ignore-path .gitignore --fix . --ext .ts --ext .tsx",
+    "lint:prettier": "prettier --ignore-path .gitignore --write \"**/*.{js,json,jsx,md,yml}\"",
     "start": "next start",
     "test": "jest --coverage"
   },
