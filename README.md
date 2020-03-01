@@ -39,6 +39,12 @@ $ docker-compose run --rm next npm run lint
 $ git commit --no-verify
 ```
 
+## Design
+
+See [Figma](<https://www.figma.com/file/Hb64KyJ84kwCrxPo9e42AX/Calmery-chan-Camera-(Public)>).
+
+![Design](https://user-images.githubusercontent.com/12670155/75629651-070d1800-5c27-11ea-931c-ecfdb8cc919f.jpg)
+
 ## Notes
 
 ### Alias Paths
