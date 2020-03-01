@@ -1,8 +1,14 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { createStore, combineReducers, applyMiddleware, Store } from "redux";
+import {
+  createStore,
+  combineReducers,
+  applyMiddleware,
+  Store,
+  AnyAction
+} from "redux";
 import logger from "redux-logger";
-import reduxThunk from "redux-thunk";
+import reduxThunk, { ThunkDispatch } from "redux-thunk";
 import { NextPage, NextPageContext } from "next";
 import counter, { CounterState } from "./counter/reducer";
 
@@ -38,7 +44,11 @@ export const getOrCreateStore = (state?: State) => {
 
 // Redux
 
-export type NextPageContextWithRedux = NextPageContext & { store: Store };
+export type NextPageContextWithRedux = NextPageContext & {
+  store: Store & {
+    dispatch: ThunkDispatch<State, any, AnyAction>;
+  };
+};
 
 export const withRedux = (Component: NextPage) => {
   const WithRedux = ({
