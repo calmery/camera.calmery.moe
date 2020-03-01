@@ -1,6 +1,9 @@
 import React from "react";
 import { NextPage } from "next";
 import Head from "next/head";
+import Counter from "~/containers/counter";
+import { increment } from "~/modules/counter/actions";
+import { withRedux, NextPageContextWithRedux } from "~/modules";
 
 const Home: NextPage = () => (
   <div className="container">
@@ -10,6 +13,8 @@ const Home: NextPage = () => (
     </Head>
 
     <main>
+      <Counter />
+
       <h1 className="title">
         Welcome to <a href="https://nextjs.org">Next.js!</a>
       </h1>
@@ -202,4 +207,8 @@ const Home: NextPage = () => (
   </div>
 );
 
-export default Home;
+Home.getInitialProps = async ({ store }: NextPageContextWithRedux) => {
+  store.dispatch(increment(100));
+};
+
+export default withRedux(Home);
