@@ -1,4 +1,20 @@
 {
+  "babel": {
+    "presets": [
+      "next/babel"
+    ],
+    "plugins": [
+      [
+        "styled-components",
+        {
+          "displayName": false,
+          "fileName": false,
+          "pure": true,
+          "ssr": true
+        }
+      ]
+    ]
+  },
   "dependencies": {
     "isomorphic-unfetch": "3.0.0",
     "next": "9.2.2",
@@ -7,7 +23,8 @@
     "react-redux": "7.2.0",
     "redux": "4.0.5",
     "redux-logger": "3.0.6",
-    "redux-thunk": "2.3.0"
+    "redux-thunk": "2.3.0",
+    "styled-components": "5.0.1"
   },
   "devDependencies": {
     "@babel/core": "7.8.6",
@@ -19,9 +36,11 @@
     "@types/react-redux": "7.1.7",
     "@types/react-test-renderer": "16.9.2",
     "@types/redux-logger": "3.0.7",
+    "@types/styled-components": "5.0.1",
     "@typescript-eslint/eslint-plugin": "2.21.0",
     "@typescript-eslint/parser": "2.21.0",
     "babel-loader": "8.0.6",
+    "babel-plugin-styled-components": "1.10.7",
     "babel-preset-react-app": "9.1.1",
     "eslint": "6.8.0",
     "eslint-config-prettier": "6.10.0",

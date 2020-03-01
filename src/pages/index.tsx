@@ -4,6 +4,11 @@ import Head from "next/head";
 import Counter from "~/containers/counter";
 import { increment } from "~/modules/counter/actions";
 import { withRedux, NextPageContextWithRedux } from "~/modules";
+import styled from "~/styles/styled-components";
+
+const Message = styled.div`
+  color: ${props => props.theme.colors.primary};
+`;
 
 const Home: NextPage = () => (
   <div className="container">
@@ -14,6 +19,8 @@ const Home: NextPage = () => (
 
     <main>
       <Counter />
+
+      <Message>Hello World !</Message>
 
       <h1 className="title">
         Welcome to <a href="https://nextjs.org">Next.js!</a>
