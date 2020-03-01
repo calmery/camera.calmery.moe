@@ -46,7 +46,7 @@ export const withRedux = (Component: NextPage) => {
     state
   }: {
     props?: object;
-    state: State;
+    state?: State;
   }) => {
     // Redux の `createStore` で生成した`store` は SSR したときにシリアライズされてしまう
     // そのため `store.getState()` で出力されたデータを元にブラウザ側でもう一度 `store` を生成する
