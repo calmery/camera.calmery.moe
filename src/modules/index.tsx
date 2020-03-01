@@ -13,7 +13,7 @@ export interface State {
 
 let cachedStore: Store | null = null;
 
-const getOrCreateStore = (state?: State) => {
+export const getOrCreateStore = (state?: State) => {
   // SSR のときは毎回新しい `store` を Redux の `createStore` で生成する
   // もし既にブラウザ側で `store` が生成されている場合はその `store` を使用する
   if (typeof window !== "undefined" && cachedStore !== null) {
@@ -40,7 +40,7 @@ export const withRedux = (Component: NextPage) => {
     props = {},
     state
   }: {
-    props: object;
+    props?: object;
     state: State;
   }) => {
     // Redux の `createStore` で生成した`store` は SSR したときにシリアライズされてしまう

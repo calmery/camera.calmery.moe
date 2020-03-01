@@ -1,7 +1,8 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import Index from "~/pages/index";
+import { getOrCreateStore } from "~/modules";
+import Home from "~/pages";
 
-it("Index", () => {
-  renderer.create(<Index />).toJSON();
+it("Home", () => {
+  renderer.create(<Home state={getOrCreateStore().getState()} />).toJSON();
 });
