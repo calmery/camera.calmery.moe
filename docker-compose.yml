@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  next:
+    image: node:12.16.1
+    command: npm start
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/home/node/workspace
+    user: node
+    working_dir: /home/node/workspace
+  storybook:
+    image: node:12.16.1
+    command: npm run storybook
+    ports:
+      - "6006:6006"
+    volumes:
+      - .:/home/node/workspace
+    user: node
+    working_dir: /home/node/workspace

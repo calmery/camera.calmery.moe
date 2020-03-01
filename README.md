@@ -20,8 +20,23 @@ $ npm ci
 ```bash
 $ npm run build
 $ npm run lint
+$ npm run storybook
 $ npm start
 $ npm test
+```
+
+### Docker (Deprecated)
+
+If you are using Docker, please execute the following command:
+
+```bash
+$ docker-compose run --rm next npm ci
+$ docker-compose up
+```
+
+```bash
+$ docker-compose run --rm next npm run lint
+$ git commit --no-verify
 ```
 
 ## Notes
