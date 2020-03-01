@@ -130,7 +130,7 @@
     "lint:eslint": "eslint --ignore-path .gitignore --fix . --ext .ts --ext .tsx",
     "lint:prettier": "prettier --ignore-path .gitignore --write \"**/*.{js,json,jsx,md,yml}\"",
     "start": "next dev",
-    "storybook": "start-storybook -c .storybook",
+    "storybook": "start-storybook -p 6006 -c .storybook",
     "test": "jest --coverage"
   },
   "version": "0.1.0"
