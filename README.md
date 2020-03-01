@@ -29,3 +29,7 @@ $ npm test
 | Alias Path | Original Path |  Example  |
 | :--------: | :-----------: | :-------: |
 |     ~/     |     src/      | `~/pages` |
+
+## Contributors
+
+Thanks a lot ! Illustration by [@metanen0x0](https://twitter.com/metanen0x0) and logo design by [@sorano_design](https://twitter.com/sorano_design).
