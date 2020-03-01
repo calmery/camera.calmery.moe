@@ -2,6 +2,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import { createStore, combineReducers, applyMiddleware, Store } from "redux";
 import logger from "redux-logger";
+import reduxThunk from "redux-thunk";
 import { NextPage, NextPageContext } from "next";
 import counter, { CounterState } from "./counter/reducer";
 
@@ -25,7 +26,11 @@ export const getOrCreateStore = (state?: State) => {
       counter
     }),
     state,
-    applyMiddleware(...(process.env.NODE_ENV === "production" ? [] : [logger]))
+    applyMiddleware(
+      ...(process.env.NODE_ENV === "production"
+        ? [reduxThunk]
+        : [reduxThunk, logger])
+    )
   );
 
   return cachedStore;
