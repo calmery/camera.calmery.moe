@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/12670155/75626669-b5579400-5c0c-11ea-87c9-d03f2083a06e.jpg" height="128"/>
+</div>
+
 # camera.calmery.moe: Calmery-chan camera :camera:
 
 [![GitHub Actions](https://github.com/calmery-chan/camera.calmery.moe/workflows/GitHub%20Actions/badge.svg)](https://github.com/calmery-chan/calmery.moe/actions)
