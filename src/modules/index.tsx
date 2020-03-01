@@ -46,6 +46,7 @@ export const getOrCreateStore = (state?: State) => {
 
 export type NextPageContextWithRedux = NextPageContext & {
   store: Store & {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dispatch: ThunkDispatch<State, any, AnyAction>;
   };
 };
