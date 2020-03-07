@@ -13,10 +13,12 @@ const Home: NextPage = () => (
       <link rel="icon" href="/favicon.ico" />
     </Head>
 
+    <Button />
+    <br />
+    <Button primary />
+
     <main>
       <Counter />
-
-      <Button />
 
       <h1 className="title">
         Welcome to <a href="https://nextjs.org">Next.js!</a>
