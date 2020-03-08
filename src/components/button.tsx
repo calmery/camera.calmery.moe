@@ -11,6 +11,7 @@ const Container = styled.div`
 
   background: ${GradientColors.pinkToBlue};
   border-radius: 50vh;
+  box-sizing: border-box;
   padding: 2px;
   text-align: center;
   width: 100%;
