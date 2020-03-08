@@ -17,7 +17,8 @@ const Home: NextPage = () => (
     <br />
     <Button primary />
 
-    <Image src="/images/logo.svg" />
+    <Image src="/images/logos/calmery.moe.svg" />
+    <Image src="/images/logos/camera.calmery.moe.svg" />
   </div>
 );
 
