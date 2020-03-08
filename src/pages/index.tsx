@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { NextPage } from "next";
+import Router from "next/router";
 import blueimpLoadImage from "blueimp-load-image";
 import styled from "styled-components";
 import { Button } from "~/components/button";
@@ -119,9 +120,14 @@ const Home: NextPage = () => {
     blueimpLoadImage(
       file,
       async canvas => {
-        dispatch(
-          addUserLayerWithDataUrl((canvas as HTMLCanvasElement).toDataURL())
-        );
+        try {
+          await dispatch(
+            addUserLayerWithDataUrl((canvas as HTMLCanvasElement).toDataURL())
+          );
+          Router.push("/edit");
+        } catch (_) {
+          // ToDo: 読み込みに失敗した
+        }
       },
       { canvas: true, orientation: true }
     );
