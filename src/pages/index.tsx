@@ -5,6 +5,7 @@ import { Button } from "~/components/button";
 import Counter from "~/containers/counter";
 import { increment } from "~/modules/counter/actions";
 import { withRedux, NextPageContextWithRedux } from "~/modules";
+import { Image } from "~/components/image";
 
 const Home: NextPage = () => (
   <div className="container">
@@ -16,6 +17,8 @@ const Home: NextPage = () => (
     <Button />
     <br />
     <Button primary />
+
+    <Image src="/images/logo.svg" />
 
     <main>
       <Counter />
