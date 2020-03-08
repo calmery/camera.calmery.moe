@@ -8,5 +8,6 @@ export const Colors = {
 };
 
 export const GradientColors = {
+  page: `linear-gradient(135deg, ${Colors.white}, #FAFAFA)`,
   pinkToBlue: `linear-gradient(135deg, ${Colors.pink}, ${Colors.blue})`
 };

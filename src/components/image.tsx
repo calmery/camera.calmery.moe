@@ -1,4 +1,9 @@
 import React from "react";
+import styled from "styled-components";
+
+const Img = styled.img`
+  vertical-align: middle;
+`;
 
 type ImageProps = {
   src: string;
@@ -11,6 +16,6 @@ export const Image: React.FC<ImageProps> = ({
 }: ImageProps) => (
   <picture>
     {webp && <source srcSet={`${src}.webp`} type="image/webp" />}
-    <img src={src} />
+    <Img src={src} />
   </picture>
 );

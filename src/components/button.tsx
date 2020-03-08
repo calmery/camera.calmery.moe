@@ -40,13 +40,15 @@ const Text = styled.div<Pick<ButtonProps, "primary">>`
 `;
 
 type ButtonProps = {
+  children: string;
   primary?: boolean;
 };
 
-export const Button: React.FC<ButtonProps> = props => (
-  <Container>
-    <Body {...props}>
-      <Text {...props}>Hellkasdkasdlkjaso World</Text>
-    </Body>
-  </Container>
-);
+export const Button: React.FC<ButtonProps> = (props: ButtonProps) =>
+  props.children ? (
+    <Container>
+      <Body {...props}>
+        <Text {...props}>{props.children}</Text>
+      </Body>
+    </Container>
+  ) : null;
