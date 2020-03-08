@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { NextPage } from "next";
+import blueimpLoadImage from "blueimp-load-image";
 import styled from "styled-components";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
@@ -10,6 +11,9 @@ import { Colors } from "~/styles/colors";
 import { Media } from "~/styles/media";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
+import { useDispatch } from "react-redux";
+import { Mixin } from "~/styles/mixin";
+import { addUserLayerWithDataUrl } from "~/modules/canvas/actions";
 
 const Buttons = styled.div`
   display: flex;
@@ -85,28 +89,70 @@ const Logo = styled.div`
   }
 `;
 
-const Home: NextPage = () => (
-  <Page margin>
-    <Contents>
-      <Header>
-        <Image src="/images/logos/calmery.moe.svg" />
-      </Header>
+const InputButton = styled.div`
+  ${Mixin.clickable}
 
-      <Logo>
-        <Image src="/images/logos/camera.calmery.moe.svg" />
-      </Logo>
+  position: relative;
+`;
 
-      <Buttons>
-        <Button primary>画像を読み込んで始める！</Button>
-        <Button>前回の続きから始める！</Button>
-      </Buttons>
+const Input = styled.input`
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+`;
 
-      <Footer>
-        Made with <Image src="/images/heart.svg" /> by Calmery
-      </Footer>
-    </Contents>
-  </Page>
-);
+const Home: NextPage = () => {
+  const dispatch = useDispatch();
+  const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) {
+      return;
+    }
+
+    const file = event.target.files[0];
+
+    blueimpLoadImage(
+      file,
+      async canvas => {
+        dispatch(
+          addUserLayerWithDataUrl((canvas as HTMLCanvasElement).toDataURL())
+        );
+      },
+      { canvas: true, orientation: true }
+    );
+  }, []);
+
+  return (
+    <Page margin>
+      <Contents>
+        <Header>
+          <Image src="/images/logos/calmery.moe.svg" />
+        </Header>
+
+        <Logo>
+          <Image src="/images/logos/camera.calmery.moe.svg" />
+        </Logo>
+
+        <Buttons>
+          <InputButton>
+            <Button primary>画像を読み込んで始める！</Button>
+            <Input type="file" onChange={onChange} multiple={false} />
+          </InputButton>
+          <Button>前回の続きから始める！</Button>
+        </Buttons>
+
+        <Footer>
+          Made with <Image src="/images/heart.svg" /> by Calmery
+        </Footer>
+      </Contents>
+    </Page>
+  );
+};
 
 Home.getInitialProps = async ({ store }: NextPageContextWithRedux) => {
   store.dispatch(increment(100));
