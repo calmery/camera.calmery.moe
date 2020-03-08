@@ -1,213 +1,111 @@
 import React from "react";
 import { NextPage } from "next";
-import Head from "next/head";
+import styled from "styled-components";
 import { Button } from "~/components/button";
-import Counter from "~/containers/counter";
-import { increment } from "~/modules/counter/actions";
+import { Image } from "~/components/image";
+import { Page } from "~/components/page";
 import { withRedux, NextPageContextWithRedux } from "~/modules";
+import { increment } from "~/modules/counter/actions";
+import { Colors } from "~/styles/colors";
+import { Media } from "~/styles/media";
+import { Spacing } from "~/styles/spacing";
+import { Typography } from "~/styles/typography";
+
+const Buttons = styled.div`
+  display: flex;
+
+  ${Media.queries.pc} {
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  ${Media.queries.sp} {
+    flex-direction: column;
+  }
+
+  & > * {
+    ${Media.queries.pc} {
+      max-width: 217px;
+      margin-right: ${Spacing.l}px;
+    }
+
+    ${Media.queries.sp} {
+      margin-bottom: ${Spacing.m}px;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+      margin-right: 0;
+    }
+  }
+`;
+
+const Contents = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const Footer = styled.div`
+  ${Typography.XS}
+
+  color: ${Colors.black};
+  font-weight: bold;
+  margin: ${Spacing.xl}px 0;
+  text-align: center;
+`;
+
+const Header = styled.div`
+  display: flex;
+
+  ${Media.queries.pc} {
+    padding: ${Spacing.xl}px 0;
+  }
+
+  ${Media.queries.sp} {
+    padding: ${Spacing.l}px 0;
+  }
+
+  img {
+    height: 32px;
+  }
+`;
+
+const Logo = styled.div`
+  align-items: center;
+  flex: 1;
+  display: flex;
+  margin: ${Spacing.xl}px auto;
+  width: fit-content;
+
+  picture,
+  img {
+    max-width: 512px;
+    width: 100%;
+  }
+`;
 
 const Home: NextPage = () => (
-  <div className="container">
-    <Head>
-      <title>Create Next App</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+  <Page margin>
+    <Contents>
+      <Header>
+        <Image src="/images/logos/calmery.moe.svg" />
+      </Header>
 
-    <main>
-      <Counter />
+      <Logo>
+        <Image src="/images/logos/camera.calmery.moe.svg" />
+      </Logo>
 
-      <Button />
+      <Buttons>
+        <Button primary>画像を読み込んで始める！</Button>
+        <Button>前回の続きから始める！</Button>
+      </Buttons>
 
-      <h1 className="title">
-        Welcome to <a href="https://nextjs.org">Next.js!</a>
-      </h1>
-
-      <p className="description">
-        Get started by editing <code>pages/index.js</code>
-      </p>
-
-      <div className="grid">
-        <a href="https://nextjs.org/docs" className="card">
-          <h3>Documentation &rarr;</h3>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a href="https://nextjs.org/learn" className="card">
-          <h3>Learn &rarr;</h3>
-          <p>Learn about Next.js in an interactive course with quizzes!</p>
-        </a>
-
-        <a
-          href="https://github.com/zeit/next.js/tree/master/examples"
-          className="card"
-        >
-          <h3>Examples &rarr;</h3>
-          <p>Discover and deploy boilerplate example Next.js projects.</p>
-        </a>
-
-        <a
-          href="https://zeit.co/new?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          className="card"
-        >
-          <h3>Deploy &rarr;</h3>
-          <p>
-            Instantly deploy your Next.js site to a public URL with ZEIT Now.
-          </p>
-        </a>
-      </div>
-    </main>
-
-    <footer>
-      <a
-        href="https://zeit.co?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Powered by <img src="/zeit.svg" alt="ZEIT Logo" />
-      </a>
-    </footer>
-
-    <style jsx>{`
-      .container {
-        min-height: 100vh;
-        padding: 0 0.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      main {
-        padding: 5rem 0;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      footer {
-        width: 100%;
-        height: 100px;
-        border-top: 1px solid #eaeaea;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      footer img {
-        margin-left: 0.5rem;
-      }
-
-      footer a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-
-      .title a {
-        color: #0070f3;
-        text-decoration: none;
-      }
-
-      .title a:hover,
-      .title a:focus,
-      .title a:active {
-        text-decoration: underline;
-      }
-
-      .title {
-        margin: 0;
-        line-height: 1.15;
-        font-size: 4rem;
-      }
-
-      .title,
-      .description {
-        text-align: center;
-      }
-
-      .description {
-        line-height: 1.5;
-        font-size: 1.5rem;
-      }
-
-      code {
-        background: #fafafa;
-        border-radius: 5px;
-        padding: 0.75rem;
-        font-size: 1.1rem;
-        font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-          DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-      }
-
-      .grid {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-
-        max-width: 800px;
-        margin-top: 3rem;
-      }
-
-      .card {
-        margin: 1rem;
-        flex-basis: 45%;
-        padding: 1.5rem;
-        text-align: left;
-        color: inherit;
-        text-decoration: none;
-        border: 1px solid #eaeaea;
-        border-radius: 10px;
-        transition: color 0.15s ease, border-color 0.15s ease;
-      }
-
-      .card:hover,
-      .card:focus,
-      .card:active {
-        color: #0070f3;
-        border-color: #0070f3;
-      }
-
-      .card h3 {
-        margin: 0 0 1rem 0;
-        font-size: 1.5rem;
-      }
-
-      .card p {
-        margin: 0;
-        font-size: 1.25rem;
-        line-height: 1.5;
-      }
-
-      @media (max-width: 600px) {
-        .grid {
-          width: 100%;
-          flex-direction: column;
-        }
-      }
-    `}</style>
-
-    <style jsx global>{`
-      html,
-      body {
-        padding: 0;
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-          Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-    `}</style>
-  </div>
+      <Footer>
+        Made with <Image src="/images/heart.svg" /> by Calmery
+      </Footer>
+    </Contents>
+  </Page>
 );
 
 Home.getInitialProps = async ({ store }: NextPageContextWithRedux) => {
