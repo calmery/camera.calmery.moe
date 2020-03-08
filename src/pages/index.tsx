@@ -147,7 +147,12 @@ const Home: NextPage = () => {
         <Buttons>
           <InputButton>
             <Button primary>画像を読み込んで始める！</Button>
-            <Input type="file" onChange={onChange} multiple={false} />
+            <Input
+              type="file"
+              onChange={onChange}
+              multiple={false}
+              accept="image/*"
+            />
           </InputButton>
           <Button>前回の続きから始める！</Button>
         </Buttons>
