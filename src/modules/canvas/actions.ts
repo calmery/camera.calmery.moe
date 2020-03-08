@@ -31,13 +31,18 @@ export type Actions =
 
 export const addUserLayerWithDataUrl = (base64: string) => {
   return (dispatch: Dispatch) => {
-    const i = new Image();
+    return new Promise((resolve, reject) => {
+      const i = new Image();
 
-    i.onload = () => {
-      dispatch(addUserLayer(base64, i.width, i.height));
-    };
+      i.onload = () => {
+        dispatch(addUserLayer(base64, i.width, i.height));
+        resolve();
+      };
 
-    i.src = base64;
+      i.onerror = () => reject();
+
+      i.src = base64;
+    });
   };
 };
 
