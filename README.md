@@ -7,6 +7,8 @@
 [![GitHub Actions](https://github.com/calmery-chan/camera.calmery.moe/workflows/GitHub%20Actions/badge.svg)](https://github.com/calmery-chan/calmery.moe/actions)
 [![WakaTime](https://wakatime.com/badge/github/calmery-chan/camera.calmery.moe.svg)](https://wakatime.com/badge/github/calmery-chan/camera.calmery.moe)
 
+[master](https://camera.calmery.moe) / [develop](https://develop.camera.calmery.moe)
+
 ## Usage
 
 Install Node.js v12.16.1 and npm 6.14.1.
