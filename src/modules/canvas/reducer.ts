@@ -47,7 +47,7 @@ export default (state = initialState, action: Actions): CanvasState => {
               blur: 0,
               hueRotate: 0,
               luminanceToAlpha: false,
-              saturate: 0
+              saturate: 1
             }
           }
         ]
