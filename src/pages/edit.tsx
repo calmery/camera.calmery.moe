@@ -1,7 +1,7 @@
 import React from "react";
 import { NextPage } from "next";
 import { withRedux, NextPageContextWithRedux } from "~/modules";
-import Canvas from "~/containers/canvas";
+import { Canvas } from "~/containers/Canvas";
 
 const Edit: NextPage = () => <Canvas />;
 

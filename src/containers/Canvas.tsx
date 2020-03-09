@@ -1,8 +1,8 @@
 import React from "react";
-import CanvasFilters from "~/containers/canvas-filters";
-import CanvasLayers from "~/containers/canvas-layers";
+import { CanvasFilters } from "~/containers/CanvasFilters";
+import { CanvasLayers } from "~/containers/CanvasLayers";
 
-const Canvas = () => (
+export const Canvas = () => (
   <svg
     viewBox="0 0 2000 1420"
     version="1.1"
@@ -14,5 +14,3 @@ const Canvas = () => (
     <CanvasLayers />
   </svg>
 );
-
-export default Canvas;
