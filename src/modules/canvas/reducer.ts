@@ -1,3 +1,4 @@
+import * as uuid from "uuid";
 import { CanvasLayer } from "~/types/CanvasLayer";
 import { CanvasLayerTransformable } from "~/types/CanvasLayerTransformable";
 import { CanvasLayerEffectable } from "~/types/CanvasLayerEffectable";
@@ -34,6 +35,7 @@ export default (state = initialState, action: Actions): CanvasState => {
           ...state.userLayers,
           {
             ...action.payload,
+            id: uuid.v4(),
             x: 0,
             y: 0,
             transform: {
