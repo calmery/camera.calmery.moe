@@ -1,13 +1,11 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { State } from "~/modules";
-import { CanvasUserLayers } from "~/components/canvas-user-layers";
-import { CanvasStickerLayers } from "~/components/canvas-sticker-layers";
-import { CanvasEssentialLayers } from "~/components/canvas-essential-layers";
+import { CanvasUserLayers } from "~/components/CanvasUserLayers";
+import { CanvasStickerLayers } from "~/components/CanvasStickerLayers";
+import { CanvasEssentialLayers } from "~/components/CanvasEssentialLayers";
 
-// Main
-
-const CanvasLayers = () => {
+export const CanvasLayers = () => {
   const { userLayers, stickerLayers, essentialLayers } = useSelector(
     ({ canvas }: State) => canvas
   );
@@ -20,5 +18,3 @@ const CanvasLayers = () => {
     </>
   );
 };
-
-export default CanvasLayers;

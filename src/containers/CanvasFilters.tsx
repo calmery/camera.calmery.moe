@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { State } from "~/modules";
-import { CanvasFilter } from "~/components/canvas-filter";
+import { CanvasFilter } from "~/components/CanvasFilter";
 
-const CanvasFilters = () => {
+export const CanvasFilters = () => {
   const { userLayers } = useSelector(({ canvas }: State) => canvas);
 
   return (
@@ -14,5 +14,3 @@ const CanvasFilters = () => {
     </defs>
   );
 };
-
-export default CanvasFilters;
