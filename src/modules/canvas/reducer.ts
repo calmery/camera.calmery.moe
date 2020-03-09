@@ -5,19 +5,31 @@ import { CanvasLayerEffectable } from "~/types/CanvasLayerEffectable";
 import { ADD_ADDABLE_STICKER_URLS, ADD_USER_LAYER, Actions } from "./actions";
 
 export type CanvasState = {
+  width: number;
+  height: number;
   addableStickerUrls: string[];
   essentialLayers: CanvasLayer[];
   stickerLayers: (CanvasLayer & CanvasLayerTransformable)[];
   userLayers: (CanvasLayer &
     CanvasLayerTransformable &
     CanvasLayerEffectable)[];
+  userLayerClipPaths: {
+    type: "rect";
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }[];
 };
 
 const initialState: CanvasState = {
+  width: 0,
+  height: 0,
   addableStickerUrls: [],
   essentialLayers: [],
   stickerLayers: [],
-  userLayers: []
+  userLayers: [],
+  userLayerClipPaths: []
 };
 
 export default (state = initialState, action: Actions): CanvasState => {
@@ -31,6 +43,8 @@ export default (state = initialState, action: Actions): CanvasState => {
     case ADD_USER_LAYER:
       return {
         ...state,
+        width: action.payload.width,
+        height: action.payload.height,
         userLayers: [
           ...state.userLayers,
           {
@@ -49,6 +63,16 @@ export default (state = initialState, action: Actions): CanvasState => {
               luminanceToAlpha: false,
               saturate: 1
             }
+          }
+        ],
+        userLayerClipPaths: [
+          ...state.userLayerClipPaths,
+          {
+            type: "rect",
+            x: 0,
+            y: 0,
+            width: action.payload.width,
+            height: action.payload.height
           }
         ]
       };

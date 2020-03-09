@@ -6,13 +6,19 @@ import { CanvasStickerLayers } from "~/components/CanvasStickerLayers";
 import { CanvasEssentialLayers } from "~/components/CanvasEssentialLayers";
 
 export const CanvasLayers = () => {
-  const { userLayers, stickerLayers, essentialLayers } = useSelector(
-    ({ canvas }: State) => canvas
-  );
+  const {
+    userLayers,
+    stickerLayers,
+    essentialLayers,
+    userLayerClipPaths
+  } = useSelector(({ canvas }: State) => canvas);
 
   return (
     <>
-      <CanvasUserLayers userLayers={userLayers} />
+      <CanvasUserLayers
+        userLayers={userLayers}
+        userLayerClipPaths={userLayerClipPaths}
+      />
       <CanvasStickerLayers stickerLayers={stickerLayers} />
       <CanvasEssentialLayers essentialLayers={essentialLayers} />
     </>
