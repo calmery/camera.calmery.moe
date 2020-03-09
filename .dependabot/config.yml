@@ -4,4 +4,4 @@ update_configs:
   - package_manager: "javascript"
     directory: "/"
     update_schedule: "live"
-    target_branch: "master"
+    target_branch: "develop"
