@@ -2,7 +2,7 @@ import React from "react";
 import { NextPage } from "next";
 import { withRedux, NextPageContextWithRedux } from "~/modules";
 
-const Edit: NextPage = () => <div>Hello World !</div>;
+const Edit: NextPage = () => <div>Edit: Hello World !</div>;
 
 Edit.getInitialProps = async (_: NextPageContextWithRedux) => {
   // ToDo
