@@ -110,9 +110,9 @@ class Canvas extends React.Component<{
 
   private handleOnMouseMove = (event: MouseEvent) => {
     const { canvas, setCursorPosition } = this.props;
-    const { moveTargetStickerLayer, width: canvasWidth } = canvas;
+    const { stickerLayerReferencePositions, width: canvasWidth } = canvas;
 
-    if (moveTargetStickerLayer === null) {
+    if (stickerLayerReferencePositions === null) {
       return;
     }
 
@@ -127,20 +127,18 @@ class Canvas extends React.Component<{
     const ratio = canvasWidth / width;
 
     const relativeCoordinateX =
-      Math.round(event.clientX * ratio - x) +
-      moveTargetStickerLayer.position.referenceX;
+      Math.round(event.clientX * ratio - x) + stickerLayerReferencePositions.x;
     const relativeCoordinateY =
-      Math.round(event.clientY * ratio - y) +
-      moveTargetStickerLayer.position.referenceY;
+      Math.round(event.clientY * ratio - y) + stickerLayerReferencePositions.y;
 
     setCursorPosition(relativeCoordinateX, relativeCoordinateY);
   };
 
   private handleOnTouchMove = (event: TouchEvent) => {
     const { canvas, setCursorPosition } = this.props;
-    const { moveTargetStickerLayer, width: canvasWidth } = canvas;
+    const { stickerLayerReferencePositions, width: canvasWidth } = canvas;
 
-    if (moveTargetStickerLayer === null) {
+    if (stickerLayerReferencePositions === null) {
       return;
     }
 
@@ -156,10 +154,10 @@ class Canvas extends React.Component<{
 
     const relativeCoordinateX =
       Math.round(event.touches[0].clientX * ratio - x) +
-      moveTargetStickerLayer.position.referenceX;
+      stickerLayerReferencePositions.x;
     const relativeCoordinateY =
       Math.round(event.touches[0].clientY * ratio - y) +
-      moveTargetStickerLayer.position.referenceY;
+      stickerLayerReferencePositions.y;
 
     setCursorPosition(relativeCoordinateX, relativeCoordinateY);
   };

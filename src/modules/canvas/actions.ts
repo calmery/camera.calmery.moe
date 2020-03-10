@@ -40,11 +40,11 @@ export const addUserLayer = (
 
 export const dragStartStickerLayer = (
   layerIndex: number,
-  referenceX: number,
-  referenceY: number
+  x: number,
+  y: number
 ) => ({
   type: STICKER_LAYER_DRAG_START,
-  payload: { layerIndex, referenceX, referenceY }
+  payload: { layerIndex, x, y }
 });
 
 export const dragEndStickerLayer = () => ({

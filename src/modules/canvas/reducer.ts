@@ -20,12 +20,9 @@ export type CanvasState = {
     x: number;
     y: number;
   };
-  moveTargetStickerLayer: {
-    index: number;
-    position: {
-      referenceX: number;
-      referenceY: number;
-    };
+  stickerLayerReferencePositions: {
+    x: number;
+    y: number;
   } | null;
   addableStickerUrls: string[];
   essentialLayers: CanvasLayer[];
@@ -49,7 +46,7 @@ const initialState: CanvasState = {
     x: 0,
     y: 0
   },
-  moveTargetStickerLayer: null,
+  stickerLayerReferencePositions: null,
   addableStickerUrls: [],
   essentialLayers: [],
   stickerLayers: [],
@@ -64,31 +61,36 @@ export default (state = initialState, action: Actions): CanvasState => {
     case STICKER_LAYER_DRAG_START:
       return {
         ...state,
-        moveTargetStickerLayer: {
-          index: action.payload.layerIndex,
-          position: {
-            referenceX: action.payload.referenceX,
-            referenceY: action.payload.referenceY
-          }
+        // 選択したレイヤーを一番上に表示するために配列の最後に移動する
+        stickerLayers: [
+          ...state.stickerLayers.filter(
+            (_, index) => index !== action.payload.layerIndex
+          ),
+          state.stickerLayers[action.payload.layerIndex]
+        ],
+        // 選択した StickerLayer の Canvas 上での相対位置を管理する
+        stickerLayerReferencePositions: {
+          x: action.payload.x,
+          y: action.payload.y
         }
       };
 
     case STICKER_LAYER_DRAG_END:
       return {
         ...state,
-        moveTargetStickerLayer: null
+        stickerLayerReferencePositions: null
       };
 
     //
 
     case SET_CURSOR_POSITION: {
-      const { stickerLayers, moveTargetStickerLayer } = state;
+      const { stickerLayers, stickerLayerReferencePositions } = state;
       const partialState: Partial<CanvasState> = {};
 
-      if (moveTargetStickerLayer !== null) {
+      if (stickerLayerReferencePositions !== null) {
         partialState.stickerLayers = stickerLayers;
-        partialState.stickerLayers[moveTargetStickerLayer.index] = {
-          ...stickerLayers[moveTargetStickerLayer.index],
+        partialState.stickerLayers[partialState.stickerLayers.length - 1] = {
+          ...stickerLayers[partialState.stickerLayers.length - 1],
           ...action.payload
         };
       }
