@@ -6,6 +6,10 @@ export const ADD_STICKER_LAYER = "ADD_STICKER_LAYER" as const;
 export const ADD_USER_LAYER = "ADD_USER_LAYER" as const;
 export const ADD_ADDABLE_STICKER_URLS = "ADD_ADDABLE_STICKER_URLS" as const;
 export const CHANGE_USER_LAYER_FILTER_VALUE = "CHANGE_USER_LAYER_FILTER_VALUE" as const;
+export const REFERENCE_POINTER_MOVE = "REFERENCE_POINTER_MOVE" as const;
+export const POINTER_MOVE = "POINTER_MOVE" as const;
+export const DRAG_START = "DRAG_START" as const;
+export const DRAG_END = "DRAG_END" as const;
 
 // Actions
 
@@ -35,6 +39,34 @@ export const addUserLayer = (
   }
 });
 
+export const dragStart = (dragTargetIndex: number) => ({
+  type: DRAG_START,
+  payload: { dragTargetIndex }
+});
+
+export const dragEnd = () => ({
+  type: DRAG_END
+});
+
+export const pointerMove = (x: number, y: number) => ({
+  type: POINTER_MOVE,
+  payload: {
+    x,
+    y
+  }
+});
+
+export const referencePointerMove = (
+  referenceX: number,
+  referenceY: number
+) => ({
+  type: REFERENCE_POINTER_MOVE,
+  payload: {
+    referenceX,
+    referenceY
+  }
+});
+
 export const addAddableStickerUrls = (addableStickerUrls: string[]) => ({
   type: ADD_ADDABLE_STICKER_URLS,
   payload: addableStickerUrls
@@ -57,6 +89,10 @@ export type Actions =
   | ReturnType<typeof addAddableStickerUrls>
   | ReturnType<typeof addStickerLayer>
   | ReturnType<typeof changeUserLayerFilterValue>
+  | ReturnType<typeof pointerMove>
+  | ReturnType<typeof referencePointerMove>
+  | ReturnType<typeof dragStart>
+  | ReturnType<typeof dragEnd>
   | ReturnType<typeof addUserLayer>;
 
 // Redux Thunks
