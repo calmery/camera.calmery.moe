@@ -1,9 +1,11 @@
 import { Dispatch } from "redux";
+import { CanvasLayerEffect } from "~/types/CanvasLayerEffect";
 import { convertUrlToDataUrl } from "~/utils/convert-url-to-data-url";
 
 export const ADD_STICKER_LAYER = "ADD_STICKER_LAYER" as const;
 export const ADD_USER_LAYER = "ADD_USER_LAYER" as const;
 export const ADD_ADDABLE_STICKER_URLS = "ADD_ADDABLE_STICKER_URLS" as const;
+export const CHANGE_USER_LAYER_FILTER_VALUE = "CHANGE_USER_LAYER_FILTER_VALUE" as const;
 
 // Actions
 
@@ -38,9 +40,23 @@ export const addAddableStickerUrls = (addableStickerUrls: string[]) => ({
   payload: addableStickerUrls
 });
 
+export const changeUserLayerFilterValue = (
+  index: number,
+  type: keyof CanvasLayerEffect,
+  value: number
+) => ({
+  type: CHANGE_USER_LAYER_FILTER_VALUE,
+  payload: {
+    index,
+    type,
+    value
+  }
+});
+
 export type Actions =
   | ReturnType<typeof addAddableStickerUrls>
   | ReturnType<typeof addStickerLayer>
+  | ReturnType<typeof changeUserLayerFilterValue>
   | ReturnType<typeof addUserLayer>;
 
 // Redux Thunks
