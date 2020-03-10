@@ -2,7 +2,12 @@ import * as uuid from "uuid";
 import { CanvasLayer } from "~/types/CanvasLayer";
 import { CanvasLayerTransformable } from "~/types/CanvasLayerTransformable";
 import { CanvasLayerEffectable } from "~/types/CanvasLayerEffectable";
-import { ADD_ADDABLE_STICKER_URLS, ADD_USER_LAYER, Actions } from "./actions";
+import {
+  ADD_ADDABLE_STICKER_URLS,
+  ADD_STICKER_LAYER,
+  ADD_USER_LAYER,
+  Actions
+} from "./actions";
 
 export type CanvasState = {
   width: number;
@@ -38,6 +43,25 @@ export default (state = initialState, action: Actions): CanvasState => {
       return {
         ...state,
         addableStickerUrls: action.payload
+      };
+
+    case ADD_STICKER_LAYER:
+      return {
+        ...state,
+        stickerLayers: [
+          ...state.stickerLayers,
+          {
+            ...action.payload,
+            id: uuid.v4(),
+            x: 0,
+            y: 0,
+            transform: {
+              flip: false,
+              rotate: 0,
+              scale: 1
+            }
+          }
+        ]
       };
 
     case ADD_USER_LAYER:
