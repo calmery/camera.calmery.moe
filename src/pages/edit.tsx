@@ -3,11 +3,13 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { withRedux, NextPageContextWithRedux } from "~/modules";
 import { Canvas } from "~/containers/Canvas";
+import { Stickers } from "~/containers/Stickers";
 
 const Edit: NextPage = () => (
   <>
     <Canvas />
     <Link href="/preview">Preview</Link>
+    <Stickers />
   </>
 );
 
