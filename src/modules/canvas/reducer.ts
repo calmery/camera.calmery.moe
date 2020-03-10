@@ -6,6 +6,7 @@ import {
   ADD_ADDABLE_STICKER_URLS,
   ADD_STICKER_LAYER,
   ADD_USER_LAYER,
+  CHANGE_USER_LAYER_FILTER_VALUE,
   Actions
 } from "./actions";
 
@@ -39,6 +40,24 @@ const initialState: CanvasState = {
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
+    case CHANGE_USER_LAYER_FILTER_VALUE: {
+      const { userLayers } = state;
+      const userLayer = state.userLayers[action.payload.index];
+
+      userLayers[action.payload.index] = {
+        ...userLayer,
+        filter: {
+          ...userLayer.filter,
+          [action.payload.type]: action.payload.value
+        }
+      };
+
+      return {
+        ...state,
+        userLayers
+      };
+    }
+
     case ADD_ADDABLE_STICKER_URLS:
       return {
         ...state,
