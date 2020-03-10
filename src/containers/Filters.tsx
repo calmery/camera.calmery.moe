@@ -1,15 +1,7 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "~/modules";
-import { CanvasLayerEffect } from "~/types/CanvasLayerEffect";
 import { changeUserLayerFilterValue } from "~/modules/canvas/actions";
-
-/*
-blur: number;
-  hueRotate: number;
-  luminanceToAlpha: boolean;
-  saturate: number;
-*/
 
 export const Filters = () => {
   const dispatch = useDispatch();

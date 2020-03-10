@@ -7,12 +7,23 @@ import {
   ADD_STICKER_LAYER,
   ADD_USER_LAYER,
   CHANGE_USER_LAYER_FILTER_VALUE,
-  Actions
+  POINTER_MOVE,
+  REFERENCE_POINTER_MOVE,
+  Actions,
+  DRAG_START,
+  DRAG_END
 } from "./actions";
 
 export type CanvasState = {
   width: number;
   height: number;
+  draggingStickerLayerIndex: number | null;
+  pointerPosition: {
+    referenceX: number;
+    referenceY: number;
+    x: number;
+    y: number;
+  };
   addableStickerUrls: string[];
   essentialLayers: CanvasLayer[];
   stickerLayers: (CanvasLayer & CanvasLayerTransformable)[];
@@ -31,6 +42,13 @@ export type CanvasState = {
 const initialState: CanvasState = {
   width: 0,
   height: 0,
+  draggingStickerLayerIndex: null,
+  pointerPosition: {
+    referenceX: 0,
+    referenceY: 0,
+    x: 0,
+    y: 0
+  },
   addableStickerUrls: [],
   essentialLayers: [],
   stickerLayers: [],
@@ -40,6 +58,51 @@ const initialState: CanvasState = {
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
+    case DRAG_START:
+      return {
+        ...state,
+        draggingStickerLayerIndex: action.payload.dragTargetIndex
+      };
+
+    case DRAG_END:
+      return {
+        ...state,
+        draggingStickerLayerIndex: null
+      };
+
+    case REFERENCE_POINTER_MOVE:
+      return {
+        ...state,
+        pointerPosition: {
+          ...state.pointerPosition,
+          ...action.payload
+        }
+      };
+
+    case POINTER_MOVE: {
+      const { stickerLayers, draggingStickerLayerIndex } = state;
+
+      // Dummy
+      if (
+        draggingStickerLayerIndex !== null &&
+        stickerLayers[draggingStickerLayerIndex]
+      ) {
+        stickerLayers[draggingStickerLayerIndex] = {
+          ...stickerLayers[draggingStickerLayerIndex],
+          ...action.payload
+        };
+      }
+
+      return {
+        ...state,
+        pointerPosition: {
+          ...state.pointerPosition,
+          ...action.payload
+        },
+        stickerLayers
+      };
+    }
+
     case CHANGE_USER_LAYER_FILTER_VALUE: {
       const { userLayers } = state;
       const userLayer = state.userLayers[action.payload.index];
