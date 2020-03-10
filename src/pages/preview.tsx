@@ -1,7 +1,7 @@
 import React, { useRef, useCallback } from "react";
 import { NextPage } from "next";
 import { withRedux, NextPageContextWithRedux } from "~/modules";
-import { Canvas } from "~/containers/Canvas";
+import Canvas from "~/containers/Canvas";
 
 const convertDataUrlToBlob = (dataUrl: string) => {
   const type = dataUrl
