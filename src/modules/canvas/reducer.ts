@@ -7,23 +7,26 @@ import {
   ADD_STICKER_LAYER,
   ADD_USER_LAYER,
   CHANGE_USER_LAYER_FILTER_VALUE,
-  POINTER_MOVE,
-  REFERENCE_POINTER_MOVE,
+  SET_CURSOR_POSITION,
   Actions,
-  DRAG_START,
-  DRAG_END
+  STICKER_LAYER_DRAG_START,
+  STICKER_LAYER_DRAG_END
 } from "./actions";
 
 export type CanvasState = {
   width: number;
   height: number;
-  draggingStickerLayerIndex: number | null;
-  pointerPosition: {
-    referenceX: number;
-    referenceY: number;
+  cursorPosition: {
     x: number;
     y: number;
   };
+  moveTargetStickerLayer: {
+    index: number;
+    position: {
+      referenceX: number;
+      referenceY: number;
+    };
+  } | null;
   addableStickerUrls: string[];
   essentialLayers: CanvasLayer[];
   stickerLayers: (CanvasLayer & CanvasLayerTransformable)[];
@@ -42,13 +45,11 @@ export type CanvasState = {
 const initialState: CanvasState = {
   width: 0,
   height: 0,
-  draggingStickerLayerIndex: null,
-  pointerPosition: {
-    referenceX: 0,
-    referenceY: 0,
+  cursorPosition: {
     x: 0,
     y: 0
   },
+  moveTargetStickerLayer: null,
   addableStickerUrls: [],
   essentialLayers: [],
   stickerLayers: [],
@@ -58,48 +59,44 @@ const initialState: CanvasState = {
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
-    case DRAG_START:
-      return {
-        ...state,
-        draggingStickerLayerIndex: action.payload.dragTargetIndex
-      };
+    // Sticker Layers
 
-    case DRAG_END:
+    case STICKER_LAYER_DRAG_START:
       return {
         ...state,
-        draggingStickerLayerIndex: null
-      };
-
-    case REFERENCE_POINTER_MOVE:
-      return {
-        ...state,
-        pointerPosition: {
-          ...state.pointerPosition,
-          ...action.payload
+        moveTargetStickerLayer: {
+          index: action.payload.layerIndex,
+          position: {
+            referenceX: action.payload.referenceX,
+            referenceY: action.payload.referenceY
+          }
         }
       };
 
-    case POINTER_MOVE: {
-      const { stickerLayers, draggingStickerLayerIndex } = state;
+    case STICKER_LAYER_DRAG_END:
+      return {
+        ...state,
+        moveTargetStickerLayer: null
+      };
 
-      // Dummy
-      if (
-        draggingStickerLayerIndex !== null &&
-        stickerLayers[draggingStickerLayerIndex]
-      ) {
-        stickerLayers[draggingStickerLayerIndex] = {
-          ...stickerLayers[draggingStickerLayerIndex],
+    //
+
+    case SET_CURSOR_POSITION: {
+      const { stickerLayers, moveTargetStickerLayer } = state;
+      const partialState: Partial<CanvasState> = {};
+
+      if (moveTargetStickerLayer !== null) {
+        partialState.stickerLayers = stickerLayers;
+        partialState.stickerLayers[moveTargetStickerLayer.index] = {
+          ...stickerLayers[moveTargetStickerLayer.index],
           ...action.payload
         };
       }
 
       return {
         ...state,
-        pointerPosition: {
-          ...state.pointerPosition,
-          ...action.payload
-        },
-        stickerLayers
+        ...partialState,
+        cursorPosition: action.payload
       };
     }
 

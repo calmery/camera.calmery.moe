@@ -3,16 +3,22 @@ import { CanvasFilters } from "~/containers/CanvasFilters";
 import { CanvasLayers } from "~/containers/CanvasLayers";
 import { connect } from "react-redux";
 import { State } from "~/modules";
-import { pointerMove, referencePointerMove } from "~/modules/canvas/actions";
+import { setCursorPosition } from "~/modules/canvas/actions";
 import { CanvasState } from "~/modules/canvas/reducer";
-import { dragStart, dragEnd } from "~/modules/canvas/actions";
+import {
+  dragStartStickerLayer,
+  dragEndStickerLayer
+} from "~/modules/canvas/actions";
 
 class Canvas extends React.Component<{
   canvas: CanvasState;
-  pointerMove: (x: number, y: number) => void;
-  referencePointerMove: (x: number, y: number) => void;
-  dragStart: (index: number) => void;
-  dragEnd: () => void;
+  setCursorPosition: (x: number, y: number) => void;
+  dragStartStickerLayer: (
+    layerIndex: number,
+    referenceX: number,
+    referenceY: number
+  ) => void;
+  dragEndStickerLayer: () => void;
 }> {
   private ref: React.RefObject<SVGSVGElement> = React.createRef();
 
@@ -56,16 +62,15 @@ class Canvas extends React.Component<{
   // Events (Sticker Layers)
 
   private handleOnMouseUpAndTouchEnd = () => {
-    const { referencePointerMove, dragEnd } = this.props;
-    referencePointerMove(0, 0);
-    dragEnd();
+    const { dragEndStickerLayer } = this.props;
+    dragEndStickerLayer();
   };
 
   private handleOnMouseDown = (
     event: React.MouseEvent<SVGImageElement, MouseEvent>,
     index: number
   ) => {
-    const { canvas, dragStart, referencePointerMove } = this.props;
+    const { canvas, dragStartStickerLayer } = this.props;
 
     if (!this.ref.current) {
       return;
@@ -78,15 +83,14 @@ class Canvas extends React.Component<{
     const referenceX = canvasLayer.x - Math.round(event.clientX * ratio - x);
     const referenceY = canvasLayer.y - Math.round(event.clientY * ratio - y);
 
-    referencePointerMove(referenceX, referenceY);
-    dragStart(index);
+    dragStartStickerLayer(index, referenceX, referenceY);
   };
 
   private handleOnTouchStart = (
     event: React.TouchEvent<SVGImageElement>,
     index: number
   ) => {
-    const { canvas, dragStart, referencePointerMove } = this.props;
+    const { canvas, dragStartStickerLayer } = this.props;
 
     if (!this.ref.current) {
       return;
@@ -101,19 +105,14 @@ class Canvas extends React.Component<{
     const referenceY =
       canvasLayer.y - Math.round(event.touches[0].clientY * ratio - y);
 
-    referencePointerMove(referenceX, referenceY);
-    dragStart(index);
+    dragStartStickerLayer(index, referenceX, referenceY);
   };
 
   private handleOnMouseMove = (event: MouseEvent) => {
-    const { canvas, pointerMove } = this.props;
-    const {
-      draggingStickerLayerIndex,
-      pointerPosition,
-      width: canvasWidth
-    } = canvas;
+    const { canvas, setCursorPosition } = this.props;
+    const { moveTargetStickerLayer, width: canvasWidth } = canvas;
 
-    if (draggingStickerLayerIndex === null) {
+    if (moveTargetStickerLayer === null) {
       return;
     }
 
@@ -128,22 +127,20 @@ class Canvas extends React.Component<{
     const ratio = canvasWidth / width;
 
     const relativeCoordinateX =
-      Math.round(event.clientX * ratio - x) + pointerPosition.referenceX;
+      Math.round(event.clientX * ratio - x) +
+      moveTargetStickerLayer.position.referenceX;
     const relativeCoordinateY =
-      Math.round(event.clientY * ratio - y) + pointerPosition.referenceY;
+      Math.round(event.clientY * ratio - y) +
+      moveTargetStickerLayer.position.referenceY;
 
-    pointerMove(relativeCoordinateX, relativeCoordinateY);
+    setCursorPosition(relativeCoordinateX, relativeCoordinateY);
   };
 
   private handleOnTouchMove = (event: TouchEvent) => {
-    const { canvas, pointerMove } = this.props;
-    const {
-      draggingStickerLayerIndex,
-      pointerPosition,
-      width: canvasWidth
-    } = canvas;
+    const { canvas, setCursorPosition } = this.props;
+    const { moveTargetStickerLayer, width: canvasWidth } = canvas;
 
-    if (draggingStickerLayerIndex === null) {
+    if (moveTargetStickerLayer === null) {
       return;
     }
 
@@ -159,12 +156,12 @@ class Canvas extends React.Component<{
 
     const relativeCoordinateX =
       Math.round(event.touches[0].clientX * ratio - x) +
-      pointerPosition.referenceX;
+      moveTargetStickerLayer.position.referenceX;
     const relativeCoordinateY =
       Math.round(event.touches[0].clientY * ratio - y) +
-      pointerPosition.referenceY;
+      moveTargetStickerLayer.position.referenceY;
 
-    pointerMove(relativeCoordinateX, relativeCoordinateY);
+    setCursorPosition(relativeCoordinateX, relativeCoordinateY);
   };
 }
 
@@ -173,17 +170,18 @@ export default connect(
     canvas: state.canvas
   }),
   dispatch => ({
-    pointerMove(relativeCoordinateX: number, relativeCoordinateY: number) {
-      dispatch(pointerMove(relativeCoordinateX, relativeCoordinateY));
+    setCursorPosition(x: number, y: number) {
+      dispatch(setCursorPosition(x, y));
     },
-    referencePointerMove(referenceX: number, referenceY: number) {
-      dispatch(referencePointerMove(referenceX, referenceY));
+    dragStartStickerLayer(
+      layerIndex: number,
+      referenceX: number,
+      referenceY: number
+    ) {
+      dispatch(dragStartStickerLayer(layerIndex, referenceX, referenceY));
     },
-    dragStart(index: number) {
-      dispatch(dragStart(index));
-    },
-    dragEnd() {
-      dispatch(dragEnd());
+    dragEndStickerLayer() {
+      dispatch(dragEndStickerLayer());
     }
   })
 )(Canvas);
