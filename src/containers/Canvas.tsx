@@ -6,6 +6,7 @@ import { State } from "~/modules";
 import { setCursorPosition } from "~/modules/canvas/actions";
 import { CanvasState } from "~/modules/canvas/reducer";
 import {
+  setCanvasPosition,
   dragStartStickerLayer,
   dragEndStickerLayer
 } from "~/modules/canvas/actions";
@@ -19,8 +20,16 @@ class Canvas extends React.Component<{
     referenceY: number
   ) => void;
   dragEndStickerLayer: () => void;
+  setCanvasPosition: (
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) => void;
 }> {
   private ref: React.RefObject<SVGSVGElement> = React.createRef();
+
+  // React Lifecycle
 
   public componentDidMount = () => {
     this.ref.current!.addEventListener("mousemove", this.handleOnMouseMove, {
@@ -29,12 +38,18 @@ class Canvas extends React.Component<{
     this.ref.current!.addEventListener("touchmove", this.handleOnTouchMove, {
       passive: false
     });
+
+    window.addEventListener("resize", this.handleOnResizeWindow, false);
+    this.handleOnResizeWindow(); // 最初にセットする必要がある
   };
 
   public componentWillUnmount = () => {
     this.ref.current!.removeEventListener("mousemove", this.handleOnMouseMove);
     this.ref.current!.removeEventListener("touchmove", this.handleOnTouchMove);
+    window.removeEventListener("resize", this.handleOnResizeWindow);
   };
+
+  // Render
 
   public render = () => {
     const { canvas } = this.props;
@@ -59,107 +74,52 @@ class Canvas extends React.Component<{
     );
   };
 
-  // Events (Sticker Layers)
+  // Event Handlers
 
-  private handleOnMouseUpAndTouchEnd = () => {
-    const { dragEndStickerLayer } = this.props;
-    dragEndStickerLayer();
+  private handleOnResizeWindow = () => {
+    const { setCanvasPosition } = this.props;
+    const { x, y, width, height } = this.ref.current!.getBoundingClientRect();
+    setCanvasPosition(x, y, width, height);
   };
 
   private handleOnMouseDown = (
     event: React.MouseEvent<SVGImageElement, MouseEvent>,
     index: number
   ) => {
-    const { canvas, dragStartStickerLayer } = this.props;
-
-    if (!this.ref.current) {
-      return;
-    }
-
-    const { x, y, width } = this.ref.current.getBoundingClientRect();
-    const ratio = canvas.width / width;
-
-    const canvasLayer = canvas.stickerLayers[index];
-    const referenceX = canvasLayer.x - Math.round(event.clientX * ratio - x);
-    const referenceY = canvasLayer.y - Math.round(event.clientY * ratio - y);
-
-    dragStartStickerLayer(index, referenceX, referenceY);
+    this.props.dragStartStickerLayer(index, event.clientX, event.clientY);
   };
 
   private handleOnTouchStart = (
     event: React.TouchEvent<SVGImageElement>,
     index: number
   ) => {
-    const { canvas, dragStartStickerLayer } = this.props;
+    this.props.dragStartStickerLayer(
+      index,
+      event.touches[0].clientX,
+      event.touches[0].clientY
+    );
+  };
 
-    if (!this.ref.current) {
-      return;
-    }
-
-    const { x, y, width } = this.ref.current.getBoundingClientRect();
-    const ratio = canvas.width / width;
-
-    const canvasLayer = canvas.stickerLayers[index];
-    const referenceX =
-      canvasLayer.x - Math.round(event.touches[0].clientX * ratio - x);
-    const referenceY =
-      canvasLayer.y - Math.round(event.touches[0].clientY * ratio - y);
-
-    dragStartStickerLayer(index, referenceX, referenceY);
+  private handleOnMouseUpAndTouchEnd = () => {
+    this.props.dragEndStickerLayer();
   };
 
   private handleOnMouseMove = (event: MouseEvent) => {
-    const { canvas, setCursorPosition } = this.props;
-    const { stickerLayerReferencePositions, width: canvasWidth } = canvas;
-
-    if (stickerLayerReferencePositions === null) {
-      return;
-    }
+    const { setCursorPosition } = this.props;
 
     event.preventDefault();
     event.stopPropagation();
 
-    if (!this.ref.current) {
-      return;
-    }
-
-    const { x, y, width } = this.ref.current.getBoundingClientRect();
-    const ratio = canvasWidth / width;
-
-    const relativeCoordinateX =
-      Math.round(event.clientX * ratio - x) + stickerLayerReferencePositions.x;
-    const relativeCoordinateY =
-      Math.round(event.clientY * ratio - y) + stickerLayerReferencePositions.y;
-
-    setCursorPosition(relativeCoordinateX, relativeCoordinateY);
+    setCursorPosition(event.clientX, event.clientY);
   };
 
   private handleOnTouchMove = (event: TouchEvent) => {
-    const { canvas, setCursorPosition } = this.props;
-    const { stickerLayerReferencePositions, width: canvasWidth } = canvas;
-
-    if (stickerLayerReferencePositions === null) {
-      return;
-    }
+    const { setCursorPosition } = this.props;
 
     event.preventDefault();
     event.stopPropagation();
 
-    if (!this.ref.current) {
-      return;
-    }
-
-    const { x, y, width } = this.ref.current.getBoundingClientRect();
-    const ratio = canvasWidth / width;
-
-    const relativeCoordinateX =
-      Math.round(event.touches[0].clientX * ratio - x) +
-      stickerLayerReferencePositions.x;
-    const relativeCoordinateY =
-      Math.round(event.touches[0].clientY * ratio - y) +
-      stickerLayerReferencePositions.y;
-
-    setCursorPosition(relativeCoordinateX, relativeCoordinateY);
+    setCursorPosition(event.touches[0].clientX, event.touches[0].clientY);
   };
 }
 
@@ -180,6 +140,9 @@ export default connect(
     },
     dragEndStickerLayer() {
       dispatch(dragEndStickerLayer());
+    },
+    setCanvasPosition(x: number, y: number, width: number, height: number) {
+      dispatch(setCanvasPosition(x, y, width, height));
     }
   })
 )(Canvas);
