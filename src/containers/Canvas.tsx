@@ -1,51 +1,54 @@
 import React from "react";
+import { Dispatch } from "redux";
+import { connect } from "react-redux";
 import { CanvasFilters } from "~/containers/CanvasFilters";
 import { CanvasLayers } from "~/containers/CanvasLayers";
-import { connect } from "react-redux";
 import { State } from "~/modules";
-import { setCursorPosition } from "~/modules/canvas/actions";
-import { CanvasState } from "~/modules/canvas/reducer";
 import {
   setCanvasPosition,
+  setCursorPosition,
   dragStartStickerLayer,
   dragEndStickerLayer
 } from "~/modules/canvas/actions";
 
-class Canvas extends React.Component<{
-  canvas: CanvasState;
-  setCursorPosition: (x: number, y: number) => void;
-  dragStartStickerLayer: (
-    layerIndex: number,
-    referenceX: number,
-    referenceY: number
-  ) => void;
-  dragEndStickerLayer: () => void;
-  setCanvasPosition: (
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ) => void;
-}> {
+const mapStateToProps = ({ canvas }: State) => ({ canvas });
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  setCanvasPosition(x: number, y: number, width: number, height: number) {
+    dispatch(setCanvasPosition(x, y, width, height));
+  },
+  setCursorPosition(x: number, y: number) {
+    dispatch(setCursorPosition(x, y));
+  },
+  dragStartStickerLayer(index: number, x: number, y: number) {
+    dispatch(dragStartStickerLayer(index, x, y));
+  },
+  dragEndStickerLayer() {
+    dispatch(dragEndStickerLayer());
+  }
+});
+
+class Canvas extends React.Component<
+  ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
+> {
   private ref: React.RefObject<SVGSVGElement> = React.createRef();
 
   // React Lifecycle
 
   public componentDidMount = () => {
-    this.ref.current!.addEventListener("mousemove", this.handleOnMouseMove, {
-      passive: false
-    });
-    this.ref.current!.addEventListener("touchmove", this.handleOnTouchMove, {
-      passive: false
-    });
+    const e = this.ref.current!;
 
+    e.addEventListener("mousemove", this.handleOnDrag, { passive: false });
+    e.addEventListener("touchmove", this.handleOnDrag, { passive: false });
     window.addEventListener("resize", this.handleOnResizeWindow, false);
-    this.handleOnResizeWindow(); // 最初にセットする必要がある
+
+    this.handleOnResizeWindow();
   };
 
   public componentWillUnmount = () => {
-    this.ref.current!.removeEventListener("mousemove", this.handleOnMouseMove);
-    this.ref.current!.removeEventListener("touchmove", this.handleOnTouchMove);
+    const e = this.ref.current!;
+    e.removeEventListener("mousemove", this.handleOnDrag);
+    e.removeEventListener("touchmove", this.handleOnDrag);
     window.removeEventListener("resize", this.handleOnResizeWindow);
   };
 
@@ -65,10 +68,10 @@ class Canvas extends React.Component<{
       >
         <CanvasFilters />
         <CanvasLayers
-          onMouseDown={this.handleOnMouseDown}
-          onMouseUp={this.handleOnMouseUpAndTouchEnd}
-          onTouchStart={this.handleOnTouchStart}
-          onTouchEnd={this.handleOnMouseUpAndTouchEnd}
+          onMouseDown={this.handleOnDragStart}
+          onMouseUp={this.handleOnDragEnd}
+          onTouchStart={this.handleOnDragStart}
+          onTouchEnd={this.handleOnDragEnd}
         />
       </svg>
     );
@@ -79,70 +82,48 @@ class Canvas extends React.Component<{
   private handleOnResizeWindow = () => {
     const { setCanvasPosition } = this.props;
     const { x, y, width, height } = this.ref.current!.getBoundingClientRect();
+
     setCanvasPosition(x, y, width, height);
   };
 
-  private handleOnMouseDown = (
-    event: React.MouseEvent<SVGImageElement, MouseEvent>,
+  private handleOnDragStart = (
+    event: React.MouseEvent | React.TouchEvent,
     index: number
   ) => {
-    this.props.dragStartStickerLayer(index, event.clientX, event.clientY);
+    const { dragStartStickerLayer } = this.props;
+
+    try {
+      dragStartStickerLayer(
+        index,
+        (event as React.TouchEvent).touches[0].clientX,
+        (event as React.TouchEvent).touches[0].clientY
+      );
+    } catch (_) {
+      dragStartStickerLayer(
+        index,
+        (event as React.MouseEvent).clientX,
+        (event as React.MouseEvent).clientY
+      );
+    }
   };
 
-  private handleOnTouchStart = (
-    event: React.TouchEvent<SVGImageElement>,
-    index: number
-  ) => {
-    this.props.dragStartStickerLayer(
-      index,
-      event.touches[0].clientX,
-      event.touches[0].clientY
+  private handleOnDrag = (event: MouseEvent | TouchEvent) => {
+    const { setCursorPosition } = this.props;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    setCursorPosition(
+      event instanceof TouchEvent ? event.touches[0].clientX : event.clientX,
+      event instanceof TouchEvent ? event.touches[0].clientY : event.clientY
     );
   };
 
-  private handleOnMouseUpAndTouchEnd = () => {
-    this.props.dragEndStickerLayer();
-  };
+  private handleOnDragEnd = () => {
+    const { dragEndStickerLayer } = this.props;
 
-  private handleOnMouseMove = (event: MouseEvent) => {
-    const { setCursorPosition } = this.props;
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    setCursorPosition(event.clientX, event.clientY);
-  };
-
-  private handleOnTouchMove = (event: TouchEvent) => {
-    const { setCursorPosition } = this.props;
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    setCursorPosition(event.touches[0].clientX, event.touches[0].clientY);
+    dragEndStickerLayer();
   };
 }
 
-export default connect(
-  (state: State) => ({
-    canvas: state.canvas
-  }),
-  dispatch => ({
-    setCursorPosition(x: number, y: number) {
-      dispatch(setCursorPosition(x, y));
-    },
-    dragStartStickerLayer(
-      layerIndex: number,
-      referenceX: number,
-      referenceY: number
-    ) {
-      dispatch(dragStartStickerLayer(layerIndex, referenceX, referenceY));
-    },
-    dragEndStickerLayer() {
-      dispatch(dragEndStickerLayer());
-    },
-    setCanvasPosition(x: number, y: number, width: number, height: number) {
-      dispatch(setCanvasPosition(x, y, width, height));
-    }
-  })
-)(Canvas);
+export default connect(mapStateToProps, mapDispatchToProps)(Canvas);
