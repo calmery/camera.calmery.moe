@@ -9,6 +9,7 @@ export const CHANGE_USER_LAYER_FILTER_VALUE = "CHANGE_USER_LAYER_FILTER_VALUE" a
 export const SET_CURSOR_POSITION = "SET_CURSOR_POSITION" as const;
 export const STICKER_LAYER_DRAG_START = "STICKER_LAYER_DRAG_START" as const;
 export const STICKER_LAYER_DRAG_END = "STICKER_LAYER_DRAG_END" as const;
+export const SET_CANVAS_POSITION = "SET_CANVAS_POSITION" as const;
 
 // Actions
 
@@ -36,6 +37,16 @@ export const addUserLayer = (
     width,
     height
   }
+});
+
+export const setCanvasPosition = (
+  x: number,
+  y: number,
+  displayWidth: number,
+  displayHeight: number
+) => ({
+  type: SET_CANVAS_POSITION,
+  payload: { x, y, displayWidth, displayHeight }
 });
 
 export const dragStartStickerLayer = (
@@ -82,6 +93,7 @@ export type Actions =
   | ReturnType<typeof addStickerLayer>
   | ReturnType<typeof changeUserLayerFilterValue>
   | ReturnType<typeof setCursorPosition>
+  | ReturnType<typeof setCanvasPosition>
   | ReturnType<typeof dragStartStickerLayer>
   | ReturnType<typeof dragEndStickerLayer>
   | ReturnType<typeof addUserLayer>;

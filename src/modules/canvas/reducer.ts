@@ -10,10 +10,15 @@ import {
   SET_CURSOR_POSITION,
   Actions,
   STICKER_LAYER_DRAG_START,
-  STICKER_LAYER_DRAG_END
+  STICKER_LAYER_DRAG_END,
+  SET_CANVAS_POSITION
 } from "./actions";
 
 export type CanvasState = {
+  x: number;
+  y: number;
+  displayWidth: number;
+  displayHeight: number;
   width: number;
   height: number;
   cursorPosition: {
@@ -40,6 +45,10 @@ export type CanvasState = {
 };
 
 const initialState: CanvasState = {
+  x: 0,
+  y: 0,
+  displayWidth: 0,
+  displayHeight: 0,
   width: 0,
   height: 0,
   cursorPosition: {
@@ -56,9 +65,18 @@ const initialState: CanvasState = {
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
+    case SET_CANVAS_POSITION:
+      return {
+        ...state,
+        ...action.payload
+      };
+
     // Sticker Layers
 
-    case STICKER_LAYER_DRAG_START:
+    case STICKER_LAYER_DRAG_START: {
+      const canvasLayer = state.stickerLayers[action.payload.layerIndex];
+      const ratio = state.width / state.displayWidth;
+
       return {
         ...state,
         // 選択したレイヤーを一番上に表示するために配列の最後に移動する
@@ -68,12 +86,13 @@ export default (state = initialState, action: Actions): CanvasState => {
           ),
           state.stickerLayers[action.payload.layerIndex]
         ],
-        // 選択した StickerLayer の Canvas 上での相対位置を管理する
+        // 選択した StickerLayer の Canvas 上での相対位置を計算する
         stickerLayerReferencePositions: {
-          x: action.payload.x,
-          y: action.payload.y
+          x: canvasLayer.x - Math.round(action.payload.x * ratio - state.x),
+          y: canvasLayer.y - Math.round(action.payload.y * ratio - state.y)
         }
       };
+    }
 
     case STICKER_LAYER_DRAG_END:
       return {
@@ -84,14 +103,20 @@ export default (state = initialState, action: Actions): CanvasState => {
     //
 
     case SET_CURSOR_POSITION: {
-      const { stickerLayers, stickerLayerReferencePositions } = state;
+      const { stickerLayers, stickerLayerReferencePositions, x, y } = state;
+      const ratio = state.width / state.displayWidth;
       const partialState: Partial<CanvasState> = {};
 
       if (stickerLayerReferencePositions !== null) {
         partialState.stickerLayers = stickerLayers;
         partialState.stickerLayers[partialState.stickerLayers.length - 1] = {
           ...stickerLayers[partialState.stickerLayers.length - 1],
-          ...action.payload
+          x:
+            Math.round(action.payload.x * ratio - x) +
+            stickerLayerReferencePositions.x,
+          y:
+            Math.round(action.payload.y * ratio - y) +
+            stickerLayerReferencePositions.y
         };
       }
 
