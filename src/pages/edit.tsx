@@ -5,6 +5,7 @@ import { withRedux, NextPageContextWithRedux } from "~/modules";
 import Canvas from "~/containers/Canvas";
 import { Filters } from "~/containers/Filters";
 import { Stickers } from "~/containers/Stickers";
+import { Menu } from "~/components/Menu";
 
 const Edit: NextPage = () => (
   <>
@@ -12,6 +13,7 @@ const Edit: NextPage = () => (
     <Link href="/preview">Preview</Link>
     <Stickers />
     <Filters />
+    <Menu />
   </>
 );
 
