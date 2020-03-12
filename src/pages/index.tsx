@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { NextPage } from "next";
 import Router from "next/router";
 import blueimpLoadImage from "blueimp-load-image";
@@ -7,6 +7,7 @@ import { Button } from "~/components/Button";
 import { IconButton } from "~/components/IconButton";
 import { Image } from "~/components/Image";
 import { Page } from "~/components/Page";
+import { Modal } from "~/containers/Modal";
 import { withRedux, NextPageContextWithRedux } from "~/modules";
 import { increment } from "~/modules/counter/actions";
 import { Colors } from "~/styles/colors";
@@ -111,6 +112,7 @@ const Input = styled.input`
 
 const Home: NextPage = () => {
   const dispatch = useDispatch();
+  const [isVisible, setVisible] = useState(true);
   const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
       return;
@@ -144,6 +146,12 @@ const Home: NextPage = () => {
             A
           </IconButton>
         </Header>
+
+        <Modal visible={isVisible} onClickCloseButton={() => setVisible(false)}>
+          Modal
+        </Modal>
+
+        <button onClick={() => setVisible(true)}>Modal</button>
 
         <Logo>
           <Image src="/images/logos/camera.calmery.moe.svg" />
