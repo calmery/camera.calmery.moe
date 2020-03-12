@@ -4,6 +4,7 @@ import Router from "next/router";
 import blueimpLoadImage from "blueimp-load-image";
 import styled from "styled-components";
 import { Button } from "~/components/Button";
+import { IconButton } from "~/components/IconButton";
 import { Image } from "~/components/Image";
 import { Page } from "~/components/Page";
 import { withRedux, NextPageContextWithRedux } from "~/modules";
@@ -138,6 +139,10 @@ const Home: NextPage = () => {
       <Contents>
         <Header>
           <Image src="/images/logos/calmery.moe.svg" />
+          <IconButton onClick={() => console.log("Clicked")}>A</IconButton>
+          <IconButton clicked onClick={() => console.log("Clicked")}>
+            A
+          </IconButton>
         </Header>
 
         <Logo>
