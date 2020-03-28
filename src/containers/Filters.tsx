@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { State } from "~/modules";
-import { changeUserLayerFilterValue } from "~/modules/canvas/actions";
+import { State } from "~/domains";
+import { changeUserLayerFilterValue } from "~/domains/canvas/actions";
 
 export const Filters = () => {
   const dispatch = useDispatch();

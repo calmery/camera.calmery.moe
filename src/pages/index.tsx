@@ -8,15 +8,15 @@ import { IconButton } from "~/components/IconButton";
 import { Image } from "~/components/Image";
 import { Page } from "~/components/Page";
 import { Modal } from "~/containers/Modal";
-import { withRedux, NextPageContextWithRedux } from "~/modules";
-import { increment } from "~/modules/counter/actions";
+import { withRedux, NextPageContextWithRedux } from "~/domains";
+import { increment } from "~/domains/counter/actions";
 import { Colors } from "~/styles/colors";
 import { Media } from "~/styles/media";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 import { useDispatch } from "react-redux";
 import { Mixin } from "~/styles/mixin";
-import { addUserLayerWithDataUrl } from "~/modules/canvas/actions";
+import { addUserLayerWithDataUrl } from "~/domains/canvas/actions";
 
 const Buttons = styled.div`
   display: flex;

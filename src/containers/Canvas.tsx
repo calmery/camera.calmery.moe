@@ -3,13 +3,13 @@ import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { CanvasFilters } from "~/containers/CanvasFilters";
 import { CanvasLayers } from "~/containers/CanvasLayers";
-import { State } from "~/modules";
+import { State } from "~/domains";
 import {
   setCanvasPosition,
   setCursorPosition,
   dragStartStickerLayer,
   dragEndStickerLayer
-} from "~/modules/canvas/actions";
+} from "~/domains/canvas/actions";
 
 const mapStateToProps = ({ canvas }: State) => ({ canvas });
 
