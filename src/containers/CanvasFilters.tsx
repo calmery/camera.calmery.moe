@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { State } from "~/modules";
+import { State } from "~/domains";
 import { CanvasFilter } from "~/components/CanvasFilter";
 
 export const CanvasFilters = () => {

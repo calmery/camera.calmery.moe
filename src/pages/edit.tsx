@@ -1,7 +1,7 @@
 import React from "react";
 import { NextPage } from "next";
 import Link from "next/link";
-import { withRedux, NextPageContextWithRedux } from "~/modules";
+import { withRedux, NextPageContextWithRedux } from "~/domains";
 import Canvas from "~/containers/Canvas";
 import { Filters } from "~/containers/Filters";
 import { Stickers } from "~/containers/Stickers";

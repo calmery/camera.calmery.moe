@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import { getOrCreateStore } from "~/modules";
+import { getOrCreateStore } from "~/domains";
 import Home from "~/pages";
 
 it("Home", () => {
