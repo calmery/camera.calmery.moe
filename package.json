@@ -18,7 +18,7 @@
   "dependencies": {
     "blueimp-load-image": "2.26.0",
     "isomorphic-unfetch": "3.0.0",
-    "next": "9.3.0",
+    "next": "9.3.3",
     "react": "16.13.0",
     "react-dom": "16.13.0",
     "react-redux": "7.2.0",
