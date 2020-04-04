@@ -5,7 +5,7 @@ import { FeColorMatrix } from "~/types/FeColorMatrix";
 
 export const CanvasFilter = ({
   id,
-  filter: { blur, hueRotate, luminanceToAlpha, saturate }
+  filter: { blur, hueRotate, luminanceToAlpha, saturate },
 }: CanvasLayer & CanvasLayerEffectable) => (
   <filter id={`defs-filter-${id}`}>
     <feColorMatrix type={FeColorMatrix.hueRotate} values={`${hueRotate}`} />

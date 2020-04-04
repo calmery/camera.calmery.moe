@@ -11,7 +11,7 @@ import {
   Actions,
   STICKER_LAYER_DRAG_START,
   STICKER_LAYER_DRAG_END,
-  SET_CANVAS_POSITION
+  SET_CANVAS_POSITION,
 } from "./actions";
 
 export type CanvasState = {
@@ -53,14 +53,14 @@ const initialState: CanvasState = {
   height: 0,
   cursorPosition: {
     x: 0,
-    y: 0
+    y: 0,
   },
   stickerLayerReferencePositions: null,
   addableStickerUrls: [],
   essentialLayers: [],
   stickerLayers: [],
   userLayers: [],
-  userLayerClipPaths: []
+  userLayerClipPaths: [],
 };
 
 export default (state = initialState, action: Actions): CanvasState => {
@@ -68,7 +68,7 @@ export default (state = initialState, action: Actions): CanvasState => {
     case SET_CANVAS_POSITION:
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
 
     // Sticker Layers
@@ -84,20 +84,20 @@ export default (state = initialState, action: Actions): CanvasState => {
           ...state.stickerLayers.filter(
             (_, index) => index !== action.payload.layerIndex
           ),
-          state.stickerLayers[action.payload.layerIndex]
+          state.stickerLayers[action.payload.layerIndex],
         ],
         // 選択した StickerLayer の Canvas 上での相対位置を計算する
         stickerLayerReferencePositions: {
           x: canvasLayer.x - Math.round(action.payload.x * ratio - state.x),
-          y: canvasLayer.y - Math.round(action.payload.y * ratio - state.y)
-        }
+          y: canvasLayer.y - Math.round(action.payload.y * ratio - state.y),
+        },
       };
     }
 
     case STICKER_LAYER_DRAG_END:
       return {
         ...state,
-        stickerLayerReferencePositions: null
+        stickerLayerReferencePositions: null,
       };
 
     //
@@ -116,14 +116,14 @@ export default (state = initialState, action: Actions): CanvasState => {
             stickerLayerReferencePositions.x,
           y:
             Math.round(action.payload.y * ratio - y) +
-            stickerLayerReferencePositions.y
+            stickerLayerReferencePositions.y,
         };
       }
 
       return {
         ...state,
         ...partialState,
-        cursorPosition: action.payload
+        cursorPosition: action.payload,
       };
     }
 
@@ -135,20 +135,20 @@ export default (state = initialState, action: Actions): CanvasState => {
         ...userLayer,
         filter: {
           ...userLayer.filter,
-          [action.payload.type]: action.payload.value
-        }
+          [action.payload.type]: action.payload.value,
+        },
       };
 
       return {
         ...state,
-        userLayers
+        userLayers,
       };
     }
 
     case ADD_ADDABLE_STICKER_URLS:
       return {
         ...state,
-        addableStickerUrls: action.payload
+        addableStickerUrls: action.payload,
       };
 
     case ADD_STICKER_LAYER:
@@ -164,10 +164,10 @@ export default (state = initialState, action: Actions): CanvasState => {
             transform: {
               flip: false,
               rotate: 0,
-              scale: 1
-            }
-          }
-        ]
+              scale: 1,
+            },
+          },
+        ],
       };
 
     case ADD_USER_LAYER:
@@ -185,15 +185,15 @@ export default (state = initialState, action: Actions): CanvasState => {
             transform: {
               flip: false,
               rotate: 0,
-              scale: 1
+              scale: 1,
             },
             filter: {
               blur: 0,
               hueRotate: 0,
               luminanceToAlpha: false,
-              saturate: 1
-            }
-          }
+              saturate: 1,
+            },
+          },
         ],
         userLayerClipPaths: [
           ...state.userLayerClipPaths,
@@ -202,9 +202,9 @@ export default (state = initialState, action: Actions): CanvasState => {
             x: 0,
             y: 0,
             width: action.payload.width,
-            height: action.payload.height
-          }
-        ]
+            height: action.payload.height,
+          },
+        ],
       };
 
     default:

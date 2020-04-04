@@ -7,7 +7,7 @@ export const CanvasStickerLayers = ({
   onMouseDown,
   onMouseUp,
   onTouchStart,
-  onTouchEnd
+  onTouchEnd,
 }: {
   stickerLayers: (CanvasLayer & CanvasLayerTransformable)[];
   onMouseDown: (
@@ -33,14 +33,14 @@ export const CanvasStickerLayers = ({
           xlinkHref={base64}
           width={width}
           height={height}
-          transform={`translate(${x}, ${y}) scale(${scale *
-            (flip ? -1 : 1)}, ${scale}) rotate(${rotate} ${width / 2} ${height /
-            2})`}
+          transform={`translate(${x}, ${y}) scale(${
+            scale * (flip ? -1 : 1)
+          }, ${scale}) rotate(${rotate} ${width / 2} ${height / 2})`}
           key={index}
-          onMouseDown={e => onMouseDown(e, index)}
-          onMouseUp={e => onMouseUp(e, index)}
-          onTouchStart={e => onTouchStart(e, index)}
-          onTouchEnd={e => onTouchEnd(e, index)}
+          onMouseDown={(e) => onMouseDown(e, index)}
+          onMouseUp={(e) => onMouseUp(e, index)}
+          onTouchStart={(e) => onTouchStart(e, index)}
+          onTouchEnd={(e) => onTouchEnd(e, index)}
         />
       );
     })}

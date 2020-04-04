@@ -22,8 +22,8 @@ export const addStickerLayer = (
   payload: {
     base64,
     width,
-    height
-  }
+    height,
+  },
 });
 
 export const addUserLayer = (
@@ -35,8 +35,8 @@ export const addUserLayer = (
   payload: {
     base64,
     width,
-    height
-  }
+    height,
+  },
 });
 
 export const setCanvasPosition = (
@@ -46,7 +46,7 @@ export const setCanvasPosition = (
   displayHeight: number
 ) => ({
   type: SET_CANVAS_POSITION,
-  payload: { x, y, displayWidth, displayHeight }
+  payload: { x, y, displayWidth, displayHeight },
 });
 
 export const dragStartStickerLayer = (
@@ -55,24 +55,24 @@ export const dragStartStickerLayer = (
   y: number
 ) => ({
   type: STICKER_LAYER_DRAG_START,
-  payload: { layerIndex, x, y }
+  payload: { layerIndex, x, y },
 });
 
 export const dragEndStickerLayer = () => ({
-  type: STICKER_LAYER_DRAG_END
+  type: STICKER_LAYER_DRAG_END,
 });
 
 export const setCursorPosition = (x: number, y: number) => ({
   type: SET_CURSOR_POSITION,
   payload: {
     x,
-    y
-  }
+    y,
+  },
 });
 
 export const addAddableStickerUrls = (addableStickerUrls: string[]) => ({
   type: ADD_ADDABLE_STICKER_URLS,
-  payload: addableStickerUrls
+  payload: addableStickerUrls,
 });
 
 export const changeUserLayerFilterValue = (
@@ -84,8 +84,8 @@ export const changeUserLayerFilterValue = (
   payload: {
     index,
     type,
-    value
-  }
+    value,
+  },
 });
 
 export type Actions =

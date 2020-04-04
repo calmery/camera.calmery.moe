@@ -122,7 +122,7 @@ const Home: NextPage = () => {
 
     blueimpLoadImage(
       file,
-      async canvas => {
+      async (canvas) => {
         try {
           await dispatch(
             addUserLayerWithDataUrl((canvas as HTMLCanvasElement).toDataURL())

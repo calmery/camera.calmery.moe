@@ -2,7 +2,7 @@ import React from "react";
 import { CanvasLayer } from "~/types/CanvasLayer";
 
 export const CanvasEssentialLayers = ({
-  essentialLayers
+  essentialLayers,
 }: {
   essentialLayers: CanvasLayer[];
 }) => {

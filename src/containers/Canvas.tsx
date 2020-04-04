@@ -8,7 +8,7 @@ import {
   setCanvasPosition,
   setCursorPosition,
   dragStartStickerLayer,
-  dragEndStickerLayer
+  dragEndStickerLayer,
 } from "~/domains/canvas/actions";
 
 const mapStateToProps = ({ canvas }: State) => ({ canvas });
@@ -25,7 +25,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   dragEndStickerLayer() {
     dispatch(dragEndStickerLayer());
-  }
+  },
 });
 
 class Canvas extends React.Component<
