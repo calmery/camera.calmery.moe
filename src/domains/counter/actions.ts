@@ -3,11 +3,11 @@ export const DECREMENT = "DECREMENT" as const;
 
 export const increment = (count: number) => ({
   type: INCREMENT,
-  payload: { count }
+  payload: { count },
 });
 
 export const decrement = () => ({
-  type: DECREMENT
+  type: DECREMENT,
 });
 
 export type Actions =

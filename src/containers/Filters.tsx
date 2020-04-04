@@ -50,7 +50,7 @@ export const Filters = () => {
               min="0"
               max="359"
               defaultValue={userLayer.filter.hueRotate}
-              onChange={event => {
+              onChange={(event) => {
                 onChangeHueRotate(index, parseInt(event.target.value, 10));
               }}
             />

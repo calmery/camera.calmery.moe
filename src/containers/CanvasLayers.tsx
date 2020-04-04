@@ -24,7 +24,7 @@ export const CanvasLayers = (props: {
     userLayers,
     stickerLayers,
     essentialLayers,
-    userLayerClipPaths
+    userLayerClipPaths,
   } = useSelector(({ canvas }: State) => canvas);
 
   return (

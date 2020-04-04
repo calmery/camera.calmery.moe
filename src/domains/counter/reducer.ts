@@ -5,7 +5,7 @@ export type CounterState = {
 };
 
 const initialState: CounterState = {
-  count: 0
+  count: 0,
 };
 
 export default (state = initialState, action: Actions) => {

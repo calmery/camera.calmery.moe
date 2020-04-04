@@ -5,7 +5,7 @@ import { CanvasLayerEffectable } from "~/types/CanvasLayerEffectable";
 
 export const CanvasUserLayers = ({
   userLayers,
-  userLayerClipPaths
+  userLayerClipPaths,
 }: {
   userLayers: (CanvasLayer &
     CanvasLayerTransformable &
@@ -41,11 +41,11 @@ export const CanvasUserLayers = ({
               xlinkHref={base64}
               width={width}
               height={height}
-              transform={`translate(${x}, ${y}) scale(${scale *
-                (flip
-                  ? -1
-                  : 1)}, ${scale}) rotate(${rotate} ${userLayerClipPaths[index]
-                .width / 2} ${userLayerClipPaths[index].height / 2})`}
+              transform={`translate(${x}, ${y}) scale(${
+                scale * (flip ? -1 : 1)
+              }, ${scale}) rotate(${rotate} ${
+                userLayerClipPaths[index].width / 2
+              } ${userLayerClipPaths[index].height / 2})`}
             />
           </g>
         </React.Fragment>

@@ -27,7 +27,7 @@ export const convertUrlToDataUrl = (
       resolve({
         base64: canvas.toDataURL("image/png"),
         width,
-        height
+        height,
       });
     };
 
