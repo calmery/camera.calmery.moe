@@ -1,18 +1,23 @@
 import { css } from "styled-components";
 
+const ANIMATION_DURATION = {
+  seconds: 0.4,
+  milliseconds: 400,
+};
+
 const animation = css`
-  transition: ease 0.4s;
+  transition: ease ${ANIMATION_DURATION.seconds}s;
   animation-fill-mode: forwards;
-  animation-duration: 0.4s;
+  animation-duration: ${ANIMATION_DURATION.seconds}s;
 `;
 
 const clickable = css`
   cursor: pointer;
-  transition: 0.4s ease;
+  transition: ${ANIMATION_DURATION.seconds}s ease;
 
   &:hover {
     transform: scale(1.06);
   }
 `;
 
-export const Mixin = { animation, clickable };
+export const Mixin = { ANIMATION_DURATION, animation, clickable };

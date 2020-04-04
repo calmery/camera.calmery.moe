@@ -112,7 +112,7 @@ const Input = styled.input`
 
 const Home: NextPage = () => {
   const dispatch = useDispatch();
-  const [isVisible, setVisible] = useState(true);
+  const [isVisible, setVisible] = useState(false);
   const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
       return;
@@ -141,7 +141,7 @@ const Home: NextPage = () => {
       <Contents>
         <Header>
           <Image src="/images/logos/calmery.moe.svg" />
-          <IconButton onClick={() => console.log("Clicked")}>A</IconButton>
+          <IconButton onClick={() => setVisible(true)}>A</IconButton>
           <IconButton clicked onClick={() => console.log("Clicked")}>
             A
           </IconButton>

@@ -229,12 +229,21 @@ export const Modal: React.FC<ModalProps> = ({
   onClickCloseButton,
   visible,
 }: ModalProps) => {
+  const [isFirstUpdate, setFirstUpdate] = useState(true);
   const [isAnimationCompleted, setIsAnimationCompleted] = useState(true);
 
   useLayoutEffect(() => {
+    if (isFirstUpdate) {
+      setFirstUpdate(false);
+      return;
+    }
+
     setIsAnimationCompleted(false);
 
-    const animationTimer = setTimeout(() => setIsAnimationCompleted(true), 400);
+    const animationTimer = setTimeout(
+      () => setIsAnimationCompleted(true),
+      Mixin.ANIMATION_DURATION.milliseconds
+    );
     return () => clearTimeout(animationTimer);
   }, [visible]);
 
