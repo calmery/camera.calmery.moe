@@ -16,7 +16,6 @@ import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 import { useDispatch } from "react-redux";
 import { Mixin } from "~/styles/mixin";
-import { addUserLayerWithDataUrl } from "~/domains/canvas/actions";
 
 const Buttons = styled.div`
   display: flex;
@@ -124,9 +123,9 @@ const Home: NextPage = () => {
       file,
       async (canvas) => {
         try {
-          await dispatch(
-            addUserLayerWithDataUrl((canvas as HTMLCanvasElement).toDataURL())
-          );
+          // await dispatch(
+          //   addUserLayerWithDataUrl((canvas as HTMLCanvasElement).toDataURL())
+          // );
           Router.push("/edit");
         } catch (_) {
           // ToDo: 読み込みに失敗した
