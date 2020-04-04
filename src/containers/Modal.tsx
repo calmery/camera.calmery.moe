@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import styled, { css } from "styled-components";
 import { Colors, GradientColors } from "~/styles/colors";
 import { Constants } from "~/styles/constants";
