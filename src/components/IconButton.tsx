@@ -59,7 +59,7 @@ type IconButtonProps = {
 export const IconButton: React.FC<IconButtonProps> = ({
   children,
   clicked = false,
-  onClick
+  onClick,
 }: IconButtonProps) => {
   if (!children) {
     return null;
