@@ -11,15 +11,15 @@ class Document extends NextDocument {
     try {
       context.renderPage = () =>
         originalRenderPage({
-          enhanceApp: App => props =>
-            serverStyleSheet.collectStyles(<App {...props} />)
+          enhanceApp: (App) => (props) =>
+            serverStyleSheet.collectStyles(<App {...props} />),
         });
 
       const initialProps = await NextDocument.getInitialProps(context);
 
       return {
         ...initialProps,
-        styles: [initialProps.styles, serverStyleSheet.getStyleElement()]
+        styles: [initialProps.styles, serverStyleSheet.getStyleElement()],
       };
     } finally {
       serverStyleSheet.seal();

@@ -5,7 +5,7 @@ import {
   combineReducers,
   applyMiddleware,
   Store,
-  AnyAction
+  AnyAction,
 } from "redux";
 import logger from "redux-logger";
 import reduxThunk, { ThunkDispatch } from "redux-thunk";
@@ -32,7 +32,7 @@ export const getOrCreateStore = (state?: State) => {
   cachedStore = createStore(
     combineReducers({
       canvas,
-      counter
+      counter,
     }),
     state,
     applyMiddleware(
@@ -57,7 +57,7 @@ export type NextPageContextWithRedux = NextPageContext & {
 export const withRedux = (Component: NextPage) => {
   const WithRedux = ({
     props = {},
-    state
+    state,
   }: {
     props?: object;
     state?: State;

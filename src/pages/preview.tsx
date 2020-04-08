@@ -4,10 +4,7 @@ import { withRedux, NextPageContextWithRedux } from "~/domains";
 import Canvas from "~/containers/Canvas";
 
 const convertDataUrlToBlob = (dataUrl: string) => {
-  const type = dataUrl
-    .split(",")[0]
-    .split(":")[1]
-    .split(";")[0];
+  const type = dataUrl.split(",")[0].split(":")[1].split(";")[0];
   const decodedData = atob(dataUrl.split(",")[1]);
   const buffer = new Uint8Array(decodedData.length);
   for (let i = 0; i < decodedData.length; i++) {
