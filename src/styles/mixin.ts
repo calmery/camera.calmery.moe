@@ -2,7 +2,7 @@ import { css } from "styled-components";
 
 const ANIMATION_DURATION = {
   seconds: 0.4,
-  milliseconds: 400,
+  milliseconds: 400
 };
 
 const animation = css`

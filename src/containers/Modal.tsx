@@ -227,7 +227,7 @@ type ModalProps = {
 export const Modal: React.FC<ModalProps> = ({
   children,
   onClickCloseButton,
-  visible,
+  visible
 }: ModalProps) => {
   const [isFirstUpdate, setFirstUpdate] = useState(true);
   const [isAnimationCompleted, setIsAnimationCompleted] = useState(true);

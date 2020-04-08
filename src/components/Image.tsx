@@ -12,7 +12,7 @@ type ImageProps = {
 
 export const Image: React.FC<ImageProps> = ({
   src,
-  webp = false,
+  webp = false
 }: ImageProps) => (
   <picture>
     {webp && <source srcSet={`${src}.webp`} type="image/webp" />}
