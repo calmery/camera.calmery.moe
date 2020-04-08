@@ -1,6 +1,7 @@
 import React from "react";
 import NextApp from "next/app";
 import { createGlobalStyle } from "styled-components";
+import "~/helpers/sentry";
 
 export const GlobalStyle = createGlobalStyle`
   html, body, #__next {
