@@ -6,10 +6,10 @@ export const Colors = {
   lightGray: "#F0F0F0",
   pink: "#FF91BE",
   white: "#FFFFFF",
-  border: "#F5F5F5",
+  border: "#F5F5F5"
 };
 
 export const GradientColors = {
   page: `linear-gradient(135deg, ${Colors.white}, #FAFAFA)`,
-  pinkToBlue: `linear-gradient(135deg, ${Colors.pink}, ${Colors.blue})`,
+  pinkToBlue: `linear-gradient(135deg, ${Colors.pink}, ${Colors.blue})`
 };
