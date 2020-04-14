@@ -7,20 +7,23 @@ export const REMOVE_USER_IMAGE = "REMOVE_USER_IMAGE" as const;
 // Actions
 
 export const addUserImage = (
+  index: number,
   dataUrl: string,
   width: number,
   height: number
 ) => ({
   type: ADD_USER_IMAGE,
   payload: {
+    index,
     dataUrl,
     width,
     height,
   },
 });
 
-export const removeUserImage = () => ({
+export const removeUserImage = (index: number) => ({
   type: REMOVE_USER_IMAGE,
+  payload: { index },
 });
 
 // Redux Thunk
@@ -37,7 +40,7 @@ const convertUrlToImage = (url: string): Promise<HTMLImageElement> => {
 };
 
 // TODO: `blueimpLoadImage` のエラー処理をちゃんとする
-export const addUserImageFromFile = (file: File) => {
+export const addUserImageFromFile = (file: File, index: number) => {
   return (dispatch: Dispatch) => {
     return new Promise((resolve) => {
       blueimpLoadImage(
@@ -46,7 +49,7 @@ export const addUserImageFromFile = (file: File) => {
           const dataUrl = (canvas as HTMLCanvasElement).toDataURL();
           const { width, height } = await convertUrlToImage(dataUrl);
 
-          dispatch(addUserImage(dataUrl, width, height));
+          dispatch(addUserImage(index, dataUrl, width, height));
 
           resolve();
         },
