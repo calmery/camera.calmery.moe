@@ -23,6 +23,7 @@ const Edit: NextPage = () => (
   </>
 );
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 Edit.getInitialProps = async (_: NextPageContextWithRedux) => {
   // ToDo
 };
