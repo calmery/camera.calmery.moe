@@ -1,13 +1,24 @@
 import React from "react";
 import { NextPage } from "next";
-import Link from "next/link";
 import { withRedux, NextPageContextWithRedux } from "~/domains";
 import Canvas from "~/containers/Canvas";
 import { Menu } from "~/components/Menu";
+import styled from "styled-components";
+
+const Container = styled.div`
+  height: 1000px;
+  text-align: center;
+
+  svg {
+    height: 100%;
+  }
+`;
 
 const Edit: NextPage = () => (
   <>
-    <Canvas />
+    <Container>
+      <Canvas />
+    </Container>
     <Menu />
   </>
 );
