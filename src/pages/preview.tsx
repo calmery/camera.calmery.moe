@@ -60,7 +60,7 @@ const Preview: NextPage = () => {
     }
 
     const dataUrl = await convertSvgToDataUrl(
-      ref.current!.innerHTML,
+      ref.current.innerHTML,
       2000,
       1420
     );
@@ -77,6 +77,7 @@ const Preview: NextPage = () => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 Preview.getInitialProps = async (_: NextPageContextWithRedux) => {
   // ToDo
 };

@@ -14,7 +14,6 @@ import { Colors } from "~/styles/colors";
 import { Media } from "~/styles/media";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
-import { useDispatch } from "react-redux";
 import { Mixin } from "~/styles/mixin";
 
 const Buttons = styled.div`
@@ -110,7 +109,6 @@ const Input = styled.input`
 `;
 
 const Home: NextPage = () => {
-  const dispatch = useDispatch();
   const [isVisible, setVisible] = useState(false);
   const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
@@ -121,11 +119,8 @@ const Home: NextPage = () => {
 
     blueimpLoadImage(
       file,
-      async (canvas) => {
+      async () => {
         try {
-          // await dispatch(
-          //   addUserLayerWithDataUrl((canvas as HTMLCanvasElement).toDataURL())
-          // );
           Router.push("/edit");
         } catch (_) {
           // ToDo: 読み込みに失敗した

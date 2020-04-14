@@ -1,39 +1,23 @@
 import * as uuid from "uuid";
 import { Actions, ADD_USER_IMAGE, REMOVE_USER_IMAGE } from "./actions";
-
-export type CanvasUserLayer = {
-  dataUrl: string;
-  width: number;
-  height: number;
-};
-
-export type CanvasUserClipPath = {
-  id: string;
-  width: number;
-  height: number;
-  x: number;
-  y: number;
-  d: string;
-};
+import { CanvasUserFrame } from "~/types/CanvasUserFrame";
+import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 
 export type CanvasState = {
   width: number;
   height: number;
+  frames: {
+    users: CanvasUserFrame[];
+  };
   layers: {
     users: (CanvasUserLayer | null)[];
-  };
-  clipPaths: {
-    users: CanvasUserClipPath[];
   };
 };
 
 const initialState: CanvasState = {
   width: 900,
   height: 1200,
-  layers: {
-    users: [],
-  },
-  clipPaths: {
+  frames: {
     users: [
       {
         id: uuid.v4(),
@@ -41,7 +25,9 @@ const initialState: CanvasState = {
         height: 612,
         x: 24,
         y: 24,
-        d: "M0 0H852V519.623L0 612V0Z",
+        clipPath: {
+          d: "M0 0H852V519.623L0 612V0Z",
+        },
       },
       {
         id: uuid.v4(),
@@ -49,47 +35,46 @@ const initialState: CanvasState = {
         height: 612,
         x: 24,
         y: 564,
-        d: "M0 96L852 0V612H0V96Z",
+        clipPath: {
+          d: "M0 96L852 0V612H0V96Z",
+        },
       },
     ],
+  },
+  layers: {
+    users: [],
   },
 };
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
     case ADD_USER_IMAGE: {
-      const { layers } = state;
-      const users = [];
+      const userFrames = state.frames.users;
+      const userLayers = state.layers.users;
+      const nextUserLayers = [];
 
-      for (let i = 0; i < state.clipPaths.users.length; i++) {
-        users[i] = state.layers.users[i] || null;
-      }
-
-      users[action.payload.index] = action.payload;
+      userFrames.forEach((_, i) => (nextUserLayers[i] = userLayers[i] || null));
+      nextUserLayers[action.payload.index] = action.payload;
 
       return {
         ...state,
         layers: {
-          ...layers,
-          users,
+          ...state.layers,
+          users: nextUserLayers,
         },
       };
     }
 
     case REMOVE_USER_IMAGE: {
-      const { layers } = state;
+      const userLayers = state.layers.users;
 
       return {
         ...state,
         layers: {
-          ...layers,
-          users: layers.users.map((layer, i) => {
-            if (i === action.payload.index) {
-              return null;
-            }
-
-            return layer;
-          }),
+          ...state.layers,
+          users: userLayers.map((userLayer, i) =>
+            i === action.payload.index ? null : userLayer
+          ),
         },
       };
     }
