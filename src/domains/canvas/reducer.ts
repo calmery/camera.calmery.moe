@@ -56,7 +56,6 @@ const initialState: CanvasState = {
 };
 
 export default (state = initialState, action: Actions): CanvasState => {
-  console.log(action);
   switch (action.type) {
     case ADD_USER_IMAGE: {
       const { layers } = state;
