@@ -2,7 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { State } from "~/domains";
-import { addUserImageFromFile, Actions } from "~/domains/canvas/actions";
+import {
+  addUserImageFromFile,
+  removeUserImage,
+  Actions,
+} from "~/domains/canvas/actions";
 import { CanvasUserLayer, CanvasUserClipPath } from "~/domains/canvas/reducer";
 
 // Styled-Components
@@ -11,8 +15,11 @@ import { CanvasUserLayer, CanvasUserClipPath } from "~/domains/canvas/reducer";
 
 const mapStateToProps = ({ canvas }: State) => ({ canvas });
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Actions>) => ({
-  addUserImageFromFile(file: File) {
-    dispatch(addUserImageFromFile(file));
+  addUserImageFromFile(file: File, index: number) {
+    dispatch(addUserImageFromFile(file, index));
+  },
+  removeUserImage(index: number) {
+    dispatch(removeUserImage(index));
   },
 });
 
@@ -24,7 +31,7 @@ class Canvas extends React.Component<
   private ref: React.RefObject<HTMLInputElement> = React.createRef();
 
   public render = () => {
-    const { width, height } = this.props.canvas;
+    const { width, height, layers } = this.props.canvas;
 
     return (
       <>
@@ -42,6 +49,13 @@ class Canvas extends React.Component<
           onChange={this.handleOnClickInput}
           accept="image/*"
         />
+        {layers.users.map((layer, index: number) =>
+          layer ? (
+            <button onClick={() => this.handleOnClockRemoveImageButton(index)}>
+              Remove: {index}
+            </button>
+          ) : null
+        )}
       </>
     );
   };
@@ -51,13 +65,14 @@ class Canvas extends React.Component<
   private renderCanvasUserLayers = () => {
     const { layers, clipPaths } = this.props.canvas;
     return clipPaths.users.map((_, i: number) =>
-      this.renderCanvasUserLayer(layers.users[i], clipPaths.users[i])
+      this.renderCanvasUserLayer(layers.users[i], clipPaths.users[i], i)
     );
   };
 
   private renderCanvasUserLayer = (
     canvasUserLayer: CanvasUserLayer | null,
-    clipPath: CanvasUserClipPath
+    clipPath: CanvasUserClipPath,
+    index: number
   ) => {
     return (
       <svg
@@ -68,6 +83,7 @@ class Canvas extends React.Component<
         viewBox={`0 0 ${clipPath.width} ${clipPath.height}`}
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
+        key={index}
       >
         <clipPath id={`clip-path-${clipPath.id}`}>
           <path d={clipPath.d} />
@@ -75,7 +91,7 @@ class Canvas extends React.Component<
 
         <g clipPath={`url(#clip-path-${clipPath.id})`}>
           {!canvasUserLayer && (
-            <g onClick={this.handOnClickEmptyImage}>
+            <g onClick={() => this.handOnClickEmptyImage(index)}>
               <rect
                 x="0"
                 y="0"
@@ -131,9 +147,16 @@ class Canvas extends React.Component<
 
   // Events
 
-  private handOnClickEmptyImage = () => {
+  private handOnClickEmptyImage = (index: number) => {
     const { ref } = this;
+    ref.current!.setAttribute("data-index", index.toString());
     ref.current!.click();
+  };
+
+  private handleOnClockRemoveImageButton = (index: number) => {
+    const { removeUserImage } = this.props;
+
+    removeUserImage(index);
   };
 
   private handleOnClickInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,7 +167,10 @@ class Canvas extends React.Component<
       return;
     }
 
-    addUserImageFromFile(files[0]);
+    addUserImageFromFile(
+      files[0],
+      parseInt(event.target.getAttribute("data-index")!, 10)
+    );
   };
 }
 

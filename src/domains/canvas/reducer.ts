@@ -1,5 +1,5 @@
 import * as uuid from "uuid";
-import { Actions, ADD_USER_IMAGE } from "./actions";
+import { Actions, ADD_USER_IMAGE, REMOVE_USER_IMAGE } from "./actions";
 
 export type CanvasUserLayer = {
   dataUrl: string;
@@ -60,12 +60,37 @@ export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
     case ADD_USER_IMAGE: {
       const { layers } = state;
+      const users = [];
+
+      for (let i = 0; i < state.clipPaths.users.length; i++) {
+        users[i] = state.layers.users[i] || null;
+      }
+
+      users[action.payload.index] = action.payload;
 
       return {
         ...state,
         layers: {
           ...layers,
-          users: [...layers.users, action.payload],
+          users,
+        },
+      };
+    }
+
+    case REMOVE_USER_IMAGE: {
+      const { layers } = state;
+
+      return {
+        ...state,
+        layers: {
+          ...layers,
+          users: layers.users.map((layer, i) => {
+            if (i === action.payload.index) {
+              return null;
+            }
+
+            return layer;
+          }),
         },
       };
     }
