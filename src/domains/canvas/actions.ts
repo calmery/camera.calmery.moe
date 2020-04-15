@@ -3,6 +3,10 @@ import blueimpLoadImage from "blueimp-load-image";
 
 export const ADD_USER_IMAGE = "ADD_USER_IMAGE" as const;
 export const REMOVE_USER_IMAGE = "REMOVE_USER_IMAGE" as const;
+export const UPDATE_DISPLAY_RATIO = "UPDATE_DISPLAY_RATIO" as const;
+export const UPDATE_CANVAS_LAYER_POSITION = "UPDATE_CANVAS_LAYER_POSITION" as const;
+export const SET_CANVAS_USER_LAYER_STARTING_POSITION = "SET_CANVAS_USER_LAYER_STARTING_POSITION" as const;
+export const RESET_ALL_FLAGS = "RESET_ALL_FLAGS" as const;
 
 // Actions
 
@@ -21,9 +25,36 @@ export const addUserImage = (
   },
 });
 
+export const resetAllFlags = () => ({
+  type: RESET_ALL_FLAGS,
+});
+
 export const removeUserImage = (index: number) => ({
   type: REMOVE_USER_IMAGE,
   payload: { index },
+});
+
+export const updateDisplayRatio = (displayWidth: number) => ({
+  type: UPDATE_DISPLAY_RATIO,
+  payload: { displayWidth },
+});
+
+export const updateCanvasUserLayerPosition = (
+  index: number,
+  nextX: number,
+  nextY: number
+) => ({
+  type: UPDATE_CANVAS_LAYER_POSITION,
+  payload: { index, nextX, nextY },
+});
+
+export const setCanvasUserLayerStartingPosition = (
+  index: number,
+  differenceFromStartingX: number,
+  differenceFromStartingY: number
+) => ({
+  type: SET_CANVAS_USER_LAYER_STARTING_POSITION,
+  payload: { index, differenceFromStartingX, differenceFromStartingY },
 });
 
 // Redux Thunk
@@ -63,4 +94,8 @@ export const addUserImageFromFile = (file: File, index: number) => {
 
 export type Actions =
   | ReturnType<typeof addUserImage>
-  | ReturnType<typeof removeUserImage>;
+  | ReturnType<typeof removeUserImage>
+  | ReturnType<typeof updateDisplayRatio>
+  | ReturnType<typeof updateCanvasUserLayerPosition>
+  | ReturnType<typeof setCanvasUserLayerStartingPosition>
+  | ReturnType<typeof resetAllFlags>;

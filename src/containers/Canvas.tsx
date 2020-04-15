@@ -13,6 +13,9 @@ const mapDispatchToProps = (
   dispatch: ThunkDispatch<{}, {}, actions.Actions>
 ) => ({
   removeUserImage: (index: number) => dispatch(actions.removeUserImage(index)),
+  updateDisplayRatio: (displayWidth: number) =>
+    dispatch(actions.updateDisplayRatio(displayWidth)),
+  resetAllFlags: () => dispatch(actions.resetAllFlags()),
 });
 
 // Main
@@ -20,8 +23,27 @@ const mapDispatchToProps = (
 class Canvas extends React.Component<
   ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 > {
+  private ref = React.createRef<SVGSVGElement>();
+
+  public componentDidMount = () => {
+    const s = this.ref.current!;
+    const options = { passive: false };
+    s.addEventListener("mouseup", this.handleOnOut, options);
+    s.addEventListener("mouseout", this.handleOnOut, options);
+    window.addEventListener("resize", this.handleOnResizeWindow);
+
+    this.handleOnResizeWindow();
+  };
+
+  public componentWillUnmount = () => {
+    const s = this.ref.current!;
+    s.removeEventListener("mouseup", this.handleOnOut);
+    s.removeEventListener("mouseout", this.handleOnOut);
+    window.removeEventListener("resize", this.handleOnResizeWindow);
+  };
+
   public render = () => {
-    const { width, height, layers } = this.props;
+    const { width, height } = this.props;
 
     return (
       <>
@@ -29,6 +51,7 @@ class Canvas extends React.Component<
           viewBox={`0 0 ${width} ${height}`}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
+          ref={this.ref}
         >
           <CanvasUserLayers />
         </svg>
@@ -55,6 +78,20 @@ class Canvas extends React.Component<
   private handleOnClockRemoveImageButton = (index: number) => {
     const { removeUserImage } = this.props;
     removeUserImage(index);
+  };
+
+  private handleOnResizeWindow = () => {
+    const { updateDisplayRatio } = this.props;
+    const s = this.ref.current!;
+    const { width } = s.getBoundingClientRect();
+
+    updateDisplayRatio(width);
+  };
+
+  private handleOnOut = () => {
+    const { resetAllFlags } = this.props;
+
+    resetAllFlags();
   };
 }
 
