@@ -17,6 +17,7 @@ export const getImageFile = (): Promise<File> => {
     };
 
     input.addEventListener("change", callback, false);
+    document.body.appendChild(input);
     input.click();
   });
 };
