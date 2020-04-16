@@ -3,6 +3,7 @@ import { NextPage } from "next";
 import { withRedux, NextPageContextWithRedux } from "~/domains";
 import Canvas from "~/containers/Canvas";
 import { Menu } from "~/components/Menu";
+import { Filters } from "~/containers/Filters";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -19,6 +20,7 @@ const Edit: NextPage = () => (
     <Container>
       <Canvas />
     </Container>
+    <Filters />
     <Menu />
   </>
 );

@@ -7,6 +7,7 @@ import {
   UPDATE_DISPLAY_RATIO,
   SET_CANVAS_USER_LAYER_STARTING_POSITION,
   UPDATE_CANVAS_LAYER_POSITION,
+  CHANGE_USER_LAYER_FILTER_VALUE,
 } from "./actions";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
@@ -71,6 +72,12 @@ export default (state = initialState, action: Actions): CanvasState => {
         isDragging: false,
         differenceFromStartingX: 0,
         differenceFromStartingY: 0,
+        filter: {
+          blur: 0,
+          hueRotate: 0,
+          luminanceToAlpha: false,
+          saturate: 1,
+        },
       };
 
       return {
@@ -170,6 +177,26 @@ export default (state = initialState, action: Actions): CanvasState => {
           ...state.layers,
           users: nextUsers,
         },
+      };
+    }
+
+    case CHANGE_USER_LAYER_FILTER_VALUE: {
+      const { layers } = state;
+      const userLayer = layers.users[action.payload.index];
+
+      if (userLayer) {
+        layers.users[action.payload.index] = {
+          ...userLayer,
+          filter: {
+            ...userLayer.filter,
+            [action.payload.type]: action.payload.value,
+          },
+        };
+      }
+
+      return {
+        ...state,
+        layers,
       };
     }
 

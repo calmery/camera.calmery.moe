@@ -65,7 +65,7 @@ export default class CUL extends React.Component<{
   };
 
   private renderImage = () => {
-    const { layer } = this.props;
+    const { frame, layer } = this.props;
 
     return (
       <svg
@@ -79,7 +79,12 @@ export default class CUL extends React.Component<{
         overflow="visible"
       >
         <g transform={`rotate(0, ${layer.width / 2}, ${layer.height / 2})`}>
-          <image xlinkHref={layer.dataUrl} width="100%" height="100%" />
+          <image
+            xlinkHref={layer.dataUrl}
+            width="100%"
+            height="100%"
+            filter={`url(#filter-${frame.id})`}
+          />
         </g>
       </svg>
     );
