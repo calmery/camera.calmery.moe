@@ -1,5 +1,6 @@
 import { Dispatch } from "redux";
 import blueimpLoadImage from "blueimp-load-image";
+import { FeColorMatrix } from "~/types/FeColorMatrix";
 
 export const ADD_USER_IMAGE = "ADD_USER_IMAGE" as const;
 export const REMOVE_USER_IMAGE = "REMOVE_USER_IMAGE" as const;
@@ -7,6 +8,7 @@ export const UPDATE_DISPLAY_RATIO = "UPDATE_DISPLAY_RATIO" as const;
 export const UPDATE_CANVAS_LAYER_POSITION = "UPDATE_CANVAS_LAYER_POSITION" as const;
 export const SET_CANVAS_USER_LAYER_STARTING_POSITION = "SET_CANVAS_USER_LAYER_STARTING_POSITION" as const;
 export const RESET_ALL_FLAGS = "RESET_ALL_FLAGS" as const;
+export const CHANGE_USER_LAYER_FILTER_VALUE = "CHANGE_USER_LAYER_FILTER_VALUE" as const;
 
 // Actions
 
@@ -57,6 +59,19 @@ export const setCanvasUserLayerStartingPosition = (
   payload: { index, differenceFromStartingX, differenceFromStartingY },
 });
 
+export const changeUserLayerFilterValue = (
+  index: number,
+  type: FeColorMatrix,
+  value: number
+) => ({
+  type: CHANGE_USER_LAYER_FILTER_VALUE,
+  payload: {
+    index,
+    type,
+    value,
+  },
+});
+
 // Redux Thunk
 
 const convertUrlToImage = (url: string): Promise<HTMLImageElement> => {
@@ -98,4 +113,5 @@ export type Actions =
   | ReturnType<typeof updateDisplayRatio>
   | ReturnType<typeof updateCanvasUserLayerPosition>
   | ReturnType<typeof setCanvasUserLayerStartingPosition>
-  | ReturnType<typeof resetAllFlags>;
+  | ReturnType<typeof resetAllFlags>
+  | ReturnType<typeof changeUserLayerFilterValue>;

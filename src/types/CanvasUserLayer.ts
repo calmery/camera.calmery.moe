@@ -7,4 +7,10 @@ export type CanvasUserLayer = {
   isDragging: boolean;
   differenceFromStartingX: number;
   differenceFromStartingY: number;
+  filter: {
+    blur: number;
+    hueRotate: number;
+    luminanceToAlpha: boolean;
+    saturate: number;
+  };
 };

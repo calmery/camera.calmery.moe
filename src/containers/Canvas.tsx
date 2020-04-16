@@ -4,6 +4,7 @@ import { ThunkDispatch } from "redux-thunk";
 import CanvasUserLayers from "./CanvasUserLayers";
 import { State } from "~/domains";
 import * as actions from "~/domains/canvas/actions";
+import { CanvasFilters } from "./CanvasFilters";
 
 // Redux
 
@@ -53,6 +54,7 @@ class Canvas extends React.Component<
           xmlnsXlink="http://www.w3.org/1999/xlink"
           ref={this.ref}
         >
+          <CanvasFilters />
           <CanvasUserLayers />
         </svg>
         {this.renderRemoveButtons()}
