@@ -10,8 +10,54 @@ export const SET_CANVAS_USER_LAYER_STARTING_POSITION = "SET_CANVAS_USER_LAYER_ST
 export const RESET_ALL_FLAGS = "RESET_ALL_FLAGS" as const;
 export const CHANGE_USER_LAYER_FILTER_VALUE = "CHANGE_USER_LAYER_FILTER_VALUE" as const;
 export const ADD_STICKER_LAYER = "ADD_STICKER_LAYER" as const;
+export const START_CANVAS_STICKER_LAYER_TRANSFORM = "START_CANVAS_STICKER_LAYER_TRANSFORM" as const;
+export const START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM = "START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM" as const;
+export const START_CANVAS_STICKER_LAYER_DRAG = "START_CANVAS_STICKER_LAYER_DRAG" as const;
+export const PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM = "PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM" as const;
+export const PROGRESS_CANVAS_STICKER_LAYER_DRAG = "PROGRESS_CANVAS_STICKER_LAYER_DRAG" as const;
 
 // Actions
+
+export const progressCanvasStickerLayerTransform = (
+  x: number,
+  y: number,
+  scale: number,
+  angle: number
+) => ({
+  type: PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM,
+  payload: { x, y, scale, angle },
+});
+
+export const progressCanvasStickerLayerDrag = (x: number, y: number) => ({
+  type: PROGRESS_CANVAS_STICKER_LAYER_DRAG,
+  payload: { x, y },
+});
+
+export const startCanvasStickerLayerTransform = (
+  index: number,
+  previousLength: number
+) => ({
+  type: START_CANVAS_STICKER_LAYER_TRANSFORM,
+  payload: { index, previousLength },
+});
+
+export const startCanvasStickerLayerMultiTouchingTransform = (
+  index: number,
+  previousLength: number,
+  startingAngle: number
+) => ({
+  type: START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM,
+  payload: { index, previousLength, startingAngle },
+});
+
+export const startCanvasStickerLayerDrag = (
+  index: number,
+  referenceX: number,
+  referenceY: number
+) => ({
+  type: START_CANVAS_STICKER_LAYER_DRAG,
+  payload: { index, referenceX, referenceY },
+});
 
 export const addStickerLayer = (
   dataUrl: string,
@@ -46,9 +92,13 @@ export const removeUserImage = (index: number) => ({
   payload: { index },
 });
 
-export const updateDisplayRatio = (displayWidth: number) => ({
+export const updateDisplayRatio = (
+  displayX: number,
+  displayY: number,
+  displayWidth: number
+) => ({
   type: UPDATE_DISPLAY_RATIO,
-  payload: { displayWidth },
+  payload: { displayX, displayY, displayWidth },
 });
 
 export const updateCanvasUserLayerPosition = (
@@ -157,4 +207,9 @@ export type Actions =
   | ReturnType<typeof updateCanvasUserLayerPosition>
   | ReturnType<typeof setCanvasUserLayerStartingPosition>
   | ReturnType<typeof resetAllFlags>
-  | ReturnType<typeof changeUserLayerFilterValue>;
+  | ReturnType<typeof changeUserLayerFilterValue>
+  | ReturnType<typeof startCanvasStickerLayerTransform>
+  | ReturnType<typeof startCanvasStickerLayerMultiTouchingTransform>
+  | ReturnType<typeof startCanvasStickerLayerDrag>
+  | ReturnType<typeof progressCanvasStickerLayerTransform>
+  | ReturnType<typeof progressCanvasStickerLayerDrag>;
