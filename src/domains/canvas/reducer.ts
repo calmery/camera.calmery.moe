@@ -75,14 +75,14 @@ const initialState: CanvasState = {
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
     case REMOVE_CANVAS_SRICKER_LAYER: {
-      console.log(
-        state.layers.stickers.slice(0, state.layers.stickers.length - 2)
-      );
       return {
         ...state,
         layers: {
           ...state.layers,
-          stickers: [],
+          stickers: state.layers.stickers.slice(
+            0,
+            state.layers.stickers.length - 2
+          ),
         },
       };
     }
