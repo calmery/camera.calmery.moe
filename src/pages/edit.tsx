@@ -4,6 +4,7 @@ import { withRedux, NextPageContextWithRedux } from "~/domains";
 import Canvas from "~/containers/Canvas";
 import { Menu } from "~/components/Menu";
 import { Filters } from "~/containers/Filters";
+import { Stickers } from "~/containers/Stickers";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -21,6 +22,7 @@ const Edit: NextPage = () => (
       <Canvas />
     </Container>
     <Filters />
+    <Stickers />
     <Menu />
   </>
 );
