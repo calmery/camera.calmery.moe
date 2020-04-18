@@ -14,6 +14,7 @@ export default class CSL extends React.Component<
     onClick: () => void;
     canvasBaseX: number;
     canvasBaseY: number;
+    onClickRemoveButton: () => void;
   } & CanvasStickerLayer
 > {
   public render = () => {
@@ -28,6 +29,7 @@ export default class CSL extends React.Component<
       displayRatio,
       selected,
       onClick,
+      onClickRemoveButton,
     } = this.props;
 
     return (
@@ -40,14 +42,18 @@ export default class CSL extends React.Component<
         overflow="visible"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
-        onClick={onClick}
       >
         <g
           transform={`rotate(${rotate.current}, ${
             (width * scale.current) / 2
           }, ${(height * scale.current) / 2})`}
         >
-          <image xlinkHref={dataUrl} width="100%" height="100%"></image>
+          <image
+            xlinkHref={dataUrl}
+            width="100%"
+            height="100%"
+            onClick={onClick}
+          ></image>
           {selected && (
             <>
               <rect
@@ -63,6 +69,13 @@ export default class CSL extends React.Component<
                 onMouseDown={this.handleOnMouseDownRect}
                 onTouchStart={this.handleOnTouchStartRect}
               ></rect>
+              <circle
+                fill="#FFF"
+                cx={width * scale.current}
+                cy="0"
+                r={12 * displayRatio}
+                onClick={onClickRemoveButton}
+              ></circle>
               <circle
                 fill="#FFF"
                 cx={width * scale.current}

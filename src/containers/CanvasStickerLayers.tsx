@@ -33,13 +33,16 @@ const mapDispatchToProps = (
   onClick: (index: number) => {
     dispatch(actions.changeActiveCanvasStickerLayer(index));
   },
+  removeCanvasStickerLayer: () => {
+    dispatch(actions.removeCanvasStickerLayer());
+  },
 });
 
 class CanvasStickerLayers extends React.Component<
   ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 > {
   public render = () => {
-    const { layers, displayRatio, x, y } = this.props;
+    const { layers, displayRatio, x, y, removeCanvasStickerLayer } = this.props;
 
     return layers.stickers.map((sticker, index) => (
       <CanvasStickerLayer
@@ -55,6 +58,7 @@ class CanvasStickerLayers extends React.Component<
         canvasBaseX={x}
         canvasBaseY={y}
         onClick={() => this.handleOnClick(index)}
+        onClickRemoveButton={removeCanvasStickerLayer}
       />
     ));
   };
