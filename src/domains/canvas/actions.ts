@@ -15,8 +15,14 @@ export const START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM = "START_CANVAS_
 export const START_CANVAS_STICKER_LAYER_DRAG = "START_CANVAS_STICKER_LAYER_DRAG" as const;
 export const PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM = "PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM" as const;
 export const PROGRESS_CANVAS_STICKER_LAYER_DRAG = "PROGRESS_CANVAS_STICKER_LAYER_DRAG" as const;
+export const CHANGE_ACTIVE_CANVAS_SRICKER_LAYER = "CHANGE_ACTIVE_CANVAS_SRICKER_LAYER" as const;
 
 // Actions
+
+export const changeActiveCanvasStickerLayer = (index: number) => ({
+  type: CHANGE_ACTIVE_CANVAS_SRICKER_LAYER,
+  payload: { index },
+});
 
 export const progressCanvasStickerLayerTransform = (
   x: number,
@@ -212,4 +218,5 @@ export type Actions =
   | ReturnType<typeof startCanvasStickerLayerMultiTouchingTransform>
   | ReturnType<typeof startCanvasStickerLayerDrag>
   | ReturnType<typeof progressCanvasStickerLayerTransform>
-  | ReturnType<typeof progressCanvasStickerLayerDrag>;
+  | ReturnType<typeof progressCanvasStickerLayerDrag>
+  | ReturnType<typeof changeActiveCanvasStickerLayer>;

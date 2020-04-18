@@ -133,8 +133,6 @@ class Canvas extends React.Component<
     const sticker = stickers[stickers.length - 1];
     const { isMultiTouching, isDragging, isTransforming } = sticker;
 
-    console.log(isMultiTouching, isDragging, isTransforming);
-
     if (isTransforming && isMultiTouching) {
       const nextAngle =
         sticker.rotate.previous +

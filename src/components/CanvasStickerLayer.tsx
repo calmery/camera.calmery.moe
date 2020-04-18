@@ -11,6 +11,7 @@ export default class CSL extends React.Component<
       startingAngle: number
     ) => void;
     startDrag: (referenceX: number, referenceY: number) => void;
+    onClick: () => void;
     canvasBaseX: number;
     canvasBaseY: number;
   } & CanvasStickerLayer
@@ -25,6 +26,8 @@ export default class CSL extends React.Component<
       rotate,
       scale,
       displayRatio,
+      selected,
+      onClick,
     } = this.props;
 
     return (
@@ -37,6 +40,7 @@ export default class CSL extends React.Component<
         overflow="visible"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
+        onClick={onClick}
       >
         <g
           transform={`rotate(${rotate.current}, ${
@@ -44,27 +48,31 @@ export default class CSL extends React.Component<
           }, ${(height * scale.current) / 2})`}
         >
           <image xlinkHref={dataUrl} width="100%" height="100%"></image>
-          <rect
-            style={{ cursor: "pointer" }}
-            fillOpacity="0"
-            stroke="#FFF"
-            strokeWidth={2 * displayRatio}
-            strokeDasharray={`${8 * displayRatio} ${8 * displayRatio}`}
-            width="100%"
-            height="100%"
-            x="0"
-            y="0"
-            onMouseDown={this.handleOnMouseDownRect}
-            onTouchStart={this.handleOnTouchStartRect}
-          ></rect>
-          <circle
-            fill="#FFF"
-            cx={width * scale.current}
-            cy={height * scale.current}
-            r={12 * displayRatio}
-            onMouseDown={this.handleOnMouseDownTransformCircle}
-            onTouchStart={this.handleOnTouchStartTransformCircle}
-          ></circle>
+          {selected && (
+            <>
+              <rect
+                style={{ cursor: "pointer" }}
+                fillOpacity="0"
+                stroke="#FFF"
+                strokeWidth={2 * displayRatio}
+                strokeDasharray={`${8 * displayRatio} ${8 * displayRatio}`}
+                width="100%"
+                height="100%"
+                x="0"
+                y="0"
+                onMouseDown={this.handleOnMouseDownRect}
+                onTouchStart={this.handleOnTouchStartRect}
+              ></rect>
+              <circle
+                fill="#FFF"
+                cx={width * scale.current}
+                cy={height * scale.current}
+                r={12 * displayRatio}
+                onMouseDown={this.handleOnMouseDownTransformCircle}
+                onTouchStart={this.handleOnTouchStartTransformCircle}
+              ></circle>
+            </>
+          )}
         </g>
       </svg>
     );
@@ -138,8 +146,6 @@ export default class CSL extends React.Component<
       );
       const startingAngle =
         Math.atan2(second.y - first.y, second.x - first.x) * (180 / Math.PI);
-
-      console.log(previousLength);
 
       startMultiTouchingTransform(previousLength, startingAngle);
 
