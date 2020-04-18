@@ -9,6 +9,11 @@ import {
   UPDATE_CANVAS_LAYER_POSITION,
   CHANGE_USER_LAYER_FILTER_VALUE,
   ADD_STICKER_LAYER,
+  START_CANVAS_STICKER_LAYER_DRAG,
+  START_CANVAS_STICKER_LAYER_TRANSFORM,
+  START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM,
+  PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM,
+  PROGRESS_CANVAS_STICKER_LAYER_DRAG,
 } from "./actions";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
@@ -17,6 +22,8 @@ import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
 export type CanvasState = {
   width: number;
   height: number;
+  x: number;
+  y: number;
   frames: {
     users: CanvasUserFrame[];
   };
@@ -30,6 +37,8 @@ export type CanvasState = {
 const initialState: CanvasState = {
   width: 900,
   height: 1200,
+  x: 0,
+  y: 0,
   frames: {
     users: [
       {
@@ -63,6 +72,113 @@ const initialState: CanvasState = {
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
+    case PROGRESS_CANVAS_STICKER_LAYER_DRAG: {
+      const { layers } = state;
+      const { stickers } = layers;
+      const sticker = stickers[stickers.length - 1];
+
+      stickers[stickers.length - 1] = {
+        ...sticker,
+        ...action.payload,
+      };
+
+      return {
+        ...state,
+        layers: {
+          ...state.layers,
+          stickers,
+        },
+      };
+    }
+
+    case PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM: {
+      const { layers } = state;
+      const { stickers } = layers;
+      const sticker = stickers[stickers.length - 1];
+
+      stickers[stickers.length - 1] = {
+        ...sticker,
+        x: action.payload.x,
+        y: action.payload.y,
+        scale: {
+          ...sticker.scale,
+          current: action.payload.scale,
+        },
+        rotate: {
+          ...sticker.rotate,
+          current: action.payload.angle,
+        },
+      };
+
+      return {
+        ...state,
+        layers: {
+          ...state.layers,
+          stickers,
+        },
+      };
+    }
+
+    case START_CANVAS_STICKER_LAYER_DRAG: {
+      const { layers } = state;
+      const sticker = layers.stickers[layers.stickers.length - 1];
+
+      layers.stickers[layers.stickers.length - 1] = {
+        ...sticker,
+        ...action.payload,
+        isDragging: true,
+      };
+
+      return {
+        ...state,
+        layers,
+      };
+    }
+
+    case START_CANVAS_STICKER_LAYER_TRANSFORM: {
+      const { layers } = state;
+      const sticker = layers.stickers[layers.stickers.length - 1];
+
+      layers.stickers[layers.stickers.length - 1] = {
+        ...sticker,
+        scale: {
+          ...sticker.scale,
+          reference: action.payload.previousLength,
+        },
+        isTransforming: true,
+      };
+
+      return {
+        ...state,
+        layers,
+      };
+    }
+
+    case START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM: {
+      const { layers } = state;
+      const sticker = layers.stickers[layers.stickers.length - 1];
+
+      layers.stickers[layers.stickers.length - 1] = {
+        ...sticker,
+        scale: {
+          ...sticker.rotate,
+          reference: action.payload.previousLength,
+        },
+        rotate: {
+          ...sticker.rotate,
+          previous: sticker.rotate.current,
+          reference: action.payload.startingAngle,
+        },
+        isTransforming: true,
+        isMultiTouching: true,
+      };
+
+      return {
+        ...state,
+        layers,
+      };
+    }
+
     case ADD_STICKER_LAYER: {
       const { dataUrl, width, height } = action.payload;
       const { layers } = state;
@@ -150,6 +266,8 @@ export default (state = initialState, action: Actions): CanvasState => {
       return {
         ...state,
         displayRatio: width / action.payload.displayWidth,
+        x: action.payload.displayX,
+        y: action.payload.displayY,
       };
     }
 
@@ -201,7 +319,7 @@ export default (state = initialState, action: Actions): CanvasState => {
     }
 
     case RESET_ALL_FLAGS: {
-      const { users } = state.layers;
+      const { users, stickers } = state.layers;
       const nextUsers = users.map((user) => {
         if (!user) {
           return user;
@@ -211,11 +329,21 @@ export default (state = initialState, action: Actions): CanvasState => {
 
         return user;
       });
+      const nextStickers = stickers.map((sticker) => ({
+        ...sticker,
+        isDragging: false,
+        isMultiTouching: false,
+        isTransforming: false,
+        scale: {
+          ...sticker.scale,
+          previous: sticker.scale.current,
+        },
+      }));
 
       return {
         ...state,
         layers: {
-          ...state.layers,
+          stickers: nextStickers,
           users: nextUsers,
         },
       };

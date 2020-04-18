@@ -9,6 +9,7 @@ import styled from "styled-components";
 
 const Container = styled.div`
   height: 1000px;
+  max-height: 80%;
   text-align: center;
 
   svg {
@@ -23,7 +24,6 @@ const Edit: NextPage = () => (
     </Container>
     <Filters />
     <Stickers />
-    <Menu />
   </>
 );
 
