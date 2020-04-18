@@ -14,6 +14,7 @@ import {
   START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM,
   PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM,
   PROGRESS_CANVAS_STICKER_LAYER_DRAG,
+  CHANGE_ACTIVE_CANVAS_SRICKER_LAYER,
 } from "./actions";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
@@ -72,6 +73,22 @@ const initialState: CanvasState = {
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
+    case CHANGE_ACTIVE_CANVAS_SRICKER_LAYER: {
+      const { stickers } = state.layers;
+      const nextStickers = [
+        ...stickers.filter((_, i) => i !== action.payload.index),
+        stickers[action.payload.index],
+      ];
+
+      return {
+        ...state,
+        layers: {
+          ...state.layers,
+          stickers: nextStickers,
+        },
+      };
+    }
+
     case PROGRESS_CANVAS_STICKER_LAYER_DRAG: {
       const { layers } = state;
       const { stickers } = layers;

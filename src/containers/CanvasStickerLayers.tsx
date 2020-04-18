@@ -30,6 +30,9 @@ const mapDispatchToProps = (
       actions.startCanvasStickerLayerDrag(index, referenceX, referenceY)
     );
   },
+  onClick: (index: number) => {
+    dispatch(actions.changeActiveCanvasStickerLayer(index));
+  },
 });
 
 class CanvasStickerLayers extends React.Component<
@@ -41,7 +44,7 @@ class CanvasStickerLayers extends React.Component<
     return layers.stickers.map((sticker, index) => (
       <CanvasStickerLayer
         key={index}
-        selected
+        selected={index === layers.stickers.length - 1}
         {...sticker}
         displayRatio={displayRatio}
         startTransform={(l) => this.handleOnStartTransform(index, l)}
@@ -51,6 +54,7 @@ class CanvasStickerLayers extends React.Component<
         startDrag={(x, y) => this.handleOnStartDrag(index, x, y)}
         canvasBaseX={x}
         canvasBaseY={y}
+        onClick={() => this.handleOnClick(index)}
       />
     ));
   };
@@ -61,6 +65,7 @@ class CanvasStickerLayers extends React.Component<
   private handleOnStartMultiTouchingTransform = this.props
     .startMultiTouchingTransform;
   private handleOnStartDrag = this.props.startDrag;
+  private handleOnClick = this.props.onClick;
 }
 
 export default connect(
