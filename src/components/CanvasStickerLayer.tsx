@@ -57,7 +57,7 @@ export default class CSL extends React.Component<
           {selected && (
             <>
               <rect
-                style={{ cursor: "pointer" }}
+                style={{ cursor: "move" }}
                 fillOpacity="0"
                 stroke="#FFF"
                 strokeWidth={2 * displayRatio}
@@ -70,6 +70,7 @@ export default class CSL extends React.Component<
                 onTouchStart={this.handleOnTouchStartRect}
               ></rect>
               <circle
+                style={{ cursor: "pointer" }}
                 fill="#FFF"
                 cx={width * scale.current}
                 cy="0"
@@ -77,6 +78,7 @@ export default class CSL extends React.Component<
                 onClick={onClickRemoveButton}
               ></circle>
               <circle
+                style={{ cursor: "se-resize" }}
                 fill="#FFF"
                 cx={width * scale.current}
                 cy={height * scale.current}

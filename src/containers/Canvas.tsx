@@ -44,7 +44,7 @@ class Canvas extends React.Component<
     const options = { passive: false };
     s.addEventListener("mouseup", this.handleOnOut);
     s.addEventListener("touchend", this.handleOnOut);
-    s.addEventListener("mouseout", this.handleOnOut, options);
+    s.addEventListener("mouseleave", this.handleOnOut);
     s.addEventListener("mousemove", this.handleOnMouseMove);
     s.addEventListener("touchmove", this.handleOnTouchMove, options);
     window.addEventListener("resize", this.handleOnResizeWindow);
@@ -56,7 +56,7 @@ class Canvas extends React.Component<
     const s = this.ref.current!;
     s.removeEventListener("mouseup", this.handleOnOut);
     s.removeEventListener("touchend", this.handleOnOut);
-    s.removeEventListener("mouseout", this.handleOnOut);
+    s.removeEventListener("mouseleave", this.handleOnOut);
     s.removeEventListener("mousemove", this.handleOnMouseMove);
     s.removeEventListener("touchmove", this.handleOnTouchMove);
     window.removeEventListener("resize", this.handleOnResizeWindow);

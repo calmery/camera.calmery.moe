@@ -81,7 +81,7 @@ export default (state = initialState, action: Actions): CanvasState => {
           ...state.layers,
           stickers: state.layers.stickers.slice(
             0,
-            state.layers.stickers.length - 2
+            state.layers.stickers.length - 1
           ),
         },
       };
@@ -192,7 +192,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       layers.stickers[layers.stickers.length - 1] = {
         ...sticker,
         scale: {
-          ...sticker.rotate,
+          ...sticker.scale,
           reference: action.payload.previousLength,
         },
         rotate: {
