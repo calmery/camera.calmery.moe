@@ -9,8 +9,18 @@ export const UPDATE_CANVAS_LAYER_POSITION = "UPDATE_CANVAS_LAYER_POSITION" as co
 export const SET_CANVAS_USER_LAYER_STARTING_POSITION = "SET_CANVAS_USER_LAYER_STARTING_POSITION" as const;
 export const RESET_ALL_FLAGS = "RESET_ALL_FLAGS" as const;
 export const CHANGE_USER_LAYER_FILTER_VALUE = "CHANGE_USER_LAYER_FILTER_VALUE" as const;
+export const ADD_STICKER_LAYER = "ADD_STICKER_LAYER" as const;
 
 // Actions
+
+export const addStickerLayer = (
+  dataUrl: string,
+  width: number,
+  height: number
+) => ({
+  type: ADD_STICKER_LAYER,
+  payload: { dataUrl, width, height },
+});
 
 export const addUserImage = (
   index: number,
@@ -105,9 +115,42 @@ export const addUserImageFromFile = (file: File, index: number) => {
   };
 };
 
+export const addStickerLayerWithUrl = (url: string) => {
+  return (dispatch: Dispatch) => {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+
+      image.onerror = () => reject();
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        if (context === null) {
+          return reject();
+        }
+
+        context.drawImage(image, 0, 0, image.width, image.height);
+        dispatch(
+          addStickerLayer(
+            canvas.toDataURL("image/png"),
+            image.width,
+            image.height
+          )
+        );
+      };
+
+      image.src = url;
+    });
+  };
+};
+
 // Actions
 
 export type Actions =
+  | ReturnType<typeof addStickerLayer>
   | ReturnType<typeof addUserImage>
   | ReturnType<typeof removeUserImage>
   | ReturnType<typeof updateDisplayRatio>

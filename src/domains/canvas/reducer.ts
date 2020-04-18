@@ -8,9 +8,11 @@ import {
   SET_CANVAS_USER_LAYER_STARTING_POSITION,
   UPDATE_CANVAS_LAYER_POSITION,
   CHANGE_USER_LAYER_FILTER_VALUE,
+  ADD_STICKER_LAYER,
 } from "./actions";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
+import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
 
 export type CanvasState = {
   width: number;
@@ -20,6 +22,7 @@ export type CanvasState = {
   };
   layers: {
     users: (CanvasUserLayer | null)[];
+    stickers: CanvasStickerLayer[];
   };
   displayRatio: number;
 };
@@ -53,12 +56,50 @@ const initialState: CanvasState = {
   },
   layers: {
     users: [],
+    stickers: [],
   },
   displayRatio: 1,
 };
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
+    case ADD_STICKER_LAYER: {
+      const { dataUrl, width, height } = action.payload;
+      const { layers } = state;
+
+      return {
+        ...state,
+        layers: {
+          ...layers,
+          stickers: [
+            ...layers.stickers,
+            {
+              dataUrl,
+              width,
+              height,
+              x: 0,
+              y: 0,
+              isDragging: false,
+              isTransforming: false,
+              isMultiTouching: false,
+              referenceX: 0,
+              referenceY: 0,
+              scale: {
+                current: 1,
+                previous: 1,
+                reference: 0,
+              },
+              rotate: {
+                current: 1,
+                previous: 1,
+                reference: 0,
+              },
+            },
+          ],
+        },
+      };
+    }
+
     case ADD_USER_IMAGE: {
       const userFrames = state.frames.users;
       const userLayers = state.layers.users;
