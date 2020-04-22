@@ -33,11 +33,23 @@ class Cropper extends React.Component<
   public componentDidMount = () => {
     const e = this.ref.current!;
 
-    e.addEventListener("mousemove", this.handleOnMove, false);
+    e.addEventListener("mousemove", this.handleOnMouseMove, false);
+    e.addEventListener("touchmove", this.handleOnTouchMove, { passive: false });
     e.addEventListener("mouseup", this.handleOnResetFlags, false);
     e.addEventListener("mouseleave", this.handleOnResetFlags, false);
+    e.addEventListener("touchend", this.handleOnResetFlags, false);
 
     this.setContainerDisplaySize();
+  };
+
+  public componentWillUnmount = () => {
+    const e = this.ref.current!;
+
+    e.removeEventListener("mousemove", this.handleOnMouseMove);
+    e.removeEventListener("touchmove", this.handleOnTouchMove);
+    e.removeEventListener("mouseup", this.handleOnResetFlags);
+    e.removeEventListener("mouseleave", this.handleOnResetFlags);
+    e.removeEventListener("touchend", this.handleOnResetFlags);
   };
 
   public render = () => {
@@ -142,7 +154,8 @@ class Cropper extends React.Component<
           height={height * sy}
           x={position.x}
           y={position.y}
-          onMouseDown={this.handleOnMouseDown}
+          onMouseDown={this.handleOnMouseDownRect}
+          onTouchStart={this.handleOnTouchStartRect}
         ></rect>
 
         <circle
@@ -151,6 +164,7 @@ class Cropper extends React.Component<
           cy={position.y + height * sy}
           r={12 * displayRatio}
           onMouseDown={this.handleOnMouseDownCircle}
+          onTouchStart={this.handleOnTouchStartCircle}
         ></circle>
       </g>
     );
@@ -187,7 +201,35 @@ class Cropper extends React.Component<
     startTransform(scaleReference, scaleXReference, scaleYReference);
   };
 
-  private handleOnMove = (event: MouseEvent) => {
+  private handleOnTouchStartCircle = (event: React.TouchEvent) => {
+    const { startTransform, containerDisplay, position } = this.props;
+
+    const scaleReference = Math.pow(
+      Math.pow(
+        (event.touches[0].clientX - containerDisplay.x) *
+          containerDisplay.ratio -
+          position.x,
+        2
+      ) +
+        Math.pow(
+          (event.touches[0].clientY - containerDisplay.y) *
+            containerDisplay.ratio -
+            position.y,
+          2
+        ),
+      0.5
+    );
+    const scaleXReference =
+      (event.touches[0].clientX - containerDisplay.x) * containerDisplay.ratio -
+      position.x;
+    const scaleYReference =
+      (event.touches[0].clientY - containerDisplay.y) * containerDisplay.ratio -
+      position.y;
+
+    startTransform(scaleReference, scaleXReference, scaleYReference);
+  };
+
+  private handleOnMove = (clientX: number, clientY: number) => {
     const {
       isDragging,
       setScale,
@@ -204,10 +246,8 @@ class Cropper extends React.Component<
     } = this.props;
 
     if (isDragging) {
-      const relativeX =
-        (event.clientX - containerDisplay.x) * containerDisplay.ratio;
-      const relativeY =
-        (event.clientY - containerDisplay.y) * containerDisplay.ratio;
+      const relativeX = (clientX - containerDisplay.x) * containerDisplay.ratio;
+      const relativeY = (clientY - containerDisplay.y) * containerDisplay.ratio;
 
       const nextX = relativeX - position.referenceX;
       const nextY = relativeY - position.referenceY;
@@ -217,12 +257,12 @@ class Cropper extends React.Component<
       const nextScale =
         (Math.pow(
           Math.pow(
-            (event.clientX - containerDisplay.x) * containerDisplay.ratio -
+            (clientX - containerDisplay.x) * containerDisplay.ratio -
               position.x,
             2
           ) +
             Math.pow(
-              (event.clientY - containerDisplay.y) * containerDisplay.ratio -
+              (clientY - containerDisplay.y) * containerDisplay.ratio -
                 position.y,
               2
             ),
@@ -231,12 +271,12 @@ class Cropper extends React.Component<
           scale.reference) *
         scale.previous;
       const nextScaleX =
-        (((event.clientX - containerDisplay.x) * containerDisplay.ratio -
+        (((clientX - containerDisplay.x) * containerDisplay.ratio -
           position.x) /
           scaleX.reference) *
         scaleX.previous;
       const nextScaleY =
-        (((event.clientY - containerDisplay.y) * containerDisplay.ratio -
+        (((clientY - containerDisplay.y) * containerDisplay.ratio -
           position.y) /
           scaleY.reference) *
         scaleY.previous;
@@ -251,10 +291,9 @@ class Cropper extends React.Component<
         if (
           width * nextScale >= 100 &&
           !(
-            (event.clientX - containerDisplay.x) * containerDisplay.ratio <
+            (clientX - containerDisplay.x) * containerDisplay.ratio <
               position.x ||
-            (event.clientY - containerDisplay.y) * containerDisplay.ratio <
-              position.y
+            (clientY - containerDisplay.y) * containerDisplay.ratio < position.y
           )
         ) {
           setScale(nextScale, scaleX.current, scaleY.current);
@@ -263,7 +302,21 @@ class Cropper extends React.Component<
     }
   };
 
-  private handleOnMouseDown = (
+  private handleOnMouseMove = (event: MouseEvent) => {
+    const { clientX, clientY } = event;
+    this.handleOnMove(clientX, clientY);
+  };
+
+  private handleOnTouchMove = (event: TouchEvent) => {
+    const { clientX, clientY } = event.touches[0];
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.handleOnMove(clientX, clientY);
+  };
+
+  private handleOnMouseDownRect = (
     event: React.MouseEvent<SVGRectElement, MouseEvent>
   ) => {
     const { containerDisplay, position, startDrag } = this.props;
@@ -272,6 +325,17 @@ class Cropper extends React.Component<
       position.x;
     const referenceY =
       (event.clientY - containerDisplay.y) * containerDisplay.ratio -
+      position.y;
+    startDrag(referenceX, referenceY);
+  };
+
+  private handleOnTouchStartRect = (event: React.TouchEvent) => {
+    const { containerDisplay, position, startDrag } = this.props;
+    const referenceX =
+      (event.touches[0].clientX - containerDisplay.x) * containerDisplay.ratio -
+      position.x;
+    const referenceY =
+      (event.touches[0].clientY - containerDisplay.y) * containerDisplay.ratio -
       position.y;
     startDrag(referenceX, referenceY);
   };
