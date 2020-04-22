@@ -5,7 +5,9 @@ import {
   SET_CONTAINER_DISPLAY_SIZE,
   START_DRAG,
   RESET_FLAGS,
+  START_TRANSFORM,
   SET_POSITION,
+  SET_SCALE,
 } from "./actions";
 
 const getCurrentSize = (state: CropperState) => {
@@ -30,6 +32,7 @@ export type CropperState = {
   width: number;
   height: number;
   isDragging: boolean;
+  isTransforming: boolean;
   image: {
     url: string;
     width: number;
@@ -73,6 +76,7 @@ const initialState: CropperState = {
   width: 160,
   height: 90,
   isDragging: false,
+  isTransforming: false,
   containerDisplay: {
     x: 0,
     y: 0,
@@ -113,6 +117,46 @@ const initialState: CropperState = {
 
 export default (state = initialState, action: Actions) => {
   switch (action.type) {
+    case SET_SCALE: {
+      return {
+        ...state,
+        scale: {
+          ...state.scale,
+          current: action.payload.nextScale,
+        },
+        scaleX: {
+          ...state.scaleX,
+          current: action.payload.nextScaleX,
+        },
+        scaleY: {
+          ...state.scaleY,
+          current: action.payload.nextScaleY,
+        },
+      };
+    }
+
+    case START_TRANSFORM: {
+      return {
+        ...state,
+        isTransforming: true,
+        scale: {
+          ...state.scale,
+          previous: state.scale.current,
+          reference: action.payload.referenceScale,
+        },
+        scaleX: {
+          ...state.scaleX,
+          previous: state.scaleX.current,
+          reference: action.payload.referenceXScale,
+        },
+        scaleY: {
+          ...state.scaleY,
+          previous: state.scaleY.current,
+          reference: action.payload.referenceYScale,
+        },
+      };
+    }
+
     case CHANGE_FREE_ASPECT: {
       const { freeAspect } = state;
 
@@ -209,6 +253,7 @@ export default (state = initialState, action: Actions) => {
       return {
         ...state,
         isDragging: false,
+        isTransforming: false,
       };
     }
 

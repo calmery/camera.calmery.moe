@@ -39,9 +39,7 @@ export const getOrCreateStore = (state?: State) => {
     }),
     state,
     applyMiddleware(
-      ...(process.env.NODE_ENV === "production"
-        ? [reduxThunk]
-        : [reduxThunk, logger])
+      ...(process.env.NODE_ENV === "production" ? [reduxThunk] : [reduxThunk])
     )
   );
 

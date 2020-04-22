@@ -13,6 +13,16 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(actions.startDrag(referenceX, referenceY)),
   resetFlags: () => dispatch(actions.resetFlags()),
   setPosition: (x: number, y: number) => dispatch(actions.setPosition(x, y)),
+  startTransform: (
+    referenceScale: number,
+    referenceXScale: number,
+    referenceYScale: number
+  ) =>
+    dispatch(
+      actions.startTransform(referenceScale, referenceXScale, referenceYScale)
+    ),
+  setScale: (nextScale: number, nextScaleX: number, nextScaleY: number) =>
+    dispatch(actions.setScale(nextScale, nextScaleX, nextScaleY)),
 });
 
 class Cropper extends React.Component<
@@ -140,6 +150,7 @@ class Cropper extends React.Component<
           cx={position.x + width * sx}
           cy={position.y + height * sy}
           r={12 * displayRatio}
+          onMouseDown={this.handleOnMouseDownCircle}
         ></circle>
       </g>
     );
@@ -147,8 +158,50 @@ class Cropper extends React.Component<
 
   // Events
 
+  private handleOnMouseDownCircle = (event: React.MouseEvent) => {
+    const { startTransform, containerDisplay, position } = this.props;
+
+    // cropperState.scale.previous = cropperState.scale.current;
+    // cropperState.scaleX.previous = cropperState.scaleX.current;
+    // cropperState.scaleY.previous = cropperState.scaleY.current;
+    const scaleReference = Math.pow(
+      Math.pow(
+        (event.clientX - containerDisplay.x) * containerDisplay.ratio -
+          position.x,
+        2
+      ) +
+        Math.pow(
+          (event.clientY - containerDisplay.y) * containerDisplay.ratio -
+            position.y,
+          2
+        ),
+      0.5
+    );
+    const scaleXReference =
+      (event.clientX - containerDisplay.x) * containerDisplay.ratio -
+      position.x;
+    const scaleYReference =
+      (event.clientY - containerDisplay.y) * containerDisplay.ratio -
+      position.y;
+
+    startTransform(scaleReference, scaleXReference, scaleYReference);
+  };
+
   private handleOnMove = (event: MouseEvent) => {
-    const { isDragging, containerDisplay, position, setPosition } = this.props;
+    const {
+      isDragging,
+      setScale,
+      freeAspect,
+      width,
+      height,
+      isTransforming,
+      containerDisplay,
+      position,
+      setPosition,
+      scale,
+      scaleX,
+      scaleY,
+    } = this.props;
 
     if (isDragging) {
       const relativeX =
@@ -160,6 +213,53 @@ class Cropper extends React.Component<
       const nextY = relativeY - position.referenceY;
 
       setPosition(nextX, nextY);
+    } else if (isTransforming) {
+      const nextScale =
+        (Math.pow(
+          Math.pow(
+            (event.clientX - containerDisplay.x) * containerDisplay.ratio -
+              position.x,
+            2
+          ) +
+            Math.pow(
+              (event.clientY - containerDisplay.y) * containerDisplay.ratio -
+                position.y,
+              2
+            ),
+          0.5
+        ) /
+          scale.reference) *
+        scale.previous;
+      const nextScaleX =
+        (((event.clientX - containerDisplay.x) * containerDisplay.ratio -
+          position.x) /
+          scaleX.reference) *
+        scaleX.previous;
+      const nextScaleY =
+        (((event.clientY - containerDisplay.y) * containerDisplay.ratio -
+          position.y) /
+          scaleY.reference) *
+        scaleY.previous;
+
+      if (freeAspect) {
+        setScale(
+          scale.current,
+          width * nextScaleX >= 100 ? nextScaleX : scaleX.current,
+          height * nextScaleY >= 100 ? nextScaleY : scaleY.current
+        );
+      } else {
+        if (
+          width * nextScale >= 100 &&
+          !(
+            (event.clientX - containerDisplay.x) * containerDisplay.ratio <
+              position.x ||
+            (event.clientY - containerDisplay.y) * containerDisplay.ratio <
+              position.y
+          )
+        ) {
+          setScale(nextScale, scaleX.current, scaleY.current);
+        }
+      }
     }
   };
 
