@@ -1,4 +1,12 @@
-import { CHANGE_FREE_ASPECT, Actions, SET_ASPECT_RATIO } from "./actions";
+import {
+  CHANGE_FREE_ASPECT,
+  Actions,
+  SET_ASPECT_RATIO,
+  SET_CONTAINER_DISPLAY_SIZE,
+  START_DRAG,
+  RESET_FLAGS,
+  SET_POSITION,
+} from "./actions";
 
 const getCurrentSize = (state: CropperState) => {
   const { freeAspect, scale, scaleX, scaleY, width, height } = state;
@@ -9,13 +17,34 @@ const getCurrentSize = (state: CropperState) => {
   };
 };
 
+// const calculateSvgRelativeCoordinates = (state: CropperState, x: number, y: number) => {
+//   // `event.clientX`、`event.clientY` から SVG 画像内の相対位置を取得する
+//   return {
+//     x: (x - state.containerDisplay.x) * state.containerDisplay.ratio,
+//     y: (y - state.containerDisplay.y) * state.containerDisplay.ratio
+//   };
+// }
+
 export type CropperState = {
   freeAspect: boolean;
   width: number;
   height: number;
+  isDragging: boolean;
+  image: {
+    url: string;
+    width: number;
+    height: number;
+  };
+  containerDisplay: {
+    x: number;
+    y: number;
+    ratio: number;
+  };
   position: {
     x: number;
     y: number;
+    referenceX: number;
+    referenceY: number;
   };
   rotate: {
     current: number;
@@ -43,9 +72,22 @@ const initialState: CropperState = {
   freeAspect: true,
   width: 160,
   height: 90,
+  isDragging: false,
+  containerDisplay: {
+    x: 0,
+    y: 0,
+    ratio: 0,
+  },
+  image: {
+    url: "images/background.jpg",
+    width: 1500,
+    height: 1065,
+  },
   position: {
     x: 0,
     y: 0,
+    referenceX: 0,
+    referenceY: 0,
   },
   rotate: {
     current: 0,
@@ -74,10 +116,32 @@ export default (state = initialState, action: Actions) => {
     case CHANGE_FREE_ASPECT: {
       const { freeAspect } = state;
 
-      return {
-        ...state,
-        freeAspect: !freeAspect,
-      };
+      if (freeAspect) {
+        return {
+          ...state,
+          freeAspect: true,
+          scale: {
+            ...state.scale,
+            current:
+              state.scaleX.current < state.scaleY.current
+                ? state.scaleX.current
+                : state.scaleY.current,
+          },
+        };
+      } else {
+        return {
+          ...state,
+          freeAspect: true,
+          scaleX: {
+            ...state.scaleX,
+            current: state.scale.current,
+          },
+          scaleY: {
+            ...state.scaleY,
+            current: state.scale.current,
+          },
+        };
+      }
     }
 
     case SET_ASPECT_RATIO: {
@@ -109,8 +173,51 @@ export default (state = initialState, action: Actions) => {
           current: 1,
         },
         position: {
+          ...state.position,
           x: state.position.x + differenceWidth / 2,
           y: state.position.y + differenceHeight / 2,
+        },
+      };
+    }
+
+    case SET_CONTAINER_DISPLAY_SIZE: {
+      return {
+        ...state,
+        containerDisplay: {
+          x: action.payload.x,
+          y: action.payload.y,
+          ratio: state.image.width / action.payload.width,
+        },
+      };
+    }
+
+    case START_DRAG: {
+      const { referenceX, referenceY } = action.payload;
+
+      return {
+        ...state,
+        isDragging: true,
+        position: {
+          ...state.position,
+          referenceX,
+          referenceY,
+        },
+      };
+    }
+
+    case RESET_FLAGS: {
+      return {
+        ...state,
+        isDragging: false,
+      };
+    }
+
+    case SET_POSITION: {
+      return {
+        ...state,
+        position: {
+          ...state.position,
+          ...action.payload,
         },
       };
     }
