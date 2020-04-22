@@ -12,10 +12,12 @@ import reduxThunk, { ThunkDispatch } from "redux-thunk";
 import { NextPage, NextPageContext } from "next";
 import canvas, { CanvasState } from "./canvas/reducer";
 import counter, { CounterState } from "./counter/reducer";
+import cropper, { CropperState } from "./cropper/reducer";
 
 export interface State {
   canvas: CanvasState;
   counter: CounterState;
+  cropper: CropperState;
 }
 
 // Store
@@ -33,6 +35,7 @@ export const getOrCreateStore = (state?: State) => {
     combineReducers({
       canvas,
       counter,
+      cropper,
     }),
     state,
     applyMiddleware(
