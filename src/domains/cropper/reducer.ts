@@ -8,6 +8,8 @@ import {
   START_TRANSFORM,
   SET_POSITION,
   SET_SCALE,
+  START_ROTATE_IMAGE,
+  SET_ROTATE,
 } from "./actions";
 
 const getCurrentSize = (state: CropperState) => {
@@ -25,6 +27,7 @@ export type CropperState = {
   height: number;
   isDragging: boolean;
   isTransforming: boolean;
+  isRotating: boolean;
   image: {
     url: string;
     width: number;
@@ -69,6 +72,7 @@ const initialState: CropperState = {
   height: 90,
   isDragging: false,
   isTransforming: false,
+  isRotating: false,
   containerDisplay: {
     x: 0,
     y: 0,
@@ -145,6 +149,28 @@ export default (state = initialState, action: Actions) => {
           ...state.scaleY,
           previous: state.scaleY.current,
           reference: action.payload.referenceYScale,
+        },
+      };
+    }
+
+    case START_ROTATE_IMAGE: {
+      return {
+        ...state,
+        isRotating: true,
+        rotate: {
+          ...state.rotate,
+          previous: state.rotate.current,
+          reference: action.payload.startingAngle,
+        },
+      };
+    }
+
+    case SET_ROTATE: {
+      return {
+        ...state,
+        rotate: {
+          ...state.rotate,
+          current: action.payload.angle,
         },
       };
     }
@@ -248,6 +274,7 @@ export default (state = initialState, action: Actions) => {
         ...state,
         isDragging: false,
         isTransforming: false,
+        isRotating: false,
       };
     }
 

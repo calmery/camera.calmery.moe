@@ -1,4 +1,4 @@
-import React from "react";
+import React, { TouchEvent } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { State } from "~/domains";
@@ -23,6 +23,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     ),
   setScale: (nextScale: number, nextScaleX: number, nextScaleY: number) =>
     dispatch(actions.setScale(nextScale, nextScaleX, nextScaleY)),
+  startRotateImage: (startingAngle: number) =>
+    dispatch(actions.startRotateImage(startingAngle)),
+  setRotate: (nextAngle: number) => dispatch(actions.setRotate(nextAngle)),
 });
 
 class Cropper extends React.Component<
@@ -33,6 +36,7 @@ class Cropper extends React.Component<
   public componentDidMount = () => {
     const e = this.ref.current!;
 
+    e.addEventListener("touchstart", this.handleOnTouchStart, false);
     e.addEventListener("mousemove", this.handleOnMouseMove, false);
     e.addEventListener("touchmove", this.handleOnTouchMove, { passive: false });
     e.addEventListener("mouseup", this.handleOnResetFlags, false);
@@ -72,7 +76,7 @@ class Cropper extends React.Component<
   };
 
   private renderTargetImage = () => {
-    const { image } = this.props;
+    const { image, rotate } = this.props;
     const { url, width, height } = image;
 
     return (
@@ -87,7 +91,9 @@ class Cropper extends React.Component<
           xmlnsXlink="http://www.w3.org/1999/xlink"
           overflow="visible"
         >
-          <g transform={`rotate(0, ${width / 2}, ${height / 2})`}>
+          <g
+            transform={`rotate(${rotate.current}, ${width / 2}, ${height / 2})`}
+          >
             <image xlinkHref={url} width="100%" height="100%" />
             <rect width="100%" height="100%" fill="#000" fillOpacity="0.48" />
           </g>
@@ -104,7 +110,11 @@ class Cropper extends React.Component<
             xmlnsXlink="http://www.w3.org/1999/xlink"
             overflow="visible"
           >
-            <g transform={`rotate(0, ${width / 2}, ${height / 2})`}>
+            <g
+              transform={`rotate(${rotate.current}, ${width / 2}, ${
+                height / 2
+              })`}
+            >
               <image xlinkHref={url} width="100%" height="100%" />
             </g>
           </svg>
@@ -172,6 +182,23 @@ class Cropper extends React.Component<
 
   // Events
 
+  private handleOnTouchStart = (event: any) => {
+    const { startRotateImage } = this.props;
+
+    if (event.touches.length > 1) {
+      const first = event.touches[0];
+      const second = event.touches[1];
+
+      startRotateImage(
+        Math.atan2(
+          second.clientY - first.clientY,
+          second.clientX - first.clientX
+        ) *
+          (180 / Math.PI)
+      );
+    }
+  };
+
   private handleOnMouseDownCircle = (event: React.MouseEvent) => {
     const { startTransform, containerDisplay, position } = this.props;
 
@@ -201,7 +228,7 @@ class Cropper extends React.Component<
     startTransform(scaleReference, scaleXReference, scaleYReference);
   };
 
-  private handleOnTouchStartCircle = (event: React.TouchEvent) => {
+  private handleOnTouchStartCircle = (event: TouchEvent) => {
     const { startTransform, containerDisplay, position } = this.props;
 
     const scaleReference = Math.pow(
@@ -229,7 +256,9 @@ class Cropper extends React.Component<
     startTransform(scaleReference, scaleXReference, scaleYReference);
   };
 
-  private handleOnMove = (clientX: number, clientY: number) => {
+  private handleOnMove = (
+    positions: { clientX: number; clientY: number }[]
+  ) => {
     const {
       isDragging,
       setScale,
@@ -237,15 +266,30 @@ class Cropper extends React.Component<
       width,
       height,
       isTransforming,
+      isRotating,
       containerDisplay,
       position,
       setPosition,
       scale,
       scaleX,
       scaleY,
+      rotate,
+      setRotate,
     } = this.props;
 
-    if (isDragging) {
+    if (isRotating && positions.length > 1) {
+      const nextAngle =
+        rotate.previous +
+        (Math.atan2(
+          positions[1].clientY - positions[0].clientY,
+          positions[1].clientX - positions[0].clientX
+        ) *
+          (180 / Math.PI) -
+          rotate.reference);
+      setRotate(nextAngle);
+    } else if (isDragging) {
+      const [{ clientX, clientY }] = positions;
+
       const relativeX = (clientX - containerDisplay.x) * containerDisplay.ratio;
       const relativeY = (clientY - containerDisplay.y) * containerDisplay.ratio;
 
@@ -254,6 +298,8 @@ class Cropper extends React.Component<
 
       setPosition(nextX, nextY);
     } else if (isTransforming) {
+      const [{ clientX, clientY }] = positions;
+
       const nextScale =
         (Math.pow(
           Math.pow(
@@ -304,16 +350,23 @@ class Cropper extends React.Component<
 
   private handleOnMouseMove = (event: MouseEvent) => {
     const { clientX, clientY } = event;
-    this.handleOnMove(clientX, clientY);
+    this.handleOnMove([{ clientX, clientY }]);
   };
 
-  private handleOnTouchMove = (event: TouchEvent) => {
-    const { clientX, clientY } = event.touches[0];
-
+  private handleOnTouchMove = (event: any) => {
     event.preventDefault();
     event.stopPropagation();
 
-    this.handleOnMove(clientX, clientY);
+    const positions = [];
+
+    for (let i = 0; i < event.touches.length; i++) {
+      positions.push({
+        clientX: event.touches[i].clientX,
+        clientY: event.touches[i].clientY,
+      });
+    }
+
+    this.handleOnMove(positions);
   };
 
   private handleOnMouseDownRect = (
@@ -331,6 +384,7 @@ class Cropper extends React.Component<
 
   private handleOnTouchStartRect = (event: React.TouchEvent) => {
     const { containerDisplay, position, startDrag } = this.props;
+
     const referenceX =
       (event.touches[0].clientX - containerDisplay.x) * containerDisplay.ratio -
       position.x;

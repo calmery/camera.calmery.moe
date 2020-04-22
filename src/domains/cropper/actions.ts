@@ -6,6 +6,13 @@ export const RESET_FLAGS = "CROPPER/RESET_FLAGS" as const;
 export const SET_POSITION = "CROPPER/SET_POSITION" as const;
 export const START_TRANSFORM = "CROPPER/START_TRANSFORM" as const;
 export const SET_SCALE = "CROPPER/SET_SCALE" as const;
+export const START_ROTATE_IMAGE = "CROPPER/START_ROTATE_IMAGE" as const;
+export const SET_ROTATE = "CROPPER/SET_ROTATE" as const;
+
+export const setRotate = (angle: number) => ({
+  type: SET_ROTATE,
+  payload: { angle },
+});
 
 export const changeFreeAspect = () => ({
   type: CHANGE_FREE_ASPECT,
@@ -33,6 +40,11 @@ export const setContainerDisplaySize = (payload: {
 }) => ({
   type: SET_CONTAINER_DISPLAY_SIZE,
   payload,
+});
+
+export const startRotateImage = (startingAngle: number) => ({
+  type: START_ROTATE_IMAGE,
+  payload: { startingAngle },
 });
 
 export const startTransform = (
@@ -66,4 +78,6 @@ export type Actions =
   | ReturnType<typeof resetFlags>
   | ReturnType<typeof setPosition>
   | ReturnType<typeof startTransform>
-  | ReturnType<typeof setScale>;
+  | ReturnType<typeof setScale>
+  | ReturnType<typeof startRotateImage>
+  | ReturnType<typeof setRotate>;
