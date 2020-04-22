@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { withRedux, NextPageContextWithRedux, State } from "~/domains";
 import Cropper from "~/containers/Cropper";
 import * as actions from "~/domains/cropper/actions";
+import CropperPreview from "~/containers/CropperPreview";
 
 const Crop: NextPage = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const Crop: NextPage = () => {
       <button onClick={() => setAspectRatio(1, 1)}>1:1</button>
       <button onClick={() => setAspectRatio(4, 3)}>4:3</button>
       <button onClick={() => setAspectRatio(3, 4)}>3:4</button>
+      <CropperPreview />
     </div>
   );
 };
