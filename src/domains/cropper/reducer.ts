@@ -181,7 +181,7 @@ export default (state = initialState, action: Actions) => {
     }
 
     case SET_ASPECT_RATIO: {
-      const { width, height } = state;
+      const { width, height, scale, scaleX, scaleY, freeAspect } = state;
       const { widthRatio, heightRatio } = action.payload;
       const { currentWidth, currentHeight } = getCurrentSize(state);
 
@@ -189,8 +189,10 @@ export default (state = initialState, action: Actions) => {
       const areaLength = currentWidth + currentHeight;
       const nextWidth = (areaLength / sumRatio) * widthRatio;
       const nextHeight = (areaLength / sumRatio) * heightRatio;
-      const differenceWidth = width - nextWidth;
-      const differenceHeight = height - nextHeight;
+      const differenceWidth =
+        width * (freeAspect ? scaleX : scale).current - nextWidth;
+      const differenceHeight =
+        height * (freeAspect ? scaleY : scale).current - nextHeight;
 
       return {
         ...state,
