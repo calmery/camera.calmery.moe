@@ -17,8 +17,14 @@ export const PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM = "PROGRESS_CANVAS_STICKER_
 export const PROGRESS_CANVAS_STICKER_LAYER_DRAG = "PROGRESS_CANVAS_STICKER_LAYER_DRAG" as const;
 export const CHANGE_ACTIVE_CANVAS_SRICKER_LAYER = "CHANGE_ACTIVE_CANVAS_SRICKER_LAYER" as const;
 export const REMOVE_CANVAS_SRICKER_LAYER = "REMOVE_CANVAS_SRICKER_LAYER" as const;
+export const CHANGE_FRAME = "CHANGE_FRAME" as const;
 
 // Actions
+
+export const changeFrame = (index: number) => ({
+  type: CHANGE_FRAME,
+  payload: { index },
+});
 
 export const removeCanvasStickerLayer = () => ({
   type: REMOVE_CANVAS_SRICKER_LAYER,
@@ -225,4 +231,5 @@ export type Actions =
   | ReturnType<typeof progressCanvasStickerLayerTransform>
   | ReturnType<typeof progressCanvasStickerLayerDrag>
   | ReturnType<typeof changeActiveCanvasStickerLayer>
-  | ReturnType<typeof removeCanvasStickerLayer>;
+  | ReturnType<typeof removeCanvasStickerLayer>
+  | ReturnType<typeof changeFrame>;

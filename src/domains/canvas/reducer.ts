@@ -16,10 +16,13 @@ import {
   PROGRESS_CANVAS_STICKER_LAYER_DRAG,
   CHANGE_ACTIVE_CANVAS_SRICKER_LAYER,
   REMOVE_CANVAS_SRICKER_LAYER,
+  CHANGE_FRAME,
 } from "./actions";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
+
+const frames = [{}];
 
 export type CanvasState = {
   width: number;
@@ -85,6 +88,73 @@ export default (state = initialState, action: Actions): CanvasState => {
           ),
         },
       };
+    }
+
+    case CHANGE_FRAME: {
+      const users: CanvasUserFrame[] = [];
+
+      switch (action.payload.index) {
+        case 0: {
+          const w = state.layers.users[0]!.width;
+          const h = state.layers.users[0]!.height;
+          users.push({
+            id: uuid.v4(),
+            width: w,
+            height: h,
+            x: 0,
+            y: 0,
+            clipPath: {
+              d: null,
+            },
+          });
+
+          return {
+            ...state,
+            width: w,
+            height: h,
+            frames: {
+              users,
+            },
+          };
+        }
+
+        case 1: {
+          users.push(
+            {
+              id: uuid.v4(),
+              width: 852,
+              height: 612,
+              x: 24,
+              y: 24,
+              clipPath: {
+                d: "M0 0H852V519.623L0 612V0Z",
+              },
+            },
+            {
+              id: uuid.v4(),
+              width: 852,
+              height: 612,
+              x: 24,
+              y: 564,
+              clipPath: {
+                d: "M0 96L852 0V612H0V96Z",
+              },
+            }
+          );
+
+          return {
+            ...state,
+            width: 900,
+            height: 1200,
+            frames: {
+              users,
+            },
+          };
+        }
+
+        default:
+          return state;
+      }
     }
 
     case CHANGE_ACTIVE_CANVAS_SRICKER_LAYER: {

@@ -5,6 +5,6 @@ export type CanvasUserFrame = {
   x: number;
   y: number;
   clipPath: {
-    d: string;
+    d: string | null;
   };
 };
