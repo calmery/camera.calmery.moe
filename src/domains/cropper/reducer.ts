@@ -19,14 +19,6 @@ const getCurrentSize = (state: CropperState) => {
   };
 };
 
-// const calculateSvgRelativeCoordinates = (state: CropperState, x: number, y: number) => {
-//   // `event.clientX`、`event.clientY` から SVG 画像内の相対位置を取得する
-//   return {
-//     x: (x - state.containerDisplay.x) * state.containerDisplay.ratio,
-//     y: (y - state.containerDisplay.y) * state.containerDisplay.ratio
-//   };
-// }
-
 export type CropperState = {
   freeAspect: boolean;
   width: number;
@@ -158,7 +150,6 @@ export default (state = initialState, action: Actions) => {
     }
 
     case CHANGE_FREE_ASPECT: {
-      console.log("CHANGE_FREE_ASPECT");
       const { freeAspect } = state;
 
       if (freeAspect) {
