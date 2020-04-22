@@ -5,9 +5,9 @@ import Cropper from "~/containers/Cropper";
 
 const Crop: NextPage = () => {
   return (
-    <>
+    <div style={{ margin: 48 }}>
       <Cropper />
-    </>
+    </div>
   );
 };
 
