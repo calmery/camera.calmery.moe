@@ -158,12 +158,13 @@ export default (state = initialState, action: Actions) => {
     }
 
     case CHANGE_FREE_ASPECT: {
+      console.log("CHANGE_FREE_ASPECT");
       const { freeAspect } = state;
 
       if (freeAspect) {
         return {
           ...state,
-          freeAspect: true,
+          freeAspect: false,
           scale: {
             ...state.scale,
             current:
