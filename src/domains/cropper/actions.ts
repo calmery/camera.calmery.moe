@@ -9,9 +9,14 @@ export const SET_SCALE = "CROPPER/SET_SCALE" as const;
 export const START_ROTATE_IMAGE = "CROPPER/START_ROTATE_IMAGE" as const;
 export const SET_ROTATE = "CROPPER/SET_ROTATE" as const;
 
-export const setRotate = (angle: number) => ({
+export const setRotate = (
+  angle: number,
+  scale: number,
+  nextX: number,
+  nextY: number
+) => ({
   type: SET_ROTATE,
-  payload: { angle },
+  payload: { angle, scale, nextX, nextY },
 });
 
 export const changeFreeAspect = () => ({
@@ -42,9 +47,12 @@ export const setContainerDisplaySize = (payload: {
   payload,
 });
 
-export const startRotateImage = (startingAngle: number) => ({
+export const startRotateImage = (
+  startingAngle: number,
+  previousLength: number
+) => ({
   type: START_ROTATE_IMAGE,
-  payload: { startingAngle },
+  payload: { startingAngle, previousLength },
 });
 
 export const startTransform = (

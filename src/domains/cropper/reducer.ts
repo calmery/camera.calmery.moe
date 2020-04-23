@@ -32,6 +32,13 @@ export type CropperState = {
     url: string;
     width: number;
     height: number;
+    x: number;
+    y: number;
+  };
+  scaleImage: {
+    current: number;
+    previous: number;
+    reference: number;
   };
   containerDisplay: {
     x: number;
@@ -82,6 +89,8 @@ const initialState: CropperState = {
     url: "images/background.jpg",
     width: 1500,
     height: 1065,
+    x: 0,
+    y: 0,
   },
   position: {
     x: 0,
@@ -92,6 +101,11 @@ const initialState: CropperState = {
   rotate: {
     current: 0,
     previous: 0,
+    reference: 0,
+  },
+  scaleImage: {
+    current: 1,
+    previous: 1,
     reference: 0,
   },
   scale: {
@@ -162,15 +176,29 @@ export default (state = initialState, action: Actions) => {
           previous: state.rotate.current,
           reference: action.payload.startingAngle,
         },
+        scaleImage: {
+          ...state.scaleImage,
+          previous: state.scaleImage.current,
+          reference: action.payload.previousLength,
+        },
       };
     }
 
     case SET_ROTATE: {
       return {
         ...state,
+        image: {
+          ...state.image,
+          x: action.payload.nextX,
+          y: action.payload.nextY,
+        },
         rotate: {
           ...state.rotate,
           current: action.payload.angle,
+        },
+        scaleImage: {
+          ...state.scaleImage,
+          current: action.payload.scale,
         },
       };
     }

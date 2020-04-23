@@ -23,9 +23,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     ),
   setScale: (nextScale: number, nextScaleX: number, nextScaleY: number) =>
     dispatch(actions.setScale(nextScale, nextScaleX, nextScaleY)),
-  startRotateImage: (startingAngle: number) =>
-    dispatch(actions.startRotateImage(startingAngle)),
-  setRotate: (nextAngle: number) => dispatch(actions.setRotate(nextAngle)),
+  startRotateImage: (startingAngle: number, previousLength: number) =>
+    dispatch(actions.startRotateImage(startingAngle, previousLength)),
+  setRotate: (nextAngle: number, nextScale: number, x: number, y: number) =>
+    dispatch(actions.setRotate(nextAngle, nextScale, x, y)),
 });
 
 class Cropper extends React.Component<
@@ -63,7 +64,7 @@ class Cropper extends React.Component<
   };
 
   public render = () => {
-    const { image } = this.props;
+    const { image, scaleImage } = this.props;
 
     return (
       <div id="container">
@@ -82,16 +83,16 @@ class Cropper extends React.Component<
   };
 
   private renderTargetImage = () => {
-    const { image, rotate } = this.props;
+    const { image, rotate, scaleImage } = this.props;
     const { url, width, height } = image;
 
     return (
       <>
         <svg
-          width={width}
-          height={height}
-          x="0"
-          y="0"
+          width={width * scaleImage.current}
+          height={height * scaleImage.current}
+          x={image.x}
+          y={image.y}
           viewBox={`0 0 ${width} ${height}`}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -107,10 +108,10 @@ class Cropper extends React.Component<
 
         <g clipPath="url(#clip-path-1)">
           <svg
-            width={width}
-            height={height}
-            x="0"
-            y="0"
+            width={width * scaleImage.current}
+            height={height * scaleImage.current}
+            x={image.x}
+            y={image.y}
             viewBox={`0 0 ${width} ${height}`}
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -195,12 +196,19 @@ class Cropper extends React.Component<
       const first = event.touches[0];
       const second = event.touches[1];
 
+      const previousLength = Math.pow(
+        Math.pow(second.clientX - first.clientX, 2) +
+          Math.pow(second.clientY - first.clientY, 2),
+        0.5
+      );
+
       startRotateImage(
         Math.atan2(
           second.clientY - first.clientY,
           second.clientX - first.clientX
         ) *
-          (180 / Math.PI)
+          (180 / Math.PI),
+        previousLength
       );
     }
   };
@@ -281,6 +289,8 @@ class Cropper extends React.Component<
       scaleY,
       rotate,
       setRotate,
+      scaleImage,
+      image,
     } = this.props;
 
     if (isRotating && positions.length > 1) {
@@ -292,7 +302,20 @@ class Cropper extends React.Component<
         ) *
           (180 / Math.PI) -
           rotate.reference);
-      setRotate(nextAngle);
+      const currentLength = Math.pow(
+        Math.pow(positions[1].clientX - positions[0].clientX, 2) +
+          Math.pow(positions[1].clientY - positions[0].clientY, 2),
+        0.5
+      );
+      const nextScale =
+        (currentLength / scaleImage.reference) * scaleImage.previous;
+      const nextX =
+        image.x +
+        (image.width * scaleImage.current - image.width * nextScale) / 2;
+      const nextY =
+        image.y +
+        (image.height * scaleImage.current - image.height * nextScale) / 2;
+      setRotate(nextAngle, nextScale, nextX, nextY);
     } else if (isDragging) {
       const [{ clientX, clientY }] = positions;
 

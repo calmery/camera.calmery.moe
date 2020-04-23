@@ -18,6 +18,7 @@ class CropperPreview extends React.Component<
       position,
       rotate,
       image,
+      scaleImage,
     } = this.props;
 
     const sx = (freeAspect ? scaleX : scale).current;
@@ -32,10 +33,10 @@ class CropperPreview extends React.Component<
       >
         <g clipPath="url(#clip-path-2)">
           <svg
-            width={image.width}
-            height={image.height}
-            x={-position.x}
-            y={-position.y}
+            width={image.width * scaleImage.current}
+            height={image.height * scaleImage.current}
+            x={-position.x + image.x}
+            y={-position.y + image.y}
             viewBox={`0 0 ${image.width} ${image.height}`}
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
