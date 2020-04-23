@@ -42,6 +42,7 @@ class Cropper extends React.Component<
     e.addEventListener("mouseup", this.handleOnResetFlags, false);
     e.addEventListener("mouseleave", this.handleOnResetFlags, false);
     e.addEventListener("touchend", this.handleOnResetFlags, false);
+    addEventListener("resize", this.handleOnResize, false);
 
     this.setContainerDisplaySize();
   };
@@ -54,6 +55,11 @@ class Cropper extends React.Component<
     e.removeEventListener("mouseup", this.handleOnResetFlags);
     e.removeEventListener("mouseleave", this.handleOnResetFlags);
     e.removeEventListener("touchend", this.handleOnResetFlags);
+    removeEventListener("resize", this.handleOnResize, false);
+  };
+
+  private handleOnResize = () => {
+    this.setContainerDisplaySize();
   };
 
   public render = () => {
