@@ -4,7 +4,5 @@ export type CanvasUserFrame = {
   height: number;
   x: number;
   y: number;
-  clipPath: {
-    d: string | null;
-  };
+  d: string | null;
 };

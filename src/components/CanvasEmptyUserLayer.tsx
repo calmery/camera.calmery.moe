@@ -18,9 +18,9 @@ export default class CanvasEmptyUserLayer extends React.Component<{
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
       >
-        {frame.clipPath.d && (
+        {frame.d && (
           <clipPath id={`clip-path-${frame.id}`}>
-            <path d={frame.clipPath.d} />
+            <path d={frame.d} />
           </clipPath>
         )}
 

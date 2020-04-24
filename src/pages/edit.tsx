@@ -3,7 +3,10 @@ import { NextPage } from "next";
 import { useSelector, useDispatch } from "react-redux";
 import { withRedux, NextPageContextWithRedux, State } from "~/domains";
 import * as actions from "~/domains/canvas/actions";
-import { frames } from "~/domains/canvas/reducer";
+import {
+  canvasUserLayerFrame,
+  CanvasUserLayerFrame,
+} from "~/domains/canvas/reducer";
 import Canvas from "~/containers/Canvas";
 import { Filters } from "~/containers/Filters";
 import { Stickers } from "~/containers/Stickers";
@@ -22,8 +25,8 @@ const Container = styled.div`
 const Edit: NextPage = () => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
-  const handleOnClickFrame = (index: number) =>
-    dispatch(actions.changeFrame(index));
+  const handleOnClickFrame = (frame: CanvasUserLayerFrame, index: number) =>
+    dispatch(actions.changeFrame(frame, index));
 
   return (
     <>
@@ -32,11 +35,26 @@ const Edit: NextPage = () => {
       </Container>
       <Filters />
       <Stickers />
-      {frames.map((_, index) => (
-        <button onClick={() => handleOnClickFrame(index)} key={index}>
-          {index}
-        </button>
-      ))}
+      {canvasUserLayerFrame[CanvasUserLayerFrame.W3H4].frames.map(
+        (_, index) => (
+          <button
+            onClick={() => handleOnClickFrame(CanvasUserLayerFrame.W3H4, index)}
+            key={index}
+          >
+            3:4 {index}
+          </button>
+        )
+      )}
+      {canvasUserLayerFrame[CanvasUserLayerFrame.W4H3].frames.map(
+        (_, index) => (
+          <button
+            onClick={() => handleOnClickFrame(CanvasUserLayerFrame.W4H3, index)}
+            key={index}
+          >
+            4:3 {index}
+          </button>
+        )
+      )}
     </>
   );
 };

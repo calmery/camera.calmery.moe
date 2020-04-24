@@ -47,9 +47,9 @@ export default class CUL extends React.Component<{
         xmlnsXlink="http://www.w3.org/1999/xlink"
         style={{ cursor: "move" }}
       >
-        {frame.clipPath.d && (
+        {frame.d && (
           <clipPath id={`clip-path-${frame.id}`}>
-            <path d={frame.clipPath.d} ref={this.ref} />
+            <path d={frame.d} ref={this.ref} />
           </clipPath>
         )}
 

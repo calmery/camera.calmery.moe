@@ -21,9 +21,9 @@ export const CHANGE_FRAME = "CHANGE_FRAME" as const;
 
 // Actions
 
-export const changeFrame = (index: number) => ({
+export const changeFrame = (frame: any, index: number) => ({
   type: CHANGE_FRAME,
-  payload: { index },
+  payload: { frame, index },
 });
 
 export const removeCanvasStickerLayer = () => ({

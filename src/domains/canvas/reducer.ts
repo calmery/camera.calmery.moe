@@ -22,224 +22,193 @@ import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
 
-export const frames = [
-  [
-    {
-      id: uuid.v4(),
-      width: 852,
-      height: 564,
-      x: 24,
-      y: 24,
-      clipPath: {
-        d: "M0 0H852V564H0V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 852,
-      height: 564,
-      x: 24,
-      y: 612,
-      clipPath: {
-        d: "M0 0H852V564H0V0Z",
-      },
-    },
-  ],
-  [
-    {
-      id: uuid.v4(),
-      width: 852,
-      height: 752,
-      x: 24,
-      y: 24,
-      clipPath: {
-        d: "M0 0H852V752L0 376V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 852,
-      height: 752,
-      x: 24,
-      y: 424,
-      clipPath: {
-        d: "M0 0L852 376V752H0V0Z",
-      },
-    },
-  ],
-  [
-    {
-      id: uuid.v4(),
-      width: 852,
-      height: 564,
-      x: 24,
-      y: 24,
-      clipPath: {
-        d: "M0 0H852V564H0V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 414,
-      height: 564,
-      x: 24,
-      y: 612,
-      clipPath: {
-        d: "M0 0H414V564H0V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 414,
-      height: 564,
-      x: 462,
-      y: 612,
-      clipPath: {
-        d: "M0 0H414V564H0V0Z",
-      },
-    },
-  ],
-  [
-    {
-      id: uuid.v4(),
-      width: 852,
-      height: 368,
-      x: 24,
-      y: 24,
-      clipPath: {
-        d: "M0 0H852V368H0V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 852,
-      height: 368,
-      x: 24,
-      y: 416,
-      clipPath: {
-        d: "M0 0H852V368H0V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 852,
-      height: 368,
-      x: 24,
-      y: 808,
-      clipPath: {
-        d: "M0 0H852V368H0V0Z",
-      },
-    },
-  ],
-  [
-    {
-      id: uuid.v4(),
-      width: 564,
-      height: 852,
-      x: 24,
-      y: 24,
-      clipPath: {
-        d: "M0 0H564V852H0V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 564,
-      height: 852,
-      x: 612,
-      y: 24,
-      clipPath: {
-        d: "M0 0H564V852H0V0Z",
-      },
-    },
-  ],
-  [
-    {
-      id: uuid.v4(),
-      width: 752,
-      height: 852,
-      x: 24,
-      y: 24,
-      clipPath: {
-        d: "M0 0H752L376 852H0V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 752,
-      height: 852,
-      x: 424,
-      y: 24,
-      clipPath: {
-        d: "M376 0H752V852H0L376 0Z",
-      },
-    },
-  ],
-  [
-    {
-      id: uuid.v4(),
-      width: 564,
-      height: 852,
-      x: 24,
-      y: 24,
-      clipPath: {
-        d: "M0 0H564V852H0V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 564,
-      height: 414,
-      x: 612,
-      y: 24,
-      clipPath: {
-        d: "M0 0H564V414H0V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 564,
-      height: 414,
-      x: 612,
-      y: 462,
-      clipPath: {
-        d: "M0 0H564V414H0V0Z",
-      },
-    },
-  ],
-  [
-    {
-      id: uuid.v4(),
-      width: 368,
-      height: 852,
-      x: 24,
-      y: 24,
-      clipPath: {
-        d: "M0 0H368V852H0V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 368,
-      height: 852,
-      x: 416,
-      y: 24,
-      clipPath: {
-        d: "M0 0H368V852H0V0Z",
-      },
-    },
-    {
-      id: uuid.v4(),
-      width: 368,
-      height: 852,
-      x: 808,
-      y: 24,
-      clipPath: {
-        d: "M0 0H368V852H0V0Z",
-      },
-    },
-  ],
-];
+export enum CanvasUserLayerFrame {
+  W3H4 = "3:4",
+  W4H3 = "4:3",
+}
+
+export const canvasUserLayerFrame: {
+  [_ in CanvasUserLayerFrame]: {
+    width: number;
+    height: number;
+    frames: {
+      width: number;
+      height: number;
+      x: number;
+      y: number;
+      d: string;
+    }[][];
+  };
+} = {
+  [CanvasUserLayerFrame.W3H4]: {
+    width: 900,
+    height: 1200,
+    frames: [
+      [
+        {
+          width: 852,
+          height: 564,
+          x: 24,
+          y: 24,
+          d: "M0 0H852V564H0V0Z",
+        },
+        {
+          width: 852,
+          height: 564,
+          x: 24,
+          y: 612,
+          d: "M0 0H852V564H0V0Z",
+        },
+      ],
+      [
+        {
+          width: 852,
+          height: 752,
+          x: 24,
+          y: 24,
+          d: "M0 0H852V752L0 376V0Z",
+        },
+        {
+          width: 852,
+          height: 752,
+          x: 24,
+          y: 424,
+          d: "M0 0L852 376V752H0V0Z",
+        },
+      ],
+      [
+        {
+          width: 852,
+          height: 564,
+          x: 24,
+          y: 24,
+          d: "M0 0H852V564H0V0Z",
+        },
+        {
+          width: 414,
+          height: 564,
+          x: 24,
+          y: 612,
+          d: "M0 0H414V564H0V0Z",
+        },
+        {
+          width: 414,
+          height: 564,
+          x: 462,
+          y: 612,
+          d: "M0 0H414V564H0V0Z",
+        },
+      ],
+      [
+        {
+          width: 852,
+          height: 368,
+          x: 24,
+          y: 24,
+          d: "M0 0H852V368H0V0Z",
+        },
+        {
+          width: 852,
+          height: 368,
+          x: 24,
+          y: 416,
+          d: "M0 0H852V368H0V0Z",
+        },
+        {
+          width: 852,
+          height: 368,
+          x: 24,
+          y: 808,
+          d: "M0 0H852V368H0V0Z",
+        },
+      ],
+    ],
+  },
+  [CanvasUserLayerFrame.W4H3]: {
+    width: 1200,
+    height: 900,
+    frames: [
+      [
+        {
+          width: 564,
+          height: 852,
+          x: 24,
+          y: 24,
+          d: "M0 0H564V852H0V0Z",
+        },
+        {
+          width: 564,
+          height: 852,
+          x: 612,
+          y: 24,
+          d: "M0 0H564V852H0V0Z",
+        },
+      ],
+      [
+        {
+          width: 752,
+          height: 852,
+          x: 24,
+          y: 24,
+          d: "M0 0H752L376 852H0V0Z",
+        },
+        {
+          width: 752,
+          height: 852,
+          x: 424,
+          y: 24,
+          d: "M376 0H752V852H0L376 0Z",
+        },
+      ],
+      [
+        {
+          width: 564,
+          height: 852,
+          x: 24,
+          y: 24,
+          d: "M0 0H564V852H0V0Z",
+        },
+        {
+          width: 564,
+          height: 414,
+          x: 612,
+          y: 24,
+          d: "M0 0H564V414H0V0Z",
+        },
+        {
+          width: 564,
+          height: 414,
+          x: 612,
+          y: 462,
+          d: "M0 0H564V414H0V0Z",
+        },
+      ],
+      [
+        {
+          width: 368,
+          height: 852,
+          x: 24,
+          y: 24,
+          d: "M0 0H368V852H0V0Z",
+        },
+        {
+          width: 368,
+          height: 852,
+          x: 416,
+          y: 24,
+          d: "M0 0H368V852H0V0Z",
+        },
+        {
+          width: 368,
+          height: 852,
+          x: 808,
+          y: 24,
+          d: "M0 0H368V852H0V0Z",
+        },
+      ],
+    ],
+  },
+};
 
 export type CanvasState = {
   width: number;
@@ -269,9 +238,7 @@ const initialState: CanvasState = {
         height: 612,
         x: 24,
         y: 24,
-        clipPath: {
-          d: "M0 0H852V519.623L0 612V0Z",
-        },
+        d: "M0 0H852V519.623L0 612V0Z",
       },
       {
         id: uuid.v4(),
@@ -279,9 +246,7 @@ const initialState: CanvasState = {
         height: 612,
         x: 24,
         y: 564,
-        clipPath: {
-          d: "M0 96L852 0V612H0V96Z",
-        },
+        d: "M0 96L852 0V612H0V96Z",
       },
     ],
   },
@@ -308,12 +273,19 @@ export default (state = initialState, action: Actions): CanvasState => {
     }
 
     case CHANGE_FRAME: {
-      const users: CanvasUserFrame[] = frames[action.payload.index];
+      const canvasUserFrame =
+        canvasUserLayerFrame[action.payload.frame as CanvasUserLayerFrame];
+      const users: CanvasUserFrame[] = canvasUserFrame.frames[
+        action.payload.index
+      ].map((f) => ({
+        ...f,
+        id: uuid.v4(),
+      }));
 
       return {
         ...state,
-        width: action.payload.index < 4 ? 900 : 1200,
-        height: action.payload.index < 4 ? 1200 : 900,
+        width: canvasUserFrame.width,
+        height: canvasUserFrame.height,
         frames: {
           users,
         },
