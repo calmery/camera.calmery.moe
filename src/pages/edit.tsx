@@ -3,6 +3,7 @@ import { NextPage } from "next";
 import { useSelector, useDispatch } from "react-redux";
 import { withRedux, NextPageContextWithRedux, State } from "~/domains";
 import * as actions from "~/domains/canvas/actions";
+import { frames } from "~/domains/canvas/reducer";
 import Canvas from "~/containers/Canvas";
 import { Filters } from "~/containers/Filters";
 import { Stickers } from "~/containers/Stickers";
@@ -31,10 +32,11 @@ const Edit: NextPage = () => {
       </Container>
       <Filters />
       <Stickers />
-      {canvas.layers.users.length ? (
-        <button onClick={() => handleOnClickFrame(0)}>Single</button>
-      ) : null}
-      <button onClick={() => handleOnClickFrame(1)}>Double</button>
+      {frames.map((_, index) => (
+        <button onClick={() => handleOnClickFrame(index)} key={index}>
+          {index}
+        </button>
+      ))}
     </>
   );
 };

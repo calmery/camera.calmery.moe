@@ -22,7 +22,224 @@ import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
 
-const frames = [{}];
+export const frames = [
+  [
+    {
+      id: uuid.v4(),
+      width: 852,
+      height: 564,
+      x: 24,
+      y: 24,
+      clipPath: {
+        d: "M0 0H852V564H0V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 852,
+      height: 564,
+      x: 24,
+      y: 612,
+      clipPath: {
+        d: "M0 0H852V564H0V0Z",
+      },
+    },
+  ],
+  [
+    {
+      id: uuid.v4(),
+      width: 852,
+      height: 752,
+      x: 24,
+      y: 24,
+      clipPath: {
+        d: "M0 0H852V752L0 376V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 852,
+      height: 752,
+      x: 24,
+      y: 424,
+      clipPath: {
+        d: "M0 0L852 376V752H0V0Z",
+      },
+    },
+  ],
+  [
+    {
+      id: uuid.v4(),
+      width: 852,
+      height: 564,
+      x: 24,
+      y: 24,
+      clipPath: {
+        d: "M0 0H852V564H0V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 414,
+      height: 564,
+      x: 24,
+      y: 612,
+      clipPath: {
+        d: "M0 0H414V564H0V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 414,
+      height: 564,
+      x: 462,
+      y: 612,
+      clipPath: {
+        d: "M0 0H414V564H0V0Z",
+      },
+    },
+  ],
+  [
+    {
+      id: uuid.v4(),
+      width: 852,
+      height: 368,
+      x: 24,
+      y: 24,
+      clipPath: {
+        d: "M0 0H852V368H0V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 852,
+      height: 368,
+      x: 24,
+      y: 416,
+      clipPath: {
+        d: "M0 0H852V368H0V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 852,
+      height: 368,
+      x: 24,
+      y: 808,
+      clipPath: {
+        d: "M0 0H852V368H0V0Z",
+      },
+    },
+  ],
+  [
+    {
+      id: uuid.v4(),
+      width: 564,
+      height: 852,
+      x: 24,
+      y: 24,
+      clipPath: {
+        d: "M0 0H564V852H0V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 564,
+      height: 852,
+      x: 612,
+      y: 24,
+      clipPath: {
+        d: "M0 0H564V852H0V0Z",
+      },
+    },
+  ],
+  [
+    {
+      id: uuid.v4(),
+      width: 752,
+      height: 852,
+      x: 24,
+      y: 24,
+      clipPath: {
+        d: "M0 0H752L376 852H0V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 752,
+      height: 852,
+      x: 424,
+      y: 24,
+      clipPath: {
+        d: "M376 0H752V852H0L376 0Z",
+      },
+    },
+  ],
+  [
+    {
+      id: uuid.v4(),
+      width: 564,
+      height: 852,
+      x: 24,
+      y: 24,
+      clipPath: {
+        d: "M0 0H564V852H0V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 564,
+      height: 414,
+      x: 612,
+      y: 24,
+      clipPath: {
+        d: "M0 0H564V414H0V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 564,
+      height: 414,
+      x: 612,
+      y: 462,
+      clipPath: {
+        d: "M0 0H564V414H0V0Z",
+      },
+    },
+  ],
+  [
+    {
+      id: uuid.v4(),
+      width: 368,
+      height: 852,
+      x: 24,
+      y: 24,
+      clipPath: {
+        d: "M0 0H368V852H0V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 368,
+      height: 852,
+      x: 416,
+      y: 24,
+      clipPath: {
+        d: "M0 0H368V852H0V0Z",
+      },
+    },
+    {
+      id: uuid.v4(),
+      width: 368,
+      height: 852,
+      x: 808,
+      y: 24,
+      clipPath: {
+        d: "M0 0H368V852H0V0Z",
+      },
+    },
+  ],
+];
 
 export type CanvasState = {
   width: number;
@@ -91,70 +308,16 @@ export default (state = initialState, action: Actions): CanvasState => {
     }
 
     case CHANGE_FRAME: {
-      const users: CanvasUserFrame[] = [];
+      const users: CanvasUserFrame[] = frames[action.payload.index];
 
-      switch (action.payload.index) {
-        case 0: {
-          const w = state.layers.users[0]!.width;
-          const h = state.layers.users[0]!.height;
-          users.push({
-            id: uuid.v4(),
-            width: w,
-            height: h,
-            x: 0,
-            y: 0,
-            clipPath: {
-              d: null,
-            },
-          });
-
-          return {
-            ...state,
-            width: w,
-            height: h,
-            frames: {
-              users,
-            },
-          };
-        }
-
-        case 1: {
-          users.push(
-            {
-              id: uuid.v4(),
-              width: 852,
-              height: 612,
-              x: 24,
-              y: 24,
-              clipPath: {
-                d: "M0 0H852V519.623L0 612V0Z",
-              },
-            },
-            {
-              id: uuid.v4(),
-              width: 852,
-              height: 612,
-              x: 24,
-              y: 564,
-              clipPath: {
-                d: "M0 96L852 0V612H0V96Z",
-              },
-            }
-          );
-
-          return {
-            ...state,
-            width: 900,
-            height: 1200,
-            frames: {
-              users,
-            },
-          };
-        }
-
-        default:
-          return state;
-      }
+      return {
+        ...state,
+        width: action.payload.index < 4 ? 900 : 1200,
+        height: action.payload.index < 4 ? 1200 : 900,
+        frames: {
+          users,
+        },
+      };
     }
 
     case CHANGE_ACTIVE_CANVAS_SRICKER_LAYER: {
