@@ -9,8 +9,8 @@ const mapStateToProps = ({ cropper }: State) => cropper;
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setContainerDisplaySize: (domRect: DOMRect) =>
     dispatch(actions.setContainerDisplaySize(domRect)),
-  startDrag: (referenceX: number, referenceY: number) =>
-    dispatch(actions.startDrag(referenceX, referenceY)),
+  startDrag: (event: React.MouseEvent | React.TouchEvent) =>
+    dispatch(actions.startDrag(event)),
   resetFlags: () => dispatch(actions.resetFlags()),
   startTransform: (event: React.MouseEvent | React.TouchEvent) =>
     dispatch(actions.startTransform(event)),
@@ -163,8 +163,8 @@ class Cropper extends React.Component<
           height={height * sy}
           x={position.x}
           y={position.y}
-          onMouseDown={this.handleOnMouseDownRect}
-          onTouchStart={this.handleOnTouchStartRect}
+          onMouseDown={this.handleOnStartDrag}
+          onTouchStart={this.handleOnStartDrag}
         ></rect>
 
         <circle
@@ -206,29 +206,10 @@ class Cropper extends React.Component<
     update(event);
   };
 
-  private handleOnMouseDownRect = (
-    event: React.MouseEvent<SVGRectElement, MouseEvent>
-  ) => {
-    const { containerDisplay, position, startDrag } = this.props;
-    const referenceX =
-      (event.clientX - containerDisplay.x) * containerDisplay.ratio -
-      position.x;
-    const referenceY =
-      (event.clientY - containerDisplay.y) * containerDisplay.ratio -
-      position.y;
-    startDrag(referenceX, referenceY);
-  };
+  private handleOnStartDrag = (event: React.MouseEvent | React.TouchEvent) => {
+    const { startDrag } = this.props;
 
-  private handleOnTouchStartRect = (event: React.TouchEvent) => {
-    const { containerDisplay, position, startDrag } = this.props;
-
-    const referenceX =
-      (event.touches[0].clientX - containerDisplay.x) * containerDisplay.ratio -
-      position.x;
-    const referenceY =
-      (event.touches[0].clientY - containerDisplay.y) * containerDisplay.ratio -
-      position.y;
-    startDrag(referenceX, referenceY);
+    startDrag(event);
   };
 
   private handleOnResetFlags = () => {

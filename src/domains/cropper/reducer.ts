@@ -356,6 +356,30 @@ const startTransform = (
   };
 };
 
+const startDrag = (
+  state: CropperState,
+  positions: { clientX: number; clientY: number }[]
+) => {
+  const { containerDisplay, position } = state;
+
+  const referenceX =
+    (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
+    position.x;
+  const referenceY =
+    (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
+    position.y;
+
+  return {
+    ...state,
+    isDragging: true,
+    position: {
+      ...state.position,
+      referenceX,
+      referenceY,
+    },
+  };
+};
+
 // Main
 
 export default (state = initialState, action: Actions) => {
@@ -449,19 +473,8 @@ export default (state = initialState, action: Actions) => {
       };
     }
 
-    case START_DRAG: {
-      const { referenceX, referenceY } = action.payload;
-
-      return {
-        ...state,
-        isDragging: true,
-        position: {
-          ...state.position,
-          referenceX,
-          referenceY,
-        },
-      };
-    }
+    case START_DRAG:
+      return startDrag(state, action.payload);
 
     case RESET_FLAGS: {
       return {

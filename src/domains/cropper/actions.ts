@@ -83,10 +83,30 @@ export const startTransform = (event: React.TouchEvent | React.MouseEvent) => {
   };
 };
 
-export const startDrag = (referenceX: number, referenceY: number) => ({
-  type: START_DRAG,
-  payload: { referenceX, referenceY },
-});
+export const startDrag = (event: React.MouseEvent | React.TouchEvent) => {
+  const positions = [];
+
+  if ((event as any).touches) {
+    const { touches } = event as TouchEvent | React.TouchEvent;
+
+    for (let i = 0; i < touches.length; i++) {
+      positions.push({
+        clientX: touches[i].clientX,
+        clientY: touches[i].clientY,
+      });
+    }
+  } else {
+    positions.push({
+      clientX: (event as MouseEvent | React.MouseEvent).clientX,
+      clientY: (event as MouseEvent | React.MouseEvent).clientY,
+    });
+  }
+
+  return {
+    type: START_DRAG,
+    payload: positions,
+  };
+};
 
 export const resetFlags = () => ({
   type: RESET_FLAGS,
