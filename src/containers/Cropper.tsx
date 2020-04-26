@@ -187,20 +187,15 @@ class Cropper extends React.Component<
 
   // Events
 
-  private handleOnTouchStart = (event: any) => {
+  private handleOnTouchStart = (event: TouchEvent) => {
     const { startRotateImage } = this.props;
 
-    if (event.touches.length > 1) {
-      startRotateImage(event);
-    }
+    startRotateImage(event);
   };
 
   private handleOnMouseDownCircle = (event: React.MouseEvent) => {
     const { startTransform, containerDisplay, position } = this.props;
 
-    // cropperState.scale.previous = cropperState.scale.current;
-    // cropperState.scaleX.previous = cropperState.scaleX.current;
-    // cropperState.scaleY.previous = cropperState.scaleY.current;
     const scaleReference = Math.pow(
       Math.pow(
         (event.clientX - containerDisplay.x) * containerDisplay.ratio -
