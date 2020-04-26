@@ -3,11 +3,8 @@ export const SET_ASPECT_RATIO = "CROPPER/SET_ASPECT_RATIO" as const;
 export const SET_CONTAINER_DISPLAY_SIZE = "CROPPER/SET_CONTAINER_DISPLAY_SIZE" as const;
 export const START_DRAG = "CROPPER/START_DRAG" as const;
 export const RESET_FLAGS = "CROPPER/RESET_FLAGS" as const;
-export const SET_POSITION = "CROPPER/SET_POSITION" as const;
 export const START_TRANSFORM = "CROPPER/START_TRANSFORM" as const;
-export const SET_SCALE = "CROPPER/SET_SCALE" as const;
 export const START_ROTATE_IMAGE = "CROPPER/START_ROTATE_IMAGE" as const;
-export const SET_ROTATE = "CROPPER/SET_ROTATE" as const;
 export const UPDATE = "CROPPER/UPDATE" as const;
 
 export const update = (
@@ -38,16 +35,6 @@ export const update = (
   };
 };
 
-export const setRotate = (
-  angle: number,
-  scale: number,
-  nextX: number,
-  nextY: number
-) => ({
-  type: SET_ROTATE,
-  payload: { angle, scale, nextX, nextY },
-});
-
 export const changeFreeAspect = () => ({
   type: CHANGE_FREE_ASPECT,
 });
@@ -55,15 +42,6 @@ export const changeFreeAspect = () => ({
 export const setAspectRatio = (widthRatio: number, heightRatio: number) => ({
   type: SET_ASPECT_RATIO,
   payload: { widthRatio, heightRatio },
-});
-
-export const setScale = (
-  nextScale: number,
-  nextScaleX: number,
-  nextScaleY: number
-) => ({
-  type: SET_SCALE,
-  payload: { nextScale, nextScaleX, nextScaleY },
 });
 
 export const setContainerDisplaySize = (payload: {
@@ -90,11 +68,6 @@ export const startTransform = (
   payload: { referenceScale, referenceXScale, referenceYScale },
 });
 
-export const setPosition = (x: number, y: number) => ({
-  type: SET_POSITION,
-  payload: { x, y },
-});
-
 export const startDrag = (referenceX: number, referenceY: number) => ({
   type: START_DRAG,
   payload: { referenceX, referenceY },
@@ -110,9 +83,6 @@ export type Actions =
   | ReturnType<typeof setContainerDisplaySize>
   | ReturnType<typeof startDrag>
   | ReturnType<typeof resetFlags>
-  | ReturnType<typeof setPosition>
   | ReturnType<typeof startTransform>
-  | ReturnType<typeof setScale>
   | ReturnType<typeof startRotateImage>
-  | ReturnType<typeof setRotate>
   | ReturnType<typeof update>;
