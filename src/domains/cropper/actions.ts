@@ -4,7 +4,7 @@ export const START_ROTATE_IMAGE = "CROPPER/START_ROTATE_IMAGE" as const;
 export const CHANGE_FREE_ASPECT = "CROPPER/CHANGE_FREE_ASPECT" as const;
 export const SET_ASPECT_RATIO = "CROPPER/SET_ASPECT_RATIO" as const;
 export const SET_CONTAINER_DISPLAY_SIZE = "CROPPER/SET_CONTAINER_DISPLAY_SIZE" as const;
-export const UPDATE = "CROPPER/UPDATE" as const;
+export const TICK = "CROPPER/TICK" as const;
 export const RESET_FLAGS = "CROPPER/RESET_FLAGS" as const;
 
 // Helper Functions
@@ -35,10 +35,10 @@ const convertEventToPositions = (
 
 // Actions
 
-export const update = (
+export const tick = (
   event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent
 ) => ({
-  type: UPDATE,
+  type: TICK,
   payload: convertEventToPositions(event),
 });
 
@@ -90,4 +90,4 @@ export type Actions =
   | ReturnType<typeof resetFlags>
   | ReturnType<typeof startTransform>
   | ReturnType<typeof startRotateImage>
-  | ReturnType<typeof update>;
+  | ReturnType<typeof tick>;

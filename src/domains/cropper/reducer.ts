@@ -7,7 +7,7 @@ import {
   RESET_FLAGS,
   START_TRANSFORM,
   START_ROTATE_IMAGE,
-  UPDATE,
+  TICK,
 } from "./actions";
 
 const getCurrentSize = (state: CropperState) => {
@@ -492,7 +492,7 @@ export default (state = initialState, action: Actions) => {
     case SET_CONTAINER_DISPLAY_SIZE:
       return setContainerDisplaySize(state, action.payload);
 
-    case UPDATE:
+    case TICK:
       return update(state, action.payload);
 
     case RESET_FLAGS:

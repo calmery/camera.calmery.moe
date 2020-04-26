@@ -7,18 +7,18 @@ import * as actions from "~/domains/cropper/actions";
 const mapStateToProps = ({ cropper }: State) => cropper;
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setContainerDisplaySize: (domRect: DOMRect) =>
-    dispatch(actions.setContainerDisplaySize(domRect)),
-  startDrag: (event: React.MouseEvent | React.TouchEvent) =>
-    dispatch(actions.startDrag(event)),
+  setContainerDisplaySize: (
+    ...xs: Parameters<typeof actions.setContainerDisplaySize>
+  ) => dispatch(actions.setContainerDisplaySize(...xs)),
+  startDrag: (...xs: Parameters<typeof actions.startDrag>) =>
+    dispatch(actions.startDrag(...xs)),
+  startRotateImage: (...xs: Parameters<typeof actions.startRotateImage>) =>
+    dispatch(actions.startRotateImage(...xs)),
+  startTransform: (...xs: Parameters<typeof actions.startTransform>) =>
+    dispatch(actions.startTransform(...xs)),
+  tick: (...xs: Parameters<typeof actions.tick>) =>
+    dispatch(actions.tick(...xs)),
   resetFlags: () => dispatch(actions.resetFlags()),
-  startTransform: (event: React.MouseEvent | React.TouchEvent) =>
-    dispatch(actions.startTransform(event)),
-  startRotateImage: (event: TouchEvent) =>
-    dispatch(actions.startRotateImage(event)),
-  update: (
-    event: MouseEvent | TouchEvent | React.TouchEvent | React.MouseEvent
-  ) => dispatch(actions.update(event)),
 });
 
 class Cropper extends React.Component<
@@ -179,12 +179,12 @@ class Cropper extends React.Component<
   private handleOnMove = (
     event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent
   ) => {
-    const { update } = this.props;
+    const { tick } = this.props;
 
     event.preventDefault();
     event.stopPropagation();
 
-    update(event);
+    tick(event);
   };
 
   private setContainerDisplaySize = () => {
