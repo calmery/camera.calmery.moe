@@ -53,21 +53,19 @@ class Cropper extends React.Component<
   };
 
   public render = () => {
-    const { image, scaleImage } = this.props;
+    const { image } = this.props;
 
     return (
-      <div id="container">
-        <svg
-          ref={this.ref}
-          viewBox={`0 0 ${image.width} ${image.height}`}
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-          overflow="visible"
-        >
-          {this.renderTargetImage()}
-          {this.renderCropper()}
-        </svg>
-      </div>
+      <svg
+        ref={this.ref}
+        viewBox={`0 0 ${image.width} ${image.height}`}
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        overflow="visible"
+      >
+        {this.renderTargetImage()}
+        {this.renderCropper()}
+      </svg>
     );
   };
 
