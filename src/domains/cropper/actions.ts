@@ -47,12 +47,9 @@ export const setContainerDisplaySize = (payload: {
   payload,
 });
 
-export const startRotateImage = (
-  startingAngle: number,
-  previousLength: number
-) => ({
+export const startRotateImage = (event: TouchEvent) => ({
   type: START_ROTATE_IMAGE,
-  payload: { startingAngle, previousLength },
+  payload: { event },
 });
 
 export const startTransform = (

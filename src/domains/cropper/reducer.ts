@@ -125,6 +125,47 @@ const initialState: CropperState = {
   },
 };
 
+// Events
+
+const startRotateImage = (
+  state: CropperState,
+  { event }: { event: TouchEvent }
+): CropperState => {
+  const ts = event.touches;
+
+  // Multi Touch
+  if (ts.length > 1) {
+    const distanceBetweenFingers = Math.pow(
+      Math.pow(ts[1].clientX - ts[0].clientX, 2) +
+        Math.pow(ts[1].clientY - ts[0].clientY, 2),
+      0.5
+    );
+
+    const angleBetweenFingers =
+      Math.atan2(ts[1].clientY - ts[0].clientY, ts[1].clientX - ts[0].clientX) *
+      (180 / Math.PI);
+
+    return {
+      ...state,
+      isRotating: true,
+      rotate: {
+        ...state.rotate,
+        previous: state.rotate.current,
+        reference: angleBetweenFingers,
+      },
+      scaleImage: {
+        ...state.scaleImage,
+        previous: state.scaleImage.current,
+        reference: distanceBetweenFingers,
+      },
+    };
+  }
+
+  return state;
+};
+
+// Main
+
 export default (state = initialState, action: Actions) => {
   switch (action.type) {
     case SET_SCALE: {
@@ -167,22 +208,8 @@ export default (state = initialState, action: Actions) => {
       };
     }
 
-    case START_ROTATE_IMAGE: {
-      return {
-        ...state,
-        isRotating: true,
-        rotate: {
-          ...state.rotate,
-          previous: state.rotate.current,
-          reference: action.payload.startingAngle,
-        },
-        scaleImage: {
-          ...state.scaleImage,
-          previous: state.scaleImage.current,
-          reference: action.payload.previousLength,
-        },
-      };
-    }
+    case START_ROTATE_IMAGE:
+      return startRotateImage(state, action.payload);
 
     case SET_ROTATE: {
       return {

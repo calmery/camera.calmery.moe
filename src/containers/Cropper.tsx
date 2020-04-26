@@ -1,4 +1,4 @@
-import React, { TouchEvent } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { State } from "~/domains";
@@ -23,8 +23,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     ),
   setScale: (nextScale: number, nextScaleX: number, nextScaleY: number) =>
     dispatch(actions.setScale(nextScale, nextScaleX, nextScaleY)),
-  startRotateImage: (startingAngle: number, previousLength: number) =>
-    dispatch(actions.startRotateImage(startingAngle, previousLength)),
+  startRotateImage: (event: TouchEvent) =>
+    dispatch(actions.startRotateImage(event)),
   setRotate: (nextAngle: number, nextScale: number, x: number, y: number) =>
     dispatch(actions.setRotate(nextAngle, nextScale, x, y)),
 });
@@ -193,23 +193,7 @@ class Cropper extends React.Component<
     const { startRotateImage } = this.props;
 
     if (event.touches.length > 1) {
-      const first = event.touches[0];
-      const second = event.touches[1];
-
-      const previousLength = Math.pow(
-        Math.pow(second.clientX - first.clientX, 2) +
-          Math.pow(second.clientY - first.clientY, 2),
-        0.5
-      );
-
-      startRotateImage(
-        Math.atan2(
-          second.clientY - first.clientY,
-          second.clientX - first.clientX
-        ) *
-          (180 / Math.PI),
-        previousLength
-      );
+      startRotateImage(event);
     }
   };
 
@@ -242,7 +226,9 @@ class Cropper extends React.Component<
     startTransform(scaleReference, scaleXReference, scaleYReference);
   };
 
-  private handleOnTouchStartCircle = (event: TouchEvent) => {
+  private handleOnTouchStartCircle = (
+    event: React.TouchEvent<SVGCircleElement>
+  ) => {
     const { startTransform, containerDisplay, position } = this.props;
 
     const scaleReference = Math.pow(
