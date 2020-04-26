@@ -6,10 +6,8 @@ import {
   START_DRAG,
   RESET_FLAGS,
   START_TRANSFORM,
-  SET_POSITION,
-  SET_SCALE,
   START_ROTATE_IMAGE,
-  SET_ROTATE,
+  UPDATE,
 } from "./actions";
 
 const getCurrentSize = (state: CropperState) => {
@@ -164,27 +162,159 @@ const startRotateImage = (
   return state;
 };
 
-// Main
+const update = (
+  state: CropperState,
+  positions: { clientX: number; clientY: number }[]
+) => {
+  const {
+    isDragging,
+    freeAspect,
+    width,
+    isTransforming,
+    isRotating,
+    containerDisplay,
+    position,
+    scale,
+    scaleX,
+    scaleY,
+    rotate,
+    scaleImage,
+    image,
+  } = state;
 
-export default (state = initialState, action: Actions) => {
-  switch (action.type) {
-    case SET_SCALE: {
+  if (isRotating && positions.length > 1) {
+    const nextAngle =
+      rotate.previous +
+      (Math.atan2(
+        positions[1].clientY - positions[0].clientY,
+        positions[1].clientX - positions[0].clientX
+      ) *
+        (180 / Math.PI) -
+        rotate.reference);
+    const currentLength = Math.pow(
+      Math.pow(positions[1].clientX - positions[0].clientX, 2) +
+        Math.pow(positions[1].clientY - positions[0].clientY, 2),
+      0.5
+    );
+    const nextScale =
+      (currentLength / scaleImage.reference) * scaleImage.previous;
+    const nextX =
+      image.x +
+      (image.width * scaleImage.current - image.width * nextScale) / 2;
+    const nextY =
+      image.y +
+      (image.height * scaleImage.current - image.height * nextScale) / 2;
+
+    return {
+      ...state,
+      image: {
+        ...state.image,
+        x: nextX,
+        y: nextY,
+      },
+      rotate: {
+        ...state.rotate,
+        current: nextAngle,
+      },
+      scaleImage: {
+        ...state.scaleImage,
+        current: nextScale,
+      },
+    };
+  }
+
+  if (isDragging) {
+    const [{ clientX, clientY }] = positions;
+
+    const relativeX = (clientX - containerDisplay.x) * containerDisplay.ratio;
+    const relativeY = (clientY - containerDisplay.y) * containerDisplay.ratio;
+
+    const nextX = relativeX - position.referenceX;
+    const nextY = relativeY - position.referenceY;
+
+    return {
+      ...state,
+      position: {
+        ...state.position,
+        x: nextX,
+        y: nextY,
+      },
+    };
+  }
+
+  if (isTransforming) {
+    const [{ clientX, clientY }] = positions;
+
+    const nextScale =
+      (Math.pow(
+        Math.pow(
+          (clientX - containerDisplay.x) * containerDisplay.ratio - position.x,
+          2
+        ) +
+          Math.pow(
+            (clientY - containerDisplay.y) * containerDisplay.ratio -
+              position.y,
+            2
+          ),
+        0.5
+      ) /
+        scale.reference) *
+      scale.previous;
+    const nextScaleX =
+      (((clientX - containerDisplay.x) * containerDisplay.ratio - position.x) /
+        scaleX.reference) *
+      scaleX.previous;
+    const nextScaleY =
+      (((clientY - containerDisplay.y) * containerDisplay.ratio - position.y) /
+        scaleY.reference) *
+      scaleY.previous;
+
+    if (freeAspect) {
       return {
         ...state,
         scale: {
           ...state.scale,
-          current: action.payload.nextScale,
+          current: nextScale,
         },
         scaleX: {
           ...state.scaleX,
-          current: action.payload.nextScaleX,
+          current: nextScaleX,
         },
         scaleY: {
           ...state.scaleY,
-          current: action.payload.nextScaleY,
+          current: nextScaleY,
         },
       };
     }
+
+    if (
+      width * nextScale >= 100 &&
+      !(
+        (clientX - containerDisplay.x) * containerDisplay.ratio < position.x ||
+        (clientY - containerDisplay.y) * containerDisplay.ratio < position.y
+      )
+    ) {
+      return {
+        ...state,
+        scale: {
+          ...state.scale,
+          current: nextScale,
+        },
+      };
+    }
+
+    return state;
+  }
+
+  return state;
+};
+
+// Main
+
+export default (state = initialState, action: Actions) => {
+  switch (action.type) {
+    case UPDATE:
+      return update(state, action.payload);
 
     case START_TRANSFORM: {
       return {
@@ -210,25 +340,6 @@ export default (state = initialState, action: Actions) => {
 
     case START_ROTATE_IMAGE:
       return startRotateImage(state, action.payload);
-
-    case SET_ROTATE: {
-      return {
-        ...state,
-        image: {
-          ...state.image,
-          x: action.payload.nextX,
-          y: action.payload.nextY,
-        },
-        rotate: {
-          ...state.rotate,
-          current: action.payload.angle,
-        },
-        scaleImage: {
-          ...state.scaleImage,
-          current: action.payload.scale,
-        },
-      };
-    }
 
     case CHANGE_FREE_ASPECT: {
       const { freeAspect } = state;
@@ -330,16 +441,6 @@ export default (state = initialState, action: Actions) => {
         isDragging: false,
         isTransforming: false,
         isRotating: false,
-      };
-    }
-
-    case SET_POSITION: {
-      return {
-        ...state,
-        position: {
-          ...state.position,
-          ...action.payload,
-        },
       };
     }
 

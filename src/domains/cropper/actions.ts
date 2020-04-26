@@ -8,6 +8,35 @@ export const START_TRANSFORM = "CROPPER/START_TRANSFORM" as const;
 export const SET_SCALE = "CROPPER/SET_SCALE" as const;
 export const START_ROTATE_IMAGE = "CROPPER/START_ROTATE_IMAGE" as const;
 export const SET_ROTATE = "CROPPER/SET_ROTATE" as const;
+export const UPDATE = "CROPPER/UPDATE" as const;
+
+export const update = (
+  event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent
+) => {
+  const positions = [];
+
+  if ((event as any).touches) {
+    console.log("Call ?");
+    const { touches } = event as TouchEvent | React.TouchEvent;
+
+    for (let i = 0; i < touches.length; i++) {
+      positions.push({
+        clientX: touches[i].clientX,
+        clientY: touches[i].clientY,
+      });
+    }
+  } else {
+    positions.push({
+      clientX: (event as MouseEvent | React.MouseEvent).clientX,
+      clientY: (event as MouseEvent | React.MouseEvent).clientY,
+    });
+  }
+
+  return {
+    type: UPDATE,
+    payload: positions,
+  };
+};
 
 export const setRotate = (
   angle: number,
@@ -85,4 +114,5 @@ export type Actions =
   | ReturnType<typeof startTransform>
   | ReturnType<typeof setScale>
   | ReturnType<typeof startRotateImage>
-  | ReturnType<typeof setRotate>;
+  | ReturnType<typeof setRotate>
+  | ReturnType<typeof update>;

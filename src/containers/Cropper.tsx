@@ -12,7 +12,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   startDrag: (referenceX: number, referenceY: number) =>
     dispatch(actions.startDrag(referenceX, referenceY)),
   resetFlags: () => dispatch(actions.resetFlags()),
-  setPosition: (x: number, y: number) => dispatch(actions.setPosition(x, y)),
   startTransform: (
     referenceScale: number,
     referenceXScale: number,
@@ -21,12 +20,11 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(
       actions.startTransform(referenceScale, referenceXScale, referenceYScale)
     ),
-  setScale: (nextScale: number, nextScaleX: number, nextScaleY: number) =>
-    dispatch(actions.setScale(nextScale, nextScaleX, nextScaleY)),
   startRotateImage: (event: TouchEvent) =>
     dispatch(actions.startRotateImage(event)),
-  setRotate: (nextAngle: number, nextScale: number, x: number, y: number) =>
-    dispatch(actions.setRotate(nextAngle, nextScale, x, y)),
+  update: (
+    event: MouseEvent | TouchEvent | React.TouchEvent | React.MouseEvent
+  ) => dispatch(actions.update(event)),
 });
 
 class Cropper extends React.Component<
@@ -38,8 +36,8 @@ class Cropper extends React.Component<
     const e = this.ref.current!;
 
     e.addEventListener("touchstart", this.handleOnTouchStart, false);
-    e.addEventListener("mousemove", this.handleOnMouseMove, false);
-    e.addEventListener("touchmove", this.handleOnTouchMove, { passive: false });
+    e.addEventListener("mousemove", this.handleOnMove, false);
+    e.addEventListener("touchmove", this.handleOnMove, { passive: false });
     e.addEventListener("mouseup", this.handleOnResetFlags, false);
     e.addEventListener("mouseleave", this.handleOnResetFlags, false);
     e.addEventListener("touchend", this.handleOnResetFlags, false);
@@ -51,8 +49,8 @@ class Cropper extends React.Component<
   public componentWillUnmount = () => {
     const e = this.ref.current!;
 
-    e.removeEventListener("mousemove", this.handleOnMouseMove);
-    e.removeEventListener("touchmove", this.handleOnTouchMove);
+    e.removeEventListener("mousemove", this.handleOnMove);
+    e.removeEventListener("touchmove", this.handleOnMove);
     e.removeEventListener("mouseup", this.handleOnResetFlags);
     e.removeEventListener("mouseleave", this.handleOnResetFlags);
     e.removeEventListener("touchend", this.handleOnResetFlags);
@@ -257,131 +255,14 @@ class Cropper extends React.Component<
   };
 
   private handleOnMove = (
-    positions: { clientX: number; clientY: number }[]
+    event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent
   ) => {
-    const {
-      isDragging,
-      setScale,
-      freeAspect,
-      width,
-      height,
-      isTransforming,
-      isRotating,
-      containerDisplay,
-      position,
-      setPosition,
-      scale,
-      scaleX,
-      scaleY,
-      rotate,
-      setRotate,
-      scaleImage,
-      image,
-    } = this.props;
+    const { update } = this.props;
 
-    if (isRotating && positions.length > 1) {
-      const nextAngle =
-        rotate.previous +
-        (Math.atan2(
-          positions[1].clientY - positions[0].clientY,
-          positions[1].clientX - positions[0].clientX
-        ) *
-          (180 / Math.PI) -
-          rotate.reference);
-      const currentLength = Math.pow(
-        Math.pow(positions[1].clientX - positions[0].clientX, 2) +
-          Math.pow(positions[1].clientY - positions[0].clientY, 2),
-        0.5
-      );
-      const nextScale =
-        (currentLength / scaleImage.reference) * scaleImage.previous;
-      const nextX =
-        image.x +
-        (image.width * scaleImage.current - image.width * nextScale) / 2;
-      const nextY =
-        image.y +
-        (image.height * scaleImage.current - image.height * nextScale) / 2;
-      setRotate(nextAngle, nextScale, nextX, nextY);
-    } else if (isDragging) {
-      const [{ clientX, clientY }] = positions;
-
-      const relativeX = (clientX - containerDisplay.x) * containerDisplay.ratio;
-      const relativeY = (clientY - containerDisplay.y) * containerDisplay.ratio;
-
-      const nextX = relativeX - position.referenceX;
-      const nextY = relativeY - position.referenceY;
-
-      setPosition(nextX, nextY);
-    } else if (isTransforming) {
-      const [{ clientX, clientY }] = positions;
-
-      const nextScale =
-        (Math.pow(
-          Math.pow(
-            (clientX - containerDisplay.x) * containerDisplay.ratio -
-              position.x,
-            2
-          ) +
-            Math.pow(
-              (clientY - containerDisplay.y) * containerDisplay.ratio -
-                position.y,
-              2
-            ),
-          0.5
-        ) /
-          scale.reference) *
-        scale.previous;
-      const nextScaleX =
-        (((clientX - containerDisplay.x) * containerDisplay.ratio -
-          position.x) /
-          scaleX.reference) *
-        scaleX.previous;
-      const nextScaleY =
-        (((clientY - containerDisplay.y) * containerDisplay.ratio -
-          position.y) /
-          scaleY.reference) *
-        scaleY.previous;
-
-      if (freeAspect) {
-        setScale(
-          scale.current,
-          width * nextScaleX >= 100 ? nextScaleX : scaleX.current,
-          height * nextScaleY >= 100 ? nextScaleY : scaleY.current
-        );
-      } else {
-        if (
-          width * nextScale >= 100 &&
-          !(
-            (clientX - containerDisplay.x) * containerDisplay.ratio <
-              position.x ||
-            (clientY - containerDisplay.y) * containerDisplay.ratio < position.y
-          )
-        ) {
-          setScale(nextScale, scaleX.current, scaleY.current);
-        }
-      }
-    }
-  };
-
-  private handleOnMouseMove = (event: MouseEvent) => {
-    const { clientX, clientY } = event;
-    this.handleOnMove([{ clientX, clientY }]);
-  };
-
-  private handleOnTouchMove = (event: any) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const positions = [];
-
-    for (let i = 0; i < event.touches.length; i++) {
-      positions.push({
-        clientX: event.touches[i].clientX,
-        clientY: event.touches[i].clientY,
-      });
-    }
-
-    this.handleOnMove(positions);
+    update(event);
   };
 
   private handleOnMouseDownRect = (
