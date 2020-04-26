@@ -13,7 +13,6 @@ export const update = (
   const positions = [];
 
   if ((event as any).touches) {
-    console.log("Call ?");
     const { touches } = event as TouchEvent | React.TouchEvent;
 
     for (let i = 0; i < touches.length; i++) {
