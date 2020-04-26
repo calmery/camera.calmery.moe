@@ -58,14 +58,30 @@ export const startRotateImage = (event: TouchEvent) => ({
   payload: { event },
 });
 
-export const startTransform = (
-  referenceScale: number,
-  referenceXScale: number,
-  referenceYScale: number
-) => ({
-  type: START_TRANSFORM,
-  payload: { referenceScale, referenceXScale, referenceYScale },
-});
+export const startTransform = (event: React.TouchEvent | React.MouseEvent) => {
+  const positions = [];
+
+  if ((event as any).touches) {
+    const { touches } = event as TouchEvent | React.TouchEvent;
+
+    for (let i = 0; i < touches.length; i++) {
+      positions.push({
+        clientX: touches[i].clientX,
+        clientY: touches[i].clientY,
+      });
+    }
+  } else {
+    positions.push({
+      clientX: (event as MouseEvent | React.MouseEvent).clientX,
+      clientY: (event as MouseEvent | React.MouseEvent).clientY,
+    });
+  }
+
+  return {
+    type: START_TRANSFORM,
+    payload: positions,
+  };
+};
 
 export const startDrag = (referenceX: number, referenceY: number) => ({
   type: START_DRAG,

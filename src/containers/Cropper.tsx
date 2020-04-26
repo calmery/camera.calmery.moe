@@ -12,14 +12,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   startDrag: (referenceX: number, referenceY: number) =>
     dispatch(actions.startDrag(referenceX, referenceY)),
   resetFlags: () => dispatch(actions.resetFlags()),
-  startTransform: (
-    referenceScale: number,
-    referenceXScale: number,
-    referenceYScale: number
-  ) =>
-    dispatch(
-      actions.startTransform(referenceScale, referenceXScale, referenceYScale)
-    ),
+  startTransform: (event: React.MouseEvent | React.TouchEvent) =>
+    dispatch(actions.startTransform(event)),
   startRotateImage: (event: TouchEvent) =>
     dispatch(actions.startRotateImage(event)),
   update: (
@@ -178,8 +172,8 @@ class Cropper extends React.Component<
           cx={position.x + width * sx}
           cy={position.y + height * sy}
           r={12 * displayRatio}
-          onMouseDown={this.handleOnMouseDownCircle}
-          onTouchStart={this.handleOnTouchStartCircle}
+          onMouseDown={this.handleOnPressCircle}
+          onTouchStart={this.handleOnPressCircle}
         ></circle>
       </g>
     );
@@ -193,60 +187,12 @@ class Cropper extends React.Component<
     startRotateImage(event);
   };
 
-  private handleOnMouseDownCircle = (event: React.MouseEvent) => {
-    const { startTransform, containerDisplay, position } = this.props;
-
-    const scaleReference = Math.pow(
-      Math.pow(
-        (event.clientX - containerDisplay.x) * containerDisplay.ratio -
-          position.x,
-        2
-      ) +
-        Math.pow(
-          (event.clientY - containerDisplay.y) * containerDisplay.ratio -
-            position.y,
-          2
-        ),
-      0.5
-    );
-    const scaleXReference =
-      (event.clientX - containerDisplay.x) * containerDisplay.ratio -
-      position.x;
-    const scaleYReference =
-      (event.clientY - containerDisplay.y) * containerDisplay.ratio -
-      position.y;
-
-    startTransform(scaleReference, scaleXReference, scaleYReference);
-  };
-
-  private handleOnTouchStartCircle = (
-    event: React.TouchEvent<SVGCircleElement>
+  private handleOnPressCircle = (
+    event: React.MouseEvent | React.TouchEvent
   ) => {
-    const { startTransform, containerDisplay, position } = this.props;
+    const { startTransform } = this.props;
 
-    const scaleReference = Math.pow(
-      Math.pow(
-        (event.touches[0].clientX - containerDisplay.x) *
-          containerDisplay.ratio -
-          position.x,
-        2
-      ) +
-        Math.pow(
-          (event.touches[0].clientY - containerDisplay.y) *
-            containerDisplay.ratio -
-            position.y,
-          2
-        ),
-      0.5
-    );
-    const scaleXReference =
-      (event.touches[0].clientX - containerDisplay.x) * containerDisplay.ratio -
-      position.x;
-    const scaleYReference =
-      (event.touches[0].clientY - containerDisplay.y) * containerDisplay.ratio -
-      position.y;
-
-    startTransform(scaleReference, scaleXReference, scaleYReference);
+    startTransform(event);
   };
 
   private handleOnMove = (

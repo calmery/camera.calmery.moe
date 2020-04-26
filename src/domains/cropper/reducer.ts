@@ -309,6 +309,53 @@ const update = (
   return state;
 };
 
+const startTransform = (
+  state: CropperState,
+  positions: { clientX: number; clientY: number }[]
+) => {
+  const { containerDisplay, position } = state;
+
+  const scale = Math.pow(
+    Math.pow(
+      (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
+        position.x,
+      2
+    ) +
+      Math.pow(
+        (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
+          position.y,
+        2
+      ),
+    0.5
+  );
+  const scaleX =
+    (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
+    position.x;
+  const scaleY =
+    (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
+    position.y;
+
+  return {
+    ...state,
+    isTransforming: true,
+    scale: {
+      ...state.scale,
+      previous: state.scale.current,
+      reference: scale,
+    },
+    scaleX: {
+      ...state.scaleX,
+      previous: state.scaleX.current,
+      reference: scaleX,
+    },
+    scaleY: {
+      ...state.scaleY,
+      previous: state.scaleY.current,
+      reference: scaleY,
+    },
+  };
+};
+
 // Main
 
 export default (state = initialState, action: Actions) => {
@@ -316,27 +363,8 @@ export default (state = initialState, action: Actions) => {
     case UPDATE:
       return update(state, action.payload);
 
-    case START_TRANSFORM: {
-      return {
-        ...state,
-        isTransforming: true,
-        scale: {
-          ...state.scale,
-          previous: state.scale.current,
-          reference: action.payload.referenceScale,
-        },
-        scaleX: {
-          ...state.scaleX,
-          previous: state.scaleX.current,
-          reference: action.payload.referenceXScale,
-        },
-        scaleY: {
-          ...state.scaleY,
-          previous: state.scaleY.current,
-          reference: action.payload.referenceYScale,
-        },
-      };
-    }
+    case START_TRANSFORM:
+      return startTransform(state, action.payload);
 
     case START_ROTATE_IMAGE:
       return startRotateImage(state, action.payload);
