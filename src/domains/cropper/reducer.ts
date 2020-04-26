@@ -380,110 +380,123 @@ const startDrag = (
   };
 };
 
+const resetAllFlags = (state: CropperState) => ({
+  ...state,
+  isDragging: false,
+  isTransforming: false,
+  isRotating: false,
+});
+
+const setContainerDisplaySize = (
+  state: CropperState,
+  { x, y, width }: { x: number; y: number; width: number }
+) => ({
+  ...state,
+  containerDisplay: {
+    x,
+    y,
+    ratio: state.image.width / width,
+  },
+});
+
+const changeFreeAspect = (state: CropperState) => {
+  const { freeAspect } = state;
+
+  if (freeAspect) {
+    return {
+      ...state,
+      freeAspect: false,
+      scale: {
+        ...state.scale,
+        current:
+          state.scaleX.current < state.scaleY.current
+            ? state.scaleX.current
+            : state.scaleY.current,
+      },
+    };
+  } else {
+    return {
+      ...state,
+      freeAspect: true,
+      scaleX: {
+        ...state.scaleX,
+        current: state.scale.current,
+      },
+      scaleY: {
+        ...state.scaleY,
+        current: state.scale.current,
+      },
+    };
+  }
+};
+
+const setAspectRatio = (
+  state: CropperState,
+  { widthRatio, heightRatio }: { widthRatio: number; heightRatio: number }
+) => {
+  const { width, height, scale, scaleX, scaleY, freeAspect } = state;
+  const { currentWidth, currentHeight } = getCurrentSize(state);
+
+  const sumRatio = widthRatio + heightRatio;
+  const areaLength = currentWidth + currentHeight;
+  const nextWidth = (areaLength / sumRatio) * widthRatio;
+  const nextHeight = (areaLength / sumRatio) * heightRatio;
+  const differenceWidth =
+    width * (freeAspect ? scaleX : scale).current - nextWidth;
+  const differenceHeight =
+    height * (freeAspect ? scaleY : scale).current - nextHeight;
+
+  return {
+    ...state,
+    width: nextWidth,
+    height: nextHeight,
+    scale: {
+      ...state.scale,
+      current: 1,
+    },
+    scaleX: {
+      ...state.scaleX,
+      current: 1,
+    },
+    scaleY: {
+      ...state.scaleY,
+      current: 1,
+    },
+    position: {
+      ...state.position,
+      x: state.position.x + differenceWidth / 2,
+      y: state.position.y + differenceHeight / 2,
+    },
+  };
+};
+
 // Main
 
 export default (state = initialState, action: Actions) => {
   switch (action.type) {
-    case UPDATE:
-      return update(state, action.payload);
-
-    case START_TRANSFORM:
-      return startTransform(state, action.payload);
+    case START_DRAG:
+      return startDrag(state, action.payload);
 
     case START_ROTATE_IMAGE:
       return startRotateImage(state, action.payload);
 
-    case CHANGE_FREE_ASPECT: {
-      const { freeAspect } = state;
+    case START_TRANSFORM:
+      return startTransform(state, action.payload);
 
-      if (freeAspect) {
-        return {
-          ...state,
-          freeAspect: false,
-          scale: {
-            ...state.scale,
-            current:
-              state.scaleX.current < state.scaleY.current
-                ? state.scaleX.current
-                : state.scaleY.current,
-          },
-        };
-      } else {
-        return {
-          ...state,
-          freeAspect: true,
-          scaleX: {
-            ...state.scaleX,
-            current: state.scale.current,
-          },
-          scaleY: {
-            ...state.scaleY,
-            current: state.scale.current,
-          },
-        };
-      }
-    }
+    case CHANGE_FREE_ASPECT:
+      return changeFreeAspect(state);
 
-    case SET_ASPECT_RATIO: {
-      const { width, height, scale, scaleX, scaleY, freeAspect } = state;
-      const { widthRatio, heightRatio } = action.payload;
-      const { currentWidth, currentHeight } = getCurrentSize(state);
+    case SET_ASPECT_RATIO:
+      return setAspectRatio(state, action.payload);
 
-      const sumRatio = widthRatio + heightRatio;
-      const areaLength = currentWidth + currentHeight;
-      const nextWidth = (areaLength / sumRatio) * widthRatio;
-      const nextHeight = (areaLength / sumRatio) * heightRatio;
-      const differenceWidth =
-        width * (freeAspect ? scaleX : scale).current - nextWidth;
-      const differenceHeight =
-        height * (freeAspect ? scaleY : scale).current - nextHeight;
+    case SET_CONTAINER_DISPLAY_SIZE:
+      return setContainerDisplaySize(state, action.payload);
 
-      return {
-        ...state,
-        width: nextWidth,
-        height: nextHeight,
-        scale: {
-          ...state.scale,
-          current: 1,
-        },
-        scaleX: {
-          ...state.scaleX,
-          current: 1,
-        },
-        scaleY: {
-          ...state.scaleY,
-          current: 1,
-        },
-        position: {
-          ...state.position,
-          x: state.position.x + differenceWidth / 2,
-          y: state.position.y + differenceHeight / 2,
-        },
-      };
-    }
+    case UPDATE:
+      return update(state, action.payload);
 
-    case SET_CONTAINER_DISPLAY_SIZE: {
-      return {
-        ...state,
-        containerDisplay: {
-          x: action.payload.x,
-          y: action.payload.y,
-          ratio: state.image.width / action.payload.width,
-        },
-      };
-    }
-
-    case START_DRAG:
-      return startDrag(state, action.payload);
-
-    case RESET_FLAGS: {
-      return {
-        ...state,
-        isDragging: false,
-        isTransforming: false,
-        isRotating: false,
-      };
-    }
+    case RESET_FLAGS:
+      return resetAllFlags(state);
 
     default:
       return state;
