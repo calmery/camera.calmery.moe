@@ -29,13 +29,13 @@ class Cropper extends React.Component<
   public componentDidMount = () => {
     const e = this.ref.current!;
 
-    e.addEventListener("touchstart", this.handleOnTouchStart, false);
+    e.addEventListener("touchstart", this.props.startRotateImage, false);
     e.addEventListener("mousemove", this.handleOnMove, false);
     e.addEventListener("touchmove", this.handleOnMove, { passive: false });
-    e.addEventListener("mouseup", this.handleOnResetFlags, false);
-    e.addEventListener("mouseleave", this.handleOnResetFlags, false);
-    e.addEventListener("touchend", this.handleOnResetFlags, false);
-    addEventListener("resize", this.handleOnResize, false);
+    e.addEventListener("mouseup", this.props.resetFlags, false);
+    e.addEventListener("mouseleave", this.props.resetFlags, false);
+    e.addEventListener("touchend", this.props.resetFlags, false);
+    addEventListener("resize", this.setContainerDisplaySize, false);
 
     this.setContainerDisplaySize();
   };
@@ -43,16 +43,13 @@ class Cropper extends React.Component<
   public componentWillUnmount = () => {
     const e = this.ref.current!;
 
+    e.removeEventListener("touchstart", this.props.startRotateImage);
     e.removeEventListener("mousemove", this.handleOnMove);
     e.removeEventListener("touchmove", this.handleOnMove);
-    e.removeEventListener("mouseup", this.handleOnResetFlags);
-    e.removeEventListener("mouseleave", this.handleOnResetFlags);
-    e.removeEventListener("touchend", this.handleOnResetFlags);
-    removeEventListener("resize", this.handleOnResize, false);
-  };
-
-  private handleOnResize = () => {
-    this.setContainerDisplaySize();
+    e.removeEventListener("mouseup", this.props.resetFlags);
+    e.removeEventListener("mouseleave", this.props.resetFlags);
+    e.removeEventListener("touchend", this.props.resetFlags);
+    removeEventListener("resize", this.setContainerDisplaySize);
   };
 
   public render = () => {
@@ -163,8 +160,8 @@ class Cropper extends React.Component<
           height={height * sy}
           x={position.x}
           y={position.y}
-          onMouseDown={this.handleOnStartDrag}
-          onTouchStart={this.handleOnStartDrag}
+          onMouseDown={this.props.startDrag}
+          onTouchStart={this.props.startDrag}
         ></rect>
 
         <circle
@@ -172,28 +169,14 @@ class Cropper extends React.Component<
           cx={position.x + width * sx}
           cy={position.y + height * sy}
           r={12 * displayRatio}
-          onMouseDown={this.handleOnPressCircle}
-          onTouchStart={this.handleOnPressCircle}
+          onMouseDown={this.props.startTransform}
+          onTouchStart={this.props.startTransform}
         ></circle>
       </g>
     );
   };
 
   // Events
-
-  private handleOnTouchStart = (event: TouchEvent) => {
-    const { startRotateImage } = this.props;
-
-    startRotateImage(event);
-  };
-
-  private handleOnPressCircle = (
-    event: React.MouseEvent | React.TouchEvent
-  ) => {
-    const { startTransform } = this.props;
-
-    startTransform(event);
-  };
 
   private handleOnMove = (
     event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent
@@ -205,20 +188,6 @@ class Cropper extends React.Component<
 
     update(event);
   };
-
-  private handleOnStartDrag = (event: React.MouseEvent | React.TouchEvent) => {
-    const { startDrag } = this.props;
-
-    startDrag(event);
-  };
-
-  private handleOnResetFlags = () => {
-    const { resetFlags } = this.props;
-
-    resetFlags();
-  };
-
-  //
 
   private setContainerDisplaySize = () => {
     const { setContainerDisplaySize } = this.props;
