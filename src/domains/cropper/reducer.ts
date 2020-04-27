@@ -15,9 +15,9 @@ export type CropperState = {
   freeAspect: boolean;
   width: number;
   height: number;
-  isDragging: boolean;
-  isTransforming: boolean;
-  isRotating: boolean;
+  isCropperMoving: boolean;
+  isCropperTransforming: boolean;
+  isImageTransforming: boolean;
   image: {
     url: string;
     width: number;
@@ -67,9 +67,9 @@ const initialState: CropperState = {
   freeAspect: true,
   width: 160,
   height: 90,
-  isDragging: false,
-  isTransforming: false,
-  isRotating: false,
+  isCropperMoving: false,
+  isCropperTransforming: false,
+  isImageTransforming: false,
   container: {
     actualX: 0,
     actualY: 0,
@@ -132,7 +132,7 @@ const startCropperMoving = (
 
   return {
     ...state,
-    isDragging: true,
+    isCropperMoving: true,
     position: {
       ...state.position,
       referenceX,
@@ -169,7 +169,7 @@ const startCropperTransforming = (
 
   return {
     ...state,
-    isTransforming: true,
+    isCropperTransforming: true,
     scale: {
       ...state.scale,
       previous: state.scale.current,
@@ -209,7 +209,7 @@ const startImageTransforming = (
 
     return {
       ...state,
-      isRotating: true,
+      isImageTransforming: true,
       rotate: {
         ...state.rotate,
         previous: state.rotate.current,
@@ -234,11 +234,11 @@ const tick = (
   positions: ReturnType<typeof actions.tick>["payload"]
 ) => {
   const {
-    isDragging,
+    isCropperMoving,
     freeAspect,
     width,
-    isTransforming,
-    isRotating,
+    isCropperTransforming,
+    isImageTransforming,
     container,
     position,
     scale,
@@ -248,7 +248,7 @@ const tick = (
     image,
   } = state;
 
-  if (isRotating && positions.length > 1) {
+  if (isImageTransforming && positions.length > 1) {
     const nextAngle =
       rotate.previous +
       (Math.atan2(
@@ -289,7 +289,7 @@ const tick = (
     };
   }
 
-  if (isDragging) {
+  if (isCropperMoving) {
     const [{ clientX, clientY }] = positions;
 
     const relativeX = (clientX - container.actualX) * container.displayRatio;
@@ -308,7 +308,7 @@ const tick = (
     };
   }
 
-  if (isTransforming) {
+  if (isCropperTransforming) {
     const [{ clientX, clientY }] = positions;
 
     const nextScale =
@@ -376,9 +376,9 @@ const tick = (
 
 const complete = (state: CropperState) => ({
   ...state,
-  isDragging: false,
-  isTransforming: false,
-  isRotating: false,
+  isCropperMoving: false,
+  isCropperTransforming: false,
+  isImageTransforming: false,
 });
 
 const setContainerActualSize = (
