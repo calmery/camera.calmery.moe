@@ -5,7 +5,7 @@ export const START_CROPPER_TRANSFORMING = "CROPPER/START_CROPPER_TRANSFORMING" a
 export const START_IMAGE_TRANSFORMING = "CROPPER/START_IMAGE_TRANSFORMING" as const;
 export const CHANGE_FREE_ASPECT = "CROPPER/CHANGE_FREE_ASPECT" as const;
 export const SET_ASPECT_RATIO = "CROPPER/SET_ASPECT_RATIO" as const;
-export const SET_CONTAINER_DISPLAY_SIZE = "CROPPER/SET_CONTAINER_DISPLAY_SIZE" as const;
+export const SET_CONTAINER_ACTUAL_SIZE = "CROPPER/SET_CONTAINER_ACTUAL_SIZE" as const;
 export const TICK = "CROPPER/TICK" as const;
 export const COMPLETE = "CROPPER/COMPLETE" as const;
 
@@ -46,13 +46,13 @@ export const setAspectRatio = (widthRatio: number, heightRatio: number) => ({
   payload: { widthRatio, heightRatio },
 });
 
-export const setContainerDisplaySize = (payload: {
+export const setContainerActualSize = (payload: {
   x: number;
   y: number;
   width: number;
   height: number;
 }) => ({
-  type: SET_CONTAINER_DISPLAY_SIZE,
+  type: SET_CONTAINER_ACTUAL_SIZE,
   payload,
 });
 
@@ -68,6 +68,6 @@ export type Actions =
   | ReturnType<typeof startImageTransforming>
   | ReturnType<typeof changeFreeAspect>
   | ReturnType<typeof setAspectRatio>
-  | ReturnType<typeof setContainerDisplaySize>
+  | ReturnType<typeof setContainerActualSize>
   | ReturnType<typeof tick>
   | ReturnType<typeof complete>;

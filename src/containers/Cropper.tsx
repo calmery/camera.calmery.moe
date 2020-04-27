@@ -7,9 +7,9 @@ import * as actions from "~/domains/cropper/actions";
 const mapStateToProps = ({ cropper }: State) => cropper;
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setContainerDisplaySize: (
-    ...xs: Parameters<typeof actions.setContainerDisplaySize>
-  ) => dispatch(actions.setContainerDisplaySize(...xs)),
+  setContainerActualSize: (
+    ...xs: Parameters<typeof actions.setContainerActualSize>
+  ) => dispatch(actions.setContainerActualSize(...xs)),
   startCropperMoving: (...xs: Parameters<typeof actions.startCropperMoving>) =>
     dispatch(actions.startCropperMoving(...xs)),
   startImageTransforming: (
@@ -37,9 +37,9 @@ class Cropper extends React.Component<
     e.addEventListener("mouseup", this.props.complete, false);
     e.addEventListener("mouseleave", this.props.complete, false);
     e.addEventListener("touchend", this.props.complete, false);
-    addEventListener("resize", this.setContainerDisplaySize, false);
+    addEventListener("resize", this.setContainerActualSize, false);
 
-    this.setContainerDisplaySize();
+    this.setContainerActualSize();
   };
 
   public componentWillUnmount = () => {
@@ -51,7 +51,7 @@ class Cropper extends React.Component<
     e.removeEventListener("mouseup", this.props.complete);
     e.removeEventListener("mouseleave", this.props.complete);
     e.removeEventListener("touchend", this.props.complete);
-    removeEventListener("resize", this.setContainerDisplaySize);
+    removeEventListener("resize", this.setContainerActualSize);
   };
 
   public render = () => {
@@ -121,7 +121,7 @@ class Cropper extends React.Component<
 
   private renderCropper = () => {
     const {
-      containerDisplay,
+      container,
       position,
       width,
       height,
@@ -130,7 +130,7 @@ class Cropper extends React.Component<
       scaleY,
       freeAspect,
     } = this.props;
-    const displayRatio = containerDisplay.ratio;
+    const displayRatio = container.displayRatio;
 
     let sx = scaleX.current;
     let sy = scaleY.current;
@@ -189,11 +189,11 @@ class Cropper extends React.Component<
     tick(event);
   };
 
-  private setContainerDisplaySize = () => {
-    const { setContainerDisplaySize } = this.props;
+  private setContainerActualSize = () => {
+    const { setContainerActualSize } = this.props;
     const e = this.ref.current!;
 
-    setContainerDisplaySize(e.getBoundingClientRect());
+    setContainerActualSize(e.getBoundingClientRect());
   };
 }
 

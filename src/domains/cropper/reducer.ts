@@ -3,7 +3,7 @@ import * as actions from "./actions";
 const {
   CHANGE_FREE_ASPECT,
   SET_ASPECT_RATIO,
-  SET_CONTAINER_DISPLAY_SIZE,
+  SET_CONTAINER_ACTUAL_SIZE,
   START_CROPPER_MOVING,
   COMPLETE,
   START_CROPPER_TRANSFORMING,
@@ -30,10 +30,10 @@ export type CropperState = {
       reference: number;
     };
   };
-  containerDisplay: {
-    x: number;
-    y: number;
-    ratio: number;
+  container: {
+    actualX: number;
+    actualY: number;
+    displayRatio: number;
   };
   position: {
     x: number;
@@ -70,10 +70,10 @@ const initialState: CropperState = {
   isDragging: false,
   isTransforming: false,
   isRotating: false,
-  containerDisplay: {
-    x: 0,
-    y: 0,
-    ratio: 0,
+  container: {
+    actualX: 0,
+    actualY: 0,
+    displayRatio: 0,
   },
   image: {
     url: "images/background.jpg",
@@ -121,13 +121,13 @@ const startCropperMoving = (
   state: CropperState,
   positions: ReturnType<typeof actions.startCropperMoving>["payload"]
 ) => {
-  const { containerDisplay, position } = state;
+  const { container, position } = state;
 
   const referenceX =
-    (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
+    (positions[0].clientX - container.actualX) * container.displayRatio -
     position.x;
   const referenceY =
-    (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
+    (positions[0].clientY - container.actualY) * container.displayRatio -
     position.y;
 
   return {
@@ -145,26 +145,26 @@ const startCropperTransforming = (
   state: CropperState,
   positions: ReturnType<typeof actions.startCropperTransforming>["payload"]
 ) => {
-  const { containerDisplay, position } = state;
+  const { container, position } = state;
 
   const scale = Math.pow(
     Math.pow(
-      (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
+      (positions[0].clientX - container.actualX) * container.displayRatio -
         position.x,
       2
     ) +
       Math.pow(
-        (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
+        (positions[0].clientY - container.actualY) * container.displayRatio -
           position.y,
         2
       ),
     0.5
   );
   const scaleX =
-    (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
+    (positions[0].clientX - container.actualX) * container.displayRatio -
     position.x;
   const scaleY =
-    (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
+    (positions[0].clientY - container.actualY) * container.displayRatio -
     position.y;
 
   return {
@@ -239,7 +239,7 @@ const tick = (
     width,
     isTransforming,
     isRotating,
-    containerDisplay,
+    container,
     position,
     scale,
     scaleX,
@@ -292,8 +292,8 @@ const tick = (
   if (isDragging) {
     const [{ clientX, clientY }] = positions;
 
-    const relativeX = (clientX - containerDisplay.x) * containerDisplay.ratio;
-    const relativeY = (clientY - containerDisplay.y) * containerDisplay.ratio;
+    const relativeX = (clientX - container.actualX) * container.displayRatio;
+    const relativeY = (clientY - container.actualY) * container.displayRatio;
 
     const nextX = relativeX - position.referenceX;
     const nextY = relativeY - position.referenceY;
@@ -314,12 +314,11 @@ const tick = (
     const nextScale =
       (Math.pow(
         Math.pow(
-          (clientX - containerDisplay.x) * containerDisplay.ratio - position.x,
+          (clientX - container.actualX) * container.displayRatio - position.x,
           2
         ) +
           Math.pow(
-            (clientY - containerDisplay.y) * containerDisplay.ratio -
-              position.y,
+            (clientY - container.actualY) * container.displayRatio - position.y,
             2
           ),
         0.5
@@ -327,11 +326,11 @@ const tick = (
         scale.reference) *
       scale.previous;
     const nextScaleX =
-      (((clientX - containerDisplay.x) * containerDisplay.ratio - position.x) /
+      (((clientX - container.actualX) * container.displayRatio - position.x) /
         scaleX.reference) *
       scaleX.previous;
     const nextScaleY =
-      (((clientY - containerDisplay.y) * containerDisplay.ratio - position.y) /
+      (((clientY - container.actualY) * container.displayRatio - position.y) /
         scaleY.reference) *
       scaleY.previous;
 
@@ -356,8 +355,8 @@ const tick = (
     if (
       width * nextScale >= 100 &&
       !(
-        (clientX - containerDisplay.x) * containerDisplay.ratio < position.x ||
-        (clientY - containerDisplay.y) * containerDisplay.ratio < position.y
+        (clientX - container.actualX) * container.displayRatio < position.x ||
+        (clientY - container.actualY) * container.displayRatio < position.y
       )
     ) {
       return {
@@ -382,15 +381,15 @@ const complete = (state: CropperState) => ({
   isRotating: false,
 });
 
-const setContainerDisplaySize = (
+const setContainerActualSize = (
   state: CropperState,
-  { x, y, width }: ReturnType<typeof actions.setContainerDisplaySize>["payload"]
-) => ({
+  { x, y, width }: ReturnType<typeof actions.setContainerActualSize>["payload"]
+): CropperState => ({
   ...state,
-  containerDisplay: {
-    x,
-    y,
-    ratio: state.image.width / width,
+  container: {
+    actualX: x,
+    actualY: y,
+    displayRatio: state.image.width / width,
   },
 });
 
@@ -481,8 +480,8 @@ export default (state = initialState, action: actions.Actions) => {
     case SET_ASPECT_RATIO:
       return setAspectRatio(state, action.payload);
 
-    case SET_CONTAINER_DISPLAY_SIZE:
-      return setContainerDisplaySize(state, action.payload);
+    case SET_CONTAINER_ACTUAL_SIZE:
+      return setContainerActualSize(state, action.payload);
 
     case TICK:
       return tick(state, action.payload);
