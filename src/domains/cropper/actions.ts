@@ -27,7 +27,7 @@ export const startCropperTransforming = (
 
 export const startImageTransforming = (event: TouchEvent) => ({
   type: START_IMAGE_TRANSFORMING,
-  payload: { event },
+  payload: convertEventToPositions(event),
 });
 
 export const tick = (

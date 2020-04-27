@@ -127,20 +127,21 @@ const initialState: CropperState = {
 
 const startImageTransforming = (
   state: CropperState,
-  { event }: { event: TouchEvent }
+  positions: { clientX: number; clientY: number }[]
 ): CropperState => {
-  const ts = event.touches;
-
   // Multi Touch
-  if (ts.length > 1) {
+  if (positions.length > 1) {
     const distanceBetweenFingers = Math.pow(
-      Math.pow(ts[1].clientX - ts[0].clientX, 2) +
-        Math.pow(ts[1].clientY - ts[0].clientY, 2),
+      Math.pow(positions[1].clientX - positions[0].clientX, 2) +
+        Math.pow(positions[1].clientY - positions[0].clientY, 2),
       0.5
     );
 
     const angleBetweenFingers =
-      Math.atan2(ts[1].clientY - ts[0].clientY, ts[1].clientX - ts[0].clientX) *
+      Math.atan2(
+        positions[1].clientY - positions[0].clientY,
+        positions[1].clientX - positions[0].clientX
+      ) *
       (180 / Math.PI);
 
     return {
