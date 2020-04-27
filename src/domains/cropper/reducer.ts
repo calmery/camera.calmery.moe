@@ -24,11 +24,11 @@ export type CropperState = {
     height: number;
     x: number;
     y: number;
-  };
-  scaleImage: {
-    current: number;
-    previous: number;
-    reference: number;
+    scale: {
+      current: number;
+      previous: number;
+      reference: number;
+    };
   };
   containerDisplay: {
     x: number;
@@ -81,6 +81,11 @@ const initialState: CropperState = {
     height: 1065,
     x: 0,
     y: 0,
+    scale: {
+      current: 1,
+      previous: 1,
+      reference: 0,
+    },
   },
   position: {
     x: 0,
@@ -91,11 +96,6 @@ const initialState: CropperState = {
   rotate: {
     current: 0,
     previous: 0,
-    reference: 0,
-  },
-  scaleImage: {
-    current: 1,
-    previous: 1,
     reference: 0,
   },
   scale: {
@@ -215,10 +215,13 @@ const startImageTransforming = (
         previous: state.rotate.current,
         reference: angleBetweenFingers,
       },
-      scaleImage: {
-        ...state.scaleImage,
-        previous: state.scaleImage.current,
-        reference: distanceBetweenFingers,
+      image: {
+        ...state.image,
+        scale: {
+          ...state.image.scale,
+          previous: state.image.scale.current,
+          reference: distanceBetweenFingers,
+        },
       },
     };
   }
@@ -242,7 +245,6 @@ const tick = (
     scaleX,
     scaleY,
     rotate,
-    scaleImage,
     image,
   } = state;
 
@@ -261,13 +263,13 @@ const tick = (
       0.5
     );
     const nextScale =
-      (currentLength / scaleImage.reference) * scaleImage.previous;
+      (currentLength / image.scale.reference) * image.scale.previous;
     const nextX =
       image.x +
-      (image.width * scaleImage.current - image.width * nextScale) / 2;
+      (image.width * image.scale.current - image.width * nextScale) / 2;
     const nextY =
       image.y +
-      (image.height * scaleImage.current - image.height * nextScale) / 2;
+      (image.height * image.scale.current - image.height * nextScale) / 2;
 
     return {
       ...state,
@@ -275,14 +277,14 @@ const tick = (
         ...state.image,
         x: nextX,
         y: nextY,
+        scale: {
+          ...state.image.scale,
+          current: nextScale,
+        },
       },
       rotate: {
         ...state.rotate,
         current: nextAngle,
-      },
-      scaleImage: {
-        ...state.scaleImage,
-        current: nextScale,
       },
     };
   }

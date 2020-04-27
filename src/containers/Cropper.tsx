@@ -72,14 +72,14 @@ class Cropper extends React.Component<
   };
 
   private renderTargetImage = () => {
-    const { image, rotate, scaleImage } = this.props;
+    const { image, rotate } = this.props;
     const { url, width, height } = image;
 
     return (
       <>
         <svg
-          width={width * scaleImage.current}
-          height={height * scaleImage.current}
+          width={width * image.scale.current}
+          height={height * image.scale.current}
           x={image.x}
           y={image.y}
           viewBox={`0 0 ${width} ${height}`}
@@ -97,8 +97,8 @@ class Cropper extends React.Component<
 
         <g clipPath="url(#clip-path-1)">
           <svg
-            width={width * scaleImage.current}
-            height={height * scaleImage.current}
+            width={width * image.scale.current}
+            height={height * image.scale.current}
             x={image.x}
             y={image.y}
             viewBox={`0 0 ${width} ${height}`}
