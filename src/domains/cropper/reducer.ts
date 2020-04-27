@@ -1,6 +1,7 @@
-import {
+import * as actions from "./actions";
+
+const {
   CHANGE_FREE_ASPECT,
-  Actions,
   SET_ASPECT_RATIO,
   SET_CONTAINER_DISPLAY_SIZE,
   START_CROPPER_MOVING,
@@ -8,16 +9,7 @@ import {
   START_CROPPER_TRANSFORMING,
   START_IMAGE_TRANSFORMING,
   TICK,
-} from "./actions";
-
-const getCurrentSize = (state: CropperState) => {
-  const { freeAspect, scale, scaleX, scaleY, width, height } = state;
-
-  return {
-    currentWidth: width * (freeAspect ? scaleX.current : scale.current),
-    currentHeight: height * (freeAspect ? scaleY.current : scale.current),
-  };
-};
+} = actions;
 
 export type CropperState = {
   freeAspect: boolean;
@@ -127,7 +119,7 @@ const initialState: CropperState = {
 
 const startCropperMoving = (
   state: CropperState,
-  positions: { clientX: number; clientY: number }[]
+  positions: ReturnType<typeof actions.startCropperMoving>["payload"]
 ) => {
   const { containerDisplay, position } = state;
 
@@ -151,7 +143,7 @@ const startCropperMoving = (
 
 const startCropperTransforming = (
   state: CropperState,
-  positions: { clientX: number; clientY: number }[]
+  positions: ReturnType<typeof actions.startCropperTransforming>["payload"]
 ) => {
   const { containerDisplay, position } = state;
 
@@ -198,7 +190,7 @@ const startCropperTransforming = (
 
 const startImageTransforming = (
   state: CropperState,
-  positions: { clientX: number; clientY: number }[]
+  positions: ReturnType<typeof actions.startImageTransforming>["payload"]
 ): CropperState => {
   // Multi Touch
   if (positions.length > 1) {
@@ -236,7 +228,7 @@ const startImageTransforming = (
 
 const tick = (
   state: CropperState,
-  positions: { clientX: number; clientY: number }[]
+  positions: ReturnType<typeof actions.tick>["payload"]
 ) => {
   const {
     isDragging,
@@ -390,7 +382,7 @@ const complete = (state: CropperState) => ({
 
 const setContainerDisplaySize = (
   state: CropperState,
-  { x, y, width }: { x: number; y: number; width: number }
+  { x, y, width }: ReturnType<typeof actions.setContainerDisplaySize>["payload"]
 ) => ({
   ...state,
   containerDisplay: {
@@ -402,15 +394,18 @@ const setContainerDisplaySize = (
 
 const setAspectRatio = (
   state: CropperState,
-  { widthRatio, heightRatio }: { widthRatio: number; heightRatio: number }
+  {
+    widthRatio,
+    heightRatio,
+  }: ReturnType<typeof actions.setAspectRatio>["payload"]
 ) => {
-  const { width, height, scale, scaleX, scaleY, freeAspect } = state;
-  const { currentWidth, currentHeight } = getCurrentSize(state);
-
-  const sumRatio = widthRatio + heightRatio;
-  const areaLength = currentWidth + currentHeight;
-  const nextWidth = (areaLength / sumRatio) * widthRatio;
-  const nextHeight = (areaLength / sumRatio) * heightRatio;
+  const { freeAspect, width, height, scale, scaleX, scaleY } = state;
+  const currentWidth = width * (freeAspect ? scaleX.current : scale.current);
+  const currentHeight = height * (freeAspect ? scaleY.current : scale.current);
+  const nextWidth =
+    ((currentWidth + currentHeight) / (widthRatio + heightRatio)) * widthRatio;
+  const nextHeight =
+    ((currentWidth + currentHeight) / (widthRatio + heightRatio)) * heightRatio;
   const differenceWidth =
     width * (freeAspect ? scaleX : scale).current - nextWidth;
   const differenceHeight =
@@ -464,7 +459,7 @@ const changeFreeAspect = (state: CropperState) => {
 
 // Main
 
-export default (state = initialState, action: Actions) => {
+export default (state = initialState, action: actions.Actions) => {
   switch (action.type) {
     case START_CROPPER_MOVING:
       return startCropperMoving(state, action.payload);
