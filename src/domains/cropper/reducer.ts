@@ -125,6 +125,77 @@ const initialState: CropperState = {
 
 // Events
 
+const startCropperMoving = (
+  state: CropperState,
+  positions: { clientX: number; clientY: number }[]
+) => {
+  const { containerDisplay, position } = state;
+
+  const referenceX =
+    (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
+    position.x;
+  const referenceY =
+    (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
+    position.y;
+
+  return {
+    ...state,
+    isDragging: true,
+    position: {
+      ...state.position,
+      referenceX,
+      referenceY,
+    },
+  };
+};
+
+const startCropperTransforming = (
+  state: CropperState,
+  positions: { clientX: number; clientY: number }[]
+) => {
+  const { containerDisplay, position } = state;
+
+  const scale = Math.pow(
+    Math.pow(
+      (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
+        position.x,
+      2
+    ) +
+      Math.pow(
+        (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
+          position.y,
+        2
+      ),
+    0.5
+  );
+  const scaleX =
+    (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
+    position.x;
+  const scaleY =
+    (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
+    position.y;
+
+  return {
+    ...state,
+    isTransforming: true,
+    scale: {
+      ...state.scale,
+      previous: state.scale.current,
+      reference: scale,
+    },
+    scaleX: {
+      ...state.scaleX,
+      previous: state.scaleX.current,
+      reference: scaleX,
+    },
+    scaleY: {
+      ...state.scaleY,
+      previous: state.scaleY.current,
+      reference: scaleY,
+    },
+  };
+};
+
 const startImageTransforming = (
   state: CropperState,
   positions: { clientX: number; clientY: number }[]
@@ -310,77 +381,6 @@ const tick = (
   return state;
 };
 
-const startCropperTransforming = (
-  state: CropperState,
-  positions: { clientX: number; clientY: number }[]
-) => {
-  const { containerDisplay, position } = state;
-
-  const scale = Math.pow(
-    Math.pow(
-      (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
-        position.x,
-      2
-    ) +
-      Math.pow(
-        (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
-          position.y,
-        2
-      ),
-    0.5
-  );
-  const scaleX =
-    (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
-    position.x;
-  const scaleY =
-    (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
-    position.y;
-
-  return {
-    ...state,
-    isTransforming: true,
-    scale: {
-      ...state.scale,
-      previous: state.scale.current,
-      reference: scale,
-    },
-    scaleX: {
-      ...state.scaleX,
-      previous: state.scaleX.current,
-      reference: scaleX,
-    },
-    scaleY: {
-      ...state.scaleY,
-      previous: state.scaleY.current,
-      reference: scaleY,
-    },
-  };
-};
-
-const startCropperMoving = (
-  state: CropperState,
-  positions: { clientX: number; clientY: number }[]
-) => {
-  const { containerDisplay, position } = state;
-
-  const referenceX =
-    (positions[0].clientX - containerDisplay.x) * containerDisplay.ratio -
-    position.x;
-  const referenceY =
-    (positions[0].clientY - containerDisplay.y) * containerDisplay.ratio -
-    position.y;
-
-  return {
-    ...state,
-    isDragging: true,
-    position: {
-      ...state.position,
-      referenceX,
-      referenceY,
-    },
-  };
-};
-
 const complete = (state: CropperState) => ({
   ...state,
   isDragging: false,
@@ -399,37 +399,6 @@ const setContainerDisplaySize = (
     ratio: state.image.width / width,
   },
 });
-
-const changeFreeAspect = (state: CropperState) => {
-  const { freeAspect } = state;
-
-  if (freeAspect) {
-    return {
-      ...state,
-      freeAspect: false,
-      scale: {
-        ...state.scale,
-        current:
-          state.scaleX.current < state.scaleY.current
-            ? state.scaleX.current
-            : state.scaleY.current,
-      },
-    };
-  } else {
-    return {
-      ...state,
-      freeAspect: true,
-      scaleX: {
-        ...state.scaleX,
-        current: state.scale.current,
-      },
-      scaleY: {
-        ...state.scaleY,
-        current: state.scale.current,
-      },
-    };
-  }
-};
 
 const setAspectRatio = (
   state: CropperState,
@@ -467,6 +436,28 @@ const setAspectRatio = (
       ...state.position,
       x: state.position.x + differenceWidth / 2,
       y: state.position.y + differenceHeight / 2,
+    },
+  };
+};
+
+const changeFreeAspect = (state: CropperState) => {
+  const { freeAspect, scale, scaleX, scaleY } = state;
+  const nextScale = (scaleX.current < scaleY.current ? scaleX : scaleY).current;
+
+  return {
+    ...state,
+    freeAspect: !freeAspect,
+    scale: {
+      ...state.scale,
+      current: !freeAspect ? nextScale : scale.current,
+    },
+    scaleX: {
+      ...state.scaleX,
+      current: (freeAspect ? scale : scaleX).current,
+    },
+    scaleY: {
+      ...state.scaleY,
+      current: (freeAspect ? scale : scaleY).current,
     },
   };
 };
