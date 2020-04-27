@@ -5,12 +5,12 @@ export default class CSL extends React.Component<
   {
     selected: boolean;
     displayRatio: number;
-    startTransform: (previousLength: number) => void;
+    startCropperTransforming: (previousLength: number) => void;
     startMultiTouchingTransform: (
       previousLength: number,
       startingAngle: number
     ) => void;
-    startDrag: (referenceX: number, referenceY: number) => void;
+    startCropperMoving: (referenceX: number, referenceY: number) => void;
     onClick: () => void;
     canvasBaseX: number;
     canvasBaseY: number;
@@ -84,7 +84,7 @@ export default class CSL extends React.Component<
                 cy={height * scale.current}
                 r={12 * displayRatio}
                 onMouseDown={this.handleOnMouseDownTransformCircle}
-                onTouchStart={this.handleOnTouchStartTransformCircle}
+                onTouchStart={this.handleOnTouchstartCropperTransformingCircle}
               ></circle>
             </>
           )}
@@ -116,14 +116,14 @@ export default class CSL extends React.Component<
   // Events
 
   private onPressTransformCircle = (x: number, y: number) => {
-    const { startTransform } = this.props;
+    const { startCropperTransforming } = this.props;
     const { x: centerX, y: centerY } = this.getCharacterCenterCoordinates();
     const { x: relativeX, y: relativeY } = this.calculateSvgRelativeCoordinates(
       x,
       y
     );
 
-    startTransform(
+    startCropperTransforming(
       Math.pow(
         Math.pow(relativeX - centerX, 2) + Math.pow(relativeY - centerY, 2),
         0.5
@@ -131,7 +131,7 @@ export default class CSL extends React.Component<
     );
   };
 
-  private handleOnTouchStartTransformCircle = (
+  private handleOnTouchstartCropperTransformingCircle = (
     event: React.TouchEvent<SVGCircleElement>
   ) => {
     const { touches } = event;
@@ -149,7 +149,7 @@ export default class CSL extends React.Component<
 
   private onPressRect = (positions: { x: number; y: number }[]) => {
     const layer = this.props;
-    const { startMultiTouchingTransform, startDrag } = this.props;
+    const { startMultiTouchingTransform, startCropperMoving } = this.props;
     const isMultiTouching = positions.length > 1;
 
     if (isMultiTouching) {
@@ -175,7 +175,7 @@ export default class CSL extends React.Component<
     const referenceX = relativeX - layer.x;
     const referenceY = relativeY - layer.y;
 
-    startDrag(referenceX, referenceY);
+    startCropperMoving(referenceX, referenceY);
   };
 
   private handleOnMouseDownRect = (

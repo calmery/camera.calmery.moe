@@ -10,15 +10,17 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setContainerDisplaySize: (
     ...xs: Parameters<typeof actions.setContainerDisplaySize>
   ) => dispatch(actions.setContainerDisplaySize(...xs)),
-  startDrag: (...xs: Parameters<typeof actions.startDrag>) =>
-    dispatch(actions.startDrag(...xs)),
-  startRotateImage: (...xs: Parameters<typeof actions.startRotateImage>) =>
-    dispatch(actions.startRotateImage(...xs)),
-  startTransform: (...xs: Parameters<typeof actions.startTransform>) =>
-    dispatch(actions.startTransform(...xs)),
+  startCropperMoving: (...xs: Parameters<typeof actions.startCropperMoving>) =>
+    dispatch(actions.startCropperMoving(...xs)),
+  startImageTransforming: (
+    ...xs: Parameters<typeof actions.startImageTransforming>
+  ) => dispatch(actions.startImageTransforming(...xs)),
+  startCropperTransforming: (
+    ...xs: Parameters<typeof actions.startCropperTransforming>
+  ) => dispatch(actions.startCropperTransforming(...xs)),
   tick: (...xs: Parameters<typeof actions.tick>) =>
     dispatch(actions.tick(...xs)),
-  resetFlags: () => dispatch(actions.resetFlags()),
+  complete: () => dispatch(actions.complete()),
 });
 
 class Cropper extends React.Component<
@@ -29,12 +31,12 @@ class Cropper extends React.Component<
   public componentDidMount = () => {
     const e = this.ref.current!;
 
-    e.addEventListener("touchstart", this.props.startRotateImage, false);
+    e.addEventListener("touchstart", this.props.startImageTransforming, false);
     e.addEventListener("mousemove", this.handleOnMove, false);
     e.addEventListener("touchmove", this.handleOnMove, { passive: false });
-    e.addEventListener("mouseup", this.props.resetFlags, false);
-    e.addEventListener("mouseleave", this.props.resetFlags, false);
-    e.addEventListener("touchend", this.props.resetFlags, false);
+    e.addEventListener("mouseup", this.props.complete, false);
+    e.addEventListener("mouseleave", this.props.complete, false);
+    e.addEventListener("touchend", this.props.complete, false);
     addEventListener("resize", this.setContainerDisplaySize, false);
 
     this.setContainerDisplaySize();
@@ -43,12 +45,12 @@ class Cropper extends React.Component<
   public componentWillUnmount = () => {
     const e = this.ref.current!;
 
-    e.removeEventListener("touchstart", this.props.startRotateImage);
+    e.removeEventListener("touchstart", this.props.startImageTransforming);
     e.removeEventListener("mousemove", this.handleOnMove);
     e.removeEventListener("touchmove", this.handleOnMove);
-    e.removeEventListener("mouseup", this.props.resetFlags);
-    e.removeEventListener("mouseleave", this.props.resetFlags);
-    e.removeEventListener("touchend", this.props.resetFlags);
+    e.removeEventListener("mouseup", this.props.complete);
+    e.removeEventListener("mouseleave", this.props.complete);
+    e.removeEventListener("touchend", this.props.complete);
     removeEventListener("resize", this.setContainerDisplaySize);
   };
 
@@ -158,8 +160,8 @@ class Cropper extends React.Component<
           height={height * sy}
           x={position.x}
           y={position.y}
-          onMouseDown={this.props.startDrag}
-          onTouchStart={this.props.startDrag}
+          onMouseDown={this.props.startCropperMoving}
+          onTouchStart={this.props.startCropperMoving}
         ></rect>
 
         <circle
@@ -167,8 +169,8 @@ class Cropper extends React.Component<
           cx={position.x + width * sx}
           cy={position.y + height * sy}
           r={12 * displayRatio}
-          onMouseDown={this.props.startTransform}
-          onTouchStart={this.props.startTransform}
+          onMouseDown={this.props.startCropperTransforming}
+          onTouchStart={this.props.startCropperTransforming}
         ></circle>
       </g>
     );

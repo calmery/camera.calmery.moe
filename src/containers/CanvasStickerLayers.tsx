@@ -10,7 +10,7 @@ const mapStateToProps = ({ canvas }: State) => canvas;
 const mapDispatchToProps = (
   dispatch: ThunkDispatch<{}, {}, actions.Actions>
 ) => ({
-  startTransform: (index: number, previousLength: number) =>
+  startCropperTransforming: (index: number, previousLength: number) =>
     dispatch(actions.startCanvasStickerLayerTransform(index, previousLength)),
   startMultiTouchingTransform: (
     index: number,
@@ -25,7 +25,11 @@ const mapDispatchToProps = (
       )
     );
   },
-  startDrag: (index: number, referenceX: number, referenceY: number) => {
+  startCropperMoving: (
+    index: number,
+    referenceX: number,
+    referenceY: number
+  ) => {
     dispatch(
       actions.startCanvasStickerLayerDrag(index, referenceX, referenceY)
     );
@@ -50,11 +54,15 @@ class CanvasStickerLayers extends React.Component<
         selected={index === layers.stickers.length - 1}
         {...sticker}
         displayRatio={displayRatio}
-        startTransform={(l) => this.handleOnStartTransform(index, l)}
+        startCropperTransforming={(l) =>
+          this.handleOnstartCropperTransforming(index, l)
+        }
         startMultiTouchingTransform={(l, a) =>
           this.handleOnStartMultiTouchingTransform(index, l, a)
         }
-        startDrag={(x, y) => this.handleOnStartDrag(index, x, y)}
+        startCropperMoving={(x, y) =>
+          this.handleOnstartCropperMoving(index, x, y)
+        }
         canvasBaseX={x}
         canvasBaseY={y}
         onClick={() => this.handleOnClick(index)}
@@ -65,10 +73,11 @@ class CanvasStickerLayers extends React.Component<
 
   // Events
 
-  private handleOnStartTransform = this.props.startTransform;
+  private handleOnstartCropperTransforming = this.props
+    .startCropperTransforming;
   private handleOnStartMultiTouchingTransform = this.props
     .startMultiTouchingTransform;
-  private handleOnStartDrag = this.props.startDrag;
+  private handleOnstartCropperMoving = this.props.startCropperMoving;
   private handleOnClick = this.props.onClick;
 }
 

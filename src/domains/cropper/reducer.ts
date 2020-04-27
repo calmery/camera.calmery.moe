@@ -3,10 +3,10 @@ import {
   Actions,
   SET_ASPECT_RATIO,
   SET_CONTAINER_DISPLAY_SIZE,
-  START_DRAG,
-  RESET_FLAGS,
-  START_TRANSFORM,
-  START_ROTATE_IMAGE,
+  START_CROPPER_MOVING,
+  COMPLETE,
+  START_CROPPER_TRANSFORMING,
+  START_IMAGE_TRANSFORMING,
   TICK,
 } from "./actions";
 
@@ -125,7 +125,7 @@ const initialState: CropperState = {
 
 // Events
 
-const startRotateImage = (
+const startImageTransforming = (
   state: CropperState,
   { event }: { event: TouchEvent }
 ): CropperState => {
@@ -162,7 +162,7 @@ const startRotateImage = (
   return state;
 };
 
-const update = (
+const tick = (
   state: CropperState,
   positions: { clientX: number; clientY: number }[]
 ) => {
@@ -309,7 +309,7 @@ const update = (
   return state;
 };
 
-const startTransform = (
+const startCropperTransforming = (
   state: CropperState,
   positions: { clientX: number; clientY: number }[]
 ) => {
@@ -356,7 +356,7 @@ const startTransform = (
   };
 };
 
-const startDrag = (
+const startCropperMoving = (
   state: CropperState,
   positions: { clientX: number; clientY: number }[]
 ) => {
@@ -380,7 +380,7 @@ const startDrag = (
   };
 };
 
-const resetAllFlags = (state: CropperState) => ({
+const complete = (state: CropperState) => ({
   ...state,
   isDragging: false,
   isTransforming: false,
@@ -474,14 +474,17 @@ const setAspectRatio = (
 
 export default (state = initialState, action: Actions) => {
   switch (action.type) {
-    case START_DRAG:
-      return startDrag(state, action.payload);
+    case START_CROPPER_MOVING:
+      return startCropperMoving(state, action.payload);
 
-    case START_ROTATE_IMAGE:
-      return startRotateImage(state, action.payload);
+    case START_CROPPER_TRANSFORMING:
+      return startCropperTransforming(state, action.payload);
 
-    case START_TRANSFORM:
-      return startTransform(state, action.payload);
+    case START_IMAGE_TRANSFORMING:
+      return startImageTransforming(state, action.payload);
+
+    case COMPLETE:
+      return complete(state);
 
     case CHANGE_FREE_ASPECT:
       return changeFreeAspect(state);
@@ -493,10 +496,7 @@ export default (state = initialState, action: Actions) => {
       return setContainerDisplaySize(state, action.payload);
 
     case TICK:
-      return update(state, action.payload);
-
-    case RESET_FLAGS:
-      return resetAllFlags(state);
+      return tick(state, action.payload);
 
     default:
       return state;
