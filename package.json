@@ -30,7 +30,7 @@
     "uuid": "7.0.3"
   },
   "devDependencies": {
-    "@babel/core": "7.9.0",
+    "@babel/core": "7.9.6",
     "@storybook/addon-knobs": "5.3.18",
     "@storybook/react": "5.3.18",
     "@types/blueimp-load-image": "2.23.6",
