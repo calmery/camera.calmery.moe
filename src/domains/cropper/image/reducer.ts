@@ -1,6 +1,7 @@
 import { SET_IMAGE, START_IMAGE_TRANSFORMING } from "./actions";
 import { Actions, COMPLETE, TICK } from "~/domains/cropper/actions";
-import { CursorPosition } from "~/utils/convert-event-to-positions";
+import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
+import { angleBetweenTwoPoints } from "~/utils/angle-between-two-points";
 
 export type CropperImageState = {
   url: string;
@@ -80,31 +81,28 @@ export default (state = initialState, action: Actions) => {
         return state;
       }
 
-      const distanceBetweenFingers = Math.pow(
-        Math.pow(positions[1].clientX - positions[0].clientX, 2) +
-          Math.pow(positions[1].clientY - positions[0].clientY, 2),
-        0.5
-      );
-
-      const angleBetweenFingers =
-        Math.atan2(
-          positions[1].clientY - positions[0].clientY,
-          positions[1].clientX - positions[0].clientX
-        ) *
-        (180 / Math.PI);
-
       return {
         ...state,
         isImageTransforming: true,
         scale: {
           ...state.scale,
           previous: state.scale.current,
-          valueAtTransformStart: distanceBetweenFingers,
+          valueAtTransformStart: distanceBetweenTwoPoints(
+            positions[0].clientX,
+            positions[0].clientY,
+            positions[1].clientX,
+            positions[1].clientY
+          ),
         },
         rotate: {
           ...state.rotate,
           previous: state.rotate.current,
-          valueAtTransformStart: angleBetweenFingers,
+          valueAtTransformStart: angleBetweenTwoPoints(
+            positions[0].clientX,
+            positions[0].clientY,
+            positions[1].clientX,
+            positions[1].clientY
+          ),
         },
       };
     }
@@ -117,19 +115,16 @@ export default (state = initialState, action: Actions) => {
         return state;
       }
 
+      const x1 = positions[0].clientX;
+      const y1 = positions[0].clientY;
+      const x2 = positions[1].clientX;
+      const y2 = positions[1].clientY;
+
       const nextAngle =
         rotate.previous +
-        (Math.atan2(
-          positions[1].clientY - positions[0].clientY,
-          positions[1].clientX - positions[0].clientX
-        ) *
-          (180 / Math.PI) -
-          rotate.valueAtTransformStart);
-      const currentLength = Math.pow(
-        Math.pow(positions[1].clientX - positions[0].clientX, 2) +
-          Math.pow(positions[1].clientY - positions[0].clientY, 2),
-        0.5
-      );
+        angleBetweenTwoPoints(x1, y1, x2, y2) -
+        rotate.valueAtTransformStart;
+      const currentLength = distanceBetweenTwoPoints(x1, y1, x2, y2);
       const nextScale =
         (currentLength / state.scale.valueAtTransformStart) *
         state.scale.previous;
