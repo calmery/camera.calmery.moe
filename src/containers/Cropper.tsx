@@ -39,8 +39,6 @@ export const Cropper: React.FC = () => {
         x: rect.x,
         y: rect.y,
         width: rect.width,
-        height: rect.height,
-        displayRatio: image.width / rect.width,
       })
     );
   }, [dispatch, image.width, containerRef.current]);
