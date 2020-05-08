@@ -68,17 +68,16 @@ export const Cropper: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    setContainerActualSize();
+  }, [cropper.image.width, cropper.image.height]);
+
   const {
     image,
-    rotate,
-    scale,
-    scaleX,
-    scaleY,
-    freeAspect,
     container,
-    position,
+    cropper: { position, scale, scaleX, scaleY, freeAspect },
   } = cropper;
-  const { url, width, height } = image;
+  const { url, width, height, rotate } = image;
   const displayRatio = container.displayRatio;
 
   let sx = scaleX.current;
@@ -100,8 +99,8 @@ export const Cropper: React.FC = () => {
       <svg
         width={width * image.scale.current}
         height={height * image.scale.current}
-        x={image.x}
-        y={image.y}
+        x={image.position.x}
+        y={image.position.y}
         viewBox={`0 0 ${width} ${height}`}
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -117,8 +116,8 @@ export const Cropper: React.FC = () => {
         <svg
           width={width * image.scale.current}
           height={height * image.scale.current}
-          x={image.x}
-          y={image.y}
+          x={image.position.x}
+          y={image.position.y}
           viewBox={`0 0 ${width} ${height}`}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -137,8 +136,8 @@ export const Cropper: React.FC = () => {
           <rect
             x={position.x}
             y={position.y}
-            width={cropper.width * sx}
-            height={cropper.height * sy}
+            width={cropper.cropper.width * sx}
+            height={cropper.cropper.height * sy}
           />
         </clipPath>
 
@@ -147,8 +146,8 @@ export const Cropper: React.FC = () => {
           stroke="#FFF"
           strokeWidth="2"
           strokeDasharray="8 8"
-          width={cropper.width * sx}
-          height={cropper.height * sy}
+          width={cropper.cropper.width * sx}
+          height={cropper.cropper.height * sy}
           x={position.x}
           y={position.y}
           onMouseDown={startCropperMoving}
@@ -157,8 +156,8 @@ export const Cropper: React.FC = () => {
 
         <circle
           fill="#FFF"
-          cx={position.x + cropper.width * sx}
-          cy={position.y + cropper.height * sy}
+          cx={position.x + cropper.cropper.width * sx}
+          cy={position.y + cropper.cropper.height * sy}
           r={12 * displayRatio}
           onMouseDown={startCropperTransforming}
           onTouchStart={startCropperTransforming}

@@ -1,5 +1,6 @@
 import { convertEventToPositions } from "~/utils/convert-event-to-positions";
 
+export const SET_IMAGE = "CROPPER/SET_IMAGE" as const;
 export const START_CROPPER_MOVING = "CROPPER/START_CROPPER_MOVING" as const;
 export const START_CROPPER_TRANSFORMING = "CROPPER/START_CROPPER_TRANSFORMING" as const;
 export const START_IMAGE_TRANSFORMING = "CROPPER/START_IMAGE_TRANSFORMING" as const;
@@ -10,6 +11,11 @@ export const TICK = "CROPPER/TICK" as const;
 export const COMPLETE = "CROPPER/COMPLETE" as const;
 
 // Actions
+
+export const setImage = (url: string, width: number, height: number) => ({
+  type: SET_IMAGE,
+  payload: { url, width, height },
+});
 
 export const startCropperMoving = (
   event: React.MouseEvent | React.TouchEvent
@@ -70,4 +76,5 @@ export type Actions =
   | ReturnType<typeof setAspectRatio>
   | ReturnType<typeof setContainerActualSize>
   | ReturnType<typeof tick>
-  | ReturnType<typeof complete>;
+  | ReturnType<typeof complete>
+  | ReturnType<typeof setImage>;

@@ -1,6 +1,7 @@
 import * as actions from "./actions";
 
 const {
+  SET_IMAGE,
   CHANGE_FREE_ASPECT,
   SET_ASPECT_RATIO,
   SET_CONTAINER_ACTUAL_SIZE,
@@ -11,41 +12,24 @@ const {
   TICK,
 } = actions;
 
-export type CropperState = {
+type CropperContainerState = {
+  actualX: number;
+  actualY: number;
+  displayRatio: number;
+};
+
+type CropperCropperState = {
   freeAspect: boolean;
-  width: number;
-  height: number;
   isCropperMoving: boolean;
   isCropperTransforming: boolean;
-  isImageTransforming: boolean;
-  image: {
-    url: string;
-    width: number;
-    height: number;
-    x: number;
-    y: number;
-    scale: {
-      current: number;
-      previous: number;
-      reference: number;
-    };
-  };
-  container: {
-    actualX: number;
-    actualY: number;
-    displayRatio: number;
-  };
+  width: number;
+  height: number;
   position: {
     x: number;
     y: number;
     referenceX: number;
     referenceY: number;
   };
-  rotate: {
-    current: number;
-    previous: number;
-    reference: number;
-  };
   scale: {
     current: number;
     previous: number;
@@ -63,41 +47,45 @@ export type CropperState = {
   };
 };
 
-const initialState: CropperState = {
+type CropperImageState = {
+  url: string;
+  width: number;
+  height: number;
+  isImageTransforming: boolean;
+  position: {
+    x: number;
+    y: number;
+  };
+  rotate: {
+    current: number;
+    previous: number;
+    reference: number;
+  };
+  scale: {
+    current: number;
+    previous: number;
+    reference: number;
+  };
+};
+
+export type CropperState = {
+  container: CropperContainerState;
+  cropper: CropperCropperState;
+  image: CropperImageState;
+};
+
+const initialCropperState: CropperCropperState = {
+  isCropperMoving: false,
+  isCropperTransforming: false,
   freeAspect: true,
   width: 160,
   height: 90,
-  isCropperMoving: false,
-  isCropperTransforming: false,
-  isImageTransforming: false,
-  container: {
-    actualX: 0,
-    actualY: 0,
-    displayRatio: 0,
-  },
-  image: {
-    url: "images/background.jpg",
-    width: 1500,
-    height: 1065,
-    x: 0,
-    y: 0,
-    scale: {
-      current: 1,
-      previous: 1,
-      reference: 0,
-    },
-  },
   position: {
     x: 0,
     y: 0,
     referenceX: 0,
     referenceY: 0,
   },
-  rotate: {
-    current: 0,
-    previous: 0,
-    reference: 0,
-  },
   scale: {
     current: 1,
     previous: 1,
@@ -115,13 +103,73 @@ const initialState: CropperState = {
   },
 };
 
+const initialState: CropperState = {
+  container: {
+    actualX: 0,
+    actualY: 0,
+    displayRatio: 0,
+  },
+  cropper: initialCropperState,
+  image: {
+    isImageTransforming: false,
+    url: "images/background.jpg",
+    width: 1500,
+    height: 1065,
+    position: {
+      x: 0,
+      y: 0,
+    },
+    scale: {
+      current: 1,
+      previous: 1,
+      reference: 0,
+    },
+    rotate: {
+      current: 0,
+      previous: 0,
+      reference: 0,
+    },
+  },
+};
+
 // Events
+
+const setImage = (
+  state: CropperState,
+  { url, width, height }: ReturnType<typeof actions.setImage>["payload"]
+) => ({
+  ...state,
+  cropper: initialCropperState,
+  image: {
+    url,
+    width,
+    height,
+    isImageTransforming: false,
+    position: {
+      x: 0,
+      y: 0,
+    },
+    scale: {
+      current: 1,
+      previous: 1,
+      reference: 0,
+    },
+    rotate: {
+      current: 0,
+      previous: 0,
+      reference: 0,
+    },
+  },
+});
 
 const startCropperMoving = (
   state: CropperState,
   positions: ReturnType<typeof actions.startCropperMoving>["payload"]
 ) => {
-  const { container, position } = state;
+  const {
+    container,
+    cropper: { position },
+  } = state;
 
   const referenceX =
     (positions[0].clientX - container.actualX) * container.displayRatio -
@@ -132,11 +180,14 @@ const startCropperMoving = (
 
   return {
     ...state,
-    isCropperMoving: true,
-    position: {
-      ...state.position,
-      referenceX,
-      referenceY,
+    cropper: {
+      ...state.cropper,
+      isCropperMoving: true,
+      position: {
+        ...state.cropper.position,
+        referenceX,
+        referenceY,
+      },
     },
   };
 };
@@ -145,7 +196,10 @@ const startCropperTransforming = (
   state: CropperState,
   positions: ReturnType<typeof actions.startCropperTransforming>["payload"]
 ) => {
-  const { container, position } = state;
+  const {
+    container,
+    cropper: { position },
+  } = state;
 
   const scale = Math.pow(
     Math.pow(
@@ -169,21 +223,24 @@ const startCropperTransforming = (
 
   return {
     ...state,
-    isCropperTransforming: true,
-    scale: {
-      ...state.scale,
-      previous: state.scale.current,
-      reference: scale,
-    },
-    scaleX: {
-      ...state.scaleX,
-      previous: state.scaleX.current,
-      reference: scaleX,
-    },
-    scaleY: {
-      ...state.scaleY,
-      previous: state.scaleY.current,
-      reference: scaleY,
+    cropper: {
+      ...state.cropper,
+      isCropperTransforming: true,
+      scale: {
+        ...state.cropper.scale,
+        previous: state.cropper.scale.current,
+        reference: scale,
+      },
+      scaleX: {
+        ...state.cropper.scaleX,
+        previous: state.cropper.scaleX.current,
+        reference: scaleX,
+      },
+      scaleY: {
+        ...state.cropper.scaleY,
+        previous: state.cropper.scaleY.current,
+        reference: scaleY,
+      },
     },
   };
 };
@@ -209,18 +266,18 @@ const startImageTransforming = (
 
     return {
       ...state,
-      isImageTransforming: true,
-      rotate: {
-        ...state.rotate,
-        previous: state.rotate.current,
-        reference: angleBetweenFingers,
-      },
       image: {
         ...state.image,
+        isImageTransforming: true,
         scale: {
           ...state.image.scale,
           previous: state.image.scale.current,
           reference: distanceBetweenFingers,
+        },
+        rotate: {
+          ...state.image.rotate,
+          previous: state.image.rotate.current,
+          reference: angleBetweenFingers,
         },
       },
     };
@@ -233,20 +290,17 @@ const tick = (
   state: CropperState,
   positions: ReturnType<typeof actions.tick>["payload"]
 ) => {
+  const { cropper, container, image } = state;
   const {
-    isCropperMoving,
-    freeAspect,
-    width,
-    isCropperTransforming,
-    isImageTransforming,
-    container,
     position,
     scale,
     scaleX,
     scaleY,
-    rotate,
-    image,
-  } = state;
+    freeAspect,
+    isCropperTransforming,
+    isCropperMoving,
+  } = cropper;
+  const { rotate, isImageTransforming } = image;
 
   if (isImageTransforming && positions.length > 1) {
     const nextAngle =
@@ -265,26 +319,28 @@ const tick = (
     const nextScale =
       (currentLength / image.scale.reference) * image.scale.previous;
     const nextX =
-      image.x +
+      image.position.x +
       (image.width * image.scale.current - image.width * nextScale) / 2;
     const nextY =
-      image.y +
+      image.position.y +
       (image.height * image.scale.current - image.height * nextScale) / 2;
 
     return {
       ...state,
       image: {
         ...state.image,
-        x: nextX,
-        y: nextY,
+        position: {
+          x: nextX,
+          y: nextY,
+        },
         scale: {
           ...state.image.scale,
           current: nextScale,
         },
-      },
-      rotate: {
-        ...state.rotate,
-        current: nextAngle,
+        rotate: {
+          ...state.image.rotate,
+          current: nextAngle,
+        },
       },
     };
   }
@@ -300,10 +356,13 @@ const tick = (
 
     return {
       ...state,
-      position: {
-        ...state.position,
-        x: nextX,
-        y: nextY,
+      cropper: {
+        ...state.cropper,
+        position: {
+          ...state.cropper.position,
+          x: nextX,
+          y: nextY,
+        },
       },
     };
   }
@@ -337,23 +396,26 @@ const tick = (
     if (freeAspect) {
       return {
         ...state,
-        scale: {
-          ...state.scale,
-          current: nextScale,
-        },
-        scaleX: {
-          ...state.scaleX,
-          current: nextScaleX,
-        },
-        scaleY: {
-          ...state.scaleY,
-          current: nextScaleY,
+        cropper: {
+          ...state.cropper,
+          scale: {
+            ...state.cropper.scale,
+            current: nextScale,
+          },
+          scaleX: {
+            ...state.cropper.scaleX,
+            current: nextScaleX,
+          },
+          scaleY: {
+            ...state.cropper.scaleY,
+            current: nextScaleY,
+          },
         },
       };
     }
 
     if (
-      width * nextScale >= 100 &&
+      cropper.width * nextScale >= 100 &&
       !(
         (clientX - container.actualX) * container.displayRatio < position.x ||
         (clientY - container.actualY) * container.displayRatio < position.y
@@ -361,9 +423,12 @@ const tick = (
     ) {
       return {
         ...state,
-        scale: {
-          ...state.scale,
-          current: nextScale,
+        cropper: {
+          ...state.cropper,
+          scale: {
+            ...state.cropper.scale,
+            current: nextScale,
+          },
         },
       };
     }
@@ -376,9 +441,15 @@ const tick = (
 
 const complete = (state: CropperState) => ({
   ...state,
-  isCropperMoving: false,
-  isCropperTransforming: false,
-  isImageTransforming: false,
+  cropper: {
+    ...state.cropper,
+    isCropperMoving: false,
+    isCropperTransforming: false,
+  },
+  image: {
+    ...state.image,
+    isImageTransforming: false,
+  },
 });
 
 const setContainerActualSize = (
@@ -400,60 +471,69 @@ const setAspectRatio = (
     heightRatio,
   }: ReturnType<typeof actions.setAspectRatio>["payload"]
 ) => {
-  const { freeAspect, width, height, scale, scaleX, scaleY } = state;
-  const currentWidth = width * (freeAspect ? scaleX.current : scale.current);
-  const currentHeight = height * (freeAspect ? scaleY.current : scale.current);
+  const { cropper } = state;
+  const { scale, scaleX, scaleY, freeAspect } = cropper;
+  const currentWidth =
+    cropper.width * (freeAspect ? scaleX.current : scale.current);
+  const currentHeight =
+    cropper.height * (freeAspect ? scaleY.current : scale.current);
   const nextWidth =
     ((currentWidth + currentHeight) / (widthRatio + heightRatio)) * widthRatio;
   const nextHeight =
     ((currentWidth + currentHeight) / (widthRatio + heightRatio)) * heightRatio;
   const differenceWidth =
-    width * (freeAspect ? scaleX : scale).current - nextWidth;
+    cropper.width * (freeAspect ? scaleX : scale).current - nextWidth;
   const differenceHeight =
-    height * (freeAspect ? scaleY : scale).current - nextHeight;
+    cropper.height * (freeAspect ? scaleY : scale).current - nextHeight;
 
   return {
     ...state,
-    width: nextWidth,
-    height: nextHeight,
-    scale: {
-      ...state.scale,
-      current: 1,
-    },
-    scaleX: {
-      ...state.scaleX,
-      current: 1,
-    },
-    scaleY: {
-      ...state.scaleY,
-      current: 1,
-    },
-    position: {
-      ...state.position,
-      x: state.position.x + differenceWidth / 2,
-      y: state.position.y + differenceHeight / 2,
+    cropper: {
+      ...state.cropper,
+      width: nextWidth,
+      height: nextHeight,
+      position: {
+        ...state.cropper.position,
+        x: state.cropper.position.x + differenceWidth / 2,
+        y: state.cropper.position.y + differenceHeight / 2,
+      },
+      scale: {
+        ...state.cropper.scale,
+        current: 1,
+      },
+      scaleX: {
+        ...state.cropper.scaleX,
+        current: 1,
+      },
+      scaleY: {
+        ...state.cropper.scaleY,
+        current: 1,
+      },
     },
   };
 };
 
 const changeFreeAspect = (state: CropperState) => {
-  const { freeAspect, scale, scaleX, scaleY } = state;
+  const { scale, scaleX, scaleY, freeAspect } = state.cropper;
   const nextScale = (scaleX.current < scaleY.current ? scaleX : scaleY).current;
 
   return {
     ...state,
-    freeAspect: !freeAspect,
-    scale: {
-      ...state.scale,
-      current: !freeAspect ? nextScale : scale.current,
-    },
-    scaleX: {
-      ...state.scaleX,
-      current: (freeAspect ? scale : scaleX).current,
-    },
-    scaleY: {
-      ...state.scaleY,
-      current: (freeAspect ? scale : scaleY).current,
+    cropper: {
+      ...state.cropper,
+      freeAspect: !freeAspect,
+      scale: {
+        ...state.cropper.scale,
+        current: !freeAspect ? nextScale : scale.current,
+      },
+      scaleX: {
+        ...state.cropper.scaleX,
+        current: (freeAspect ? scale : scaleX).current,
+      },
+      scaleY: {
+        ...state.cropper.scaleY,
+        current: (freeAspect ? scale : scaleY).current,
+      },
     },
   };
 };
@@ -462,6 +542,9 @@ const changeFreeAspect = (state: CropperState) => {
 
 export default (state = initialState, action: actions.Actions) => {
   switch (action.type) {
+    case SET_IMAGE:
+      return setImage(state, action.payload);
+
     case START_CROPPER_MOVING:
       return startCropperMoving(state, action.payload);
 
