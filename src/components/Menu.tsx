@@ -13,7 +13,6 @@ const Container = styled.div`
   position: fixed;
   padding: ${Spacing.s}px ${Spacing.l}px;
   box-sizing: border-box;
-  // display: flex;
 `;
 
 const Group = styled.div`
@@ -21,18 +20,18 @@ const Group = styled.div`
   display: flex;
   -webkit-justify-content: space-between;
 
-  // &:first-child {
-  //   margin-right: auto;
-  // }
+  &:first-child {
+    margin-right: auto;
+  }
 `;
 
 const FlexContainer = styled.div`
   display: flex;
   -webkit-justify-content: center;
 
-  // &:first-child {
-  //   margin-right: auto;
-  // }
+  &:first-child {
+    margin-right: auto;
+  }
 `;
 
 const Border = styled.div`
