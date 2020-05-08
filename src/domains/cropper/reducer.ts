@@ -286,154 +286,182 @@ const startImageTransforming = (
   return state;
 };
 
-const tick = (
+// Tick
+
+const transformImage = (
   state: CropperState,
-  positions: ReturnType<typeof actions.tick>["payload"]
+  positions: { clientX: number; clientY: number }[]
 ) => {
-  const { cropper, container, image } = state;
-  const {
-    position,
-    scale,
-    scaleX,
-    scaleY,
-    freeAspect,
-    isCropperTransforming,
-    isCropperMoving,
-  } = cropper;
-  const { rotate, isImageTransforming } = image;
+  const { image } = state;
+  const { rotate } = image;
 
-  if (isImageTransforming && positions.length > 1) {
-    const nextAngle =
-      rotate.previous +
-      (Math.atan2(
-        positions[1].clientY - positions[0].clientY,
-        positions[1].clientX - positions[0].clientX
-      ) *
-        (180 / Math.PI) -
-        rotate.reference);
-    const currentLength = Math.pow(
-      Math.pow(positions[1].clientX - positions[0].clientX, 2) +
-        Math.pow(positions[1].clientY - positions[0].clientY, 2),
-      0.5
-    );
-    const nextScale =
-      (currentLength / image.scale.reference) * image.scale.previous;
-    const nextX =
-      image.position.x +
-      (image.width * image.scale.current - image.width * nextScale) / 2;
-    const nextY =
-      image.position.y +
-      (image.height * image.scale.current - image.height * nextScale) / 2;
+  const nextAngle =
+    rotate.previous +
+    (Math.atan2(
+      positions[1].clientY - positions[0].clientY,
+      positions[1].clientX - positions[0].clientX
+    ) *
+      (180 / Math.PI) -
+      rotate.reference);
+  const currentLength = Math.pow(
+    Math.pow(positions[1].clientX - positions[0].clientX, 2) +
+      Math.pow(positions[1].clientY - positions[0].clientY, 2),
+    0.5
+  );
+  const nextScale =
+    (currentLength / image.scale.reference) * image.scale.previous;
+  const nextX =
+    image.position.x +
+    (image.width * image.scale.current - image.width * nextScale) / 2;
+  const nextY =
+    image.position.y +
+    (image.height * image.scale.current - image.height * nextScale) / 2;
 
-    return {
-      ...state,
-      image: {
-        ...state.image,
-        position: {
-          x: nextX,
-          y: nextY,
-        },
-        scale: {
-          ...state.image.scale,
-          current: nextScale,
-        },
-        rotate: {
-          ...state.image.rotate,
-          current: nextAngle,
-        },
+  return {
+    ...state,
+    image: {
+      ...state.image,
+      position: {
+        x: nextX,
+        y: nextY,
       },
-    };
-  }
+      scale: {
+        ...state.image.scale,
+        current: nextScale,
+      },
+      rotate: {
+        ...state.image.rotate,
+        current: nextAngle,
+      },
+    },
+  };
+};
 
-  if (isCropperMoving) {
-    const [{ clientX, clientY }] = positions;
+const moveCropper = (state: CropperState, cursorX: number, cursorY: number) => {
+  const { container, cropper } = state;
 
-    const relativeX = (clientX - container.actualX) * container.displayRatio;
-    const relativeY = (clientY - container.actualY) * container.displayRatio;
+  const relativeX = (cursorX - container.actualX) * container.displayRatio;
+  const relativeY = (cursorY - container.actualY) * container.displayRatio;
 
-    const nextX = relativeX - position.referenceX;
-    const nextY = relativeY - position.referenceY;
+  const nextX = relativeX - cropper.position.referenceX;
+  const nextY = relativeY - cropper.position.referenceY;
+
+  return {
+    ...state,
+    cropper: {
+      ...state.cropper,
+      position: {
+        ...state.cropper.position,
+        x: nextX,
+        y: nextY,
+      },
+    },
+  };
+};
+
+const transformCropper = (
+  state: CropperState,
+  positions: { clientX: number; clientY: number }[]
+) => {
+  const { cropper, container } = state;
+  const [{ clientX, clientY }] = positions;
+
+  if (cropper.freeAspect) {
+    let nextScaleX =
+      (((clientX - container.actualX) * container.displayRatio -
+        cropper.position.x) /
+        cropper.scaleX.reference) *
+      cropper.scaleX.previous;
+    let nextScaleY =
+      (((clientY - container.actualY) * container.displayRatio -
+        cropper.position.y) /
+        cropper.scaleY.reference) *
+      cropper.scaleY.previous;
+
+    if (cropper.width * nextScaleX < 160) {
+      nextScaleX = cropper.scaleX.current;
+    }
+
+    if (cropper.height * nextScaleY < 90) {
+      nextScaleY = cropper.scaleY.current;
+    }
 
     return {
       ...state,
       cropper: {
         ...state.cropper,
-        position: {
-          ...state.cropper.position,
-          x: nextX,
-          y: nextY,
+        scaleX: {
+          ...state.cropper.scaleX,
+          current: nextScaleX,
+        },
+        scaleY: {
+          ...state.cropper.scaleY,
+          current: nextScaleY,
         },
       },
     };
   }
 
-  if (isCropperTransforming) {
-    const [{ clientX, clientY }] = positions;
-
-    const nextScale =
-      (Math.pow(
+  const nextScale =
+    (Math.pow(
+      Math.pow(
+        (clientX - container.actualX) * container.displayRatio -
+          cropper.position.x,
+        2
+      ) +
         Math.pow(
-          (clientX - container.actualX) * container.displayRatio - position.x,
+          (clientY - container.actualY) * container.displayRatio -
+            cropper.position.y,
           2
-        ) +
-          Math.pow(
-            (clientY - container.actualY) * container.displayRatio - position.y,
-            2
-          ),
-        0.5
-      ) /
-        scale.reference) *
-      scale.previous;
-    const nextScaleX =
-      (((clientX - container.actualX) * container.displayRatio - position.x) /
-        scaleX.reference) *
-      scaleX.previous;
-    const nextScaleY =
-      (((clientY - container.actualY) * container.displayRatio - position.y) /
-        scaleY.reference) *
-      scaleY.previous;
+        ),
+      0.5
+    ) /
+      cropper.scale.reference) *
+    cropper.scale.previous;
 
-    if (freeAspect) {
-      return {
-        ...state,
-        cropper: {
-          ...state.cropper,
-          scale: {
-            ...state.cropper.scale,
-            current: nextScale,
-          },
-          scaleX: {
-            ...state.cropper.scaleX,
-            current: nextScaleX,
-          },
-          scaleY: {
-            ...state.cropper.scaleY,
-            current: nextScaleY,
-          },
+  if (
+    cropper.width * nextScale >= 100 &&
+    !(
+      (clientX - container.actualX) * container.displayRatio <
+        cropper.position.x ||
+      (clientY - container.actualY) * container.displayRatio <
+        cropper.position.y
+    )
+  ) {
+    return {
+      ...state,
+      cropper: {
+        ...state.cropper,
+        scale: {
+          ...state.cropper.scale,
+          current: nextScale,
         },
-      };
-    }
+      },
+    };
+  }
 
-    if (
-      cropper.width * nextScale >= 100 &&
-      !(
-        (clientX - container.actualX) * container.displayRatio < position.x ||
-        (clientY - container.actualY) * container.displayRatio < position.y
-      )
-    ) {
-      return {
-        ...state,
-        cropper: {
-          ...state.cropper,
-          scale: {
-            ...state.cropper.scale,
-            current: nextScale,
-          },
-        },
-      };
-    }
+  return state;
+};
 
-    return state;
+const tick = (
+  state: CropperState,
+  positions: ReturnType<typeof actions.tick>["payload"]
+) => {
+  const { cropper, image } = state;
+  const { isCropperTransforming, isCropperMoving } = cropper;
+  const { isImageTransforming } = image;
+
+  if (isImageTransforming && positions.length > 1) {
+    return transformImage(state, positions);
+  }
+
+  if (isCropperMoving) {
+    const [{ clientX, clientY }] = positions;
+    return moveCropper(state, clientX, clientY);
+  }
+
+  if (isCropperTransforming) {
+    return transformCropper(state, positions);
   }
 
   return state;
