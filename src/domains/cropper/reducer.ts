@@ -12,6 +12,13 @@ const {
   TICK,
 } = actions;
 
+// Constants
+
+const CROPPER_DEFAULT_WIDTH = 320;
+const CROPPER_DEFAULT_HEIGHT = 180;
+
+// Types
+
 type CropperContainerState = {
   actualX: number;
   actualY: number;
@@ -78,8 +85,8 @@ const initialCropperState: CropperCropperState = {
   isCropperMoving: false,
   isCropperTransforming: false,
   freeAspect: true,
-  width: 160,
-  height: 90,
+  width: CROPPER_DEFAULT_WIDTH,
+  height: CROPPER_DEFAULT_HEIGHT,
   position: {
     x: 0,
     y: 0,
@@ -378,11 +385,11 @@ const transformCropper = (
         cropper.scaleY.reference) *
       cropper.scaleY.previous;
 
-    if (cropper.width * nextScaleX < 160) {
+    if (cropper.width * nextScaleX < CROPPER_DEFAULT_WIDTH) {
       nextScaleX = cropper.scaleX.current;
     }
 
-    if (cropper.height * nextScaleY < 90) {
+    if (cropper.height * nextScaleY < CROPPER_DEFAULT_HEIGHT) {
       nextScaleY = cropper.scaleY.current;
     }
 
@@ -420,7 +427,7 @@ const transformCropper = (
     cropper.scale.previous;
 
   if (
-    cropper.width * nextScale >= 100 &&
+    cropper.width * nextScale >= CROPPER_DEFAULT_WIDTH &&
     !(
       (clientX - container.actualX) * container.displayRatio <
         cropper.position.x ||
