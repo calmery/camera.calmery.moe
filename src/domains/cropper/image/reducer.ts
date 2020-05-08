@@ -86,37 +86,37 @@ export default (state = initialState, action: Actions) => {
           ...state.scale,
           previous: state.scale.current,
           valueAtTransformStart: distanceBetweenTwoPoints(
-            positions[0].clientX,
-            positions[0].clientY,
-            positions[1].clientX,
-            positions[1].clientY
+            positions[0].x,
+            positions[0].y,
+            positions[1].x,
+            positions[1].y
           ),
         },
         rotate: {
           ...state.rotate,
           previous: state.rotate.current,
           valueAtTransformStart: angleBetweenTwoPoints(
-            positions[0].clientX,
-            positions[0].clientY,
-            positions[1].clientX,
-            positions[1].clientY
+            positions[0].x,
+            positions[0].y,
+            positions[1].x,
+            positions[1].y
           ),
         },
       };
     }
 
     case TICK: {
-      const { positions } = action.payload;
+      const { cursorPositions } = action.payload;
       const { rotate, isImageTransforming } = state;
 
-      if (!isImageTransforming && positions.length < 2) {
+      if (!isImageTransforming && cursorPositions.length < 2) {
         return state;
       }
 
-      const x1 = positions[0].clientX;
-      const y1 = positions[0].clientY;
-      const x2 = positions[1].clientX;
-      const y2 = positions[1].clientY;
+      const x1 = cursorPositions[0].x;
+      const y1 = cursorPositions[0].y;
+      const x2 = cursorPositions[1].x;
+      const y2 = cursorPositions[1].y;
 
       const nextAngle =
         rotate.previous +

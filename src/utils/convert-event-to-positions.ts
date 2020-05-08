@@ -1,6 +1,6 @@
 export type CursorPosition = {
-  clientX: number;
-  clientY: number;
+  x: number;
+  y: number;
 };
 
 export const convertEventToCursorPositions = (
@@ -13,14 +13,14 @@ export const convertEventToCursorPositions = (
 
     for (let i = 0; i < touches.length; i++) {
       positions.push({
-        clientX: touches[i].clientX,
-        clientY: touches[i].clientY,
+        x: touches[i].clientX,
+        y: touches[i].clientY,
       });
     }
   } else {
     positions.push({
-      clientX: (event as MouseEvent | React.MouseEvent).clientX,
-      clientY: (event as MouseEvent | React.MouseEvent).clientY,
+      x: (event as MouseEvent | React.MouseEvent).clientX,
+      y: (event as MouseEvent | React.MouseEvent).clientY,
     });
   }
 

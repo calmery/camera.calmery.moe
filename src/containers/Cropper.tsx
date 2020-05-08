@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { State, getOrCreateStore } from "~/domains";
+import { State } from "~/domains";
 import { actions } from "~/domains/cropper/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-positions";
 
@@ -18,8 +18,7 @@ export const Cropper: React.FC = () => {
       event.preventDefault();
       event.stopPropagation();
 
-      const state = getOrCreateStore().getState();
-      dispatch(actions.tick(event, state.cropper.container));
+      dispatch(actions.tick(convertEventToCursorPositions(event)));
     },
     [dispatch]
   );
@@ -58,20 +57,17 @@ export const Cropper: React.FC = () => {
 
   const handleOnStartCropperMove = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
-      const state = getOrCreateStore().getState();
-      dispatch(actions.startCropperMoving(event, state.cropper.container));
+      dispatch(
+        actions.startCropperMoving(convertEventToCursorPositions(event))
+      );
     },
     [dispatch]
   );
 
   const handleOnStartCropperTransform = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
-      const state = getOrCreateStore().getState();
       dispatch(
-        actions.startCropperTransforming(
-          convertEventToCursorPositions(event),
-          state.cropper.container
-        )
+        actions.startCropperTransforming(convertEventToCursorPositions(event))
       );
     },
     [dispatch]
