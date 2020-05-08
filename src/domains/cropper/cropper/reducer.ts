@@ -246,24 +246,30 @@ export default (state = initialState, action: Actions) => {
     }
 
     case CHANGE_FREE_ASPECT: {
-      const { scale, scaleX, scaleY, freeAspect } = state;
-      const nextScale = (scaleX.current < scaleY.current ? scaleX : scaleY)
-        .current;
+      const { freeAspect, scale, scaleX, scaleY } = state;
+      const nextFreeAspect = !freeAspect;
+
+      if (nextFreeAspect) {
+        return {
+          ...state,
+          freeAspect: true,
+          scaleX: {
+            ...scaleX,
+            current: scale.current,
+          },
+          scaleY: {
+            ...scaleX,
+            current: scale.current,
+          },
+        };
+      }
 
       return {
         ...state,
-        freeAspect: !freeAspect,
+        freeAspect: false,
         scale: {
           ...state.scale,
-          current: !freeAspect ? nextScale : scale.current,
-        },
-        scaleX: {
-          ...state.scaleX,
-          current: (freeAspect ? scale : scaleX).current,
-        },
-        scaleY: {
-          ...state.scaleY,
-          current: (freeAspect ? scale : scaleY).current,
+          current: (scaleX.current < scaleY.current ? scaleX : scaleY).current,
         },
       };
     }
