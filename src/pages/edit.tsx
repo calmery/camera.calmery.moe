@@ -11,6 +11,7 @@ import Canvas from "~/containers/Canvas";
 import { Filters } from "~/containers/Filters";
 import { Stickers } from "~/containers/Stickers";
 import styled from "styled-components";
+import { Menu } from "~/components/Menu";
 
 const Container = styled.div`
   height: 1000px;
@@ -22,6 +23,18 @@ const Container = styled.div`
   }
 `;
 
+const FlexContainer = styled.div`
+  display: flex;
+  -webkit-justify-content: center;
+`;
+
+const EditCanvasitems = styled.div`
+  text-align: center;
+  > * > * {
+    margin: 12px 0 0 0;
+  }
+`;
+
 const Edit: NextPage = () => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
@@ -30,31 +43,40 @@ const Edit: NextPage = () => {
 
   return (
     <>
-      <Container>
-        <Canvas />
-      </Container>
-      <Filters />
-      <Stickers />
-      {canvasUserLayerFrame[CanvasUserLayerFrame.W3H4].frames.map(
-        (_, index) => (
-          <button
-            onClick={() => handleOnClickFrame(CanvasUserLayerFrame.W3H4, index)}
-            key={index}
-          >
-            3:4 {index}
-          </button>
-        )
-      )}
-      {canvasUserLayerFrame[CanvasUserLayerFrame.W4H3].frames.map(
-        (_, index) => (
-          <button
-            onClick={() => handleOnClickFrame(CanvasUserLayerFrame.W4H3, index)}
-            key={index}
-          >
-            4:3 {index}
-          </button>
-        )
-      )}
+      <FlexContainer>
+        <Container>
+          <Canvas />
+        </Container>
+        <EditCanvasitems>
+          <Filters />
+          <Stickers />
+          {canvasUserLayerFrame[CanvasUserLayerFrame.W3H4].frames.map(
+            (_, index) => (
+              <button
+                onClick={() =>
+                  handleOnClickFrame(CanvasUserLayerFrame.W3H4, index)
+                }
+                key={index}
+              >
+                3:4 {index}
+              </button>
+            )
+          )}
+          {canvasUserLayerFrame[CanvasUserLayerFrame.W4H3].frames.map(
+            (_, index) => (
+              <button
+                onClick={() =>
+                  handleOnClickFrame(CanvasUserLayerFrame.W4H3, index)
+                }
+                key={index}
+              >
+                4:3 {index}
+              </button>
+            )
+          )}
+          <Menu />
+        </EditCanvasitems>
+      </FlexContainer>
     </>
   );
 };
