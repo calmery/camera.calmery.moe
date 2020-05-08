@@ -26,9 +26,9 @@ export type CropperImageState = {
 
 const initialState: CropperImageState = {
   isImageTransforming: false,
-  url: "images/background.jpg",
-  width: 1500,
-  height: 1065,
+  url: "",
+  width: 0,
+  height: 0,
   position: {
     x: 0,
     y: 0,
