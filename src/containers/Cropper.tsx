@@ -1,82 +1,119 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import React, { useEffect, useRef, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { State } from "~/domains";
 import * as actions from "~/domains/cropper/actions";
 
-const mapStateToProps = ({ cropper }: State) => cropper;
+export const Cropper: React.FC = () => {
+  const dispatch = useDispatch();
+  const cropper = useSelector(({ cropper }: State) => cropper);
+  const containerRef = useRef<SVGSVGElement>(null);
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setContainerActualSize: (
-    ...xs: Parameters<typeof actions.setContainerActualSize>
-  ) => dispatch(actions.setContainerActualSize(...xs)),
-  startCropperMoving: (...xs: Parameters<typeof actions.startCropperMoving>) =>
-    dispatch(actions.startCropperMoving(...xs)),
-  startImageTransforming: (
-    ...xs: Parameters<typeof actions.startImageTransforming>
-  ) => dispatch(actions.startImageTransforming(...xs)),
-  startCropperTransforming: (
-    ...xs: Parameters<typeof actions.startCropperTransforming>
-  ) => dispatch(actions.startCropperTransforming(...xs)),
-  tick: (...xs: Parameters<typeof actions.tick>) =>
-    dispatch(actions.tick(...xs)),
-  complete: () => dispatch(actions.complete()),
-});
+  // Events
 
-class Cropper extends React.Component<
-  ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
-> {
-  private ref = React.createRef<SVGSVGElement>();
+  const startCropperMoving = useCallback(
+    (...xs: Parameters<typeof actions.startCropperMoving>) =>
+      dispatch(actions.startCropperMoving(...xs)),
+    [dispatch]
+  );
+  const startImageTransforming = useCallback(
+    (...xs: Parameters<typeof actions.startImageTransforming>) =>
+      dispatch(actions.startImageTransforming(...xs)),
+    [dispatch]
+  );
+  const startCropperTransforming = useCallback(
+    (...xs: Parameters<typeof actions.startCropperTransforming>) =>
+      dispatch(actions.startCropperTransforming(...xs)),
+    [dispatch]
+  );
+  const complete = useCallback(() => dispatch(actions.complete()), [dispatch]);
 
-  public componentDidMount = () => {
-    const e = this.ref.current!;
+  const handleOnMove = useCallback(
+    (event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-    e.addEventListener("touchstart", this.props.startImageTransforming, false);
-    e.addEventListener("mousemove", this.handleOnMove, false);
-    e.addEventListener("touchmove", this.handleOnMove, { passive: false });
-    e.addEventListener("mouseup", this.props.complete, false);
-    e.addEventListener("mouseleave", this.props.complete, false);
-    e.addEventListener("touchend", this.props.complete, false);
-    addEventListener("resize", this.setContainerActualSize, false);
+      dispatch(actions.tick(event));
+    },
+    [dispatch]
+  );
 
-    this.setContainerActualSize();
-  };
+  const setContainerActualSize = useCallback(() => {
+    const e = containerRef.current!;
+    dispatch(actions.setContainerActualSize(e.getBoundingClientRect()));
+  }, [dispatch, containerRef]);
 
-  public componentWillUnmount = () => {
-    const e = this.ref.current!;
+  // Refs
 
-    e.removeEventListener("touchstart", this.props.startImageTransforming);
-    e.removeEventListener("mousemove", this.handleOnMove);
-    e.removeEventListener("touchmove", this.handleOnMove);
-    e.removeEventListener("mouseup", this.props.complete);
-    e.removeEventListener("mouseleave", this.props.complete);
-    e.removeEventListener("touchend", this.props.complete);
-    removeEventListener("resize", this.setContainerActualSize);
-  };
+  useEffect(() => {
+    const e = containerRef.current!;
 
-  public render = () => {
-    const { image } = this.props;
+    e.addEventListener("touchstart", startImageTransforming, false);
+    e.addEventListener("mousemove", handleOnMove, false);
+    e.addEventListener("touchmove", handleOnMove, { passive: false });
+    e.addEventListener("mouseup", complete, false);
+    e.addEventListener("mouseleave", complete, false);
+    e.addEventListener("touchend", complete, false);
+    addEventListener("resize", setContainerActualSize, false);
 
-    return (
+    setContainerActualSize();
+
+    return () => {
+      e.removeEventListener("touchstart", startImageTransforming);
+      e.removeEventListener("mousemove", handleOnMove);
+      e.removeEventListener("touchmove", handleOnMove);
+      e.removeEventListener("mouseup", complete);
+      e.removeEventListener("mouseleave", complete);
+      e.removeEventListener("touchend", complete);
+      removeEventListener("resize", setContainerActualSize);
+    };
+  }, []);
+
+  const {
+    image,
+    rotate,
+    scale,
+    scaleX,
+    scaleY,
+    freeAspect,
+    container,
+    position,
+  } = cropper;
+  const { url, width, height } = image;
+  const displayRatio = container.displayRatio;
+
+  let sx = scaleX.current;
+  let sy = scaleY.current;
+
+  if (!freeAspect) {
+    sx = scale.current;
+    sy = scale.current;
+  }
+
+  return (
+    <svg
+      ref={containerRef}
+      viewBox={`0 0 ${image.width} ${image.height}`}
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      overflow="visible"
+    >
       <svg
-        ref={this.ref}
-        viewBox={`0 0 ${image.width} ${image.height}`}
+        width={width * image.scale.current}
+        height={height * image.scale.current}
+        x={image.x}
+        y={image.y}
+        viewBox={`0 0 ${width} ${height}`}
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
         overflow="visible"
       >
-        {this.renderTargetImage()}
-        {this.renderCropper()}
+        <g transform={`rotate(${rotate.current}, ${width / 2}, ${height / 2})`}>
+          <image xlinkHref={url} width="100%" height="100%" />
+          <rect width="100%" height="100%" fill="#000" fillOpacity="0.48" />
+        </g>
       </svg>
-    );
-  };
 
-  private renderTargetImage = () => {
-    const { image, rotate } = this.props;
-    const { url, width, height } = image;
-
-    return (
-      <>
+      <g clipPath="url(#clip-path-1)">
         <svg
           width={width * image.scale.current}
           height={height * image.scale.current}
@@ -91,63 +128,17 @@ class Cropper extends React.Component<
             transform={`rotate(${rotate.current}, ${width / 2}, ${height / 2})`}
           >
             <image xlinkHref={url} width="100%" height="100%" />
-            <rect width="100%" height="100%" fill="#000" fillOpacity="0.48" />
           </g>
         </svg>
+      </g>
 
-        <g clipPath="url(#clip-path-1)">
-          <svg
-            width={width * image.scale.current}
-            height={height * image.scale.current}
-            x={image.x}
-            y={image.y}
-            viewBox={`0 0 ${width} ${height}`}
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            overflow="visible"
-          >
-            <g
-              transform={`rotate(${rotate.current}, ${width / 2}, ${
-                height / 2
-              })`}
-            >
-              <image xlinkHref={url} width="100%" height="100%" />
-            </g>
-          </svg>
-        </g>
-      </>
-    );
-  };
-
-  private renderCropper = () => {
-    const {
-      container,
-      position,
-      width,
-      height,
-      scale,
-      scaleX,
-      scaleY,
-      freeAspect,
-    } = this.props;
-    const displayRatio = container.displayRatio;
-
-    let sx = scaleX.current;
-    let sy = scaleY.current;
-
-    if (!freeAspect) {
-      sx = scale.current;
-      sy = scale.current;
-    }
-
-    return (
       <g>
         <clipPath id="clip-path-1">
           <rect
             x={position.x}
             y={position.y}
-            width={width * sx}
-            height={height * sy}
+            width={cropper.width * sx}
+            height={cropper.height * sy}
           />
         </clipPath>
 
@@ -156,45 +147,23 @@ class Cropper extends React.Component<
           stroke="#FFF"
           strokeWidth="2"
           strokeDasharray="8 8"
-          width={width * sx}
-          height={height * sy}
+          width={cropper.width * sx}
+          height={cropper.height * sy}
           x={position.x}
           y={position.y}
-          onMouseDown={this.props.startCropperMoving}
-          onTouchStart={this.props.startCropperMoving}
+          onMouseDown={startCropperMoving}
+          onTouchStart={startCropperMoving}
         ></rect>
 
         <circle
           fill="#FFF"
-          cx={position.x + width * sx}
-          cy={position.y + height * sy}
+          cx={position.x + cropper.width * sx}
+          cy={position.y + cropper.height * sy}
           r={12 * displayRatio}
-          onMouseDown={this.props.startCropperTransforming}
-          onTouchStart={this.props.startCropperTransforming}
+          onMouseDown={startCropperTransforming}
+          onTouchStart={startCropperTransforming}
         ></circle>
       </g>
-    );
-  };
-
-  // Events
-
-  private handleOnMove = (
-    event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent
-  ) => {
-    const { tick } = this.props;
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    tick(event);
-  };
-
-  private setContainerActualSize = () => {
-    const { setContainerActualSize } = this.props;
-    const e = this.ref.current!;
-
-    setContainerActualSize(e.getBoundingClientRect());
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Cropper);
+    </svg>
+  );
+};
