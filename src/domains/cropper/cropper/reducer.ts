@@ -25,23 +25,23 @@ export type CropperCropperState = {
   position: {
     x: number;
     y: number;
-    referenceX: number;
-    referenceY: number;
+    valueAtTransformStartX: number;
+    valueAtTransformStartY: number;
   };
   scale: {
     current: number;
     previous: number;
-    reference: number;
+    valueAtTransformStart: number;
   };
   scaleX: {
     current: number;
     previous: number;
-    reference: number;
+    valueAtTransformStart: number;
   };
   scaleY: {
     current: number;
     previous: number;
-    reference: number;
+    valueAtTransformStart: number;
   };
 };
 
@@ -54,23 +54,23 @@ const initialState: CropperCropperState = {
   position: {
     x: 0,
     y: 0,
-    referenceX: 0,
-    referenceY: 0,
+    valueAtTransformStartX: 0,
+    valueAtTransformStartY: 0,
   },
   scale: {
     current: 1,
     previous: 1,
-    reference: 0,
+    valueAtTransformStart: 0,
   },
   scaleX: {
     current: 1,
     previous: 1,
-    reference: 0,
+    valueAtTransformStart: 0,
   },
   scaleY: {
     current: 1,
     previous: 1,
-    reference: 0,
+    valueAtTransformStart: 0,
   },
 };
 
@@ -83,10 +83,10 @@ const startCropperMoving = (
 ): CropperCropperState => {
   const { position } = state;
 
-  const referenceX =
+  const valueAtTransformStartX =
     (positions[0].clientX - container.actualX) * container.displayRatio -
     position.x;
-  const referenceY =
+  const valueAtTransformStartY =
     (positions[0].clientY - container.actualY) * container.displayRatio -
     position.y;
 
@@ -95,8 +95,8 @@ const startCropperMoving = (
     isCropperMoving: true,
     position: {
       ...state.position,
-      referenceX,
-      referenceY,
+      valueAtTransformStartX,
+      valueAtTransformStartY,
     },
   };
 };
@@ -134,17 +134,17 @@ const startCropperTransforming = (
     scale: {
       ...state.scale,
       previous: state.scale.current,
-      reference: scale,
+      valueAtTransformStart: scale,
     },
     scaleX: {
       ...state.scaleX,
       previous: state.scaleX.current,
-      reference: scaleX,
+      valueAtTransformStart: scaleX,
     },
     scaleY: {
       ...state.scaleY,
       previous: state.scaleY.current,
-      reference: scaleY,
+      valueAtTransformStart: scaleY,
     },
   };
 };
@@ -228,8 +228,8 @@ const moveCropper = (
   const relativeX = (cursorX - container.actualX) * container.displayRatio;
   const relativeY = (cursorY - container.actualY) * container.displayRatio;
 
-  const nextX = relativeX - position.referenceX;
-  const nextY = relativeY - position.referenceY;
+  const nextX = relativeX - position.valueAtTransformStartX;
+  const nextY = relativeY - position.valueAtTransformStartY;
 
   return {
     ...state,
@@ -253,12 +253,12 @@ const transformCropper = (
     let nextScaleX =
       (((clientX - container.actualX) * container.displayRatio -
         cropper.position.x) /
-        cropper.scaleX.reference) *
+        cropper.scaleX.valueAtTransformStart) *
       cropper.scaleX.previous;
     let nextScaleY =
       (((clientY - container.actualY) * container.displayRatio -
         cropper.position.y) /
-        cropper.scaleY.reference) *
+        cropper.scaleY.valueAtTransformStart) *
       cropper.scaleY.previous;
 
     if (cropper.width * nextScaleX < CROPPER_DEFAULT_WIDTH) {
@@ -296,7 +296,7 @@ const transformCropper = (
         ),
       0.5
     ) /
-      cropper.scale.reference) *
+      cropper.scale.valueAtTransformStart) *
     cropper.scale.previous;
 
   if (

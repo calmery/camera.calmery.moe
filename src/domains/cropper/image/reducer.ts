@@ -1,5 +1,4 @@
 import * as actions from "./actions";
-import { getOrCreateStore } from "../..";
 import { TICK, Actions, COMPLETE } from "../actions";
 
 const { SET_IMAGE, START_IMAGE_TRANSFORMING } = actions;
@@ -16,12 +15,12 @@ export type CropperImageState = {
   rotate: {
     current: number;
     previous: number;
-    reference: number;
+    valueAtTransformStart: number;
   };
   scale: {
     current: number;
     previous: number;
-    reference: number;
+    valueAtTransformStart: number;
   };
 };
 
@@ -37,12 +36,12 @@ const initialState: CropperImageState = {
   scale: {
     current: 1,
     previous: 1,
-    reference: 0,
+    valueAtTransformStart: 0,
   },
   rotate: {
     current: 0,
     previous: 0,
-    reference: 0,
+    valueAtTransformStart: 0,
   },
 };
 
@@ -64,12 +63,12 @@ const setImage = ({
   scale: {
     current: 1,
     previous: 1,
-    reference: 0,
+    valueAtTransformStart: 0,
   },
   rotate: {
     current: 0,
     previous: 0,
-    reference: 0,
+    valueAtTransformStart: 0,
   },
 });
 
@@ -98,12 +97,12 @@ const startImageTransforming = (
       scale: {
         ...state.scale,
         previous: state.scale.current,
-        reference: distanceBetweenFingers,
+        valueAtTransformStart: distanceBetweenFingers,
       },
       rotate: {
         ...state.rotate,
         previous: state.rotate.current,
-        reference: angleBetweenFingers,
+        valueAtTransformStart: angleBetweenFingers,
       },
     };
   }
@@ -128,14 +127,14 @@ const tick = (
       positions[1].clientX - positions[0].clientX
     ) *
       (180 / Math.PI) -
-      rotate.reference);
+      rotate.valueAtTransformStart);
   const currentLength = Math.pow(
     Math.pow(positions[1].clientX - positions[0].clientX, 2) +
       Math.pow(positions[1].clientY - positions[0].clientY, 2),
     0.5
   );
   const nextScale =
-    (currentLength / state.scale.reference) * state.scale.previous;
+    (currentLength / state.scale.valueAtTransformStart) * state.scale.previous;
   const nextX =
     state.position.x +
     (state.width * state.scale.current - state.width * nextScale) / 2;
