@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { useDispatch, useSelector } from "react-redux";
 import { withRedux, NextPageContextWithRedux, State } from "~/domains";
 import { Cropper } from "~/containers/Cropper";
-import * as actions from "~/domains/cropper/actions";
+import { actions } from "~/domains/cropper/actions";
 import CropperPreview from "~/containers/CropperPreview";
 
 const Crop: NextPage = () => {
@@ -13,7 +13,7 @@ const Crop: NextPage = () => {
   );
   const changeFreeAspect = () => dispatch(actions.changeFreeAspect());
   const setImage = (url: string, width: number, height: number) =>
-    dispatch(actions.setImage(url, width, height));
+    dispatch(actions.setImage({ url, width, height }));
   const setAspectRatio = (w: number, h: number) =>
     dispatch(actions.setAspectRatio(w, h));
 

@@ -1,6 +1,11 @@
-export const convertEventToPositions = (
+export type CursorPosition = {
+  clientX: number;
+  clientY: number;
+};
+
+export const convertEventToCursorPositions = (
   event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent
-) => {
+): CursorPosition[] => {
   const positions = [];
 
   if ((event as any).touches) {

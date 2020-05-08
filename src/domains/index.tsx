@@ -24,7 +24,7 @@ export interface State {
 
 let cachedStore: Store | null = null;
 
-export const getOrCreateStore = (state?: State) => {
+export const getOrCreateStore = (state?: State): Store<State> => {
   // SSR のときは毎回新しい `store` を Redux の `createStore` で生成する
   // もし既にブラウザ側で `store` が生成されている場合はその `store` を使用する
   if (typeof window !== "undefined" && cachedStore !== null) {
