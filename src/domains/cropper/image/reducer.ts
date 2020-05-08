@@ -45,8 +45,6 @@ const initialState: CropperImageState = {
   },
 };
 
-// Main
-
 export default (state = initialState, action: Actions) => {
   switch (action.type) {
     case SET_IMAGE: {
