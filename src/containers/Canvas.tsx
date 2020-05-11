@@ -20,7 +20,7 @@ const mapDispatchToProps = (
     displayY: number,
     displayWidth: number
   ) => dispatch(actions.updateDisplayRatio(displayX, displayY, displayWidth)),
-  resetAllFlags: () => dispatch(actions.resetAllFlags()),
+  complete: () => dispatch(actions.complete()),
   progressCanvasStickerLayerDrag: (x: number, y: number) =>
     dispatch(actions.progressCanvasStickerLayerDrag(x, y)),
   progressCanvasStickerLayerTransform: (
@@ -42,9 +42,9 @@ class Canvas extends React.Component<
   public componentDidMount = () => {
     const e = this.ref.current!;
 
-    e.addEventListener("mouseup", this.handleOnOut);
-    e.addEventListener("touchend", this.handleOnOut);
-    e.addEventListener("mouseleave", this.handleOnOut);
+    e.addEventListener("mouseup", this.handleOnComplete);
+    e.addEventListener("touchend", this.handleOnComplete);
+    e.addEventListener("mouseleave", this.handleOnComplete);
     e.addEventListener("mousemove", this.handleOnMouseMove);
     e.addEventListener("touchmove", this.handleOnTouchMove, { passive: false });
     addEventListener("resize", this.handleOnResizeWindow);
@@ -55,9 +55,9 @@ class Canvas extends React.Component<
   public componentWillUnmount = () => {
     const e = this.ref.current!;
 
-    e.removeEventListener("mouseup", this.handleOnOut);
-    e.removeEventListener("touchend", this.handleOnOut);
-    e.removeEventListener("mouseleave", this.handleOnOut);
+    e.removeEventListener("mouseup", this.handleOnComplete);
+    e.removeEventListener("touchend", this.handleOnComplete);
+    e.removeEventListener("mouseleave", this.handleOnComplete);
     e.removeEventListener("mousemove", this.handleOnMouseMove);
     e.removeEventListener("touchmove", this.handleOnTouchMove);
     removeEventListener("resize", this.handleOnResizeWindow);
@@ -88,10 +88,10 @@ class Canvas extends React.Component<
     updateDisplayRatio(x, y, width);
   };
 
-  private handleOnOut = () => {
-    const { resetAllFlags } = this.props;
+  private handleOnComplete = () => {
+    const { complete } = this.props;
 
-    resetAllFlags();
+    complete();
   };
 
   private handleOnMove = (positions: { x: number; y: number }[]) => {

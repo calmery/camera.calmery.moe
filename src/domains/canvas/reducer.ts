@@ -3,7 +3,7 @@ import {
   Actions,
   ADD_USER_IMAGE,
   REMOVE_USER_IMAGE,
-  RESET_ALL_FLAGS,
+  COMPLETE,
   UPDATE_DISPLAY_RATIO,
   SET_CANVAS_USER_LAYER_STARTING_POSITION,
   UPDATE_CANVAS_LAYER_POSITION,
@@ -554,7 +554,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case RESET_ALL_FLAGS: {
+    case COMPLETE: {
       const { users, stickers } = state.layers;
       const nextUsers = users.map((user) => {
         if (!user) {

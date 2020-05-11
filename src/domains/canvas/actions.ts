@@ -7,7 +7,7 @@ export const REMOVE_USER_IMAGE = "REMOVE_USER_IMAGE" as const;
 export const UPDATE_DISPLAY_RATIO = "UPDATE_DISPLAY_RATIO" as const;
 export const UPDATE_CANVAS_LAYER_POSITION = "UPDATE_CANVAS_LAYER_POSITION" as const;
 export const SET_CANVAS_USER_LAYER_STARTING_POSITION = "SET_CANVAS_USER_LAYER_STARTING_POSITION" as const;
-export const RESET_ALL_FLAGS = "RESET_ALL_FLAGS" as const;
+export const COMPLETE = "CANVAS/COMPLETE" as const;
 export const CHANGE_USER_LAYER_FILTER_VALUE = "CHANGE_USER_LAYER_FILTER_VALUE" as const;
 export const ADD_STICKER_LAYER = "ADD_STICKER_LAYER" as const;
 export const START_CANVAS_STICKER_LAYER_TRANSFORM = "START_CANVAS_STICKER_LAYER_TRANSFORM" as const;
@@ -100,8 +100,8 @@ export const addUserImage = (
   },
 });
 
-export const resetAllFlags = () => ({
-  type: RESET_ALL_FLAGS,
+export const complete = () => ({
+  type: COMPLETE,
 });
 
 export const removeUserImage = (index: number) => ({
@@ -223,7 +223,7 @@ export type Actions =
   | ReturnType<typeof updateDisplayRatio>
   | ReturnType<typeof updateCanvasUserLayerPosition>
   | ReturnType<typeof setCanvasUserLayerStartingPosition>
-  | ReturnType<typeof resetAllFlags>
+  | ReturnType<typeof complete>
   | ReturnType<typeof changeUserLayerFilterValue>
   | ReturnType<typeof startCanvasStickerLayerTransform>
   | ReturnType<typeof startCanvasStickerLayerMultiTouchingTransform>
