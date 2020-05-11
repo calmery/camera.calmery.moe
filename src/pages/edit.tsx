@@ -38,8 +38,13 @@ const EditCanvasitems = styled.div`
 const Edit: NextPage = () => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
+  const { layers } = canvas;
   const handleOnClickFrame = (frame: CanvasUserLayerFrame, index: number) =>
     dispatch(actions.changeFrame(frame, index));
+
+  const handleOnClockRemoveImageButton = (index: number) => {
+    dispatch(actions.removeUserImage(index));
+  };
 
   return (
     <>
@@ -47,6 +52,18 @@ const Edit: NextPage = () => {
         <Container>
           <Canvas />
         </Container>
+        <div>
+          {layers.users.map((layer, index) =>
+            layer ? (
+              <button
+                onClick={() => handleOnClockRemoveImageButton(index)}
+                key={index}
+              >
+                Remove: {index}
+              </button>
+            ) : null
+          )}
+        </div>
         <EditCanvasitems>
           <Filters />
           <Stickers />

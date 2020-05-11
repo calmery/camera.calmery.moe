@@ -40,66 +40,44 @@ class Canvas extends React.Component<
   private ref = React.createRef<SVGSVGElement>();
 
   public componentDidMount = () => {
-    const s = this.ref.current!;
-    const options = { passive: false };
-    s.addEventListener("mouseup", this.handleOnOut);
-    s.addEventListener("touchend", this.handleOnOut);
-    s.addEventListener("mouseleave", this.handleOnOut);
-    s.addEventListener("mousemove", this.handleOnMouseMove);
-    s.addEventListener("touchmove", this.handleOnTouchMove, options);
-    window.addEventListener("resize", this.handleOnResizeWindow);
+    const e = this.ref.current!;
+
+    e.addEventListener("mouseup", this.handleOnOut);
+    e.addEventListener("touchend", this.handleOnOut);
+    e.addEventListener("mouseleave", this.handleOnOut);
+    e.addEventListener("mousemove", this.handleOnMouseMove);
+    e.addEventListener("touchmove", this.handleOnTouchMove, { passive: false });
+    addEventListener("resize", this.handleOnResizeWindow);
 
     this.handleOnResizeWindow();
   };
 
   public componentWillUnmount = () => {
-    const s = this.ref.current!;
-    s.removeEventListener("mouseup", this.handleOnOut);
-    s.removeEventListener("touchend", this.handleOnOut);
-    s.removeEventListener("mouseleave", this.handleOnOut);
-    s.removeEventListener("mousemove", this.handleOnMouseMove);
-    s.removeEventListener("touchmove", this.handleOnTouchMove);
-    window.removeEventListener("resize", this.handleOnResizeWindow);
+    const e = this.ref.current!;
+
+    e.removeEventListener("mouseup", this.handleOnOut);
+    e.removeEventListener("touchend", this.handleOnOut);
+    e.removeEventListener("mouseleave", this.handleOnOut);
+    e.removeEventListener("mousemove", this.handleOnMouseMove);
+    e.removeEventListener("touchmove", this.handleOnTouchMove);
+    removeEventListener("resize", this.handleOnResizeWindow);
   };
 
   public render = () => {
     const { width, height } = this.props;
 
     return (
-      <>
-        <svg
-          viewBox={`0 0 ${width} ${height}`}
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-          ref={this.ref}
-        >
-          <CanvasFilters />
-          <CanvasUserLayers />
-          <CanvasStickerLayers />
-        </svg>
-        {this.renderRemoveButtons()}
-      </>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        ref={this.ref}
+      >
+        <CanvasFilters />
+        <CanvasUserLayers />
+        <CanvasStickerLayers />
+      </svg>
     );
-  };
-
-  private renderRemoveButtons = () => {
-    const { layers } = this.props;
-
-    return layers.users.map((layer, index) =>
-      layer ? (
-        <button
-          onClick={() => this.handleOnClockRemoveImageButton(index)}
-          key={index}
-        >
-          Remove: {index}
-        </button>
-      ) : null
-    );
-  };
-
-  private handleOnClockRemoveImageButton = (index: number) => {
-    const { removeUserImage } = this.props;
-    removeUserImage(index);
   };
 
   private handleOnResizeWindow = () => {
