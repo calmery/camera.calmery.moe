@@ -3,13 +3,11 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import CanvasStickerLayer from "~/components/CanvasStickerLayer";
 import { State } from "~/domains";
-import * as actions from "~/domains/canvas/actions";
+import { actions, Actions } from "~/domains/canvas/actions";
 
 const mapStateToProps = ({ canvas }: State) => canvas;
 
-const mapDispatchToProps = (
-  dispatch: ThunkDispatch<{}, {}, actions.Actions>
-) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Actions>) => ({
   startCropperTransforming: (index: number, previousLength: number) =>
     dispatch(actions.startCanvasStickerLayerTransform(index, previousLength)),
   startMultiTouchingTransform: (

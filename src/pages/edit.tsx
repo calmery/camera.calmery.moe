@@ -2,7 +2,7 @@ import React from "react";
 import { NextPage } from "next";
 import { useSelector, useDispatch } from "react-redux";
 import { withRedux, NextPageContextWithRedux, State } from "~/domains";
-import * as actions from "~/domains/canvas/actions";
+import { actions } from "~/domains/canvas/actions";
 import {
   canvasUserLayerFrame,
   CanvasUserLayerFrame,

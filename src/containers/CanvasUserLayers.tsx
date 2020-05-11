@@ -4,16 +4,14 @@ import { ThunkDispatch } from "redux-thunk";
 import CanvasUserLayer from "~/components/CanvasUserLayer";
 import CanvasEmptyUserLayer from "~/components/CanvasEmptyUserLayer";
 import { State } from "~/domains";
-import * as actions from "~/domains/canvas/actions";
+import { actions, tickActions, Actions } from "~/domains/canvas/actions";
 import { getImageFile } from "~/utils/get-image-file";
 
 const mapStateToProps = ({ canvas }: State) => canvas;
 
-const mapDispatchToProps = (
-  dispatch: ThunkDispatch<{}, {}, actions.Actions>
-) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Actions>) => ({
   addUserImageFromFile: (file: File, index: number) =>
-    dispatch(actions.addUserImageFromFile(file, index)),
+    dispatch(tickActions.addUserImageFromFile(file, index)),
   setCanvasUserLayerStartingPosition: (
     index: number,
     differenceFromStartingX: number,

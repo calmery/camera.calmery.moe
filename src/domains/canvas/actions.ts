@@ -206,19 +206,26 @@ export const addStickerLayerWithUrl = (url: string) => {
 
 // Actions
 
-export type Actions =
-  | ReturnType<typeof addStickerLayer>
-  | ReturnType<typeof addUserImage>
-  | ReturnType<typeof removeUserImage>
-  | ReturnType<typeof updateDisplayRatio>
-  | ReturnType<typeof updateCanvasUserLayerPosition>
-  | ReturnType<typeof setCanvasUserLayerStartingPosition>
-  | ReturnType<typeof complete>
-  | ReturnType<typeof changeUserLayerFilterValue>
-  | ReturnType<typeof startCanvasStickerLayerTransform>
-  | ReturnType<typeof startCanvasStickerLayerMultiTouchingTransform>
-  | ReturnType<typeof startCanvasStickerLayerDrag>
-  | ReturnType<typeof changeActiveCanvasStickerLayer>
-  | ReturnType<typeof removeCanvasStickerLayer>
-  | ReturnType<typeof changeFrame>
-  | ReturnType<typeof tick>;
+export const actions = {
+  addStickerLayer,
+  addUserImage,
+  removeUserImage,
+  updateDisplayRatio,
+  updateCanvasUserLayerPosition,
+  setCanvasUserLayerStartingPosition,
+  complete,
+  changeUserLayerFilterValue,
+  startCanvasStickerLayerTransform,
+  startCanvasStickerLayerMultiTouchingTransform,
+  startCanvasStickerLayerDrag,
+  changeActiveCanvasStickerLayer,
+  removeCanvasStickerLayer,
+  changeFrame,
+  tick,
+};
+
+export const tickActions = {
+  addUserImageFromFile,
+};
+
+export type Actions = ReturnType<typeof actions[keyof typeof actions]>;
