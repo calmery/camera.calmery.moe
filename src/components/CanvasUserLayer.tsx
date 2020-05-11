@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
+import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
-export default class CUL extends React.Component<{
+export const CanvasUserLayerComponent: React.FC<{
   layer: CanvasUserLayer;
   frame: CanvasUserFrame;
   displayRatio: number;
@@ -11,93 +12,13 @@ export default class CUL extends React.Component<{
     differenceFromStartingY: number
   ) => void;
   onMove: (nextX: number, nextY: number) => void;
-}> {
-  private containerRef = React.createRef<SVGRectElement>();
-  private ref = React.createRef<SVGPathElement>();
+}> = (props) => {
+  const pathRef = useRef<SVGPathElement>(null);
+  const rectRef = useRef<SVGRectElement>(null);
+  const { frame, layer, onMove, displayRatio, onStart } = props;
 
-  public componentDidMount = () => {
-    const s = this.containerRef.current!;
-
-    s.addEventListener("touchstart", this.handleOnTouchStart);
-    s.addEventListener("mousedown", this.handleOnMouseDown);
-    s.addEventListener("mousemove", this.handleOnMouseMove);
-    s.addEventListener("touchmove", this.handleOnTouchMove, { passive: false });
-  };
-
-  public componentWillUnmount = () => {
-    const s = this.containerRef.current!;
-
-    s.removeEventListener("touchstart", this.handleOnTouchStart);
-    s.removeEventListener("mousedown", this.handleOnMouseDown);
-    s.removeEventListener("mousemove", this.handleOnMouseMove);
-    s.removeEventListener("touchmove", this.handleOnTouchMove);
-  };
-
-  public render = () => {
-    const { frame } = this.props;
-
-    return (
-      <svg
-        x={frame.x}
-        y={frame.y}
-        width={frame.width}
-        height={frame.height}
-        viewBox={`0 0 ${frame.width} ${frame.height}`}
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        style={{ cursor: "move" }}
-      >
-        {frame.d && (
-          <clipPath id={`clip-path-${frame.id}`}>
-            <path d={frame.d} ref={this.ref} />
-          </clipPath>
-        )}
-
-        <g clipPath={`url(#clip-path-${frame.id})`}>{this.renderImage()}</g>
-
-        <g clipPath={`url(#clip-path-${frame.id})`}>
-          <rect
-            ref={this.containerRef}
-            width={frame.width}
-            height={frame.height}
-            fillOpacity={0}
-          />
-        </g>
-      </svg>
-    );
-  };
-
-  private renderImage = () => {
-    const { frame, layer } = this.props;
-
-    return (
-      <svg
-        width={layer.width}
-        height={layer.height}
-        x={layer.x}
-        y={layer.y}
-        viewBox={`0 0 ${layer.width} ${layer.height}`}
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        overflow="visible"
-      >
-        <g transform={`rotate(0, ${layer.width / 2}, ${layer.height / 2})`}>
-          <image
-            xlinkHref={layer.dataUrl}
-            width="100%"
-            height="100%"
-            filter={`url(#filter-${frame.id})`}
-          />
-        </g>
-      </svg>
-    );
-  };
-
-  // Helper Functions
-
-  private calculateupperRelativeCoordinates = (x: number, y: number) => {
-    const clipPath = this.ref.current!.getBoundingClientRect();
-    const { displayRatio } = this.props;
+  const calculateupperRelativeCoordinates = (x: number, y: number) => {
+    const clipPath = pathRef.current!.getBoundingClientRect();
 
     return {
       x: (x - clipPath.x) * displayRatio,
@@ -107,9 +28,9 @@ export default class CUL extends React.Component<{
 
   // Events
 
-  private handleOnMoveStart = (x: number, y: number) => {
-    const { layer, onStart } = this.props;
-    const { x: currentX, y: currentY } = this.calculateupperRelativeCoordinates(
+  const handleOnMoveStart = (event: MouseEvent | TouchEvent) => {
+    const [{ x, y }] = convertEventToCursorPositions(event);
+    const { x: currentX, y: currentY } = calculateupperRelativeCoordinates(
       x,
       y
     );
@@ -120,30 +41,19 @@ export default class CUL extends React.Component<{
     onStart(differenceFromStartingX, differenceFromStartingY);
   };
 
-  private handleOnTouchStart = (event: TouchEvent) => {
-    const x = event.touches[0].clientX;
-    const y = event.touches[0].clientY;
-
-    this.handleOnMoveStart(x, y);
-  };
-
-  private handleOnMouseDown = (event: MouseEvent) => {
-    const x = event.clientX;
-    const y = event.clientY;
-
-    this.handleOnMoveStart(x, y);
-  };
-
   // Move
 
-  private handleOnMove = (x: number, y: number) => {
-    const { onMove, layer } = this.props;
+  const handleOnMove = (event: MouseEvent | TouchEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const [{ x, y }] = convertEventToCursorPositions(event);
 
     if (layer.isDragging) {
-      const {
-        x: currentX,
-        y: currentY,
-      } = this.calculateupperRelativeCoordinates(x, y);
+      const { x: currentX, y: currentY } = calculateupperRelativeCoordinates(
+        x,
+        y
+      );
       const nextX = currentX - layer.differenceFromStartingX;
       const nextY = currentY - layer.differenceFromStartingY;
 
@@ -151,20 +61,69 @@ export default class CUL extends React.Component<{
     }
   };
 
-  private handleOnTouchMove = (event: TouchEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
+  useEffect(() => {
+    const e = rectRef.current!;
 
-    const x = event.touches[0].clientX;
-    const y = event.touches[0].clientY;
+    e.addEventListener("touchstart", handleOnMoveStart);
+    e.addEventListener("mousedown", handleOnMoveStart);
+    e.addEventListener("mousemove", handleOnMove);
+    e.addEventListener("touchmove", handleOnMove, { passive: false });
 
-    this.handleOnMove(x, y);
-  };
+    return () => {
+      e.removeEventListener("touchstart", handleOnMoveStart);
+      e.removeEventListener("mousedown", handleOnMoveStart);
+      e.removeEventListener("mousemove", handleOnMove);
+      e.removeEventListener("touchmove", handleOnMove);
+    };
+  });
 
-  private handleOnMouseMove = (event: MouseEvent) => {
-    const x = event.clientX;
-    const y = event.clientY;
+  return (
+    <svg
+      x={frame.x}
+      y={frame.y}
+      width={frame.width}
+      height={frame.height}
+      viewBox={`0 0 ${frame.width} ${frame.height}`}
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      style={{ cursor: "move" }}
+    >
+      {frame.d && (
+        <clipPath id={`clip-path-${frame.id}`}>
+          <path d={frame.d} ref={pathRef} />
+        </clipPath>
+      )}
 
-    this.handleOnMove(x, y);
-  };
-}
+      <g clipPath={`url(#clip-path-${frame.id})`}>
+        <svg
+          width={layer.width}
+          height={layer.height}
+          x={layer.x}
+          y={layer.y}
+          viewBox={`0 0 ${layer.width} ${layer.height}`}
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+          overflow="visible"
+        >
+          <g transform={`rotate(0, ${layer.width / 2}, ${layer.height / 2})`}>
+            <image
+              xlinkHref={layer.dataUrl}
+              width="100%"
+              height="100%"
+              filter={`url(#filter-${frame.id})`}
+            />
+          </g>
+        </svg>
+      </g>
+
+      <g clipPath={`url(#clip-path-${frame.id})`}>
+        <rect
+          ref={rectRef}
+          width={frame.width}
+          height={frame.height}
+          fillOpacity={0}
+        />
+      </g>
+    </svg>
+  );
+};

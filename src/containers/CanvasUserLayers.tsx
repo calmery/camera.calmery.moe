@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import CanvasUserLayer from "~/components/CanvasUserLayer";
-import CanvasEmptyUserLayer from "~/components/CanvasEmptyUserLayer";
+import { CanvasUserLayerComponent } from "~/components/CanvasUserLayer";
+import { CanvasEmptyUserLayer } from "~/components/CanvasEmptyUserLayer";
 import { State } from "~/domains";
 import { actions, thunkActions } from "~/domains/canvas/actions";
 import { getImageFile } from "~/utils/get-image-file";
@@ -49,7 +49,7 @@ export const CanvasUserLayers: React.FC = () => {
 
         if (layer) {
           return (
-            <CanvasUserLayer
+            <CanvasUserLayerComponent
               layer={layer}
               frame={frame}
               key={i}
