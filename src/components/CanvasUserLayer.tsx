@@ -1,65 +1,35 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
-import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
 export const CanvasUserLayerComponent: React.FC<{
   layer: CanvasUserLayer;
   frame: CanvasUserFrame;
-  displayRatio: number;
-  onStart: (
-    differenceFromStartingX: number,
-    differenceFromStartingY: number
-  ) => void;
-  onMove: (nextX: number, nextY: number) => void;
+  onStart: (clipPath: DOMRect, event: MouseEvent | TouchEvent) => void;
+  onMove: (clipPath: DOMRect, event: MouseEvent | TouchEvent) => void;
 }> = (props) => {
   const pathRef = useRef<SVGPathElement>(null);
   const rectRef = useRef<SVGRectElement>(null);
-  const { frame, layer, onMove, displayRatio, onStart } = props;
+  const { frame, layer, onMove, onStart } = props;
 
-  const calculateupperRelativeCoordinates = (x: number, y: number) => {
-    const clipPath = pathRef.current!.getBoundingClientRect();
+  const handleOnMoveStart = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      const e = pathRef.current!.getBoundingClientRect();
+      onStart(e, event);
+    },
+    [onStart]
+  );
 
-    return {
-      x: (x - clipPath.x) * displayRatio,
-      y: (y - clipPath.y) * displayRatio,
-    };
-  };
+  const handleOnMove = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-  // Events
-
-  const handleOnMoveStart = (event: MouseEvent | TouchEvent) => {
-    const [{ x, y }] = convertEventToCursorPositions(event);
-    const { x: currentX, y: currentY } = calculateupperRelativeCoordinates(
-      x,
-      y
-    );
-
-    const differenceFromStartingX = currentX - layer.x;
-    const differenceFromStartingY = currentY - layer.y;
-
-    onStart(differenceFromStartingX, differenceFromStartingY);
-  };
-
-  // Move
-
-  const handleOnMove = (event: MouseEvent | TouchEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const [{ x, y }] = convertEventToCursorPositions(event);
-
-    if (layer.isDragging) {
-      const { x: currentX, y: currentY } = calculateupperRelativeCoordinates(
-        x,
-        y
-      );
-      const nextX = currentX - layer.differenceFromStartingX;
-      const nextY = currentY - layer.differenceFromStartingY;
-
-      onMove(nextX, nextY);
-    }
-  };
+      const e = pathRef.current!.getBoundingClientRect();
+      onMove(e, event);
+    },
+    [onMove]
+  );
 
   useEffect(() => {
     const e = rectRef.current!;

@@ -62,20 +62,22 @@ export const removeCanvasUserLayer = (index: number) => ({
 
 export const startCanvasUserLayerDrag = (
   index: number,
-  differenceFromStartingX: number,
-  differenceFromStartingY: number
+  clipPathX: number,
+  clipPathY: number,
+  cursorPositions: CursorPosition[]
 ) => ({
   type: CANVAS_USER_LAYER_START_DRAG,
-  payload: { index, differenceFromStartingX, differenceFromStartingY },
+  payload: { index, clipPathX, clipPathY, cursorPositions },
 });
 
 export const setCanvasUserLayerPosition = (
   index: number,
-  nextX: number,
-  nextY: number
+  clipPathX: number,
+  clipPathY: number,
+  cursorPositions: CursorPosition[]
 ) => ({
   type: CANVAS_USER_LAYER_SET_POSITION,
-  payload: { index, nextX, nextY },
+  payload: { index, clipPathX, clipPathY, cursorPositions },
 });
 
 export const setUserLayerFilterValue = (

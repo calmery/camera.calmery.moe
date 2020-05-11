@@ -255,6 +255,21 @@ const initialState: CanvasState = {
   displayRatio: 1,
 };
 
+const calculateCanvasUserLayerRelativeCoordinates = (
+  state: CanvasState,
+  clipPathX: number,
+  clipPathY: number,
+  x: number,
+  y: number
+) => {
+  const { displayRatio } = state;
+
+  return {
+    x: (x - clipPathX) * displayRatio,
+    y: (y - clipPathY) * displayRatio,
+  };
+};
+
 const progressCanvasStickerLayerDrag = (
   state: CanvasState,
   x: number,
@@ -725,33 +740,69 @@ export default (state = initialState, action: Actions): CanvasState => {
         return state;
       }
 
-      users[action.payload.index] = {
-        ...user,
-        x: action.payload.nextX,
-        y: action.payload.nextY,
-      };
+      const { clipPathX, clipPathY } = action.payload;
+      const [{ x, y }] = action.payload.cursorPositions;
 
-      return {
-        ...state,
-        layers: {
-          ...state.layers,
-          users,
-        },
-      };
+      if (user.isDragging) {
+        const {
+          x: currentX,
+          y: currentY,
+        } = calculateCanvasUserLayerRelativeCoordinates(
+          state,
+          clipPathX,
+          clipPathY,
+          x,
+          y
+        );
+        const nextX = currentX - user.differenceFromStartingX;
+        const nextY = currentY - user.differenceFromStartingY;
+
+        users[action.payload.index] = {
+          ...user,
+          x: nextX,
+          y: nextY,
+        };
+
+        return {
+          ...state,
+          layers: {
+            ...state.layers,
+            users,
+          },
+        };
+      }
+
+      return state;
     }
 
     case CANVAS_USER_LAYER_START_DRAG: {
+      const { index, cursorPositions, clipPathX, clipPathY } = action.payload;
+      const [{ x, y }] = cursorPositions;
       const { users } = state.layers;
-      const user = users[action.payload.index];
+      const user = users[index];
 
       if (user === null) {
         return state;
       }
 
-      users[action.payload.index] = {
+      const {
+        x: currentX,
+        y: currentY,
+      } = calculateCanvasUserLayerRelativeCoordinates(
+        state,
+        clipPathX,
+        clipPathY,
+        x,
+        y
+      );
+
+      const differenceFromStartingX = currentX - user.x;
+      const differenceFromStartingY = currentY - user.y;
+
+      users[index] = {
         ...user,
-        differenceFromStartingX: action.payload.differenceFromStartingX,
-        differenceFromStartingY: action.payload.differenceFromStartingY,
+        differenceFromStartingX: differenceFromStartingX,
+        differenceFromStartingY: differenceFromStartingY,
         isDragging: true,
       };
 

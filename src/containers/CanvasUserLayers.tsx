@@ -5,23 +5,32 @@ import { CanvasEmptyUserLayer } from "~/components/CanvasEmptyUserLayer";
 import { State } from "~/domains";
 import { actions, thunkActions } from "~/domains/canvas/actions";
 import { getImageFile } from "~/utils/get-image-file";
+import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
 export const CanvasUserLayers: React.FC = () => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
   const { frames, layers, displayRatio } = canvas;
 
+  const handOnClickEmptyUserImage = async (index: number) => {
+    dispatch(
+      thunkActions.addCanvasUserLayerFromFile(await getImageFile(), index)
+    );
+  };
+
   const handleOnStart = useCallback(
     (
       index: number,
-      differenceFromStartingX: number,
-      differenceFromStartingY: number
+      clipPathX: number,
+      clipPathY: number,
+      event: MouseEvent | TouchEvent
     ) => {
       dispatch(
         actions.startCanvasUserLayerDrag(
           index,
-          differenceFromStartingX,
-          differenceFromStartingY
+          clipPathX,
+          clipPathY,
+          convertEventToCursorPositions(event)
         )
       );
     },
@@ -29,17 +38,23 @@ export const CanvasUserLayers: React.FC = () => {
   );
 
   const handleOnMove = useCallback(
-    (index: number, nextX: number, nextY: number) => {
-      dispatch(actions.setCanvasUserLayerPosition(index, nextX, nextY));
+    (
+      index: number,
+      clipPathX: number,
+      clipPathY: number,
+      event: MouseEvent | TouchEvent
+    ) => {
+      dispatch(
+        actions.setCanvasUserLayerPosition(
+          index,
+          clipPathX,
+          clipPathY,
+          convertEventToCursorPositions(event)
+        )
+      );
     },
     [dispatch]
   );
-
-  const handOnClickEmptyUserImage = async (index: number) => {
-    dispatch(
-      thunkActions.addCanvasUserLayerFromFile(await getImageFile(), index)
-    );
-  };
 
   return (
     <>
@@ -53,9 +68,12 @@ export const CanvasUserLayers: React.FC = () => {
               layer={layer}
               frame={frame}
               key={i}
-              displayRatio={displayRatio}
-              onStart={(x, y) => handleOnStart(i, x, y)}
-              onMove={(x, y) => handleOnMove(i, x, y)}
+              onStart={(clipPath: DOMRect, event: MouseEvent | TouchEvent) =>
+                handleOnStart(i, clipPath.x, clipPath.y, event)
+              }
+              onMove={(clipPath: DOMRect, event: MouseEvent | TouchEvent) =>
+                handleOnMove(i, clipPath.x, clipPath.y, event)
+              }
             />
           );
         }
