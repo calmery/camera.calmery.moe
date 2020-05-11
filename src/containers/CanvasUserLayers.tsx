@@ -18,7 +18,7 @@ export const CanvasUserLayers: React.FC = () => {
       differenceFromStartingY: number
     ) => {
       dispatch(
-        actions.setCanvasUserLayerStartingPosition(
+        actions.startCanvasUserLayerDrag(
           index,
           differenceFromStartingX,
           differenceFromStartingY
@@ -30,13 +30,15 @@ export const CanvasUserLayers: React.FC = () => {
 
   const handleOnMove = useCallback(
     (index: number, nextX: number, nextY: number) => {
-      dispatch(actions.updateCanvasUserLayerPosition(index, nextX, nextY));
+      dispatch(actions.setCanvasUserLayerPosition(index, nextX, nextY));
     },
     [dispatch]
   );
 
   const handOnClickEmptyUserImage = async (index: number) => {
-    dispatch(thunkActions.addUserImageFromFile(await getImageFile(), index));
+    dispatch(
+      thunkActions.addCanvasUserLayerFromFile(await getImageFile(), index)
+    );
   };
 
   return (

@@ -1,11 +1,11 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { addStickerLayerWithUrl } from "~/domains/canvas/actions";
+import { addCanvasStickerLayerWithUrl } from "~/domains/canvas/actions";
 
 export const Stickers = () => {
   const dispatch = useDispatch();
   const onClickAddStickerButton = useCallback(
-    (url: string) => dispatch(addStickerLayerWithUrl(url)),
+    (url: string) => dispatch(addCanvasStickerLayerWithUrl(url)),
     []
   );
 

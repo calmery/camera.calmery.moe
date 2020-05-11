@@ -10,7 +10,7 @@ export const CanvasStickerLayers: React.FC = () => {
   const { layers, displayRatio } = useSelector(({ canvas }: State) => canvas);
 
   const handleOnSelect = useCallback(
-    (index: number) => dispatch(actions.changeActiveCanvasStickerLayer(index)),
+    (index: number) => dispatch(actions.setCanvasStickerLayerActive(index)),
     [dispatch]
   );
 

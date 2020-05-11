@@ -24,21 +24,89 @@ export const COMPLETE = "CANVAS/COMPLETE" as const;
 
 // Actions
 
-export const tick = (cursorPositions: CursorPosition[]) => ({
-  type: TICK,
-  payload: { cursorPositions },
-});
-
-export const changeFrame = (frame: any, index: number) => ({
+export const setCanvasFrame = (frame: any, index: number) => ({
   type: CANVAS_SET_FRAME,
   payload: { frame, index },
+});
+
+export const setCanvasDisplayRatio = (
+  displayX: number,
+  displayY: number,
+  displayWidth: number
+) => ({
+  type: CANVAS_SET_DISPLAY_RATIO,
+  payload: { displayX, displayY, displayWidth },
+});
+
+// User Layer
+
+export const addCanvasUserLayer = (
+  index: number,
+  dataUrl: string,
+  width: number,
+  height: number
+) => ({
+  type: CANVAS_USER_LAYER_ADD,
+  payload: {
+    index,
+    dataUrl,
+    width,
+    height,
+  },
+});
+
+export const removeCanvasUserLayer = (index: number) => ({
+  type: CANVAS_USER_LAYER_REMOVE,
+  payload: { index },
+});
+
+export const startCanvasUserLayerDrag = (
+  index: number,
+  differenceFromStartingX: number,
+  differenceFromStartingY: number
+) => ({
+  type: CANVAS_USER_LAYER_START_DRAG,
+  payload: { index, differenceFromStartingX, differenceFromStartingY },
+});
+
+export const setCanvasUserLayerPosition = (
+  index: number,
+  nextX: number,
+  nextY: number
+) => ({
+  type: CANVAS_USER_LAYER_SET_POSITION,
+  payload: { index, nextX, nextY },
+});
+
+export const setUserLayerFilterValue = (
+  index: number,
+  type: FeColorMatrix,
+  value: number
+) => ({
+  type: CANVAS_FILTER_SET_VALUE,
+  payload: {
+    index,
+    type,
+    value,
+  },
+});
+
+// Sticker Layer
+
+export const addCanvasStickerLayer = (
+  dataUrl: string,
+  width: number,
+  height: number
+) => ({
+  type: CANVAS_STICKER_LAYER_ADD,
+  payload: { dataUrl, width, height },
 });
 
 export const removeCanvasStickerLayer = () => ({
   type: CANVAS_SRICKER_LAYER_REMOVE,
 });
 
-export const changeActiveCanvasStickerLayer = (index: number) => ({
+export const setCanvasStickerLayerActive = (index: number) => ({
   type: CANVAS_STICKER_LAYER_SET_ACTIVE,
   payload: { index },
 });
@@ -60,77 +128,15 @@ export const startCanvasStickerLayerDrag = (
   payload: { index, cursorPositions },
 });
 
-export const addStickerLayer = (
-  dataUrl: string,
-  width: number,
-  height: number
-) => ({
-  type: CANVAS_STICKER_LAYER_ADD,
-  payload: { dataUrl, width, height },
-});
+// Event Loop
 
-export const addUserImage = (
-  index: number,
-  dataUrl: string,
-  width: number,
-  height: number
-) => ({
-  type: CANVAS_USER_LAYER_ADD,
-  payload: {
-    index,
-    dataUrl,
-    width,
-    height,
-  },
+export const tick = (cursorPositions: CursorPosition[]) => ({
+  type: TICK,
+  payload: { cursorPositions },
 });
 
 export const complete = () => ({
   type: COMPLETE,
-});
-
-export const removeUserImage = (index: number) => ({
-  type: CANVAS_USER_LAYER_REMOVE,
-  payload: { index },
-});
-
-export const updateDisplayRatio = (
-  displayX: number,
-  displayY: number,
-  displayWidth: number
-) => ({
-  type: CANVAS_SET_DISPLAY_RATIO,
-  payload: { displayX, displayY, displayWidth },
-});
-
-export const updateCanvasUserLayerPosition = (
-  index: number,
-  nextX: number,
-  nextY: number
-) => ({
-  type: CANVAS_USER_LAYER_SET_POSITION,
-  payload: { index, nextX, nextY },
-});
-
-export const setCanvasUserLayerStartingPosition = (
-  index: number,
-  differenceFromStartingX: number,
-  differenceFromStartingY: number
-) => ({
-  type: CANVAS_USER_LAYER_START_DRAG,
-  payload: { index, differenceFromStartingX, differenceFromStartingY },
-});
-
-export const changeUserLayerFilterValue = (
-  index: number,
-  type: FeColorMatrix,
-  value: number
-) => ({
-  type: CANVAS_FILTER_SET_VALUE,
-  payload: {
-    index,
-    type,
-    value,
-  },
 });
 
 // Redux Thunk
@@ -147,7 +153,7 @@ const convertUrlToImage = (url: string): Promise<HTMLImageElement> => {
 };
 
 // TODO: `blueimpLoadImage` のエラー処理をちゃんとする
-export const addUserImageFromFile = (file: File, index: number) => {
+export const addCanvasUserLayerFromFile = (file: File, index: number) => {
   return (dispatch: Dispatch) => {
     return new Promise((resolve) => {
       blueimpLoadImage(
@@ -156,7 +162,7 @@ export const addUserImageFromFile = (file: File, index: number) => {
           const dataUrl = (canvas as HTMLCanvasElement).toDataURL();
           const { width, height } = await convertUrlToImage(dataUrl);
 
-          dispatch(addUserImage(index, dataUrl, width, height));
+          dispatch(addCanvasUserLayer(index, dataUrl, width, height));
 
           resolve();
         },
@@ -166,7 +172,7 @@ export const addUserImageFromFile = (file: File, index: number) => {
   };
 };
 
-export const addStickerLayerWithUrl = (url: string) => {
+export const addCanvasStickerLayerWithUrl = (url: string) => {
   return (dispatch: Dispatch) => {
     return new Promise((resolve, reject) => {
       const image = new Image();
@@ -185,7 +191,7 @@ export const addStickerLayerWithUrl = (url: string) => {
 
         context.drawImage(image, 0, 0, image.width, image.height);
         dispatch(
-          addStickerLayer(
+          addCanvasStickerLayer(
             canvas.toDataURL("image/png"),
             image.width,
             image.height
@@ -201,24 +207,24 @@ export const addStickerLayerWithUrl = (url: string) => {
 // Actions
 
 export const actions = {
-  addStickerLayer,
-  addUserImage,
-  removeUserImage,
-  updateDisplayRatio,
-  updateCanvasUserLayerPosition,
-  setCanvasUserLayerStartingPosition,
+  addCanvasStickerLayer,
+  addCanvasUserLayer,
+  removeCanvasUserLayer,
+  setCanvasDisplayRatio,
+  setCanvasUserLayerPosition,
+  startCanvasUserLayerDrag,
   complete,
-  changeUserLayerFilterValue,
+  setUserLayerFilterValue,
   startCanvasStickerLayerTransform,
   startCanvasStickerLayerDrag,
-  changeActiveCanvasStickerLayer,
+  setCanvasStickerLayerActive,
   removeCanvasStickerLayer,
-  changeFrame,
+  setCanvasFrame,
   tick,
 };
 
 export const thunkActions = {
-  addUserImageFromFile,
+  addCanvasUserLayerFromFile,
 };
 
 export type Actions = ReturnType<typeof actions[keyof typeof actions]>;

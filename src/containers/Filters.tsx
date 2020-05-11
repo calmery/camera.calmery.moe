@@ -1,25 +1,25 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "~/domains";
-import { changeUserLayerFilterValue } from "~/domains/canvas/actions";
+import { setUserLayerFilterValue } from "~/domains/canvas/actions";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
 
 export const Filters = () => {
   const dispatch = useDispatch();
   const { frames, layers } = useSelector(({ canvas }: State) => canvas);
   const onClickBlurButton = useCallback((index, value) => {
-    dispatch(changeUserLayerFilterValue(index, FeColorMatrix.blur, value));
+    dispatch(setUserLayerFilterValue(index, FeColorMatrix.blur, value));
   }, []);
   const onChangeHueRotate = useCallback((index, value) => {
-    dispatch(changeUserLayerFilterValue(index, FeColorMatrix.hueRotate, value));
+    dispatch(setUserLayerFilterValue(index, FeColorMatrix.hueRotate, value));
   }, []);
   const onChangeLuminanceToAlpha = useCallback((index, value) => {
     dispatch(
-      changeUserLayerFilterValue(index, FeColorMatrix.luminanceToAlpha, value)
+      setUserLayerFilterValue(index, FeColorMatrix.luminanceToAlpha, value)
     );
   }, []);
   const onClickSaturate = useCallback((index, value) => {
-    dispatch(changeUserLayerFilterValue(index, FeColorMatrix.saturate, value));
+    dispatch(setUserLayerFilterValue(index, FeColorMatrix.saturate, value));
   }, []);
 
   return (

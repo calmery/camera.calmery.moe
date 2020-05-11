@@ -40,10 +40,10 @@ const Edit: NextPage = () => {
   const canvas = useSelector(({ canvas }: State) => canvas);
   const { layers } = canvas;
   const handleOnClickFrame = (frame: CanvasUserLayerFrame, index: number) =>
-    dispatch(actions.changeFrame(frame, index));
+    dispatch(actions.setCanvasFrame(frame, index));
 
   const handleOnClockRemoveImageButton = (index: number) => {
-    dispatch(actions.removeUserImage(index));
+    dispatch(actions.removeCanvasUserLayer(index));
   };
 
   return (

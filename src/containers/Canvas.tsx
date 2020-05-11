@@ -20,7 +20,7 @@ export const Canvas: React.FC = () => {
     const e = containerRef.current!;
     const rect = e.getBoundingClientRect();
 
-    dispatch(actions.updateDisplayRatio(rect.x, rect.y, rect.width));
+    dispatch(actions.setCanvasDisplayRatio(rect.x, rect.y, rect.width));
   }, [dispatch]);
 
   const handleOnMove = useCallback(
