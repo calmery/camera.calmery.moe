@@ -12,11 +12,10 @@ import {
   START_CANVAS_STICKER_LAYER_DRAG,
   START_CANVAS_STICKER_LAYER_TRANSFORM,
   START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM,
-  PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM,
-  PROGRESS_CANVAS_STICKER_LAYER_DRAG,
   CHANGE_ACTIVE_CANVAS_SRICKER_LAYER,
   REMOVE_CANVAS_SRICKER_LAYER,
   CHANGE_FRAME,
+  TICK,
 } from "./actions";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
@@ -257,8 +256,210 @@ const initialState: CanvasState = {
   displayRatio: 1,
 };
 
+const progressCanvasStickerLayerDrag = (
+  state: CanvasState,
+  x: number,
+  y: number
+) => {
+  const { layers } = state;
+  const { stickers } = layers;
+  const sticker = stickers[stickers.length - 1];
+
+  stickers[stickers.length - 1] = {
+    ...sticker,
+    x,
+    y,
+  };
+
+  return {
+    ...state,
+    layers: {
+      ...state.layers,
+      stickers,
+    },
+  };
+};
+
+const progressCanvasStickerLayerTransform = (
+  state: CanvasState,
+  x: number,
+  y: number,
+  nextScale: number,
+  nextAngle: number
+) => {
+  const { layers } = state;
+  const { stickers } = layers;
+  const sticker = stickers[stickers.length - 1];
+
+  stickers[stickers.length - 1] = {
+    ...sticker,
+    x,
+    y,
+    scale: {
+      ...sticker.scale,
+      current: nextScale,
+    },
+    rotate: {
+      ...sticker.rotate,
+      current: nextAngle,
+    },
+  };
+
+  return {
+    ...state,
+    layers: {
+      ...state.layers,
+      stickers,
+    },
+  };
+};
+
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
+    case TICK: {
+      const { layers, displayRatio } = state;
+      const canvas = state;
+      const { stickers } = layers;
+
+      const positions = action.payload.cursorPositions;
+
+      if (!stickers.length) {
+        return state;
+      }
+
+      const sticker = stickers[stickers.length - 1];
+      const { isMultiTouching, isDragging, isTransforming } = sticker;
+
+      if (isTransforming && isMultiTouching) {
+        const nextAngle =
+          sticker.rotate.previous +
+          (Math.atan2(
+            positions[1].y - positions[0].y,
+            positions[1].x - positions[0].x
+          ) *
+            (180 / Math.PI) -
+            sticker.rotate.reference);
+        const currentLength = Math.pow(
+          Math.pow(positions[1].x - positions[0].x, 2) +
+            Math.pow(positions[1].y - positions[0].y, 2),
+          0.5
+        );
+        const nextScale =
+          (currentLength / sticker.scale.reference) * sticker.scale.previous;
+
+        let nextX = sticker.x;
+        let nextY = sticker.y;
+
+        // 最小値を見て縮小するかどうかを決める
+        if (
+          sticker.width * nextScale > 200 &&
+          sticker.height * nextScale > 200
+        ) {
+          nextX =
+            sticker.x +
+            (sticker.width * sticker.scale.current -
+              sticker.width * nextScale) /
+              2;
+          nextY =
+            sticker.y +
+            (sticker.height * sticker.scale.current -
+              sticker.height * nextScale) /
+              2;
+
+          return progressCanvasStickerLayerTransform(
+            state,
+            nextX,
+            nextY,
+            nextScale,
+            nextAngle
+          );
+        }
+
+        return progressCanvasStickerLayerTransform(
+          state,
+          nextX,
+          nextY,
+          sticker.scale.current,
+          nextAngle
+        );
+      }
+
+      if (isTransforming) {
+        const [{ x, y }] = positions;
+        const centerX = sticker.x + (sticker.width * sticker.scale.current) / 2;
+        const centerY =
+          sticker.y + (sticker.height * sticker.scale.current) / 2;
+        const relativeX = (x - canvas.x) * displayRatio;
+        const relativeY = (y - canvas.y) * displayRatio;
+
+        // 回転ボタン初期位置と中心座標の度の差を求めて足す
+        const nextAngle =
+          Math.atan2(relativeX - centerX, relativeY - centerY) *
+            (180 / Math.PI) *
+            -1 +
+          Math.atan2(
+            sticker.x + sticker.width * sticker.scale.current - centerX,
+            sticker.y + sticker.height * sticker.scale.current - centerY
+          ) *
+            (180 / Math.PI);
+        const nextScale =
+          (Math.pow(
+            Math.pow(relativeX - centerX, 2) + Math.pow(relativeY - centerY, 2),
+            0.5
+          ) /
+            sticker.scale.reference) *
+          sticker.scale.previous;
+
+        let nextX = sticker.x;
+        let nextY = sticker.y;
+
+        // 最小値を見て縮小するかどうかを決める
+        if (
+          sticker.width * nextScale > 200 &&
+          sticker.height * nextScale > 200
+        ) {
+          nextX =
+            sticker.x +
+            (sticker.width * sticker.scale.current -
+              sticker.width * nextScale) /
+              2;
+          nextY =
+            sticker.y +
+            (sticker.height * sticker.scale.current -
+              sticker.height * nextScale) /
+              2;
+
+          return progressCanvasStickerLayerTransform(
+            state,
+            nextX,
+            nextY,
+            nextScale,
+            nextAngle
+          );
+        }
+
+        return progressCanvasStickerLayerTransform(
+          state,
+          nextX,
+          nextY,
+          sticker.scale.current,
+          nextAngle
+        );
+      }
+
+      if (isDragging) {
+        const [{ x, y }] = positions;
+        const relativeX = (x - canvas.x) * displayRatio;
+        const relativeY = (y - canvas.y) * displayRatio;
+        const nextX = relativeX - sticker.referenceX;
+        const nextY = relativeY - sticker.referenceY;
+
+        return progressCanvasStickerLayerDrag(state, nextX, nextY);
+      }
+
+      return state;
+    }
+
     case REMOVE_CANVAS_SRICKER_LAYER: {
       return {
         ...state,
@@ -304,53 +505,6 @@ export default (state = initialState, action: Actions): CanvasState => {
         layers: {
           ...state.layers,
           stickers: nextStickers,
-        },
-      };
-    }
-
-    case PROGRESS_CANVAS_STICKER_LAYER_DRAG: {
-      const { layers } = state;
-      const { stickers } = layers;
-      const sticker = stickers[stickers.length - 1];
-
-      stickers[stickers.length - 1] = {
-        ...sticker,
-        ...action.payload,
-      };
-
-      return {
-        ...state,
-        layers: {
-          ...state.layers,
-          stickers,
-        },
-      };
-    }
-
-    case PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM: {
-      const { layers } = state;
-      const { stickers } = layers;
-      const sticker = stickers[stickers.length - 1];
-
-      stickers[stickers.length - 1] = {
-        ...sticker,
-        x: action.payload.x,
-        y: action.payload.y,
-        scale: {
-          ...sticker.scale,
-          current: action.payload.scale,
-        },
-        rotate: {
-          ...sticker.rotate,
-          current: action.payload.angle,
-        },
-      };
-
-      return {
-        ...state,
-        layers: {
-          ...state.layers,
-          stickers,
         },
       };
     }

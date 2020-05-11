@@ -1,6 +1,7 @@
 import { Dispatch } from "redux";
 import blueimpLoadImage from "blueimp-load-image";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
+import { CursorPosition } from "~/utils/convert-event-to-positions";
 
 export const ADD_USER_IMAGE = "ADD_USER_IMAGE" as const;
 export const REMOVE_USER_IMAGE = "REMOVE_USER_IMAGE" as const;
@@ -13,13 +14,17 @@ export const ADD_STICKER_LAYER = "ADD_STICKER_LAYER" as const;
 export const START_CANVAS_STICKER_LAYER_TRANSFORM = "START_CANVAS_STICKER_LAYER_TRANSFORM" as const;
 export const START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM = "START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM" as const;
 export const START_CANVAS_STICKER_LAYER_DRAG = "START_CANVAS_STICKER_LAYER_DRAG" as const;
-export const PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM = "PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM" as const;
-export const PROGRESS_CANVAS_STICKER_LAYER_DRAG = "PROGRESS_CANVAS_STICKER_LAYER_DRAG" as const;
 export const CHANGE_ACTIVE_CANVAS_SRICKER_LAYER = "CHANGE_ACTIVE_CANVAS_SRICKER_LAYER" as const;
 export const REMOVE_CANVAS_SRICKER_LAYER = "REMOVE_CANVAS_SRICKER_LAYER" as const;
 export const CHANGE_FRAME = "CHANGE_FRAME" as const;
+export const TICK = "CANVAS/TICK" as const;
 
 // Actions
+
+export const tick = (cursorPositions: CursorPosition[]) => ({
+  type: TICK,
+  payload: { cursorPositions },
+});
 
 export const changeFrame = (frame: any, index: number) => ({
   type: CHANGE_FRAME,
@@ -33,21 +38,6 @@ export const removeCanvasStickerLayer = () => ({
 export const changeActiveCanvasStickerLayer = (index: number) => ({
   type: CHANGE_ACTIVE_CANVAS_SRICKER_LAYER,
   payload: { index },
-});
-
-export const progressCanvasStickerLayerTransform = (
-  x: number,
-  y: number,
-  scale: number,
-  angle: number
-) => ({
-  type: PROGRESS_CANVAS_STICKER_LAYER_TRANSFORM,
-  payload: { x, y, scale, angle },
-});
-
-export const progressCanvasStickerLayerDrag = (x: number, y: number) => ({
-  type: PROGRESS_CANVAS_STICKER_LAYER_DRAG,
-  payload: { x, y },
 });
 
 export const startCanvasStickerLayerTransform = (
@@ -228,8 +218,7 @@ export type Actions =
   | ReturnType<typeof startCanvasStickerLayerTransform>
   | ReturnType<typeof startCanvasStickerLayerMultiTouchingTransform>
   | ReturnType<typeof startCanvasStickerLayerDrag>
-  | ReturnType<typeof progressCanvasStickerLayerTransform>
-  | ReturnType<typeof progressCanvasStickerLayerDrag>
   | ReturnType<typeof changeActiveCanvasStickerLayer>
   | ReturnType<typeof removeCanvasStickerLayer>
-  | ReturnType<typeof changeFrame>;
+  | ReturnType<typeof changeFrame>
+  | ReturnType<typeof tick>;
