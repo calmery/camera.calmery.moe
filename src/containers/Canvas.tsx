@@ -6,6 +6,7 @@ import CanvasStickerLayers from "./CanvasStickerLayers";
 import CanvasUserLayers from "./CanvasUserLayers";
 import { State } from "~/domains";
 import * as actions from "~/domains/canvas/actions";
+import { convertEventToCursorPositions } from "~/utils/convert-event-to-positions";
 
 // Redux
 
@@ -45,8 +46,8 @@ class Canvas extends React.Component<
     e.addEventListener("mouseup", this.props.complete);
     e.addEventListener("touchend", this.props.complete);
     e.addEventListener("mouseleave", this.props.complete);
-    e.addEventListener("mousemove", this.handleOnMouseMove);
-    e.addEventListener("touchmove", this.handleOnTouchMove, { passive: false });
+    e.addEventListener("mousemove", this.handleOnMove);
+    e.addEventListener("touchmove", this.handleOnMove, { passive: false });
     addEventListener("resize", this.handleOnResizeWindow);
 
     this.handleOnResizeWindow();
@@ -58,8 +59,8 @@ class Canvas extends React.Component<
     e.removeEventListener("mouseup", this.props.complete);
     e.removeEventListener("touchend", this.props.complete);
     e.removeEventListener("mouseleave", this.props.complete);
-    e.removeEventListener("mousemove", this.handleOnMouseMove);
-    e.removeEventListener("touchmove", this.handleOnTouchMove);
+    e.removeEventListener("mousemove", this.handleOnMove);
+    e.removeEventListener("touchmove", this.handleOnMove);
     removeEventListener("resize", this.handleOnResizeWindow);
   };
 
@@ -82,13 +83,16 @@ class Canvas extends React.Component<
 
   private handleOnResizeWindow = () => {
     const { updateDisplayRatio } = this.props;
-    const s = this.ref.current!;
-    const { width, x, y } = s.getBoundingClientRect();
+    const e = this.ref.current!;
+    const { width, x, y } = e.getBoundingClientRect();
 
     updateDisplayRatio(x, y, width);
   };
 
-  private handleOnMove = (positions: { x: number; y: number }[]) => {
+  private handleOnMove = (event: TouchEvent | MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     const {
       layers,
       displayRatio,
@@ -97,6 +101,8 @@ class Canvas extends React.Component<
     } = this.props;
     const canvas = this.props;
     const { stickers } = layers;
+
+    const positions = convertEventToCursorPositions(event);
 
     if (!stickers.length) {
       return;
@@ -218,25 +224,6 @@ class Canvas extends React.Component<
 
       return progressCanvasStickerLayerDrag(nextX, nextY);
     }
-  };
-
-  private handleOnMouseMove = (event: MouseEvent) => {
-    const { clientX, clientY } = event;
-    this.handleOnMove([{ x: clientX, y: clientY }]);
-  };
-
-  private handleOnTouchMove = (event: TouchEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const { touches } = event;
-    const positions = [];
-
-    for (let i = 0; i < touches.length; i++) {
-      positions.push({ x: touches[i].clientX, y: touches[i].clientY });
-    }
-
-    this.handleOnMove(positions);
   };
 }
 
