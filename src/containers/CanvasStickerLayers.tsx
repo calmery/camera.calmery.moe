@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { CanvasStickerLayerComponent } from "~/components/CanvasStickerLayer";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
-import { convertEventToCursorPositions } from "~/utils/convert-event-to-positions";
+import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
 export const CanvasStickerLayers: React.FC = () => {
   const dispatch = useDispatch();

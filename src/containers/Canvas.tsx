@@ -5,7 +5,7 @@ import { CanvasStickerLayers } from "./CanvasStickerLayers";
 import { CanvasUserLayers } from "./CanvasUserLayers";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
-import { convertEventToCursorPositions } from "~/utils/convert-event-to-positions";
+import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
 export const Canvas: React.FC = () => {
   const containerRef = useRef<SVGSVGElement>(null);

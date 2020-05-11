@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
 import blueimpLoadImage from "blueimp-load-image";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
-import { CursorPosition } from "~/utils/convert-event-to-positions";
+import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 
 export const CANVAS_SET_FRAME = "CANVAS/SET_FRAME" as const;
 export const CANVAS_SET_DISPLAY_RATIO = "CANVAS/UPDATE_DISPLAY_RATIO" as const;

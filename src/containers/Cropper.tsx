@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "~/domains";
 import { actions } from "~/domains/cropper/actions";
-import { convertEventToCursorPositions } from "~/utils/convert-event-to-positions";
+import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
 export const Cropper: React.FC = () => {
   const dispatch = useDispatch();

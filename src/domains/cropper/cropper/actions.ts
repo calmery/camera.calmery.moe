@@ -1,5 +1,5 @@
 import { getOrCreateStore } from "~/domains";
-import { CursorPosition } from "~/utils/convert-event-to-positions";
+import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 
 export const START_CROPPER_MOVING = "CROPPER/CROPPER/START_MOVING" as const;
 export const START_CROPPER_TRANSFORMING = "CROPPER/CROPPER/START_TRANSFORMING" as const;

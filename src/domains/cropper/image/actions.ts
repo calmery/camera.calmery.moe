@@ -1,4 +1,4 @@
-import { CursorPosition } from "~/utils/convert-event-to-positions";
+import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 
 export const SET_IMAGE = "CROPPER/IMAGE/SET" as const;
 export const START_IMAGE_TRANSFORMING = "CROPPER/IMAGE/START_TRANSFORMING" as const;

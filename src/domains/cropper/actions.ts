@@ -1,4 +1,4 @@
-import { CursorPosition } from "~/utils/convert-event-to-positions";
+import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 import { actions as containerActions } from "./container/actions";
 import { actions as cropperActions } from "./cropper/actions";
 import { actions as imageActions } from "./image/actions";

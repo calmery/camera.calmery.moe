@@ -6,7 +6,7 @@ import {
 } from "./actions";
 import { COMPLETE, TICK, Actions } from "~/domains/cropper/actions";
 import { CropperContainerState } from "~/domains/cropper/container/reducer";
-import { CursorPosition } from "~/utils/convert-event-to-positions";
+import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
 
 // Constants
