@@ -1,26 +1,19 @@
 import React from "react";
 import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
 
-export const CanvasStickerLayerComponent: React.FC<
-  {
-    selected: boolean;
-    displayRatio: number;
-    handleOnPressTransformCircle: (
-      event: React.MouseEvent | React.TouchEvent
-    ) => void;
-    handleOnPress: (event: React.MouseEvent | React.TouchEvent) => void;
-    handleOnSelect: () => void;
-    handleOnClickRemoveButton: () => void;
-  } & CanvasStickerLayer
-> = (props) => {
+export const CanvasStickerLayerComponent: React.FC<{
+  selected: boolean;
+  displayRatio: number;
+  handleOnPressTransformCircle: (
+    event: React.MouseEvent | React.TouchEvent
+  ) => void;
+  handleOnPress: (event: React.MouseEvent | React.TouchEvent) => void;
+  handleOnSelect: () => void;
+  handleOnClickRemoveButton: () => void;
+  sticker: CanvasStickerLayer;
+}> = (props) => {
   const {
-    dataUrl,
-    x,
-    y,
-    width,
-    height,
-    rotate,
-    scale,
+    sticker,
     displayRatio,
     selected,
     handleOnSelect,
@@ -28,6 +21,8 @@ export const CanvasStickerLayerComponent: React.FC<
     handleOnPressTransformCircle,
     handleOnClickRemoveButton,
   } = props;
+
+  const { dataUrl, x, y, width, height, rotate, scale } = sticker;
 
   return (
     <svg

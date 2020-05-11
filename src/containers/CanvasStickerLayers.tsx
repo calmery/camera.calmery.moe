@@ -52,7 +52,7 @@ export const CanvasStickerLayers: React.FC = () => {
               handleOnPressTransformCircle(index, event)
             }
             handleOnSelect={() => handleOnSelect(index)}
-            {...sticker}
+            sticker={sticker}
           />
         );
       })}
