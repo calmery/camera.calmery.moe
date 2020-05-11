@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import CanvasUserLayers from "./CanvasUserLayers";
+import { CanvasFilters } from "./CanvasFilters";
 import CanvasStickerLayers from "./CanvasStickerLayers";
+import CanvasUserLayers from "./CanvasUserLayers";
 import { State } from "~/domains";
 import * as actions from "~/domains/canvas/actions";
-import { CanvasFilters } from "./CanvasFilters";
 
 // Redux
 
@@ -42,9 +42,9 @@ class Canvas extends React.Component<
   public componentDidMount = () => {
     const e = this.ref.current!;
 
-    e.addEventListener("mouseup", this.handleOnComplete);
-    e.addEventListener("touchend", this.handleOnComplete);
-    e.addEventListener("mouseleave", this.handleOnComplete);
+    e.addEventListener("mouseup", this.props.complete);
+    e.addEventListener("touchend", this.props.complete);
+    e.addEventListener("mouseleave", this.props.complete);
     e.addEventListener("mousemove", this.handleOnMouseMove);
     e.addEventListener("touchmove", this.handleOnTouchMove, { passive: false });
     addEventListener("resize", this.handleOnResizeWindow);
@@ -55,9 +55,9 @@ class Canvas extends React.Component<
   public componentWillUnmount = () => {
     const e = this.ref.current!;
 
-    e.removeEventListener("mouseup", this.handleOnComplete);
-    e.removeEventListener("touchend", this.handleOnComplete);
-    e.removeEventListener("mouseleave", this.handleOnComplete);
+    e.removeEventListener("mouseup", this.props.complete);
+    e.removeEventListener("touchend", this.props.complete);
+    e.removeEventListener("mouseleave", this.props.complete);
     e.removeEventListener("mousemove", this.handleOnMouseMove);
     e.removeEventListener("touchmove", this.handleOnTouchMove);
     removeEventListener("resize", this.handleOnResizeWindow);
@@ -86,12 +86,6 @@ class Canvas extends React.Component<
     const { width, x, y } = s.getBoundingClientRect();
 
     updateDisplayRatio(x, y, width);
-  };
-
-  private handleOnComplete = () => {
-    const { complete } = this.props;
-
-    complete();
   };
 
   private handleOnMove = (positions: { x: number; y: number }[]) => {
