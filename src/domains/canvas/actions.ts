@@ -3,21 +3,24 @@ import blueimpLoadImage from "blueimp-load-image";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
 import { CursorPosition } from "~/utils/convert-event-to-positions";
 
-export const ADD_USER_IMAGE = "ADD_USER_IMAGE" as const;
-export const REMOVE_USER_IMAGE = "REMOVE_USER_IMAGE" as const;
-export const UPDATE_DISPLAY_RATIO = "UPDATE_DISPLAY_RATIO" as const;
-export const UPDATE_CANVAS_LAYER_POSITION = "UPDATE_CANVAS_LAYER_POSITION" as const;
-export const SET_CANVAS_USER_LAYER_STARTING_POSITION = "SET_CANVAS_USER_LAYER_STARTING_POSITION" as const;
-export const COMPLETE = "CANVAS/COMPLETE" as const;
-export const CHANGE_USER_LAYER_FILTER_VALUE = "CHANGE_USER_LAYER_FILTER_VALUE" as const;
-export const ADD_STICKER_LAYER = "ADD_STICKER_LAYER" as const;
-export const START_CANVAS_STICKER_LAYER_TRANSFORM = "START_CANVAS_STICKER_LAYER_TRANSFORM" as const;
-export const START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM = "START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM" as const;
-export const START_CANVAS_STICKER_LAYER_DRAG = "START_CANVAS_STICKER_LAYER_DRAG" as const;
-export const CHANGE_ACTIVE_CANVAS_SRICKER_LAYER = "CHANGE_ACTIVE_CANVAS_SRICKER_LAYER" as const;
-export const REMOVE_CANVAS_SRICKER_LAYER = "REMOVE_CANVAS_SRICKER_LAYER" as const;
-export const CHANGE_FRAME = "CHANGE_FRAME" as const;
+export const CANVAS_SET_FRAME = "CANVAS/SET_FRAME" as const;
+export const CANVAS_SET_DISPLAY_RATIO = "CANVAS/UPDATE_DISPLAY_RATIO" as const;
+
+export const CANVAS_USER_LAYER_ADD = "CANVAS/CANVAS_USER_LAYER/ADD" as const;
+export const CANVAS_USER_LAYER_REMOVE = "CANVAS/CANVAS_USER_LAYER/REMOVE" as const;
+export const CANVAS_USER_LAYER_START_DRAG = "CANVAS/CANVAS_USER_LAYER/START_DRAG" as const;
+export const CANVAS_USER_LAYER_SET_POSITION = "CANVAS/CANVAS_USER_LAYER.SET_POSITION" as const;
+
+export const CANVAS_FILTER_SET_VALUE = "CANVAS/CANVAS_FILTER/SET_VALUE" as const;
+
+export const CANVAS_STICKER_LAYER_ADD = "CANVAS/CANVAS_STICKER_LAYER/ADD" as const;
+export const CANVAS_SRICKER_LAYER_REMOVE = "CANVAS/CANVAS_SRICKER_LAYER/REMOVE" as const;
+export const CANVAS_STICKER_LAYER_SET_ACTIVE = "CANVAS/CANVAS_STICKER_LAYER/SET_ACTIVE" as const;
+export const CANVAS_STICKER_LAYER_START_DRAG = "CANVAS/CANVAS_STICKER_LAYER/START_DRAG" as const;
+export const CANVAS_STICKER_LAYER_START_TRANSFORM = "CANVAS/CANVAS_STICKER_LAYER/START_TRANSFORM" as const;
+
 export const TICK = "CANVAS/TICK" as const;
+export const COMPLETE = "CANVAS/COMPLETE" as const;
 
 // Actions
 
@@ -27,16 +30,16 @@ export const tick = (cursorPositions: CursorPosition[]) => ({
 });
 
 export const changeFrame = (frame: any, index: number) => ({
-  type: CHANGE_FRAME,
+  type: CANVAS_SET_FRAME,
   payload: { frame, index },
 });
 
 export const removeCanvasStickerLayer = () => ({
-  type: REMOVE_CANVAS_SRICKER_LAYER,
+  type: CANVAS_SRICKER_LAYER_REMOVE,
 });
 
 export const changeActiveCanvasStickerLayer = (index: number) => ({
-  type: CHANGE_ACTIVE_CANVAS_SRICKER_LAYER,
+  type: CANVAS_STICKER_LAYER_SET_ACTIVE,
   payload: { index },
 });
 
@@ -45,7 +48,7 @@ export const startCanvasStickerLayerTransform = (
   x: number,
   y: number
 ) => ({
-  type: START_CANVAS_STICKER_LAYER_TRANSFORM,
+  type: CANVAS_STICKER_LAYER_START_TRANSFORM,
   payload: { index, x, y },
 });
 
@@ -53,7 +56,7 @@ export const startCanvasStickerLayerDrag = (
   index: number,
   cursorPositions: CursorPosition[]
 ) => ({
-  type: START_CANVAS_STICKER_LAYER_DRAG,
+  type: CANVAS_STICKER_LAYER_START_DRAG,
   payload: { index, cursorPositions },
 });
 
@@ -62,7 +65,7 @@ export const addStickerLayer = (
   width: number,
   height: number
 ) => ({
-  type: ADD_STICKER_LAYER,
+  type: CANVAS_STICKER_LAYER_ADD,
   payload: { dataUrl, width, height },
 });
 
@@ -72,7 +75,7 @@ export const addUserImage = (
   width: number,
   height: number
 ) => ({
-  type: ADD_USER_IMAGE,
+  type: CANVAS_USER_LAYER_ADD,
   payload: {
     index,
     dataUrl,
@@ -86,7 +89,7 @@ export const complete = () => ({
 });
 
 export const removeUserImage = (index: number) => ({
-  type: REMOVE_USER_IMAGE,
+  type: CANVAS_USER_LAYER_REMOVE,
   payload: { index },
 });
 
@@ -95,7 +98,7 @@ export const updateDisplayRatio = (
   displayY: number,
   displayWidth: number
 ) => ({
-  type: UPDATE_DISPLAY_RATIO,
+  type: CANVAS_SET_DISPLAY_RATIO,
   payload: { displayX, displayY, displayWidth },
 });
 
@@ -104,7 +107,7 @@ export const updateCanvasUserLayerPosition = (
   nextX: number,
   nextY: number
 ) => ({
-  type: UPDATE_CANVAS_LAYER_POSITION,
+  type: CANVAS_USER_LAYER_SET_POSITION,
   payload: { index, nextX, nextY },
 });
 
@@ -113,7 +116,7 @@ export const setCanvasUserLayerStartingPosition = (
   differenceFromStartingX: number,
   differenceFromStartingY: number
 ) => ({
-  type: SET_CANVAS_USER_LAYER_STARTING_POSITION,
+  type: CANVAS_USER_LAYER_START_DRAG,
   payload: { index, differenceFromStartingX, differenceFromStartingY },
 });
 
@@ -122,7 +125,7 @@ export const changeUserLayerFilterValue = (
   type: FeColorMatrix,
   value: number
 ) => ({
-  type: CHANGE_USER_LAYER_FILTER_VALUE,
+  type: CANVAS_FILTER_SET_VALUE,
   payload: {
     index,
     type,

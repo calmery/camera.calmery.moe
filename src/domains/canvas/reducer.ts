@@ -1,20 +1,19 @@
 import * as uuid from "uuid";
 import {
   Actions,
-  ADD_USER_IMAGE,
-  REMOVE_USER_IMAGE,
+  CANVAS_USER_LAYER_ADD,
+  CANVAS_USER_LAYER_REMOVE,
   COMPLETE,
-  UPDATE_DISPLAY_RATIO,
-  SET_CANVAS_USER_LAYER_STARTING_POSITION,
-  UPDATE_CANVAS_LAYER_POSITION,
-  CHANGE_USER_LAYER_FILTER_VALUE,
-  ADD_STICKER_LAYER,
-  START_CANVAS_STICKER_LAYER_DRAG,
-  START_CANVAS_STICKER_LAYER_TRANSFORM,
-  START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM,
-  CHANGE_ACTIVE_CANVAS_SRICKER_LAYER,
-  REMOVE_CANVAS_SRICKER_LAYER,
-  CHANGE_FRAME,
+  CANVAS_SET_DISPLAY_RATIO,
+  CANVAS_USER_LAYER_START_DRAG,
+  CANVAS_USER_LAYER_SET_POSITION,
+  CANVAS_FILTER_SET_VALUE,
+  CANVAS_STICKER_LAYER_ADD,
+  CANVAS_STICKER_LAYER_START_DRAG,
+  CANVAS_STICKER_LAYER_START_TRANSFORM,
+  CANVAS_STICKER_LAYER_SET_ACTIVE,
+  CANVAS_SRICKER_LAYER_REMOVE,
+  CANVAS_SET_FRAME,
   TICK,
 } from "./actions";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
@@ -483,7 +482,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       return state;
     }
 
-    case REMOVE_CANVAS_SRICKER_LAYER: {
+    case CANVAS_SRICKER_LAYER_REMOVE: {
       return {
         ...state,
         layers: {
@@ -496,7 +495,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case CHANGE_FRAME: {
+    case CANVAS_SET_FRAME: {
       const canvasUserFrame =
         canvasUserLayerFrame[action.payload.frame as CanvasUserLayerFrame];
       const users: CanvasUserFrame[] = canvasUserFrame.frames[
@@ -516,7 +515,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case CHANGE_ACTIVE_CANVAS_SRICKER_LAYER: {
+    case CANVAS_STICKER_LAYER_SET_ACTIVE: {
       const { stickers } = state.layers;
       const nextStickers = [
         ...stickers.filter((_, i) => i !== action.payload.index),
@@ -532,7 +531,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case START_CANVAS_STICKER_LAYER_DRAG: {
+    case CANVAS_STICKER_LAYER_START_DRAG: {
       const { layers } = state;
       const sticker = layers.stickers[action.payload.index];
       const positions = action.payload.cursorPositions;
@@ -591,7 +590,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case START_CANVAS_STICKER_LAYER_TRANSFORM: {
+    case CANVAS_STICKER_LAYER_START_TRANSFORM: {
       const { index, x, y } = action.payload;
       const { x: centerX, y: centerY } = getCharacterCenterCoordinates(
         state,
@@ -626,7 +625,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case ADD_STICKER_LAYER: {
+    case CANVAS_STICKER_LAYER_ADD: {
       const { dataUrl, width, height } = action.payload;
       const { layers } = state;
 
@@ -663,7 +662,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case ADD_USER_IMAGE: {
+    case CANVAS_USER_LAYER_ADD: {
       const userFrames = state.frames.users;
       const userLayers = state.layers.users;
       const nextUserLayers = [];
@@ -693,7 +692,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case REMOVE_USER_IMAGE: {
+    case CANVAS_USER_LAYER_REMOVE: {
       const userLayers = state.layers.users;
 
       return {
@@ -707,7 +706,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case UPDATE_DISPLAY_RATIO: {
+    case CANVAS_SET_DISPLAY_RATIO: {
       const { width } = state;
 
       return {
@@ -718,7 +717,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case UPDATE_CANVAS_LAYER_POSITION: {
+    case CANVAS_USER_LAYER_SET_POSITION: {
       const { users } = state.layers;
       const user = users[action.payload.index];
 
@@ -741,7 +740,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case SET_CANVAS_USER_LAYER_STARTING_POSITION: {
+    case CANVAS_USER_LAYER_START_DRAG: {
       const { users } = state.layers;
       const user = users[action.payload.index];
 
@@ -796,7 +795,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case CHANGE_USER_LAYER_FILTER_VALUE: {
+    case CANVAS_FILTER_SET_VALUE: {
       const { layers } = state;
       const userLayer = layers.users[action.payload.index];
 
