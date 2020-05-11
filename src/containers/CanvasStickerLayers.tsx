@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import CanvasStickerLayer from "~/components/CanvasStickerLayer";
+import { CanvasStickerLayerComponent } from "~/components/CanvasStickerLayer";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 
@@ -53,7 +53,7 @@ export const CanvasStickerLayers: React.FC = () => {
   return (
     <>
       {layers.stickers.map((sticker, index) => (
-        <CanvasStickerLayer
+        <CanvasStickerLayerComponent
           key={index}
           selected={index === layers.stickers.length - 1}
           {...sticker}
