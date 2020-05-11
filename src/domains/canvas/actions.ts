@@ -224,7 +224,7 @@ export const actions = {
   tick,
 };
 
-export const tickActions = {
+export const thunkActions = {
   addUserImageFromFile,
 };
 

@@ -1,99 +1,71 @@
-import React from "react";
-import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
+import React, { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import CanvasUserLayer from "~/components/CanvasUserLayer";
 import CanvasEmptyUserLayer from "~/components/CanvasEmptyUserLayer";
 import { State } from "~/domains";
-import { actions, tickActions, Actions } from "~/domains/canvas/actions";
+import { actions, thunkActions } from "~/domains/canvas/actions";
 import { getImageFile } from "~/utils/get-image-file";
 
-const mapStateToProps = ({ canvas }: State) => canvas;
+export const CanvasUserLayers: React.FC = () => {
+  const dispatch = useDispatch();
+  const canvas = useSelector(({ canvas }: State) => canvas);
+  const { frames, layers, displayRatio } = canvas;
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Actions>) => ({
-  addUserImageFromFile: (file: File, index: number) =>
-    dispatch(tickActions.addUserImageFromFile(file, index)),
-  setCanvasUserLayerStartingPosition: (
-    index: number,
-    differenceFromStartingX: number,
-    differenceFromStartingY: number
-  ) => {
-    dispatch(
-      actions.setCanvasUserLayerStartingPosition(
-        index,
-        differenceFromStartingX,
-        differenceFromStartingY
-      )
-    );
-  },
-  updateCanvasUserLayerPosition: (
-    index: number,
-    nextX: number,
-    nextY: number
-  ) => {
-    dispatch(actions.updateCanvasUserLayerPosition(index, nextX, nextY));
-  },
-});
+  const handleOnStart = useCallback(
+    (
+      index: number,
+      differenceFromStartingX: number,
+      differenceFromStartingY: number
+    ) => {
+      dispatch(
+        actions.setCanvasUserLayerStartingPosition(
+          index,
+          differenceFromStartingX,
+          differenceFromStartingY
+        )
+      );
+    },
+    [dispatch]
+  );
 
-class CanvasUserLayers extends React.Component<
-  ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
-> {
-  public render = () => {
-    const { layers, frames, displayRatio } = this.props;
-    return (
-      <>
-        {frames.users.map((_, i: number) => {
-          const layer = layers.users[i];
-          const frame = frames.users[i];
+  const handleOnMove = useCallback(
+    (index: number, nextX: number, nextY: number) => {
+      dispatch(actions.updateCanvasUserLayerPosition(index, nextX, nextY));
+    },
+    [dispatch]
+  );
 
-          if (layer) {
-            return (
-              <CanvasUserLayer
-                layer={layer}
-                frame={frame}
-                key={i}
-                displayRatio={displayRatio}
-                onStart={(x, y) => this.handleOnStart(i, x, y)}
-                onMove={(x, y) => this.handleOnMove(i, x, y)}
-              />
-            );
-          }
+  const handOnClickEmptyUserImage = async (index: number) => {
+    dispatch(thunkActions.addUserImageFromFile(await getImageFile(), index));
+  };
 
+  return (
+    <>
+      {frames.users.map((_, i: number) => {
+        const layer = layers.users[i];
+        const frame = frames.users[i];
+
+        if (layer) {
           return (
-            <CanvasEmptyUserLayer
+            <CanvasUserLayer
+              layer={layer}
               frame={frame}
-              onClick={() => this.handOnClickEmptyUserImage(i)}
               key={i}
+              displayRatio={displayRatio}
+              onStart={(x, y) => handleOnStart(i, x, y)}
+              onMove={(x, y) => handleOnMove(i, x, y)}
             />
           );
-        })}
-      </>
-    );
-  };
+        }
 
-  // Events
-
-  private handOnClickEmptyUserImage = async (index: number) => {
-    const { addUserImageFromFile } = this.props;
-    addUserImageFromFile(await getImageFile(), index);
-  };
-
-  private handleOnStart = (
-    index: number,
-    differenceFromStartingX: number,
-    differenceFromStartingY: number
-  ) => {
-    const { setCanvasUserLayerStartingPosition } = this.props;
-    setCanvasUserLayerStartingPosition(
-      index,
-      differenceFromStartingX,
-      differenceFromStartingY
-    );
-  };
-
-  private handleOnMove = (index: number, nextX: number, nextY: number) => {
-    const { updateCanvasUserLayerPosition } = this.props;
-    updateCanvasUserLayerPosition(index, nextX, nextY);
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CanvasUserLayers);
+        return (
+          <CanvasEmptyUserLayer
+            frame={frame}
+            onClick={() => handOnClickEmptyUserImage(i)}
+            key={i}
+          />
+        );
+      })}
+    </>
+  );
+};

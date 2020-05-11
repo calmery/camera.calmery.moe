@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CanvasFilters } from "./CanvasFilters";
 import CanvasStickerLayers from "./CanvasStickerLayers";
-import CanvasUserLayers from "./CanvasUserLayers";
+import { CanvasUserLayers } from "./CanvasUserLayers";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-positions";
