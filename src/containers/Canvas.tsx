@@ -1,96 +1,70 @@
-import React from "react";
-import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
+import React, { useRef, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { CanvasFilters } from "./CanvasFilters";
 import CanvasStickerLayers from "./CanvasStickerLayers";
 import CanvasUserLayers from "./CanvasUserLayers";
 import { State } from "~/domains";
 import * as actions from "~/domains/canvas/actions";
-import {
-  convertEventToCursorPositions,
-  CursorPosition,
-} from "~/utils/convert-event-to-positions";
+import { convertEventToCursorPositions } from "~/utils/convert-event-to-positions";
 
-// Redux
+export const Canvas: React.FC = () => {
+  const containerRef = useRef<SVGSVGElement>(null);
+  const dispatch = useDispatch();
+  const canvas = useSelector(({ canvas }: State) => canvas);
 
-const mapStateToProps = ({ canvas }: State) => canvas;
+  const handleOnComplete = useCallback(() => dispatch(actions.complete()), [
+    dispatch,
+  ]);
 
-const mapDispatchToProps = (
-  dispatch: ThunkDispatch<{}, {}, actions.Actions>
-) => ({
-  updateDisplayRatio: (
-    displayX: number,
-    displayY: number,
-    displayWidth: number
-  ) => dispatch(actions.updateDisplayRatio(displayX, displayY, displayWidth)),
-  complete: () => dispatch(actions.complete()),
-  tick: (cursorPositions: CursorPosition[]) =>
-    dispatch(actions.tick(cursorPositions)),
-});
+  const handleOnResizeWindow = useCallback(() => {
+    const e = containerRef.current!;
+    const rect = e.getBoundingClientRect();
 
-// Main
+    dispatch(actions.updateDisplayRatio(rect.x, rect.y, rect.width));
+  }, [dispatch]);
 
-class Canvas extends React.Component<
-  ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
-> {
-  private ref = React.createRef<SVGSVGElement>();
+  const handleOnMove = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-  public componentDidMount = () => {
-    const e = this.ref.current!;
+      dispatch(actions.tick(convertEventToCursorPositions(event)));
+    },
+    [dispatch]
+  );
 
-    e.addEventListener("mouseup", this.props.complete);
-    e.addEventListener("touchend", this.props.complete);
-    e.addEventListener("mouseleave", this.props.complete);
-    e.addEventListener("mousemove", this.handleOnMove);
-    e.addEventListener("touchmove", this.handleOnMove, { passive: false });
-    addEventListener("resize", this.handleOnResizeWindow);
+  useEffect(() => {
+    const e = containerRef.current!;
 
-    this.handleOnResizeWindow();
-  };
+    e.addEventListener("mouseup", handleOnComplete);
+    e.addEventListener("touchend", handleOnComplete);
+    e.addEventListener("mouseleave", handleOnComplete);
+    e.addEventListener("mousemove", handleOnMove);
+    e.addEventListener("touchmove", handleOnMove, { passive: false });
+    addEventListener("resize", handleOnResizeWindow);
 
-  public componentWillUnmount = () => {
-    const e = this.ref.current!;
+    handleOnResizeWindow();
 
-    e.removeEventListener("mouseup", this.props.complete);
-    e.removeEventListener("touchend", this.props.complete);
-    e.removeEventListener("mouseleave", this.props.complete);
-    e.removeEventListener("mousemove", this.handleOnMove);
-    e.removeEventListener("touchmove", this.handleOnMove);
-    removeEventListener("resize", this.handleOnResizeWindow);
-  };
+    return () => {
+      e.removeEventListener("mouseup", handleOnComplete);
+      e.removeEventListener("touchend", handleOnComplete);
+      e.removeEventListener("mouseleave", handleOnComplete);
+      e.removeEventListener("mousemove", handleOnMove);
+      e.removeEventListener("touchmove", handleOnMove);
+      removeEventListener("resize", handleOnResizeWindow);
+    };
+  }, []);
 
-  public render = () => {
-    const { width, height } = this.props;
-
-    return (
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        ref={this.ref}
-      >
-        <CanvasFilters />
-        <CanvasUserLayers />
-        <CanvasStickerLayers />
-      </svg>
-    );
-  };
-
-  private handleOnResizeWindow = () => {
-    const { updateDisplayRatio } = this.props;
-    const e = this.ref.current!;
-    const { width, x, y } = e.getBoundingClientRect();
-
-    updateDisplayRatio(x, y, width);
-  };
-
-  private handleOnMove = (event: TouchEvent | MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const { tick } = this.props;
-    tick(convertEventToCursorPositions(event));
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Canvas);
+  return (
+    <svg
+      viewBox={`0 0 ${canvas.width} ${canvas.height}`}
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      ref={containerRef}
+    >
+      <CanvasFilters />
+      <CanvasUserLayers />
+      <CanvasStickerLayers />
+    </svg>
+  );
+};

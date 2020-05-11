@@ -7,7 +7,7 @@ import {
   canvasUserLayerFrame,
   CanvasUserLayerFrame,
 } from "~/domains/canvas/reducer";
-import Canvas from "~/containers/Canvas";
+import { Canvas } from "~/containers/Canvas";
 import { Filters } from "~/containers/Filters";
 import { Stickers } from "~/containers/Stickers";
 import styled from "styled-components";
