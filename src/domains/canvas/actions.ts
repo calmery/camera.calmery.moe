@@ -42,28 +42,19 @@ export const changeActiveCanvasStickerLayer = (index: number) => ({
 
 export const startCanvasStickerLayerTransform = (
   index: number,
-  previousLength: number
+  x: number,
+  y: number
 ) => ({
   type: START_CANVAS_STICKER_LAYER_TRANSFORM,
-  payload: { index, previousLength },
-});
-
-export const startCanvasStickerLayerMultiTouchingTransform = (
-  index: number,
-  previousLength: number,
-  startingAngle: number
-) => ({
-  type: START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM,
-  payload: { index, previousLength, startingAngle },
+  payload: { index, x, y },
 });
 
 export const startCanvasStickerLayerDrag = (
   index: number,
-  referenceX: number,
-  referenceY: number
+  cursorPositions: CursorPosition[]
 ) => ({
   type: START_CANVAS_STICKER_LAYER_DRAG,
-  payload: { index, referenceX, referenceY },
+  payload: { index, cursorPositions },
 });
 
 export const addStickerLayer = (
@@ -216,7 +207,6 @@ export const actions = {
   complete,
   changeUserLayerFilterValue,
   startCanvasStickerLayerTransform,
-  startCanvasStickerLayerMultiTouchingTransform,
   startCanvasStickerLayerDrag,
   changeActiveCanvasStickerLayer,
   removeCanvasStickerLayer,

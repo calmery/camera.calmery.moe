@@ -280,6 +280,29 @@ const progressCanvasStickerLayerDrag = (
   };
 };
 
+const getCharacterCenterCoordinates = (state: CanvasState, index: number) => {
+  const { layers } = state;
+  const { x, y, width, height, scale } = layers.stickers[index];
+
+  return {
+    x: x + (width * scale.current) / 2,
+    y: y + (height * scale.current) / 2,
+  };
+};
+
+const calculateSvgRelativeCoordinates = (
+  state: CanvasState,
+  x: number,
+  y: number
+) => {
+  const { x: canvasBaseX, y: canvasBaseY, displayRatio } = state;
+
+  return {
+    x: (x - canvasBaseX) * displayRatio,
+    y: (y - canvasBaseY) * displayRatio,
+  };
+};
+
 const progressCanvasStickerLayerTransform = (
   state: CanvasState,
   x: number,
@@ -511,11 +534,54 @@ export default (state = initialState, action: Actions): CanvasState => {
 
     case START_CANVAS_STICKER_LAYER_DRAG: {
       const { layers } = state;
-      const sticker = layers.stickers[layers.stickers.length - 1];
+      const sticker = layers.stickers[action.payload.index];
+      const positions = action.payload.cursorPositions;
+      const isMultiTouching = positions.length > 1;
+
+      if (isMultiTouching) {
+        const [first, second] = positions;
+
+        const previousLength = Math.pow(
+          Math.pow(second.x - first.x, 2) + Math.pow(second.y - first.y, 2),
+          0.5
+        );
+        const startingAngle =
+          Math.atan2(second.y - first.y, second.x - first.x) * (180 / Math.PI);
+
+        layers.stickers[layers.stickers.length - 1] = {
+          ...sticker,
+          scale: {
+            ...sticker.scale,
+            reference: previousLength,
+          },
+          rotate: {
+            ...sticker.rotate,
+            previous: sticker.rotate.current,
+            reference: startingAngle,
+          },
+          isTransforming: true,
+          isMultiTouching: true,
+        };
+
+        return {
+          ...state,
+          layers,
+        };
+      }
+
+      const [{ x, y }] = positions;
+      const { x: relativeX, y: relativeY } = calculateSvgRelativeCoordinates(
+        state,
+        x,
+        y
+      );
+      const referenceX = relativeX - sticker.x;
+      const referenceY = relativeY - sticker.y;
 
       layers.stickers[layers.stickers.length - 1] = {
         ...sticker,
-        ...action.payload,
+        referenceX,
+        referenceY,
         isDragging: true,
       };
 
@@ -526,6 +592,22 @@ export default (state = initialState, action: Actions): CanvasState => {
     }
 
     case START_CANVAS_STICKER_LAYER_TRANSFORM: {
+      const { index, x, y } = action.payload;
+      const { x: centerX, y: centerY } = getCharacterCenterCoordinates(
+        state,
+        index
+      );
+      const { x: relativeX, y: relativeY } = calculateSvgRelativeCoordinates(
+        state,
+        x,
+        y
+      );
+
+      const previousLength = Math.pow(
+        Math.pow(relativeX - centerX, 2) + Math.pow(relativeY - centerY, 2),
+        0.5
+      );
+
       const { layers } = state;
       const sticker = layers.stickers[layers.stickers.length - 1];
 
@@ -533,34 +615,9 @@ export default (state = initialState, action: Actions): CanvasState => {
         ...sticker,
         scale: {
           ...sticker.scale,
-          reference: action.payload.previousLength,
+          reference: previousLength,
         },
         isTransforming: true,
-      };
-
-      return {
-        ...state,
-        layers,
-      };
-    }
-
-    case START_CANVAS_STICKER_LAYER_MUTI_TOUCHING_TRANSFORM: {
-      const { layers } = state;
-      const sticker = layers.stickers[layers.stickers.length - 1];
-
-      layers.stickers[layers.stickers.length - 1] = {
-        ...sticker,
-        scale: {
-          ...sticker.scale,
-          reference: action.payload.previousLength,
-        },
-        rotate: {
-          ...sticker.rotate,
-          previous: sticker.rotate.current,
-          reference: action.payload.startingAngle,
-        },
-        isTransforming: true,
-        isMultiTouching: true,
       };
 
       return {
