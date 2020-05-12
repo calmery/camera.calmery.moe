@@ -42,24 +42,7 @@ const initialState: CanvasState = {
   x: 0,
   y: 0,
   frames: {
-    users: [
-      {
-        id: uuid.v4(),
-        width: 852,
-        height: 612,
-        x: 24,
-        y: 24,
-        d: "M0 0H852V519.623L0 612V0Z",
-      },
-      {
-        id: uuid.v4(),
-        width: 852,
-        height: 612,
-        x: 24,
-        y: 564,
-        d: "M0 96L852 0V612H0V96Z",
-      },
-    ],
+    users: [],
   },
   layers: {
     users: [],
