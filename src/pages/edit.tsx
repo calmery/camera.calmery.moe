@@ -6,7 +6,7 @@ import { actions } from "~/domains/canvas/actions";
 import {
   canvasUserLayerFrame,
   CanvasUserLayerFrame,
-} from "~/domains/canvas/reducer";
+} from "~/domains/canvas/frames";
 import { Canvas } from "~/containers/Canvas";
 import { Filters } from "~/containers/Filters";
 import { Stickers } from "~/containers/Stickers";
