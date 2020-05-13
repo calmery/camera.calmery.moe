@@ -19,7 +19,9 @@ import {
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
-import { canvasUserLayerFrame, CanvasUserLayerFrame } from "./frames";
+import { canvasUserLayerFrame } from "./frames";
+import { angleBetweenTwoPoints } from "~/utils/angle-between-two-points";
+import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
 
 export type CanvasState = {
   width: number;
@@ -63,40 +65,6 @@ const calculateCanvasUserLayerRelativeCoordinates = (
   return {
     x: (x - clipPathX) * displayRatio,
     y: (y - clipPathY) * displayRatio,
-  };
-};
-
-const progressCanvasStickerLayerDrag = (
-  state: CanvasState,
-  x: number,
-  y: number
-) => {
-  const { layers } = state;
-  const { stickers } = layers;
-  const sticker = stickers[stickers.length - 1];
-
-  stickers[stickers.length - 1] = {
-    ...sticker,
-    x,
-    y,
-  };
-
-  return {
-    ...state,
-    layers: {
-      ...state.layers,
-      stickers,
-    },
-  };
-};
-
-const getCharacterCenterCoordinates = (state: CanvasState, index: number) => {
-  const { layers } = state;
-  const { x, y, width, height, scale } = layers.stickers[index];
-
-  return {
-    x: x + (width * scale.current) / 2,
-    y: y + (height * scale.current) / 2,
   };
 };
 
@@ -147,288 +115,185 @@ const progressCanvasStickerLayerTransform = (
   };
 };
 
+const CANVAS_STICKER_LAYER_MIN_WIDTH = 200;
+const CANVAS_STICKER_LAYER_MIN_HEIGHT = 200;
+
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
-    case TICK: {
-      const { layers, displayRatio } = state;
-      const canvas = state;
-      const { stickers } = layers;
-
-      const positions = action.payload.cursorPositions;
-
-      if (!stickers.length) {
-        return state;
-      }
-
-      const sticker = stickers[stickers.length - 1];
-      const { isMultiTouching, isDragging, isTransforming } = sticker;
-
-      if (isTransforming && isMultiTouching) {
-        const nextAngle =
-          sticker.rotate.previous +
-          (Math.atan2(
-            positions[1].y - positions[0].y,
-            positions[1].x - positions[0].x
-          ) *
-            (180 / Math.PI) -
-            sticker.rotate.reference);
-        const currentLength = Math.pow(
-          Math.pow(positions[1].x - positions[0].x, 2) +
-            Math.pow(positions[1].y - positions[0].y, 2),
-          0.5
-        );
-        const nextScale =
-          (currentLength / sticker.scale.reference) * sticker.scale.previous;
-
-        let nextX = sticker.x;
-        let nextY = sticker.y;
-
-        // 最小値を見て縮小するかどうかを決める
-        if (
-          sticker.width * nextScale > 200 &&
-          sticker.height * nextScale > 200
-        ) {
-          nextX =
-            sticker.x +
-            (sticker.width * sticker.scale.current -
-              sticker.width * nextScale) /
-              2;
-          nextY =
-            sticker.y +
-            (sticker.height * sticker.scale.current -
-              sticker.height * nextScale) /
-              2;
-
-          return progressCanvasStickerLayerTransform(
-            state,
-            nextX,
-            nextY,
-            nextScale,
-            nextAngle
-          );
-        }
-
-        return progressCanvasStickerLayerTransform(
-          state,
-          nextX,
-          nextY,
-          sticker.scale.current,
-          nextAngle
-        );
-      }
-
-      if (isTransforming) {
-        const [{ x, y }] = positions;
-        const centerX = sticker.x + (sticker.width * sticker.scale.current) / 2;
-        const centerY =
-          sticker.y + (sticker.height * sticker.scale.current) / 2;
-        const relativeX = (x - canvas.x) * displayRatio;
-        const relativeY = (y - canvas.y) * displayRatio;
-
-        // 回転ボタン初期位置と中心座標の度の差を求めて足す
-        const nextAngle =
-          Math.atan2(relativeX - centerX, relativeY - centerY) *
-            (180 / Math.PI) *
-            -1 +
-          Math.atan2(
-            sticker.x + sticker.width * sticker.scale.current - centerX,
-            sticker.y + sticker.height * sticker.scale.current - centerY
-          ) *
-            (180 / Math.PI);
-        const nextScale =
-          (Math.pow(
-            Math.pow(relativeX - centerX, 2) + Math.pow(relativeY - centerY, 2),
-            0.5
-          ) /
-            sticker.scale.reference) *
-          sticker.scale.previous;
-
-        let nextX = sticker.x;
-        let nextY = sticker.y;
-
-        // 最小値を見て縮小するかどうかを決める
-        if (
-          sticker.width * nextScale > 200 &&
-          sticker.height * nextScale > 200
-        ) {
-          nextX =
-            sticker.x +
-            (sticker.width * sticker.scale.current -
-              sticker.width * nextScale) /
-              2;
-          nextY =
-            sticker.y +
-            (sticker.height * sticker.scale.current -
-              sticker.height * nextScale) /
-              2;
-
-          return progressCanvasStickerLayerTransform(
-            state,
-            nextX,
-            nextY,
-            nextScale,
-            nextAngle
-          );
-        }
-
-        return progressCanvasStickerLayerTransform(
-          state,
-          nextX,
-          nextY,
-          sticker.scale.current,
-          nextAngle
-        );
-      }
-
-      if (isDragging) {
-        const [{ x, y }] = positions;
-        const relativeX = (x - canvas.x) * displayRatio;
-        const relativeY = (y - canvas.y) * displayRatio;
-        const nextX = relativeX - sticker.referenceX;
-        const nextY = relativeY - sticker.referenceY;
-
-        return progressCanvasStickerLayerDrag(state, nextX, nextY);
-      }
-
-      return state;
-    }
-
-    case CANVAS_SRICKER_LAYER_REMOVE: {
-      return {
-        ...state,
-        layers: {
-          ...state.layers,
-          stickers: state.layers.stickers.slice(
-            0,
-            state.layers.stickers.length - 1
-          ),
-        },
-      };
-    }
-
     case CANVAS_SET_FRAME: {
-      const canvasUserFrame =
-        canvasUserLayerFrame[action.payload.frame as CanvasUserLayerFrame];
-      const users: CanvasUserFrame[] = canvasUserFrame.frames[
-        action.payload.index
-      ].map((f) => ({
-        ...f,
-        id: uuid.v4(),
-      }));
+      const { frame, index } = action.payload;
+      const canvasUserFrame = canvasUserLayerFrame[frame];
 
       return {
         ...state,
         width: canvasUserFrame.width,
         height: canvasUserFrame.height,
         frames: {
+          users: canvasUserFrame.frames[index].map((f) => ({
+            ...f,
+            id: uuid.v4(),
+          })),
+        },
+      };
+    }
+
+    case CANVAS_SET_DISPLAY_RATIO: {
+      const { width } = state;
+      const { displayWidth, displayX, displayY } = action.payload;
+
+      return {
+        ...state,
+        displayRatio: width / displayWidth,
+        x: displayX,
+        y: displayY,
+      };
+    }
+
+    //
+
+    case CANVAS_USER_LAYER_ADD: {
+      const { layers } = state;
+      const { users } = layers;
+      const { index, dataUrl, width, height } = action.payload;
+
+      users[index] = {
+        dataUrl,
+        width,
+        height,
+        x: 0,
+        y: 0,
+        isDragging: false,
+        differenceFromStartingX: 0,
+        differenceFromStartingY: 0,
+        filter: {
+          blur: 0,
+          hueRotate: 0,
+          luminanceToAlpha: false,
+          saturate: 1,
+        },
+      };
+
+      return {
+        ...state,
+        layers: {
+          ...layers,
           users,
         },
       };
     }
 
-    case CANVAS_STICKER_LAYER_SET_ACTIVE: {
-      const { stickers } = state.layers;
-      const nextStickers = [
-        ...stickers.filter((_, i) => i !== action.payload.index),
-        stickers[action.payload.index],
-      ];
+    case CANVAS_USER_LAYER_REMOVE: {
+      const { layers } = state;
+      const { users } = layers;
+      const { index } = action.payload;
+
+      users[index] = null;
 
       return {
         ...state,
         layers: {
-          ...state.layers,
-          stickers: nextStickers,
+          ...layers,
+          users,
         },
       };
     }
 
-    case CANVAS_STICKER_LAYER_START_DRAG: {
-      const { layers } = state;
-      const sticker = layers.stickers[action.payload.index];
-      const positions = action.payload.cursorPositions;
-      const isMultiTouching = positions.length > 1;
+    case CANVAS_USER_LAYER_START_DRAG: {
+      const { users } = state.layers;
+      const { index, cursorPositions, clipPathX, clipPathY } = action.payload;
+      const userLayer = users[index];
 
-      if (isMultiTouching) {
-        const [first, second] = positions;
-
-        const previousLength = Math.pow(
-          Math.pow(second.x - first.x, 2) + Math.pow(second.y - first.y, 2),
-          0.5
-        );
-        const startingAngle =
-          Math.atan2(second.y - first.y, second.x - first.x) * (180 / Math.PI);
-
-        layers.stickers[layers.stickers.length - 1] = {
-          ...sticker,
-          scale: {
-            ...sticker.scale,
-            reference: previousLength,
-          },
-          rotate: {
-            ...sticker.rotate,
-            previous: sticker.rotate.current,
-            reference: startingAngle,
-          },
-          isTransforming: true,
-          isMultiTouching: true,
-        };
-
-        return {
-          ...state,
-          layers,
-        };
+      if (userLayer === null) {
+        return state;
       }
 
-      const [{ x, y }] = positions;
-      const { x: relativeX, y: relativeY } = calculateSvgRelativeCoordinates(
+      const { x, y } = calculateCanvasUserLayerRelativeCoordinates(
         state,
-        x,
-        y
+        clipPathX,
+        clipPathY,
+        cursorPositions[0].x,
+        cursorPositions[0].y
       );
-      const referenceX = relativeX - sticker.x;
-      const referenceY = relativeY - sticker.y;
 
-      layers.stickers[layers.stickers.length - 1] = {
-        ...sticker,
-        referenceX,
-        referenceY,
+      users[index] = {
+        ...userLayer,
+        differenceFromStartingX: x - userLayer.x,
+        differenceFromStartingY: y - userLayer.y,
         isDragging: true,
       };
 
       return {
         ...state,
-        layers,
+        layers: {
+          ...state.layers,
+          users,
+        },
       };
     }
 
-    case CANVAS_STICKER_LAYER_START_TRANSFORM: {
-      const { index, x, y } = action.payload;
-      const { x: centerX, y: centerY } = getCharacterCenterCoordinates(
-        state,
-        index
-      );
-      const { x: relativeX, y: relativeY } = calculateSvgRelativeCoordinates(
-        state,
-        x,
-        y
-      );
-
-      const previousLength = Math.pow(
-        Math.pow(relativeX - centerX, 2) + Math.pow(relativeY - centerY, 2),
-        0.5
-      );
-
+    case CANVAS_USER_LAYER_SET_POSITION: {
       const { layers } = state;
-      const sticker = layers.stickers[layers.stickers.length - 1];
+      const { users } = layers;
+      const { index, clipPathX, clipPathY, cursorPositions } = action.payload;
+      const user = users[index];
 
-      layers.stickers[layers.stickers.length - 1] = {
-        ...sticker,
-        scale: {
-          ...sticker.scale,
-          reference: previousLength,
-        },
-        isTransforming: true,
-      };
+      if (!user) {
+        return state;
+      }
+
+      const {
+        isDragging,
+        differenceFromStartingX,
+        differenceFromStartingY,
+      } = user;
+      const [{ x, y }] = cursorPositions;
+
+      if (isDragging) {
+        const {
+          x: currentX,
+          y: currentY,
+        } = calculateCanvasUserLayerRelativeCoordinates(
+          state,
+          clipPathX,
+          clipPathY,
+          x,
+          y
+        );
+
+        users[index] = {
+          ...user,
+          x: currentX - differenceFromStartingX,
+          y: currentY - differenceFromStartingY,
+        };
+
+        return {
+          ...state,
+          layers: {
+            ...state.layers,
+            users,
+          },
+        };
+      }
+
+      return state;
+    }
+
+    //
+
+    case CANVAS_FILTER_SET_VALUE: {
+      const { layers } = state;
+      const { index, type, value } = action.payload;
+      const userLayer = layers.users[index];
+
+      if (userLayer) {
+        layers.users[index] = {
+          ...userLayer,
+          filter: {
+            ...userLayer.filter,
+            [type]: value,
+          },
+        };
+      }
 
       return {
         ...state,
@@ -436,9 +301,11 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
+    //
+
     case CANVAS_STICKER_LAYER_ADD: {
-      const { dataUrl, width, height } = action.payload;
       const { layers } = state;
+      const { dataUrl, width, height } = action.payload;
 
       return {
         ...state,
@@ -463,8 +330,8 @@ export default (state = initialState, action: Actions): CanvasState => {
                 reference: 0,
               },
               rotate: {
-                current: 1,
-                previous: 1,
+                current: 0,
+                previous: 0,
                 reference: 0,
               },
             },
@@ -473,97 +340,217 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case CANVAS_USER_LAYER_ADD: {
-      const userFrames = state.frames.users;
-      const userLayers = state.layers.users;
-      const nextUserLayers = [];
-
-      userFrames.forEach((_, i) => (nextUserLayers[i] = userLayers[i] || null));
-      nextUserLayers[action.payload.index] = {
-        ...action.payload,
-        x: 0,
-        y: 0,
-        isDragging: false,
-        differenceFromStartingX: 0,
-        differenceFromStartingY: 0,
-        filter: {
-          blur: 0,
-          hueRotate: 0,
-          luminanceToAlpha: false,
-          saturate: 1,
-        },
-      };
+    case CANVAS_SRICKER_LAYER_REMOVE: {
+      const { layers } = state;
+      const { stickers } = layers;
 
       return {
         ...state,
         layers: {
-          ...state.layers,
-          users: nextUserLayers,
+          ...layers,
+          stickers: stickers.slice(0, stickers.length - 1),
         },
       };
     }
 
-    case CANVAS_USER_LAYER_REMOVE: {
-      const userLayers = state.layers.users;
+    case CANVAS_STICKER_LAYER_SET_ACTIVE: {
+      const { layers } = state;
+      const { stickers } = layers;
+      const { index } = action.payload;
 
       return {
         ...state,
         layers: {
-          ...state.layers,
-          users: userLayers.map((userLayer, i) =>
-            i === action.payload.index ? null : userLayer
+          ...layers,
+          stickers: [
+            ...stickers.filter((_, i) => i !== index),
+            stickers[index],
+          ],
+        },
+      };
+    }
+
+    case CANVAS_STICKER_LAYER_START_DRAG: {
+      const { layers } = state;
+      const { stickers } = layers;
+      const { cursorPositions } = action.payload;
+      const index = stickers.length - 1;
+      const sticker = stickers[index];
+      const isMultiTouching = cursorPositions.length > 1;
+
+      if (isMultiTouching) {
+        const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = cursorPositions;
+
+        stickers[index] = {
+          ...sticker,
+          scale: {
+            ...sticker.scale,
+            previous: sticker.scale.current,
+            reference: distanceBetweenTwoPoints(x1, y1, x2, y2),
+          },
+          rotate: {
+            ...sticker.rotate,
+            previous: sticker.rotate.current,
+            reference: angleBetweenTwoPoints(x1, y1, x2, y2),
+          },
+          isTransforming: true,
+          isMultiTouching: true,
+        };
+
+        return {
+          ...state,
+          layers,
+        };
+      }
+
+      const [{ x, y }] = cursorPositions;
+      const { x: relativeX, y: relativeY } = calculateSvgRelativeCoordinates(
+        state,
+        x,
+        y
+      );
+
+      layers.stickers[index] = {
+        ...sticker,
+        referenceX: relativeX - sticker.x,
+        referenceY: relativeY - sticker.y,
+        isDragging: true,
+      };
+
+      return {
+        ...state,
+        layers,
+      };
+    }
+
+    case CANVAS_STICKER_LAYER_START_TRANSFORM: {
+      const { layers } = state;
+      const { stickers } = layers;
+      const { x, y } = action.payload;
+      const sticker = stickers[stickers.length - 1];
+      const centerX = sticker.x + (sticker.width * sticker.scale.current) / 2;
+      const centerY = sticker.y + (sticker.height * sticker.scale.current) / 2;
+
+      const { x: relativeX, y: relativeY } = calculateSvgRelativeCoordinates(
+        state,
+        x,
+        y
+      );
+
+      layers.stickers[stickers.length - 1] = {
+        ...sticker,
+        isTransforming: true,
+        scale: {
+          ...sticker.scale,
+          reference: distanceBetweenTwoPoints(
+            centerX,
+            centerY,
+            relativeX,
+            relativeY
           ),
         },
       };
-    }
-
-    case CANVAS_SET_DISPLAY_RATIO: {
-      const { width } = state;
 
       return {
         ...state,
-        displayRatio: width / action.payload.displayWidth,
-        x: action.payload.displayX,
-        y: action.payload.displayY,
+        layers,
       };
     }
 
-    case CANVAS_USER_LAYER_SET_POSITION: {
-      const { users } = state.layers;
-      const user = users[action.payload.index];
+    //
 
-      if (user === null) {
+    case TICK: {
+      const { layers, displayRatio } = state;
+      const { stickers } = layers;
+      const { cursorPositions } = action.payload;
+
+      if (!stickers.length) {
         return state;
       }
 
-      const { clipPathX, clipPathY } = action.payload;
-      const [{ x, y }] = action.payload.cursorPositions;
+      const sticker = stickers[stickers.length - 1];
+      const { isMultiTouching, isDragging, isTransforming } = sticker;
 
-      if (user.isDragging) {
-        const {
-          x: currentX,
-          y: currentY,
-        } = calculateCanvasUserLayerRelativeCoordinates(
+      if (isTransforming) {
+        const { rotate, scale, x, y, width, height } = sticker;
+
+        let nextX = x;
+        let nextY = y;
+        let nextAngle = rotate.current;
+        let nextScale = scale.current;
+
+        if (isMultiTouching) {
+          const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = cursorPositions;
+
+          nextAngle =
+            rotate.previous +
+            angleBetweenTwoPoints(x1, y1, x2, y2) -
+            rotate.reference;
+          const currentLength = distanceBetweenTwoPoints(x1, y1, x2, y2);
+          nextScale = (currentLength / scale.reference) * scale.previous;
+        } else {
+          const centerX = x + (width * scale.current) / 2;
+          const centerY = y + (height * scale.current) / 2;
+          const relativeX = (cursorPositions[0].x - state.x) * displayRatio;
+          const relativeY = (cursorPositions[0].y - state.y) * displayRatio;
+
+          // 回転ボタン初期位置と中心座標の度の差を求めて足す
+          nextAngle =
+            angleBetweenTwoPoints(centerY, centerX, relativeY, relativeX) * -1 +
+            angleBetweenTwoPoints(
+              centerY,
+              centerX,
+              y + height * scale.current,
+              x + width * scale.current
+            );
+          nextScale =
+            (distanceBetweenTwoPoints(centerX, centerY, relativeX, relativeY) /
+              scale.reference) *
+            scale.previous;
+        }
+
+        // 最小値を見て縮小するかどうかを決める
+        if (
+          width * nextScale > CANVAS_STICKER_LAYER_MIN_WIDTH &&
+          height * nextScale > CANVAS_STICKER_LAYER_MIN_HEIGHT
+        ) {
+          nextX = x + (width * scale.current - width * nextScale) / 2;
+          nextY = y + (height * scale.current - height * nextScale) / 2;
+
+          return progressCanvasStickerLayerTransform(
+            state,
+            nextX,
+            nextY,
+            nextScale,
+            nextAngle
+          );
+        }
+
+        return progressCanvasStickerLayerTransform(
           state,
-          clipPathX,
-          clipPathY,
-          x,
-          y
+          nextX,
+          nextY,
+          scale.current,
+          nextAngle
         );
-        const nextX = currentX - user.differenceFromStartingX;
-        const nextY = currentY - user.differenceFromStartingY;
+      }
 
-        users[action.payload.index] = {
-          ...user,
-          x: nextX,
-          y: nextY,
+      if (isDragging) {
+        const [{ x, y }] = cursorPositions;
+        const relativeX = (x - state.x) * displayRatio;
+        const relativeY = (y - state.y) * displayRatio;
+
+        stickers[stickers.length - 1] = {
+          ...sticker,
+          x: relativeX - sticker.referenceX,
+          y: relativeY - sticker.referenceY,
         };
 
         return {
           ...state,
           layers: {
             ...state.layers,
-            users,
+            stickers,
           },
         };
       }
@@ -571,96 +558,33 @@ export default (state = initialState, action: Actions): CanvasState => {
       return state;
     }
 
-    case CANVAS_USER_LAYER_START_DRAG: {
-      const { index, cursorPositions, clipPathX, clipPathY } = action.payload;
-      const [{ x, y }] = cursorPositions;
-      const { users } = state.layers;
-      const user = users[index];
-
-      if (user === null) {
-        return state;
-      }
-
-      const {
-        x: currentX,
-        y: currentY,
-      } = calculateCanvasUserLayerRelativeCoordinates(
-        state,
-        clipPathX,
-        clipPathY,
-        x,
-        y
-      );
-
-      const differenceFromStartingX = currentX - user.x;
-      const differenceFromStartingY = currentY - user.y;
-
-      users[index] = {
-        ...user,
-        differenceFromStartingX: differenceFromStartingX,
-        differenceFromStartingY: differenceFromStartingY,
-        isDragging: true,
-      };
-
-      return {
-        ...state,
-        layers: {
-          ...state.layers,
-          users,
-        },
-      };
-    }
-
     case COMPLETE: {
       const { users, stickers } = state.layers;
-      const nextUsers = users.map((user) => {
-        if (!user) {
-          return user;
-        }
-
-        user.isDragging = false;
-
-        return user;
-      });
-      const nextStickers = stickers.map((sticker) => ({
-        ...sticker,
-        isDragging: false,
-        isMultiTouching: false,
-        isTransforming: false,
-        scale: {
-          ...sticker.scale,
-          previous: sticker.scale.current,
-        },
-      }));
 
       return {
         ...state,
         layers: {
-          stickers: nextStickers,
-          users: nextUsers,
+          stickers: stickers.map((sticker) => ({
+            ...sticker,
+            isDragging: false,
+            isMultiTouching: false,
+            isTransforming: false,
+          })),
+          users: users.map((user) => {
+            if (!user) {
+              return user;
+            }
+
+            return {
+              ...user,
+              isDragging: false,
+            };
+          }),
         },
       };
     }
 
-    case CANVAS_FILTER_SET_VALUE: {
-      const { layers } = state;
-      const userLayer = layers.users[action.payload.index];
-
-      if (userLayer) {
-        layers.users[action.payload.index] = {
-          ...userLayer,
-          filter: {
-            ...userLayer.filter,
-            [action.payload.type]: action.payload.value,
-          },
-        };
-      }
-
-      return {
-        ...state,
-        layers,
-      };
-    }
+    //
 
     default:
       return state;

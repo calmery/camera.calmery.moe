@@ -2,6 +2,7 @@ import { Dispatch } from "redux";
 import blueimpLoadImage from "blueimp-load-image";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
+import { CanvasUserLayerFrame } from "./frames";
 
 export const CANVAS_SET_FRAME = "CANVAS/SET_FRAME" as const;
 export const CANVAS_SET_DISPLAY_RATIO = "CANVAS/UPDATE_DISPLAY_RATIO" as const;
@@ -24,7 +25,7 @@ export const COMPLETE = "CANVAS/COMPLETE" as const;
 
 // Actions
 
-export const setCanvasFrame = (frame: any, index: number) => ({
+export const setCanvasFrame = (frame: CanvasUserLayerFrame, index: number) => ({
   type: CANVAS_SET_FRAME,
   payload: { frame, index },
 });
@@ -113,21 +114,16 @@ export const setCanvasStickerLayerActive = (index: number) => ({
   payload: { index },
 });
 
-export const startCanvasStickerLayerTransform = (
-  index: number,
-  x: number,
-  y: number
-) => ({
+export const startCanvasStickerLayerTransform = (x: number, y: number) => ({
   type: CANVAS_STICKER_LAYER_START_TRANSFORM,
-  payload: { index, x, y },
+  payload: { x, y },
 });
 
 export const startCanvasStickerLayerDrag = (
-  index: number,
   cursorPositions: CursorPosition[]
 ) => ({
   type: CANVAS_STICKER_LAYER_START_DRAG,
-  payload: { index, cursorPositions },
+  payload: { cursorPositions },
 });
 
 // Event Loop

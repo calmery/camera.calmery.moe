@@ -20,22 +20,15 @@ export const CanvasStickerLayers: React.FC = () => {
   );
 
   const handleOnPressTransformCircle = (
-    index: number,
     event: React.MouseEvent | React.TouchEvent
   ) => {
     const [{ x, y }] = convertEventToCursorPositions(event);
-    dispatch(actions.startCanvasStickerLayerTransform(index, x, y));
+    dispatch(actions.startCanvasStickerLayerTransform(x, y));
   };
 
-  const handleOnPress = (
-    index: number,
-    event: React.MouseEvent | React.TouchEvent
-  ) =>
+  const handleOnPress = (event: React.MouseEvent | React.TouchEvent) =>
     dispatch(
-      actions.startCanvasStickerLayerDrag(
-        index,
-        convertEventToCursorPositions(event)
-      )
+      actions.startCanvasStickerLayerDrag(convertEventToCursorPositions(event))
     );
 
   return (
@@ -47,10 +40,8 @@ export const CanvasStickerLayers: React.FC = () => {
             displayRatio={displayRatio}
             selected={index === layers.stickers.length - 1}
             handleOnClickRemoveButton={handleOnClickRemoveButton}
-            handleOnPress={(event) => handleOnPress(index, event)}
-            handleOnPressTransformCircle={(event) =>
-              handleOnPressTransformCircle(index, event)
-            }
+            handleOnPress={handleOnPress}
+            handleOnPressTransformCircle={handleOnPressTransformCircle}
             handleOnSelect={() => handleOnSelect(index)}
             sticker={sticker}
           />

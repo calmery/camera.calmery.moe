@@ -14,6 +14,7 @@ import styled from "styled-components";
 import { Menu } from "~/components/Menu";
 
 const Container = styled.div`
+  width: 100%;
   height: 1000px;
   max-height: 80%;
   text-align: center;
