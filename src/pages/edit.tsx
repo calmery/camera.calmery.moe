@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { NextPage } from "next";
 import { useSelector, useDispatch } from "react-redux";
+import styled from "styled-components";
 import { withRedux, NextPageContextWithRedux, State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import {
@@ -8,10 +9,12 @@ import {
   CanvasUserLayerFrame,
 } from "~/domains/canvas/frames";
 import { Canvas } from "~/containers/Canvas";
-import { Filters } from "~/containers/Filters";
-import { Stickers } from "~/containers/Stickers";
-import styled from "styled-components";
 import { Menu } from "~/components/Menu";
+import {
+  setUserLayerFilterValue,
+  addCanvasStickerLayerWithUrl,
+} from "~/domains/canvas/actions";
+import { FeColorMatrix } from "~/types/FeColorMatrix";
 
 const Container = styled.div`
   width: 100%;
@@ -39,13 +42,33 @@ const EditCanvasitems = styled.div`
 const Edit: NextPage = () => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
-  const { layers } = canvas;
+  const { frames, layers } = canvas;
   const handleOnClickFrame = (frame: CanvasUserLayerFrame, index: number) =>
     dispatch(actions.setCanvasFrame(frame, index));
 
   const handleOnClockRemoveImageButton = (index: number) => {
     dispatch(actions.removeCanvasUserLayer(index));
   };
+
+  const onClickBlurButton = useCallback((index, value) => {
+    dispatch(setUserLayerFilterValue(index, FeColorMatrix.blur, value));
+  }, []);
+  const onChangeHueRotate = useCallback((index, value) => {
+    dispatch(setUserLayerFilterValue(index, FeColorMatrix.hueRotate, value));
+  }, []);
+  const onChangeLuminanceToAlpha = useCallback((index, value) => {
+    dispatch(
+      setUserLayerFilterValue(index, FeColorMatrix.luminanceToAlpha, value)
+    );
+  }, []);
+  const onClickSaturate = useCallback((index, value) => {
+    dispatch(setUserLayerFilterValue(index, FeColorMatrix.saturate, value));
+  }, []);
+
+  const onClickAddStickerButton = useCallback(
+    (url: string) => dispatch(addCanvasStickerLayerWithUrl(url)),
+    []
+  );
 
   return (
     <>
@@ -66,8 +89,93 @@ const Edit: NextPage = () => {
           )}
         </div>
         <EditCanvasitems>
-          <Filters />
-          <Stickers />
+          {layers.users.map(
+            (userLayer, index) =>
+              userLayer && (
+                <div key={index}>
+                  <div>{frames.users[index].id}</div>
+                  <div>
+                    <div>Blur: {userLayer.filter.blur}</div>
+                    <button
+                      onClick={
+                        userLayer.filter.blur > 0
+                          ? () =>
+                              onClickBlurButton(
+                                index,
+                                userLayer.filter.blur - 1
+                              )
+                          : undefined
+                      }
+                    >
+                      -
+                    </button>
+                    <button
+                      onClick={() =>
+                        onClickBlurButton(index, userLayer.filter.blur + 1)
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div>
+                    <div>hueRotate</div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="359"
+                      defaultValue={userLayer.filter.hueRotate}
+                      onChange={(event) => {
+                        onChangeHueRotate(
+                          index,
+                          parseInt(event.target.value, 10)
+                        );
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <div>luminanceToAlpha</div>
+                    <input
+                      type="checkbox"
+                      checked={userLayer.filter.luminanceToAlpha}
+                      onChange={() => {
+                        onChangeLuminanceToAlpha(
+                          index,
+                          !userLayer.filter.luminanceToAlpha
+                        );
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <div>saturate: {userLayer.filter.saturate}</div>
+                    <button
+                      onClick={
+                        userLayer.filter.saturate > 0
+                          ? () =>
+                              onClickSaturate(
+                                index,
+                                userLayer.filter.saturate - 1
+                              )
+                          : undefined
+                      }
+                    >
+                      -
+                    </button>
+                    <button
+                      onClick={() =>
+                        onClickSaturate(index, userLayer.filter.saturate + 1)
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              )
+          )}
+          <button
+            onClick={() => onClickAddStickerButton("/images/stickers/15.png")}
+          >
+            /images/stickers/15.png
+          </button>
           {canvasUserLayerFrame[CanvasUserLayerFrame.W3H4].frames.map(
             (_, index) => (
               <button
