@@ -7,7 +7,7 @@ import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-p
 
 export const CanvasStickerLayers: React.FC = () => {
   const dispatch = useDispatch();
-  const { layers, displayRatio } = useSelector(({ canvas }: State) => canvas);
+  const { stickers, container } = useSelector(({ canvas }: State) => canvas);
 
   const handleOnSelect = useCallback(
     (index: number) => dispatch(actions.setCanvasStickerLayerActive(index)),
@@ -33,12 +33,12 @@ export const CanvasStickerLayers: React.FC = () => {
 
   return (
     <>
-      {layers.stickers.map((sticker, index) => {
+      {stickers.layers.map((sticker, index) => {
         return (
           <CanvasStickerLayerComponent
             key={index}
-            displayRatio={displayRatio}
-            selected={index === layers.stickers.length - 1}
+            displayRatio={container.displayRatio}
+            selected={index === stickers.layers.length - 1}
             handleOnClickRemoveButton={handleOnClickRemoveButton}
             handleOnPress={handleOnPress}
             handleOnPressTransformCircle={handleOnPressTransformCircle}

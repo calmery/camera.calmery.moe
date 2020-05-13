@@ -10,10 +10,7 @@ import {
 } from "~/domains/canvas/frames";
 import { Canvas } from "~/containers/Canvas";
 import { Menu } from "~/components/Menu";
-import {
-  setUserLayerFilterValue,
-  addCanvasStickerLayerWithUrl,
-} from "~/domains/canvas/actions";
+import { thunkActions } from "~/domains/canvas/actions";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
 
 const Container = styled.div`
@@ -42,31 +39,39 @@ const EditCanvasitems = styled.div`
 const Edit: NextPage = () => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
-  const { frames, layers } = canvas;
+  const { users } = canvas;
   const handleOnClickFrame = (frame: CanvasUserLayerFrame, index: number) =>
-    dispatch(actions.setCanvasFrame(frame, index));
+    dispatch(actions.setFrame(frame, index));
 
   const handleOnClockRemoveImageButton = (index: number) => {
     dispatch(actions.removeCanvasUserLayer(index));
   };
 
   const onClickBlurButton = useCallback((index, value) => {
-    dispatch(setUserLayerFilterValue(index, FeColorMatrix.blur, value));
+    dispatch(actions.setUserLayerFilterValue(index, FeColorMatrix.blur, value));
   }, []);
   const onChangeHueRotate = useCallback((index, value) => {
-    dispatch(setUserLayerFilterValue(index, FeColorMatrix.hueRotate, value));
+    dispatch(
+      actions.setUserLayerFilterValue(index, FeColorMatrix.hueRotate, value)
+    );
   }, []);
   const onChangeLuminanceToAlpha = useCallback((index, value) => {
     dispatch(
-      setUserLayerFilterValue(index, FeColorMatrix.luminanceToAlpha, value)
+      actions.setUserLayerFilterValue(
+        index,
+        FeColorMatrix.luminanceToAlpha,
+        value
+      )
     );
   }, []);
   const onClickSaturate = useCallback((index, value) => {
-    dispatch(setUserLayerFilterValue(index, FeColorMatrix.saturate, value));
+    dispatch(
+      actions.setUserLayerFilterValue(index, FeColorMatrix.saturate, value)
+    );
   }, []);
 
   const onClickAddStickerButton = useCallback(
-    (url: string) => dispatch(addCanvasStickerLayerWithUrl(url)),
+    (url: string) => dispatch(thunkActions.addCanvasStickerLayerWithUrl(url)),
     []
   );
 
@@ -77,7 +82,7 @@ const Edit: NextPage = () => {
           <Canvas />
         </Container>
         <div>
-          {layers.users.map((layer, index) =>
+          {users.layers.map((layer, index) =>
             layer ? (
               <button
                 onClick={() => handleOnClockRemoveImageButton(index)}
@@ -89,11 +94,11 @@ const Edit: NextPage = () => {
           )}
         </div>
         <EditCanvasitems>
-          {layers.users.map(
+          {users.layers.map(
             (userLayer, index) =>
               userLayer && (
                 <div key={index}>
-                  <div>{frames.users[index].id}</div>
+                  <div>{users.frames[index].id}</div>
                   <div>
                     <div>Blur: {userLayer.filter.blur}</div>
                     <button

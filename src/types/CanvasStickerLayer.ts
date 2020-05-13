@@ -4,11 +4,6 @@ export type CanvasStickerLayer = {
   height: number;
   x: number;
   y: number;
-  isDragging: boolean;
-  isTransforming: boolean;
-  isMultiTouching: boolean;
-  referenceX: number;
-  referenceY: number;
   scale: {
     current: number;
     previous: number;

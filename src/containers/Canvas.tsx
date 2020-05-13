@@ -10,7 +10,7 @@ import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-p
 export const Canvas: React.FC = () => {
   const containerRef = useRef<SVGSVGElement>(null);
   const dispatch = useDispatch();
-  const canvas = useSelector(({ canvas }: State) => canvas);
+  const { container } = useSelector(({ canvas }: State) => canvas);
 
   const handleOnComplete = useCallback(() => dispatch(actions.complete()), [
     dispatch,
@@ -20,7 +20,7 @@ export const Canvas: React.FC = () => {
     const e = containerRef.current!;
     const rect = e.getBoundingClientRect();
 
-    dispatch(actions.setCanvasDisplayRatio(rect.x, rect.y, rect.width));
+    dispatch(actions.setActualSize(rect));
   }, [dispatch]);
 
   const handleOnMove = useCallback(
@@ -55,9 +55,13 @@ export const Canvas: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    handleOnResizeWindow();
+  }, [container.width, container.height]);
+
   return (
     <svg
-      viewBox={`0 0 ${canvas.width} ${canvas.height}`}
+      viewBox={`0 0 ${container.width} ${container.height}`}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       ref={containerRef}

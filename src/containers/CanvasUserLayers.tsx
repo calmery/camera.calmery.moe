@@ -10,7 +10,7 @@ import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-p
 export const CanvasUserLayers: React.FC = () => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
-  const { frames, layers, displayRatio } = canvas;
+  const { users } = canvas;
 
   const handOnClickEmptyUserImage = async (index: number) => {
     dispatch(
@@ -58,9 +58,9 @@ export const CanvasUserLayers: React.FC = () => {
 
   return (
     <>
-      {frames.users.map((_, i: number) => {
-        const layer = layers.users[i];
-        const frame = frames.users[i];
+      {users.frames.map((_, i: number) => {
+        const layer = users.layers[i];
+        const frame = users.frames[i];
 
         if (layer) {
           return (
