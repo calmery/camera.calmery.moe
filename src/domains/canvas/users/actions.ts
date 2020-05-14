@@ -3,6 +3,7 @@ import blueimpLoadImage from "blueimp-load-image";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 import { getOrCreateStore } from "~/domains";
+import { checkAndResizeImage } from "~/utils/check-and-resize-image";
 
 export const ADD = "CANVAS/CANVAS_USER_LAYER/ADD" as const;
 export const REMOVE = "CANVAS/CANVAS_USER_LAYER/REMOVE" as const;
@@ -101,11 +102,14 @@ export const addCanvasUserLayerFromFile = (file: File, index: number) => {
       blueimpLoadImage(
         file,
         async (canvas) => {
-          const dataUrl = (canvas as HTMLCanvasElement).toDataURL();
-          const { width, height } = await convertUrlToImage(dataUrl);
+          const image = await convertUrlToImage(
+            (canvas as HTMLCanvasElement).toDataURL()
+          );
+          // ToDo: null のときはサイズエラーになっている
+          const result = checkAndResizeImage(image);
+          const { width, height, dataUrl } = result!;
 
           dispatch(addCanvasUserLayer(index, dataUrl, width, height));
-
           resolve();
         },
         { canvas: true, orientation: true }

@@ -6,6 +6,7 @@ import * as users from "./users/actions";
 import { CanvasUserLayerFrame } from "./frames";
 import { getOrCreateStore } from "~/domains";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
+import { checkAndResizeImage } from "~/utils/check-and-resize-image";
 
 export const TICK = "CANVAS/TICK" as const;
 export const COMPLETE = "CANVAS/COMPLETE" as const;
@@ -74,8 +75,12 @@ export const addCanvasUserLayerAndSetFrameFromFile = (file: File) => {
       blueimpLoadImage(
         file,
         async (canvas) => {
-          const dataUrl = (canvas as HTMLCanvasElement).toDataURL();
-          const { width, height } = await convertUrlToImage(dataUrl);
+          const image = await convertUrlToImage(
+            (canvas as HTMLCanvasElement).toDataURL()
+          );
+          // ToDo: null のときはサイズエラーになっている
+          const result = checkAndResizeImage(image);
+          const { width, height, dataUrl } = result!;
 
           dispatch(addCanvasUserLayerAndSetFrame(dataUrl, width, height));
 
