@@ -19,6 +19,7 @@ import { canvasUserLayerFrame } from "../frames";
 
 export type CanvasUsersState = {
   isDragging: boolean;
+  canDragging: boolean;
   differenceFromStartingX: number;
   differenceFromStartingY: number;
   layers: (CanvasUserLayer | null)[];
@@ -27,6 +28,7 @@ export type CanvasUsersState = {
 
 const initialState: CanvasUsersState = {
   isDragging: false,
+  canDragging: false,
   differenceFromStartingX: 0,
   differenceFromStartingY: 0,
   layers: [],
@@ -47,10 +49,22 @@ const calculateCanvasUserLayerRelativeCoordinates = (
 export default (state = initialState, action: Actions): CanvasUsersState => {
   switch (action.type) {
     case SET_DEFAULT_FRAME: {
+      const { layers } = state;
       const { width, height } = action.payload;
+
+      // ToDo: 1 枚目の画像の他のフレームでの座標位置が消えてしまう
+      if (layers[0]) {
+        layers[0] = {
+          ...layers[0],
+          x: 0,
+          y: 0,
+        };
+      }
 
       return {
         ...state,
+        canDragging: false,
+        layers,
         frames: [
           {
             id: uuid.v4(),
@@ -171,6 +185,7 @@ export default (state = initialState, action: Actions): CanvasUsersState => {
         isDragging,
         differenceFromStartingX,
         differenceFromStartingY,
+        canDragging,
       } = state;
       const {
         index,
@@ -181,7 +196,7 @@ export default (state = initialState, action: Actions): CanvasUsersState => {
       } = action.payload;
       const user = layers[index];
 
-      if (!user) {
+      if (!user || !canDragging) {
         return state;
       }
 
@@ -245,6 +260,7 @@ export default (state = initialState, action: Actions): CanvasUsersState => {
       // ToDo: container にも必要！
       return {
         ...state,
+        canDragging: true,
         frames: canvasUserFrame.frames[index].map((f) => ({
           ...f,
           id: uuid.v4(),
