@@ -152,14 +152,18 @@ const ModalConfigDescription = styled.div`
   font-family: SmartFontUI, sans-serif;
 `;
 
-const HiddenInput = styled.div`
-  width: 0;
-  height: 0;
+const HiddenInput = styled.input`
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  position: absolute;
+  cursor: pointer;
 `;
 
 const Index: NextPage = () => {
   const dispatch = useDispatch();
-  const ref = useRef<HTMLInputElement>(null);
   const [isInformationVisible, setInformationVisible] = useState(false);
   const [isSettingVisible, setSettingVisible] = useState(false);
 
@@ -176,11 +180,6 @@ const Index: NextPage = () => {
     },
     [dispatch]
   );
-
-  const handleOnClickStartButton = useCallback(() => {
-    const e = ref.current;
-    e!.click();
-  }, [ref.current]);
 
   const handleOnClickInformationVisible = useCallback(
     () => setInformationVisible(!isInformationVisible),
@@ -223,35 +222,22 @@ const Index: NextPage = () => {
           </Logo>
 
           <Buttons>
-            <Button primary onClick={handleOnClickStartButton}>
+            <Button primary>
               画像を読み込んで始める！
+              <HiddenInput
+                type="file"
+                multiple={false}
+                accept="image/*"
+                onChange={handleOnChangeFile}
+              />
             </Button>
             <Button disabled>前回の続きから始める！</Button>
           </Buttons>
-
-          <input
-            ref={ref}
-            type="file"
-            multiple={false}
-            accept="image/*"
-            onChange={handleOnChangeFile}
-          />
-
           <Footer>
             Made with <Image src="/images/heart.svg" /> by Calmery
           </Footer>
         </Columns>
       </Page>
-
-      <HiddenInput>
-        <input
-          ref={ref}
-          type="file"
-          multiple={false}
-          accept="image/*"
-          onChange={handleOnChangeFile}
-        />
-      </HiddenInput>
 
       <Modal
         visible={isInformationVisible}

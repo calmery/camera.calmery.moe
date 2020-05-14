@@ -30,6 +30,7 @@ const Body = styled.div<Pick<ButtonProps, "primary">>`
   background: ${({ primary }) => (primary ? "transparent" : Colors.white)};
   border-radius: 50vh;
   padding: ${Spacing.m - 2}px ${Spacing.l - 2}px;
+  position: relative;
 `;
 
 const Text = styled.div<Pick<ButtonProps, "primary">>`
@@ -49,7 +50,7 @@ const Text = styled.div<Pick<ButtonProps, "primary">>`
 `;
 
 type ButtonProps = {
-  children: string;
+  children: string | React.ReactNode[];
   disabled?: boolean;
   primary?: boolean;
   onClick?: () => void;
