@@ -51,7 +51,7 @@ const Text = styled.div<{ clicked: boolean }>`
 `;
 
 type IconButtonProps = {
-  children: string;
+  children: React.ReactNode;
   clicked?: boolean;
   onClick: () => void;
 };

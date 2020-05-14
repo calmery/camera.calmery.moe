@@ -5,8 +5,7 @@ import { Mixin } from "~/styles/mixin";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 
-const Container = styled.div`
-  ${Mixin.clickable};
+const Container = styled.div<Pick<ButtonProps, "disabled">>`
   ${Typography.M};
 
   background: ${GradientColors.pinkToBlue};
@@ -15,6 +14,16 @@ const Container = styled.div`
   padding: 2px;
   text-align: center;
   width: 100%;
+  opacity: 0.48;
+  cursor: not-allowed;
+
+  ${({ disabled }) =>
+    !disabled &&
+    css`
+      ${Mixin.clickable};
+      opacity: 1;
+      cursor: pointer;
+    `};
 `;
 
 const Body = styled.div<Pick<ButtonProps, "primary">>`
@@ -41,12 +50,13 @@ const Text = styled.div<Pick<ButtonProps, "primary">>`
 
 type ButtonProps = {
   children: string;
+  disabled?: boolean;
   primary?: boolean;
 };
 
 export const Button: React.FC<ButtonProps> = (props: ButtonProps) =>
   props.children ? (
-    <Container>
+    <Container disabled={props.disabled}>
       <Body {...props}>
         <Text {...props}>{props.children}</Text>
       </Body>
