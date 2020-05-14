@@ -19,7 +19,7 @@
     "@sentry/browser": "5.15.5",
     "blueimp-load-image": "5.10.0",
     "isomorphic-unfetch": "3.0.0",
-    "next": "9.3.6",
+    "next": "9.4.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-redux": "7.2.0",
