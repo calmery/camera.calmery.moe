@@ -58,11 +58,9 @@ export const CanvasUserLayerComponent: React.FC<{
       xmlnsXlink="http://www.w3.org/1999/xlink"
       style={{ cursor: "move" }}
     >
-      {frame.d && (
-        <clipPath id={`clip-path-${frame.id}`}>
-          <path d={frame.d} ref={pathRef} />
-        </clipPath>
-      )}
+      <clipPath id={`clip-path-${frame.id}`}>
+        <path d={frame.d} ref={pathRef} />
+      </clipPath>
 
       <g clipPath={`url(#clip-path-${frame.id})`}>
         <svg

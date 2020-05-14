@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { NextPage } from "next";
+import Router from "next/router";
 import styled from "styled-components";
 import { IconButton } from "~/components/IconButton";
 import { Page } from "~/components/Page";
@@ -12,6 +13,9 @@ import { Modal } from "~/containers/Modal";
 import { Image } from "~/components/Image";
 import { Checkbox } from "~/components/Checkbox";
 import { Button } from "~/components/Button";
+import { useDispatch } from "react-redux";
+import { withRedux } from "~/domains";
+import { actions, thunkActions } from "~/domains/canvas/actions";
 
 const Columns = styled.div`
   height: 100%;
@@ -148,11 +152,35 @@ const ModalConfigDescription = styled.div`
   font-family: SmartFontUI, sans-serif;
 `;
 
+const HiddenInput = styled.div`
+  width: 0;
+  height: 0;
+`;
+
 const Index: NextPage = () => {
+  const dispatch = useDispatch();
+  const ref = useRef<HTMLInputElement>(null);
   const [isInformationVisible, setInformationVisible] = useState(false);
-  const [isSettingVisible, setSettingVisible] = useState(true);
+  const [isSettingVisible, setSettingVisible] = useState(false);
 
   // Events
+
+  const handleOnChangeFile = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { files } = event.target;
+      const file = files![0];
+
+      await dispatch(thunkActions.addCanvasUserLayerAndSetFrameFromFile(file));
+
+      Router.push("/edit");
+    },
+    [dispatch]
+  );
+
+  const handleOnClickStartButton = useCallback(() => {
+    const e = ref.current;
+    e!.click();
+  }, [ref.current]);
 
   const handleOnClickInformationVisible = useCallback(
     () => setInformationVisible(!isInformationVisible),
@@ -195,15 +223,35 @@ const Index: NextPage = () => {
           </Logo>
 
           <Buttons>
-            <Button primary>画像を読み込んで始める！</Button>
+            <Button primary onClick={handleOnClickStartButton}>
+              画像を読み込んで始める！
+            </Button>
             <Button disabled>前回の続きから始める！</Button>
           </Buttons>
+
+          <input
+            ref={ref}
+            type="file"
+            multiple={false}
+            accept="image/*"
+            onChange={handleOnChangeFile}
+          />
 
           <Footer>
             Made with <Image src="/images/heart.svg" /> by Calmery
           </Footer>
         </Columns>
       </Page>
+
+      <HiddenInput>
+        <input
+          ref={ref}
+          type="file"
+          multiple={false}
+          accept="image/*"
+          onChange={handleOnChangeFile}
+        />
+      </HiddenInput>
 
       <Modal
         visible={isInformationVisible}
@@ -262,4 +310,4 @@ const Index: NextPage = () => {
   );
 };
 
-export default Index;
+export default withRedux(Index);

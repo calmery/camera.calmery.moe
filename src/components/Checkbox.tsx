@@ -20,8 +20,6 @@ export const Checkbox: React.FC<{
   const [id] = useState(v4());
   const [checked, setChecked] = useState(props.defaultChecked || false);
 
-  console.log(checked);
-
   return (
     <>
       <Input

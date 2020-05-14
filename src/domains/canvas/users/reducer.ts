@@ -1,5 +1,10 @@
 import * as uuid from "uuid";
-import { Actions, COMPLETE, SET_FRAME } from "~/domains/canvas/actions";
+import {
+  Actions,
+  COMPLETE,
+  SET_FRAME,
+  ADD_USER_IMAGE_AND_SET_FRAME,
+} from "~/domains/canvas/actions";
 import {
   ADD,
   REMOVE,
@@ -40,6 +45,40 @@ const calculateCanvasUserLayerRelativeCoordinates = (
 
 export default (state = initialState, action: Actions): CanvasUsersState => {
   switch (action.type) {
+    case ADD_USER_IMAGE_AND_SET_FRAME: {
+      const { frames, layers } = state;
+      const { dataUrl, width, height } = action.payload;
+
+      layers[0] = {
+        dataUrl,
+        width,
+        height,
+        x: 0,
+        y: 0,
+        filter: {
+          blur: 0,
+          hueRotate: 0,
+          luminanceToAlpha: false,
+          saturate: 1,
+        },
+      };
+
+      frames[0] = {
+        id: uuid.v4(),
+        width,
+        height,
+        x: 0,
+        y: 0,
+        d: `M0 0H${width}V${height}H0V0Z`,
+      };
+
+      return {
+        ...state,
+        frames,
+        layers,
+      };
+    }
+
     case ADD: {
       const { layers } = state;
       const { index, dataUrl, width, height } = action.payload;

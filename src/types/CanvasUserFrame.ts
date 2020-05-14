@@ -4,5 +4,5 @@ export type CanvasUserFrame = {
   height: number;
   x: number;
   y: number;
-  d: string | null;
+  d: string;
 };

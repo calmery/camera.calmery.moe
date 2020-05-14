@@ -52,11 +52,15 @@ type ButtonProps = {
   children: string;
   disabled?: boolean;
   primary?: boolean;
+  onClick?: () => void;
 };
 
 export const Button: React.FC<ButtonProps> = (props: ButtonProps) =>
   props.children ? (
-    <Container disabled={props.disabled}>
+    <Container
+      disabled={props.disabled}
+      onClick={() => props.onClick && props.onClick()}
+    >
       <Body {...props}>
         <Text {...props}>{props.children}</Text>
       </Body>
