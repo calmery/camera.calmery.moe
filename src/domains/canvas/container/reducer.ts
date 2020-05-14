@@ -2,6 +2,7 @@ import {
   Actions,
   SET_FRAME,
   ADD_USER_IMAGE_AND_SET_FRAME,
+  SET_DEFAULT_FRAME,
 } from "~/domains/canvas/actions";
 import { SET_ACTUAL_SIZE } from "./actions";
 import { canvasUserLayerFrame } from "../frames";
@@ -40,6 +41,16 @@ export default (
     }
 
     case ADD_USER_IMAGE_AND_SET_FRAME: {
+      const { width, height } = action.payload;
+
+      return {
+        ...state,
+        width,
+        height,
+      };
+    }
+
+    case SET_DEFAULT_FRAME: {
       const { width, height } = action.payload;
 
       return {

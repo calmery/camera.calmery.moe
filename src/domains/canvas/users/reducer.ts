@@ -4,6 +4,7 @@ import {
   COMPLETE,
   SET_FRAME,
   ADD_USER_IMAGE_AND_SET_FRAME,
+  SET_DEFAULT_FRAME,
 } from "~/domains/canvas/actions";
 import {
   ADD,
@@ -45,6 +46,24 @@ const calculateCanvasUserLayerRelativeCoordinates = (
 
 export default (state = initialState, action: Actions): CanvasUsersState => {
   switch (action.type) {
+    case SET_DEFAULT_FRAME: {
+      const { width, height } = action.payload;
+
+      return {
+        ...state,
+        frames: [
+          {
+            id: uuid.v4(),
+            width,
+            height,
+            x: 0,
+            y: 0,
+            d: `M0 0H${width}V${height}H0V0Z`,
+          },
+        ],
+      };
+    }
+
     case ADD_USER_IMAGE_AND_SET_FRAME: {
       const { frames, layers } = state;
       const { dataUrl, width, height } = action.payload;

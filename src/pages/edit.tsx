@@ -181,6 +181,9 @@ const Edit: NextPage = () => {
           >
             /images/stickers/15.png
           </button>
+          <button onClick={() => dispatch(actions.setDefaultFrame())}>
+            Default
+          </button>
           {canvasUserLayerFrame[CanvasUserLayerFrame.W3H4].frames.map(
             (_, index) => (
               <button

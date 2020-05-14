@@ -11,6 +11,7 @@ export const TICK = "CANVAS/TICK" as const;
 export const COMPLETE = "CANVAS/COMPLETE" as const;
 export const SET_FRAME = "CANVAS/SET_FRAME" as const;
 export const ADD_USER_IMAGE_AND_SET_FRAME = "CANVAS/ADD_USER_IMAGE_AND_SET_FRAME" as const;
+export const SET_DEFAULT_FRAME = "CANVAS/SET_DEFAULT_FRAME" as const;
 
 export const tick = (cursorPositions: CursorPosition[]) => {
   const { container } = getOrCreateStore().getState().canvas;
@@ -29,6 +30,18 @@ export const setFrame = (frame: CanvasUserLayerFrame, index: number) => ({
   type: SET_FRAME,
   payload: { frame, index },
 });
+
+export const setDefaultFrame = () => {
+  const { layers } = getOrCreateStore().getState().canvas.users;
+
+  return {
+    type: SET_DEFAULT_FRAME,
+    payload: {
+      width: layers[0] ? layers[0].width : 0,
+      height: layers[0] ? layers[0].height : 0,
+    },
+  };
+};
 
 export const addCanvasUserLayerAndSetFrame = (
   dataUrl: string,
@@ -82,6 +95,7 @@ export const actions = {
   complete,
   setFrame,
   addCanvasUserLayerAndSetFrame,
+  setDefaultFrame,
 };
 
 export const thunkActions = {
