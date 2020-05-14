@@ -27,18 +27,23 @@ const Background = styled.div<{ clicked: boolean }>`
   position: absolute;
 `;
 
-const Text = styled.div<{ clicked: boolean }>`
+const Icon = styled.div<{ clicked: boolean }>`
   width: 32px;
   height: 32px;
   color: ${Colors.white};
-  line-height: 32px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   position: absolute;
+
+  img {
+    filter: brightness(0) invert(1);
+  }
 
   ${({ clicked }) =>
     !clicked &&
@@ -47,28 +52,28 @@ const Text = styled.div<{ clicked: boolean }>`
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
+
+      img {
+        filter: none;
+      }
     `};
 `;
 
 type IconButtonProps = {
-  children: React.ReactNode;
+  src: string;
   clicked?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 export const IconButton: React.FC<IconButtonProps> = ({
-  children,
+  src,
   clicked = false,
   onClick,
-}: IconButtonProps) => {
-  if (!children) {
-    return null;
-  }
-
-  return (
-    <Container onClick={onClick}>
-      <Background clicked={clicked} />
-      <Text clicked={clicked}>{children}</Text>
-    </Container>
-  );
-};
+}: IconButtonProps) => (
+  <Container onClick={onClick}>
+    <Background clicked={clicked} />
+    <Icon clicked={clicked}>
+      <img src={src} />
+    </Icon>
+  </Container>
+);

@@ -7,8 +7,10 @@ import { Colors } from "~/styles/colors";
 import { Media } from "~/styles/media";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
+import { Mixin } from "~/styles/mixin";
 import { Modal } from "~/containers/Modal";
 import { Image } from "~/components/Image";
+import { Checkbox } from "~/components/Checkbox";
 import { Button } from "~/components/Button";
 
 const Columns = styled.div`
@@ -23,6 +25,8 @@ const Header = styled.div`
 `;
 
 const HeaderLogo = styled.div`
+  ${Mixin.clickable}
+
   margin-right: auto;
 
   picture,
@@ -41,21 +45,28 @@ const HeaderIconButtons = styled.div`
 
 const Buttons = styled.div`
   display: flex;
+
   ${Media.queries.pc} {
     width: fit-content;
     margin: 0 auto;
   }
+
   ${Media.queries.sp} {
     flex-direction: column;
   }
+
   & > * {
+    font-family: SmartFontUI;
+
     ${Media.queries.pc} {
       max-width: 217px;
       margin-right: ${Spacing.l}px;
     }
+
     ${Media.queries.sp} {
       margin-bottom: ${Spacing.m}px;
     }
+
     &:last-child {
       margin-bottom: 0;
       margin-right: 0;
@@ -86,9 +97,60 @@ const Logo = styled.div`
   }
 `;
 
+const ModalTitle = styled.div`
+  ${Typography.L}
+
+  color: ${Colors.black};
+  font-family: SmartFontUI, sans-serif;
+  margin-bottom: ${Spacing.s}px;
+`;
+
+const ModalText = styled.div`
+  ${Typography.S}
+
+  color: ${Colors.black};
+  font-family: SmartFontUI, sans-serif;
+
+  a {
+    color: ${Colors.black};
+    font-family: Roboto, sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+  }
+`;
+
+const ModalTextRoboto = styled.span`
+  color: ${Colors.black};
+  font-family: Roboto, sans-serif;
+`;
+
+const ModalConfig = styled.div`
+  display: flex;
+  margin-bottom: ${Spacing.l}px;
+
+  > *:first-child {
+    margin-right: ${Spacing.m}px;
+  }
+`;
+
+const ModalConfigTitle = styled.div`
+  ${Typography.L}
+
+  line-height: 32px;
+  color: ${Colors.black};
+  font-family: SmartFontUI, sans-serif;
+`;
+
+const ModalConfigDescription = styled.div`
+  ${Typography.XS}
+
+  color: ${Colors.gray};
+  font-family: SmartFontUI, sans-serif;
+`;
+
 const Index: NextPage = () => {
   const [isInformationVisible, setInformationVisible] = useState(false);
-  const [isSettingVisible, setSettingVisible] = useState(false);
+  const [isSettingVisible, setSettingVisible] = useState(true);
 
   // Events
 
@@ -110,21 +172,21 @@ const Index: NextPage = () => {
         <Columns>
           <Header>
             <HeaderLogo>
-              <Image src="/images/logos/calmery.moe.svg" />
+              <a href="https://calmery.moe">
+                <Image src="/images/logos/calmery.moe.svg" />
+              </a>
             </HeaderLogo>
             <HeaderIconButtons>
               <IconButton
                 clicked={isInformationVisible}
                 onClick={handleOnClickInformationVisible}
-              >
-                A
-              </IconButton>
+                src="/images/information.svg"
+              />
               <IconButton
                 clicked={isSettingVisible}
                 onClick={handleOnClickSettingVisible}
-              >
-                A
-              </IconButton>
+                src="/images/setting.svg"
+              />
             </HeaderIconButtons>
           </Header>
 
@@ -147,13 +209,54 @@ const Index: NextPage = () => {
         visible={isInformationVisible}
         onClickCloseButton={handleOnClickInformationVisible}
       >
-        Information
+        <ModalTitle>お問い合わせ</ModalTitle>
+        <ModalText>
+          ご感想や不具合の報告は <ModalTextRoboto>Twitter</ModalTextRoboto> の{" "}
+          <a
+            href="https://twitter.com/calmeryme"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @calmeryme
+          </a>{" "}
+          までお願いします。感想貰えるとめっちゃ嬉しいのでよろしくね！
+        </ModalText>
       </Modal>
+
       <Modal
         visible={isSettingVisible}
         onClickCloseButton={handleOnClickSettingVisible}
       >
-        Setting
+        <ModalConfig>
+          <div>
+            <Checkbox
+              onChange={() => {
+                console.log("Dummy");
+              }}
+            />
+          </div>
+          <div>
+            <ModalConfigTitle>画像を元のサイズで読み込む</ModalConfigTitle>
+            <ModalConfigDescription>
+              画像を読み込むときに画像を縮小せずに読み込みます。画像を読み込んだときにページが落ちる、再読み込みするといった症状が起こる場合はオフにしてください。
+            </ModalConfigDescription>
+          </div>
+        </ModalConfig>
+        <ModalConfig>
+          <div>
+            <Checkbox
+              onChange={() => {
+                console.log("Dummy");
+              }}
+            />
+          </div>
+          <div>
+            <ModalConfigTitle>開発中の機能をオンにする</ModalConfigTitle>
+            <ModalConfigDescription>
+              開発中の機能を使用します。使用中にアプリが落ちる、再読み込みするといった問題が起こる可能性があることに注意してください。
+            </ModalConfigDescription>
+          </div>
+        </ModalConfig>
       </Modal>
     </>
   );

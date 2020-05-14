@@ -210,11 +210,11 @@ const Contents = styled.div`
   height: max-content;
 
   ${Media.queries.pc} {
-    margin-top: ${Spacing.m}px;
+    margin-top: ${Spacing.l}px;
   }
 
   ${Media.queries.sp} {
-    margin-top: ${Spacing.m}px;
+    margin-top: ${Spacing.l}px;
   }
 `;
 
