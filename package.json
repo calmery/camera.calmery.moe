@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@sentry/browser": "5.15.5",
-    "blueimp-load-image": "5.10.0",
+    "blueimp-load-image": "5.12.0",
     "isomorphic-unfetch": "3.0.0",
     "next": "9.3.6",
     "react": "16.13.1",
