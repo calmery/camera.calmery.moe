@@ -33,24 +33,16 @@ export default (state = initialState, action: Actions) => {
       const { x, y, width, height, image } = action.payload;
       const { width: imageWidth, height: imageHeight } = image;
 
-      let svgWidth = 0;
-      let svgHeight = 0;
-      let svgX = 24;
-      let svgY = 0;
+      let svgWidth = width;
+      let svgHeight = imageHeight * (width / imageWidth);
+      let svgX = x;
+      let svgY = y + (height - svgHeight) / 2;
 
-      console.log(x, y, width, height);
-
-      // 横幅が縦幅よりも小さいとき
-      if (imageWidth < imageHeight) {
+      if (svgHeight > height) {
         svgHeight = height;
         svgWidth = imageWidth * (height / imageHeight);
         svgX = x + (width - svgWidth) / 2;
         svgY = y;
-      } else {
-        svgWidth = width;
-        svgHeight = imageHeight * (width / imageWidth);
-        svgX = x;
-        svgY = y + (height - svgHeight) / 2;
       }
 
       return {
