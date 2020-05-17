@@ -73,6 +73,14 @@ export const Cropper: React.FC = () => {
     [dispatch]
   );
 
+  const handleOnTouchStartDocument = useCallback((event: TouchEvent) => {
+    // Safari、2 本指でピンチインしたときに Safari のタブ一覧に遷移してしまうことがある
+    // そのため 2 本指でのタッチを一時的に無効化する
+    if (event.touches.length > 1) {
+      event.preventDefault();
+    }
+  }, []);
+
   // Hooks
 
   useEffect(() => {
@@ -85,6 +93,9 @@ export const Cropper: React.FC = () => {
     e.addEventListener("mouseleave", handleOnComplete, false);
     e.addEventListener("touchend", handleOnComplete, false);
     addEventListener("resize", handleOnUpdateContainerSize, false);
+    addEventListener("touchstart", handleOnTouchStartDocument, {
+      passive: false,
+    });
 
     handleOnUpdateContainerSize();
 
@@ -96,6 +107,7 @@ export const Cropper: React.FC = () => {
       e.removeEventListener("mouseleave", handleOnComplete);
       e.removeEventListener("touchend", handleOnComplete);
       removeEventListener("resize", handleOnUpdateContainerSize);
+      removeEventListener("touchstart", handleOnTouchStartDocument);
     };
   }, []);
 
