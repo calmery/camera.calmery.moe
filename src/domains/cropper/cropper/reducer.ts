@@ -187,7 +187,12 @@ export default (state = initialState, action: Actions) => {
   switch (action.type) {
     case START_CROPPER_MOVING: {
       const { position } = state;
-      const { container, cursorPositions } = action.payload;
+      const { container, cursorPositions, image } = action.payload;
+
+      if (image.isImageTransforming) {
+        return state;
+      }
+
       const [
         valueAtTransformStartX,
         valueAtTransformStartY,
@@ -209,8 +214,12 @@ export default (state = initialState, action: Actions) => {
     }
 
     case START_CROPPER_TRANSFORMING: {
-      const { container, cursorPositions } = action.payload;
+      const { container, image, cursorPositions } = action.payload;
       const { position } = state;
+
+      if (image.isImageTransforming) {
+        return state;
+      }
 
       const cursorPositionX = cursorPositions[0].x;
       const cursorPositionY = cursorPositions[0].y;
