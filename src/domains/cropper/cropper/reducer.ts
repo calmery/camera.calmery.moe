@@ -43,6 +43,7 @@ export type CropperCropperState = {
     previous: number;
     valueAtTransformStart: number;
   };
+  selectedIndex: number;
 };
 
 const initialState: CropperCropperState = {
@@ -72,6 +73,7 @@ const initialState: CropperCropperState = {
     previous: 1,
     valueAtTransformStart: 0,
   },
+  selectedIndex: -1,
 };
 
 // Helper Functions
@@ -258,33 +260,47 @@ export default (state = initialState, action: Actions) => {
       const { freeAspect, scale, scaleX, scaleY } = state;
       const nextFreeAspect = !freeAspect;
 
-      if (nextFreeAspect) {
-        return {
-          ...state,
-          freeAspect: true,
-          scaleX: {
-            ...scaleX,
-            current: scale.current,
-          },
-          scaleY: {
-            ...scaleX,
-            current: scale.current,
-          },
-        };
-      }
-
       return {
         ...state,
-        freeAspect: false,
-        scale: {
-          ...state.scale,
-          current: (scaleX.current < scaleY.current ? scaleX : scaleY).current,
+        freeAspect: true,
+        scaleX: {
+          ...scaleX,
+          current: scale.current,
         },
+        scaleY: {
+          ...scaleX,
+          current: scale.current,
+        },
+        selectedIndex: -1,
       };
+
+      // if (nextFreeAspect) {
+      //   return {
+      //     ...state,
+      //     freeAspect: true,
+      //     scaleX: {
+      //       ...scaleX,
+      //       current: scale.current,
+      //     },
+      //     scaleY: {
+      //       ...scaleX,
+      //       current: scale.current,
+      //     },
+      //   };
+      // }
+
+      // return {
+      //   ...state,
+      //   freeAspect: false,
+      //   scale: {
+      //     ...state.scale,
+      //     current: (scaleX.current < scaleY.current ? scaleX : scaleY).current,
+      //   },
+      // };
     }
 
     case SET_ASPECT_RATIO: {
-      const { widthRatio, heightRatio } = action.payload;
+      const { widthRatio, heightRatio, index } = action.payload;
       const { freeAspect, scale, scaleX, scaleY, width, height } = state;
 
       const currentWidth =
@@ -323,6 +339,8 @@ export default (state = initialState, action: Actions) => {
           ...state.scaleY,
           current: 1,
         },
+        selectedIndex: index,
+        freeAspect: false,
       };
     }
 

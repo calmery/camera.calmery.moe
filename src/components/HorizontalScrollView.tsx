@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 const Container = styled.div`
   width: 100%;
-  overflow: scroll;
+  overflow-y: visible;
+  overflow-x: scroll;
   scrollbar-width: none;
   -ms-overflow-style: none;
 

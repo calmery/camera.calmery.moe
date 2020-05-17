@@ -28,9 +28,13 @@ export const changeFreeAspect = () => ({
   type: CHANGE_FREE_ASPECT,
 });
 
-export const setAspectRatio = (widthRatio: number, heightRatio: number) => ({
+export const setAspectRatio = (
+  index: number,
+  widthRatio: number,
+  heightRatio: number
+) => ({
   type: SET_ASPECT_RATIO,
-  payload: { widthRatio, heightRatio },
+  payload: { index, widthRatio, heightRatio },
 });
 
 export const actions = {

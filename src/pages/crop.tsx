@@ -14,6 +14,7 @@ import { HorizontalScrollView } from "~/components/HorizontalScrollView";
 import { HorizontalScrollViewItem } from "~/components/HorizontalScrollViewItem";
 import ResizeObserver from "resize-observer-polyfill";
 import { Menu } from "~/components/Menu";
+import { Mixin } from "~/styles/mixin";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -49,49 +50,58 @@ const BottomBar = styled.div`
   flex-shrink: 0;
 `;
 
-const AspectRatioContainer = styled.div`
-  display: flex;
-  justify-content: strech;
-  transition: 0.4s ease;
-  width: 365px;
-  &:hover {
-    width: 100px;
-  }
+const Rotate = styled.div`
+  ${Typography.S};
+
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: ${Spacing.l}px;
+  color: ${Colors.black};
 `;
 
-const AspectRatio = styled.div`
-  width: 36px;
+const AspectRatioContainer = styled.div`
+  margin-left: ${Spacing.l}px;
+  margin-bottom: ${Spacing.l}px;
+`;
+
+const AspectRatio = styled.div<{ selected?: boolean }>`
   margin-right: ${Spacing.m}px;
+  cursor: pointer;
+
+  ${({ selected }) =>
+    selected &&
+    css`
+      ${Mixin.clickable};
+    `}
 `;
 
 const AspectRatioIcon = styled.div<{ selected?: boolean }>`
   width: 36px;
   height: 36px;
-  background: ${({ selected }) =>
-    selected ? GradientColors.pinkToBlue : "transparent"};
   border-radius: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  img {
-    filter: ${({ selected }) =>
-      selected ? "brightness(0) invert(1)" : "none"};
-    max-width: 22px;
-    max-height: 22px;
-  }
-`;
 
-const AspectRatioCenter = styled.div`
-  margin: 0 auto;
-  display: flex;
+  ${({ selected }) =>
+    selected &&
+    css`
+      background: ${GradientColors.pinkToBlue};
+
+      img {
+        filter: brightness(0) invert(1);
+      }
+    `}
 `;
 
 const AspectRatioTitle = styled.div<{ selected?: boolean }>`
   ${Typography.XS};
-  text-align: center;
-  margin-top: ${Spacing.xs}px;
+
   font-weight: bold;
   color: ${Colors.gray};
+  text-align: center;
+  margin-top: ${Spacing.xs}px;
+
   ${({ selected }) =>
     selected &&
     css`
@@ -102,18 +112,39 @@ const AspectRatioTitle = styled.div<{ selected?: boolean }>`
     `}
 `;
 
+const aspectRatios = [
+  {
+    w: 1,
+    h: 1,
+  },
+  {
+    w: 3,
+    h: 4,
+  },
+  {
+    w: 4,
+    h: 3,
+  },
+  {
+    w: 9,
+    h: 16,
+  },
+  {
+    w: 16,
+    h: 9,
+  },
+];
+
 const Crop: NextPage = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
-  const freeAspect = useSelector(
-    ({ cropper }: State) => cropper.cropper.freeAspect
-  );
+  const { image, cropper } = useSelector(({ cropper }: State) => cropper);
   const changeFreeAspect = () => dispatch(actions.changeFreeAspect());
   const setImage = (url: string, width: number, height: number) =>
     dispatch(actions.setImage({ url, width, height }));
-  const setAspectRatio = (w: number, h: number) =>
-    dispatch(actions.setAspectRatio(w, h));
+  const setAspectRatio = (index: number, w: number, h: number) =>
+    dispatch(actions.setAspectRatio(index, w, h));
 
   useEffect(() => {
     const e = ref.current!;
@@ -134,6 +165,14 @@ const Crop: NextPage = () => {
     setImage("images/background.jpg", 1500, 1065);
   }, []);
 
+  let rotate = image.rotate.current;
+
+  if (rotate < 0) {
+    rotate = 360 - (Math.abs(rotate) % 360);
+  } else {
+    rotate = rotate % 360;
+  }
+
   return (
     <>
       <Page>
@@ -145,22 +184,59 @@ const Crop: NextPage = () => {
             <CanvasSizeDetector ref={ref} />
           </Canvas>
           <BottomBar>
+            <Rotate>{Math.floor(rotate)}°</Rotate>
             <AspectRatioContainer>
-              <AspectRatioCenter>
-                <AspectRatio>
-                  <AspectRatioIcon selected>
-                    <img src="/images/crop/4-3.svg" />
-                  </AspectRatioIcon>
-                  <AspectRatioTitle selected>4:3</AspectRatioTitle>
-                </AspectRatio>
-
-                <AspectRatio>
-                  <AspectRatioIcon>
-                    <img src="/images/crop/3-4.svg" />
-                  </AspectRatioIcon>
-                  <AspectRatioTitle>3:4</AspectRatioTitle>
-                </AspectRatio>
-              </AspectRatioCenter>
+              <HorizontalScrollView
+                rootElement={(element) => setRootElement(element)}
+              >
+                {rootElement && (
+                  <>
+                    <HorizontalScrollViewItem rootElement={rootElement}>
+                      <AspectRatio
+                        selected={cropper.selectedIndex === -1}
+                        onClick={
+                          cropper.freeAspect ? undefined : changeFreeAspect
+                        }
+                      >
+                        <AspectRatioIcon
+                          selected={cropper.selectedIndex === -1}
+                        >
+                          <img src="/images/crop/free.svg" />
+                        </AspectRatioIcon>
+                        <AspectRatioTitle
+                          selected={cropper.selectedIndex === -1}
+                        >
+                          Free
+                        </AspectRatioTitle>
+                      </AspectRatio>
+                    </HorizontalScrollViewItem>
+                    {aspectRatios.map(({ w, h }, index) => {
+                      return (
+                        <HorizontalScrollViewItem
+                          rootElement={rootElement}
+                          key={index}
+                        >
+                          <AspectRatio
+                            selected={cropper.selectedIndex === index}
+                            onClick={() => setAspectRatio(index, w, h)}
+                          >
+                            <AspectRatioIcon
+                              selected={cropper.selectedIndex === index}
+                            >
+                              <img src={`/images/crop/${w}-${h}.svg`} />
+                            </AspectRatioIcon>
+                            <AspectRatioTitle
+                              selected={cropper.selectedIndex === index}
+                            >
+                              {w}:{h}
+                            </AspectRatioTitle>
+                          </AspectRatio>
+                        </HorizontalScrollViewItem>
+                      );
+                    })}
+                  </>
+                )}
+              </HorizontalScrollView>
             </AspectRatioContainer>
             <Menu />
           </BottomBar>
