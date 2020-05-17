@@ -140,6 +140,34 @@ export const Cropper: React.FC = () => {
         height: `${container.actualHeight}px`,
       }}
     >
+      {/* 画像範囲外のでは枠線が黒のクロップ領域を表示する */}
+
+      <g>
+        <rect
+          fillOpacity="0"
+          stroke="#3c3c3c"
+          strokeWidth="2"
+          strokeDasharray="8 8"
+          width={cropper.width * sx}
+          height={cropper.height * sy}
+          x={cropper.position.x}
+          y={cropper.position.y}
+          onMouseDown={handleOnStartCropperMove}
+          onTouchStart={handleOnStartCropperMove}
+        ></rect>
+
+        <circle
+          fill="#3c3c3c"
+          cx={cropper.position.x + cropper.width * sx}
+          cy={cropper.position.y + cropper.height * sy}
+          r={12 * displayRatio}
+          onMouseDown={handleOnStartCropperTransform}
+          onTouchStart={handleOnStartCropperTransform}
+        ></circle>
+      </g>
+
+      {/* 切り取る対象となる画像 */}
+
       <svg
         width={image.width * image.scale.current}
         height={image.height * image.scale.current}
@@ -160,7 +188,18 @@ export const Cropper: React.FC = () => {
         </g>
       </svg>
 
-      <g clipPath="url(#clip-path-1)">
+      {/* 切り取った画像 */}
+
+      <clipPath id="cropper-clip-path">
+        <rect
+          x={cropper.position.x}
+          y={cropper.position.y}
+          width={cropper.width * sx}
+          height={cropper.height * sy}
+        />
+      </clipPath>
+
+      <g clipPath="url(#cropper-clip-path)">
         <svg
           width={image.width * image.scale.current}
           height={image.height * image.scale.current}
@@ -181,16 +220,21 @@ export const Cropper: React.FC = () => {
         </svg>
       </g>
 
-      <g>
-        <clipPath id="clip-path-1">
-          <rect
-            x={cropper.position.x}
-            y={cropper.position.y}
-            width={cropper.width * sx}
-            height={cropper.height * sy}
-          />
-        </clipPath>
+      {/* 画像の表示領域のみを切り取る */}
 
+      <clipPath id="image-clip-path">
+        <rect
+          width={image.width * image.scale.current}
+          height={image.height * image.scale.current}
+          x={image.position.x}
+          y={image.position.y}
+          transform={`rotate(${image.rotate.current}, ${image.width / 2}, ${
+            image.height / 2
+          })`}
+        />
+      </clipPath>
+
+      <g clipPath="url(#image-clip-path)">
         <rect
           fillOpacity="0"
           stroke="#FFF"
