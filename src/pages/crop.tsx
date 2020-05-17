@@ -13,6 +13,7 @@ import { Typography } from "~/styles/typography";
 import { HorizontalScrollView } from "~/components/HorizontalScrollView";
 import { HorizontalScrollViewItem } from "~/components/HorizontalScrollViewItem";
 import ResizeObserver from "resize-observer-polyfill";
+import { Menu } from "~/components/Menu";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -21,9 +22,8 @@ const FlexColumn = styled.div`
 `;
 
 const ControlBar = styled.div`
-  width: 100%;
   height: 16px;
-  padding: ${Spacing.l}px 0;
+  padding: ${Spacing.l}px;
   flex-shrink: 0;
 
   img {
@@ -33,7 +33,7 @@ const ControlBar = styled.div`
 
 const Canvas = styled.div`
   box-sizing: border-box;
-  padding: 24px 0;
+  padding: 24px;
   flex-grow: 1;
   height: fit-content;
 `;
@@ -46,7 +46,6 @@ const CanvasSizeDetector = styled.div`
 const BottomBar = styled.div`
   width: 100%;
   flex-shrink: 0;
-  display: flex;
 `;
 
 const AspectRatioContainer = styled.div`
@@ -136,7 +135,7 @@ const Crop: NextPage = () => {
 
   return (
     <>
-      <Page margin>
+      <Page>
         <FlexColumn>
           <ControlBar>
             <img src="/images/close.svg" />
@@ -162,6 +161,7 @@ const Crop: NextPage = () => {
                 </AspectRatio>
               </AspectRatioCenter>
             </AspectRatioContainer>
+            <Menu />
           </BottomBar>
         </FlexColumn>
       </Page>

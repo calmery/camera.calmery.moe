@@ -1,72 +1,74 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Colors, GradientColors } from "~/styles/colors";
 import { Spacing } from "~/styles/spacing";
 
 const Container = styled.div`
-  width: 100%;
+  box-sizing: border-box;
   background: ${Colors.white};
   border-top: 1px solid ${Colors.border};
-  bottom: 0;
-  left: 0;
-  right: 0;
-  position: fixed;
-  padding: ${Spacing.s}px ${Spacing.l}px;
-  box-sizing: border-box;
-`;
-
-const Group = styled.div`
-  margin: ${Spacing.s}px 0;
+  padding: ${Spacing.s}px 0;
   display: flex;
-  -webkit-justify-content: space-between;
-
-  &:first-child {
-    margin-right: auto;
-  }
 `;
 
-const FlexContainer = styled.div`
-  display: flex;
-  -webkit-justify-content: center;
-
-  &:first-child {
-    margin-right: auto;
-  }
-`;
-
-const Border = styled.div`
-  width: 2px;
-  height: 100%;
-  background: ${GradientColors.pinkToBlue};
-  border-radius: 50vw;
-  margin: 0 ${Spacing.l}px;
-`;
-
-const Item = styled.object`
+const PrimaryButtons = styled.div`
+  height: 48px;
   margin-left: ${Spacing.l}px;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+`;
 
-  &:first-child {
-    margin-left: 0;
-  }
+const SecondaryButtons = styled.div`
+  height: 48px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+`;
+
+const Divider = styled.div`
+  width: 2px;
+  height: 48px;
+  background: ${GradientColors.pinkToBlue};
+  border-radius: 1px;
+  margin-right: ${Spacing.l}px;
+  flex-shrink: 0;
+`;
+
+const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
+  height: 32px;
+  margin-right: ${Spacing.l}px;
+  pointer-events: none;
+
+  ${({ selected }) =>
+    !selected &&
+    css`
+      // rgba(180, 180, 180, 1);
+      filter: brightness(0) opacity(29.5%);
+    `};
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      opacity: 0.48;
+    `};
 `;
 
 export const Menu = () => {
   return (
     <Container>
-      <Group>
-        <FlexContainer>
-          <Item data="/images/menu/tune.svg" type="image/svg+xml" />
-          <Item data="/images/menu/tune.svg" type="image/svg+xml" />
-          <Item data="/images/menu/tune.svg" type="image/svg+xml" />
-          <Item data="/images/menu/tune.svg" type="image/svg+xml" />
-        </FlexContainer>
-        <FlexContainer>
-          <div>
-            <Border />
-          </div>
-          <Item data="/images/menu/tune.svg" type="image/svg+xml" />
-        </FlexContainer>
-      </Group>
+      <PrimaryButtons>
+        <Icon type="image/svg+xml" data="/images/menu/stickers.svg" />
+        <Icon disabled type="image/svg+xml" data="/images/menu/tune.svg" />
+        <Icon selected type="image/svg+xml" data="/images/menu/crop.svg" />
+        <Icon type="image/svg+xml" data="/images/menu/collage.svg" />
+      </PrimaryButtons>
+
+      <Divider />
+      <SecondaryButtons>
+        <Icon type="image/svg+xml" data="/images/menu/save.svg" />
+      </SecondaryButtons>
     </Container>
   );
 };
