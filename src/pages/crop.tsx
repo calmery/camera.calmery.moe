@@ -27,7 +27,8 @@ const ControlBar = styled.div`
   flex-shrink: 0;
 
   img {
-    height: 100%;
+    width: 16px;
+    height: 16px;
   }
 `;
 
