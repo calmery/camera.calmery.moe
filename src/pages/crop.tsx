@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { NextPage } from "next";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,18 +12,40 @@ import { Colors, GradientColors } from "~/styles/colors";
 import { Typography } from "~/styles/typography";
 import { HorizontalScrollView } from "~/components/HorizontalScrollView";
 import { HorizontalScrollViewItem } from "~/components/HorizontalScrollViewItem";
+import ResizeObserver from "resize-observer-polyfill";
+
+const FlexColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
 
 const ControlBar = styled.div`
+  width: 100%;
   height: 16px;
-  margin: ${Spacing.l}px 0;
+  padding: ${Spacing.l}px 0;
+  flex-shrink: 0;
 
   img {
     height: 100%;
   }
 `;
 
+const Canvas = styled.div`
+  box-sizing: border-box;
+  padding: 24px 0;
+  flex-grow: 1;
+  height: fit-content;
+`;
+
+const CanvasSizeDetector = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
 const BottomBar = styled.div`
   width: 100%;
+  flex-shrink: 0;
   display: flex;
 `;
 
@@ -32,7 +54,6 @@ const AspectRatioContainer = styled.div`
   justify-content: strech;
   transition: 0.4s ease;
   width: 365px;
-
   &:hover {
     width: 100px;
   }
@@ -46,15 +67,12 @@ const AspectRatio = styled.div`
 const AspectRatioIcon = styled.div<{ selected?: boolean }>`
   width: 36px;
   height: 36px;
-
   background: ${({ selected }) =>
     selected ? GradientColors.pinkToBlue : "transparent"};
   border-radius: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   img {
     filter: ${({ selected }) =>
       selected ? "brightness(0) invert(1)" : "none"};
@@ -70,12 +88,10 @@ const AspectRatioCenter = styled.div`
 
 const AspectRatioTitle = styled.div<{ selected?: boolean }>`
   ${Typography.XS};
-
   text-align: center;
   margin-top: ${Spacing.xs}px;
   font-weight: bold;
   color: ${Colors.gray};
-
   ${({ selected }) =>
     selected &&
     css`
@@ -86,16 +102,8 @@ const AspectRatioTitle = styled.div<{ selected?: boolean }>`
     `}
 `;
 
-const H1 = styled.div`
-  background: #ff6015;
-  color: #fff;
-  position: sticky;
-  left: 50%;
-  margin-left: -50px;
-  width: 100px;
-`;
-
 const Crop: NextPage = () => {
+  const ref = useRef<HTMLDivElement>(null);
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
   const freeAspect = useSelector(
@@ -107,68 +115,58 @@ const Crop: NextPage = () => {
   const setAspectRatio = (w: number, h: number) =>
     dispatch(actions.setAspectRatio(w, h));
 
+  useEffect(() => {
+    const e = ref.current!;
+    const resizeObserver = new ResizeObserver(() => {
+      dispatch(actions.setSvgPositionAndSize(e.getBoundingClientRect()));
+    });
+
+    resizeObserver.observe(e);
+
+    return () => {
+      resizeObserver.unobserve(e);
+    };
+  }, []);
+
   // Debug
 
   useEffect(() => {
     setImage("images/background.jpg", 1500, 1065);
   }, []);
 
-  const data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
   return (
-    <Page margin>
-      <ControlBar>
-        <img src="/images/close.svg" />
-      </ControlBar>
-      <div>
-        <Cropper />
-      </div>
+    <>
+      <Page margin>
+        <FlexColumn>
+          <ControlBar>
+            <img src="/images/close.svg" />
+          </ControlBar>
+          <Canvas>
+            <CanvasSizeDetector ref={ref} />
+          </Canvas>
+          <BottomBar>
+            <AspectRatioContainer>
+              <AspectRatioCenter>
+                <AspectRatio>
+                  <AspectRatioIcon selected>
+                    <img src="/images/crop/4-3.svg" />
+                  </AspectRatioIcon>
+                  <AspectRatioTitle selected>4:3</AspectRatioTitle>
+                </AspectRatio>
 
-      <HorizontalScrollView rootElement={(element) => setRootElement(element)}>
-        <div>
-          <H1>Hello</H1>
-          <div style={{ display: "flex" }}>
-            {rootElement &&
-              data.map((props, index) => (
-                <HorizontalScrollViewItem key={index} rootElement={rootElement}>
-                  <div style={{ width: "100px" }}>{props}</div>
-                </HorizontalScrollViewItem>
-              ))}
-          </div>
-        </div>
-        <div>
-          <H1>Hello</H1>
-          <div style={{ display: "flex" }}>
-            {rootElement &&
-              data.map((props, index) => (
-                <HorizontalScrollViewItem key={index} rootElement={rootElement}>
-                  <div style={{ width: "100px" }}>{props}</div>
-                </HorizontalScrollViewItem>
-              ))}
-          </div>
-        </div>
-      </HorizontalScrollView>
-
-      <BottomBar>
-        <AspectRatioContainer>
-          <AspectRatioCenter>
-            <AspectRatio>
-              <AspectRatioIcon selected>
-                <img src="/images/crop/4-3.svg" />
-              </AspectRatioIcon>
-              <AspectRatioTitle selected>4:3</AspectRatioTitle>
-            </AspectRatio>
-
-            <AspectRatio>
-              <AspectRatioIcon>
-                <img src="/images/crop/3-4.svg" />
-              </AspectRatioIcon>
-              <AspectRatioTitle>3:4</AspectRatioTitle>
-            </AspectRatio>
-          </AspectRatioCenter>
-        </AspectRatioContainer>
-      </BottomBar>
-    </Page>
+                <AspectRatio>
+                  <AspectRatioIcon>
+                    <img src="/images/crop/3-4.svg" />
+                  </AspectRatioIcon>
+                  <AspectRatioTitle>3:4</AspectRatioTitle>
+                </AspectRatio>
+              </AspectRatioCenter>
+            </AspectRatioContainer>
+          </BottomBar>
+        </FlexColumn>
+      </Page>
+      <Cropper />
+    </>
   );
 };
 

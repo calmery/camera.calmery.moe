@@ -120,6 +120,13 @@ export const Cropper: React.FC = () => {
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       overflow="visible"
+      style={{
+        position: "fixed",
+        top: `${container.actualY}px`,
+        left: `${container.actualX}px`,
+        width: `${container.actualWidth}px`,
+        height: `${container.actualHeight}px`,
+      }}
     >
       <svg
         width={image.width * image.scale.current}
