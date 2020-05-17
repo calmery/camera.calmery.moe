@@ -60,13 +60,24 @@ const Rotate = styled.div`
 `;
 
 const AspectRatioContainer = styled.div`
-  margin-left: ${Spacing.l}px;
   margin-bottom: ${Spacing.l}px;
 `;
 
 const AspectRatio = styled.div<{ selected?: boolean }>`
   margin-right: ${Spacing.m}px;
   cursor: pointer;
+
+  ${({ selected }) =>
+    selected &&
+    css`
+      ${Mixin.clickable};
+    `}
+`;
+
+const AspectRatioFree = styled.div<{ selected?: boolean }>`
+  margin-right: ${Spacing.m}px;
+  cursor: pointer;
+  margin-left: ${Spacing.l}px;
 
   ${({ selected }) =>
     selected &&
@@ -133,6 +144,10 @@ const aspectRatios = [
     w: 16,
     h: 9,
   },
+  {
+    w: 3,
+    h: 1,
+  },
 ];
 
 const Crop: NextPage = () => {
@@ -192,7 +207,7 @@ const Crop: NextPage = () => {
                 {rootElement && (
                   <>
                     <HorizontalScrollViewItem rootElement={rootElement}>
-                      <AspectRatio
+                      <AspectRatioFree
                         selected={cropper.selectedIndex === -1}
                         onClick={
                           cropper.freeAspect ? undefined : changeFreeAspect
@@ -208,7 +223,7 @@ const Crop: NextPage = () => {
                         >
                           Free
                         </AspectRatioTitle>
-                      </AspectRatio>
+                      </AspectRatioFree>
                     </HorizontalScrollViewItem>
                     {aspectRatios.map(({ w, h }, index) => {
                       return (
