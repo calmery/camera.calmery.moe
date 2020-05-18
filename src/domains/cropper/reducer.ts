@@ -1,8 +1,7 @@
 import { Actions } from "./actions";
 import * as types from "./types";
-import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
-import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
 import { angleBetweenTwoPoints } from "~/utils/angle-between-two-points";
+import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
 
 const CROPPER_DEFAULT_WIDTH = 320;
 const CROPPER_DEFAULT_HEIGHT = 180;

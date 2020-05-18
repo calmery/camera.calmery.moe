@@ -1,5 +1,5 @@
-import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 import * as types from "./types";
+import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 
 // Container
 
