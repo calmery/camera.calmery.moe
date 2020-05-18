@@ -1,12 +1,21 @@
+import * as uuid from "uuid";
 import { Actions } from "./actions";
 import { canvasUserLayerFrame } from "./frames";
+import * as types from "./types";
+import {
+  calculateCanvasUserLayerRelativeCoordinates,
+  progressCanvasStickerLayerTransform,
+} from "./utils";
 import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
-import { angleBetweenTwoPoints } from "~/utils/angle-between-two-points";
-import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
-import * as uuid from "uuid";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
-import * as types from "./types";
+import { angleBetweenTwoPoints } from "~/utils/angle-between-two-points";
+import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
+
+// Constants
+
+const CANVAS_STICKER_LAYER_MIN_WIDTH = 200;
+const CANVAS_STICKER_LAYER_MIN_HEIGHT = 200;
 
 // Container Reducer
 
@@ -101,56 +110,6 @@ const stickerInitialState: CanvasStickersState = {
   layers: [],
 };
 
-const calculateSvgRelativeCoordinates = (
-  container: CanvasContainerState,
-  x: number,
-  y: number
-) => {
-  const {
-    actualX: canvasBaseX,
-    actualY: canvasBaseY,
-    displayRatio,
-  } = container;
-
-  return {
-    x: (x - canvasBaseX) * displayRatio,
-    y: (y - canvasBaseY) * displayRatio,
-  };
-};
-
-const progressCanvasStickerLayerTransform = (
-  state: CanvasStickersState,
-  x: number,
-  y: number,
-  nextScale: number,
-  nextAngle: number
-): CanvasStickersState => {
-  const { layers } = state;
-  const sticker = layers[layers.length - 1];
-
-  layers[layers.length - 1] = {
-    ...sticker,
-    x,
-    y,
-    scale: {
-      ...sticker.scale,
-      current: nextScale,
-    },
-    rotate: {
-      ...sticker.rotate,
-      current: nextAngle,
-    },
-  };
-
-  return {
-    ...state,
-    layers,
-  };
-};
-
-const CANVAS_STICKER_LAYER_MIN_WIDTH = 200;
-const CANVAS_STICKER_LAYER_MIN_HEIGHT = 200;
-
 const stickerReducer = (
   parentState: CanvasState,
   state = stickerInitialState,
@@ -239,11 +198,14 @@ const stickerReducer = (
       }
 
       const [{ x, y }] = cursorPositions;
-      const { x: relativeX, y: relativeY } = calculateSvgRelativeCoordinates(
-        container,
-        x,
-        y
-      );
+      const {
+        actualX: canvasBaseX,
+        actualY: canvasBaseY,
+        displayRatio,
+      } = container;
+
+      const relativeX = (x - canvasBaseX) * displayRatio;
+      const relativeY = (y - canvasBaseY) * displayRatio;
 
       return {
         ...state,
@@ -261,11 +223,14 @@ const stickerReducer = (
       const centerX = sticker.x + (sticker.width * sticker.scale.current) / 2;
       const centerY = sticker.y + (sticker.height * sticker.scale.current) / 2;
 
-      const { x: relativeX, y: relativeY } = calculateSvgRelativeCoordinates(
-        container,
-        x,
-        y
-      );
+      const {
+        actualX: canvasBaseX,
+        actualY: canvasBaseY,
+        displayRatio,
+      } = container;
+
+      const relativeX = (x - canvasBaseX) * displayRatio;
+      const relativeY = (y - canvasBaseY) * displayRatio;
 
       layers[layers.length - 1] = {
         ...sticker,
@@ -347,22 +312,28 @@ const stickerReducer = (
           nextX = x + (width * scale.current - width * nextScale) / 2;
           nextY = y + (height * scale.current - height * nextScale) / 2;
 
-          return progressCanvasStickerLayerTransform(
-            state,
-            nextX,
-            nextY,
-            nextScale,
-            nextAngle
-          );
+          return {
+            ...state,
+            layers: progressCanvasStickerLayerTransform(
+              state.layers,
+              nextX,
+              nextY,
+              nextScale,
+              nextAngle
+            ),
+          };
         }
 
-        return progressCanvasStickerLayerTransform(
-          state,
-          nextX,
-          nextY,
-          scale.current,
-          nextAngle
-        );
+        return {
+          ...state,
+          layers: progressCanvasStickerLayerTransform(
+            state.layers,
+            nextX,
+            nextY,
+            scale.current,
+            nextAngle
+          ),
+        };
       }
 
       if (isDragging) {
@@ -411,17 +382,6 @@ const userInitialState: CanvasUsersState = {
   layers: [],
   frames: [],
 };
-
-const calculateCanvasUserLayerRelativeCoordinates = (
-  displayRatio: number,
-  clipPathX: number,
-  clipPathY: number,
-  x: number,
-  y: number
-) => ({
-  x: (x - clipPathX) * displayRatio,
-  y: (y - clipPathY) * displayRatio,
-});
 
 const userReducer = (
   parentState: CanvasState,
