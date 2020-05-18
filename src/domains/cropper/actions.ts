@@ -31,13 +31,13 @@ const setSvgPositionAndSize = ({
   };
 };
 
-export const containerActions = {
+const containerActions = {
   setSvgPositionAndSize,
 };
 
 // Cropper
 
-export const startCropperMoving = (cursorPositions: CursorPosition[]) => {
+const startCropperMoving = (cursorPositions: CursorPosition[]) => {
   const { container, image } = getOrCreateStore().getState().cropper;
 
   return {
@@ -46,7 +46,7 @@ export const startCropperMoving = (cursorPositions: CursorPosition[]) => {
   };
 };
 
-export const startCropperTransforming = (cursorPositions: CursorPosition[]) => {
+const startCropperTransforming = (cursorPositions: CursorPosition[]) => {
   const { container, image } = getOrCreateStore().getState().cropper;
 
   return {
@@ -55,11 +55,11 @@ export const startCropperTransforming = (cursorPositions: CursorPosition[]) => {
   };
 };
 
-export const changeFreeAspect = () => ({
+const changeFreeAspect = () => ({
   type: types.CHANGE_FREE_ASPECT,
 });
 
-export const setAspectRatio = (
+const setAspectRatio = (
   index: number,
   widthRatio: number,
   heightRatio: number
@@ -68,7 +68,7 @@ export const setAspectRatio = (
   payload: { index, widthRatio, heightRatio },
 });
 
-export const cropperActions = {
+const cropperActions = {
   startCropperMoving,
   startCropperTransforming,
   changeFreeAspect,
@@ -77,28 +77,24 @@ export const cropperActions = {
 
 // Images
 
-export const setImage = (payload: {
-  url: string;
-  width: number;
-  height: number;
-}) => ({
+const setImage = (payload: { url: string; width: number; height: number }) => ({
   type: types.SET_IMAGE,
   payload,
 });
 
-export const startImageTransforming = (payload: CursorPosition[]) => ({
+const startImageTransforming = (payload: CursorPosition[]) => ({
   type: types.START_IMAGE_TRANSFORMING,
   payload,
 });
 
-export const imageActions = {
+const imageActions = {
   setImage,
   startImageTransforming,
 };
 
 // Common
 
-export const tick = (cursorPositions: CursorPosition[]) => {
+const tick = (cursorPositions: CursorPosition[]) => {
   const { container } = getOrCreateStore().getState().cropper;
 
   return {
@@ -107,7 +103,7 @@ export const tick = (cursorPositions: CursorPosition[]) => {
   };
 };
 
-export const complete = () => ({
+const complete = () => ({
   type: types.COMPLETE,
 });
 
