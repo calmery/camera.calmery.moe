@@ -10,16 +10,6 @@ import * as types from "./types";
 
 // Container Reducer
 
-export type CanvasContainerState = {
-  width: number;
-  height: number;
-  actualX: number;
-  actualY: number;
-  actualWidth: number;
-  actualHeight: number;
-  displayRatio: number;
-};
-
 const containerInitialState: CanvasContainerState = {
   width: 0,
   height: 0,
@@ -98,15 +88,6 @@ const containerReducer = (
 };
 
 // Sticker Reducer
-
-export type CanvasStickersState = {
-  isDragging: boolean;
-  isTransforming: boolean;
-  isMultiTouching: boolean;
-  referenceX: number;
-  referenceY: number;
-  layers: CanvasStickerLayer[];
-};
 
 const stickerInitialState: CanvasStickersState = {
   isDragging: false,
@@ -415,15 +396,6 @@ const stickerReducer = (
 
 // User Reducer
 
-export type CanvasUsersState = {
-  isDragging: boolean;
-  canDragging: boolean;
-  differenceFromStartingX: number;
-  differenceFromStartingY: number;
-  layers: (CanvasUserLayer | null)[];
-  frames: CanvasUserFrame[];
-};
-
 const userInitialState: CanvasUsersState = {
   isDragging: false,
   canDragging: false,
@@ -681,24 +653,53 @@ const userReducer = (
   }
 };
 
-// Common Reducer
+// Types
 
-export type CanvasState = {
+export interface CanvasContainerState {
+  width: number;
+  height: number;
+  actualX: number;
+  actualY: number;
+  actualWidth: number;
+  actualHeight: number;
+  displayRatio: number;
+}
+
+export interface CanvasStickersState {
+  isDragging: boolean;
+  isTransforming: boolean;
+  isMultiTouching: boolean;
+  referenceX: number;
+  referenceY: number;
+  layers: CanvasStickerLayer[];
+}
+
+export interface CanvasUsersState {
+  isDragging: boolean;
+  canDragging: boolean;
+  differenceFromStartingX: number;
+  differenceFromStartingY: number;
+  layers: (CanvasUserLayer | null)[];
+  frames: CanvasUserFrame[];
+}
+
+export interface CanvasState {
   container: CanvasContainerState;
   stickers: CanvasStickersState;
   users: CanvasUsersState;
-};
+}
 
-const initialState = {
-  container: containerInitialState,
-  stickers: stickerInitialState,
-  users: userInitialState,
-};
+// Main
 
-export default (state = initialState, action: Actions): CanvasState => {
-  return {
-    container: containerReducer(state.container, action),
-    stickers: stickerReducer(state.stickers, action),
-    users: userReducer(state.users, action),
-  };
-};
+export default (
+  state = {
+    container: containerInitialState,
+    stickers: stickerInitialState,
+    users: userInitialState,
+  },
+  action: Actions
+): CanvasState => ({
+  container: containerReducer(state.container, action),
+  stickers: stickerReducer(state.stickers, action),
+  users: userReducer(state.users, action),
+});
