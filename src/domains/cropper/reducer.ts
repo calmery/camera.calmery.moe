@@ -25,7 +25,7 @@ const containerReducer = (
   action: Actions
 ) => {
   switch (action.type) {
-    case types.SET_SVG_POSITION_AND_SIZE: {
+    case types.CROPPER_CONTAINER_UPDATE_RECT: {
       const { image } = parentState;
       const { x, y, width, height } = action.payload;
       const { width: imageWidth, height: imageHeight } = image;
@@ -242,7 +242,7 @@ const cropperReducer = (
   action: Actions
 ) => {
   switch (action.type) {
-    case types.START_CROPPER_MOVING: {
+    case types.CROPPER_CROPPER_START_DRAG: {
       const { position } = state;
       const { container, image } = parentState;
       const { cursorPositions } = action.payload;
@@ -271,7 +271,7 @@ const cropperReducer = (
       };
     }
 
-    case types.START_CROPPER_TRANSFORMING: {
+    case types.CROPPER_CROPPER_START_TRANSFORM: {
       const { container, image } = parentState;
       const { cursorPositions } = action.payload;
       const { position } = state;
@@ -313,26 +313,7 @@ const cropperReducer = (
       };
     }
 
-    case types.CHANGE_FREE_ASPECT: {
-      const { freeAspect, scale, scaleX, scaleY } = state;
-      const nextFreeAspect = !freeAspect;
-
-      return {
-        ...state,
-        freeAspect: true,
-        scaleX: {
-          ...scaleX,
-          current: scale.current,
-        },
-        scaleY: {
-          ...scaleX,
-          current: scale.current,
-        },
-        selectedIndex: -1,
-      };
-    }
-
-    case types.SET_ASPECT_RATIO: {
+    case types.CROPPER_CROPPER_CHANGE_ASPECT_RATIO: {
       const { widthRatio, heightRatio, index } = action.payload;
       const { freeAspect, scale, scaleX, scaleY, width, height } = state;
 
@@ -377,7 +358,7 @@ const cropperReducer = (
       };
     }
 
-    case types.TICK: {
+    case types.CROPPER_TICK: {
       const { container } = parentState;
       const { cursorPositions } = action.payload;
       const { isCropperTransforming, isCropperMoving } = state;
@@ -393,7 +374,7 @@ const cropperReducer = (
       return state;
     }
 
-    case types.COMPLETE:
+    case types.CROPPER_COMPLETE:
       return {
         ...state,
         isCropperMoving: false,
@@ -457,7 +438,7 @@ const imageReducer = (
   action: Actions
 ) => {
   switch (action.type) {
-    case types.SET_IMAGE: {
+    case types.CROPPER_IMAGE_INITIALIZE: {
       const { url, width, height } = action.payload;
 
       return {
@@ -482,7 +463,7 @@ const imageReducer = (
       };
     }
 
-    case types.START_IMAGE_TRANSFORMING: {
+    case types.CROPPER_IMAGE_START_TRANSFORM: {
       const positions = action.payload;
 
       if (positions.length < 2) {
@@ -515,7 +496,7 @@ const imageReducer = (
       };
     }
 
-    case types.TICK: {
+    case types.CROPPER_TICK: {
       const { cursorPositions } = action.payload;
       const { rotate, isImageTransforming } = state;
 
@@ -560,7 +541,7 @@ const imageReducer = (
       };
     }
 
-    case types.COMPLETE:
+    case types.CROPPER_COMPLETE:
       return {
         ...state,
         isImageTransforming: false,

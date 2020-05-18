@@ -3,7 +3,7 @@ import * as types from "./types";
 
 // Container
 
-const setSvgPositionAndSize = ({
+const updateCropperContainerRect = ({
   x,
   y,
   width,
@@ -14,7 +14,7 @@ const setSvgPositionAndSize = ({
   width: number;
   height: number;
 }) => ({
-  type: types.SET_SVG_POSITION_AND_SIZE,
+  type: types.CROPPER_CONTAINER_UPDATE_RECT,
   payload: {
     x,
     y,
@@ -23,76 +23,68 @@ const setSvgPositionAndSize = ({
   },
 });
 
-const containerActions = {
-  setSvgPositionAndSize,
-};
-
 // Cropper
 
-const startCropperMoving = (cursorPositions: CursorPosition[]) => ({
-  type: types.START_CROPPER_MOVING,
+const startCropperCropperDrag = (cursorPositions: CursorPosition[]) => ({
+  type: types.CROPPER_CROPPER_START_DRAG,
   payload: { cursorPositions },
 });
 
-const startCropperTransforming = (cursorPositions: CursorPosition[]) => ({
-  type: types.START_CROPPER_TRANSFORMING,
+const startCropperCropperTransform = (cursorPositions: CursorPosition[]) => ({
+  type: types.CROPPER_CROPPER_START_TRANSFORM,
   payload: { cursorPositions },
 });
 
-const changeFreeAspect = () => ({
-  type: types.CHANGE_FREE_ASPECT,
-});
-
-const setAspectRatio = (
+const changeCropperCropperAspectRatio = (
   index: number,
   widthRatio: number,
   heightRatio: number
 ) => ({
-  type: types.SET_ASPECT_RATIO,
+  type: types.CROPPER_CROPPER_CHANGE_ASPECT_RATIO,
   payload: { index, widthRatio, heightRatio },
 });
 
-const cropperActions = {
-  startCropperMoving,
-  startCropperTransforming,
-  changeFreeAspect,
-  setAspectRatio,
-};
-
 // Images
 
-const setImage = (payload: { url: string; width: number; height: number }) => ({
-  type: types.SET_IMAGE,
+const initializeCropperImage = (payload: {
+  url: string;
+  width: number;
+  height: number;
+}) => ({
+  type: types.CROPPER_IMAGE_INITIALIZE,
   payload,
 });
 
-const startImageTransforming = (payload: CursorPosition[]) => ({
-  type: types.START_IMAGE_TRANSFORMING,
+const startCropperImageTransform = (payload: CursorPosition[]) => ({
+  type: types.CROPPER_IMAGE_START_TRANSFORM,
   payload,
 });
 
 const imageActions = {
-  setImage,
-  startImageTransforming,
+  initializeCropperImage,
+  startCropperImageTransform,
 };
 
 // Common
 
-const tick = (cursorPositions: CursorPosition[]) => ({
-  type: types.TICK,
+const tickCropper = (cursorPositions: CursorPosition[]) => ({
+  type: types.CROPPER_TICK,
   payload: { cursorPositions },
 });
 
-const complete = () => ({
-  type: types.COMPLETE,
+const completeCropper = () => ({
+  type: types.CROPPER_COMPLETE,
 });
 
 export const actions = {
-  ...containerActions,
-  ...cropperActions,
-  ...imageActions,
-  tick,
-  complete,
+  updateCropperContainerRect,
+  startCropperCropperDrag,
+  startCropperCropperTransform,
+  changeCropperCropperAspectRatio,
+  initializeCropperImage,
+  startCropperImageTransform,
+  tickCropper,
+  completeCropper,
 };
 
 export type Actions = ReturnType<typeof actions[keyof typeof actions]>;

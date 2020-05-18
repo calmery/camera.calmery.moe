@@ -18,21 +18,22 @@ export const Cropper: React.FC = () => {
       event.preventDefault();
       event.stopPropagation();
 
-      dispatch(actions.tick(convertEventToCursorPositions(event)));
+      dispatch(actions.tickCropper(convertEventToCursorPositions(event)));
     },
     [dispatch]
   );
 
-  const handleOnComplete = useCallback(() => dispatch(actions.complete()), [
-    dispatch,
-  ]);
+  const handleOnComplete = useCallback(
+    () => dispatch(actions.completeCropper()),
+    [dispatch]
+  );
 
   // Image Events
 
   const handleOnStartImageTransform = useCallback(
     (event: TouchEvent) => {
       dispatch(
-        actions.startImageTransforming(convertEventToCursorPositions(event))
+        actions.startCropperImageTransform(convertEventToCursorPositions(event))
       );
     },
     [dispatch]
@@ -43,7 +44,7 @@ export const Cropper: React.FC = () => {
   const handleOnStartCropperMove = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
       dispatch(
-        actions.startCropperMoving(convertEventToCursorPositions(event))
+        actions.startCropperCropperDrag(convertEventToCursorPositions(event))
       );
     },
     [dispatch]
@@ -52,7 +53,9 @@ export const Cropper: React.FC = () => {
   const handleOnStartCropperTransform = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
       dispatch(
-        actions.startCropperTransforming(convertEventToCursorPositions(event))
+        actions.startCropperCropperTransform(
+          convertEventToCursorPositions(event)
+        )
       );
     },
     [dispatch]

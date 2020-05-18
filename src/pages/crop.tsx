@@ -155,16 +155,18 @@ const Crop: NextPage = () => {
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
   const { image, cropper } = useSelector(({ cropper }: State) => cropper);
-  const changeFreeAspect = () => dispatch(actions.changeFreeAspect());
-  const setImage = (url: string, width: number, height: number) =>
-    dispatch(actions.setImage({ url, width, height }));
-  const setAspectRatio = (index: number, w: number, h: number) =>
-    dispatch(actions.setAspectRatio(index, w, h));
+  const initializeCropperImage = (url: string, width: number, height: number) =>
+    dispatch(actions.initializeCropperImage({ url, width, height }));
+  const changeCropperCropperAspectRatio = (
+    index: number,
+    w: number,
+    h: number
+  ) => dispatch(actions.changeCropperCropperAspectRatio(index, w, h));
 
   useEffect(() => {
     const e = ref.current!;
     const resizeObserver = new ResizeObserver(() => {
-      dispatch(actions.setSvgPositionAndSize(e.getBoundingClientRect()));
+      dispatch(actions.updateCropperContainerRect(e.getBoundingClientRect()));
     });
 
     resizeObserver.observe(e);
@@ -177,7 +179,7 @@ const Crop: NextPage = () => {
   // Debug
 
   useEffect(() => {
-    setImage("images/background.jpg", 1500, 1065);
+    initializeCropperImage("images/background.jpg", 1500, 1065);
   }, []);
 
   let rotate = image.rotate.current;
@@ -210,7 +212,10 @@ const Crop: NextPage = () => {
                       <AspectRatioFree
                         selected={cropper.selectedIndex === -1}
                         onClick={
-                          cropper.freeAspect ? undefined : changeFreeAspect
+                          // ToDo: FreeAspect を true にする処理が必要になる
+                          () => {
+                            console.log;
+                          }
                         }
                       >
                         <AspectRatioIcon
@@ -233,7 +238,9 @@ const Crop: NextPage = () => {
                         >
                           <AspectRatio
                             selected={cropper.selectedIndex === index}
-                            onClick={() => setAspectRatio(index, w, h)}
+                            onClick={() =>
+                              changeCropperCropperAspectRatio(index, w, h)
+                            }
                           >
                             <AspectRatioIcon
                               selected={cropper.selectedIndex === index}
@@ -268,15 +275,15 @@ const Crop: NextPage = () => {
         defaultChecked={freeAspect}
         onChange={() => changeFreeAspect()}
       />
-      <button onClick={() => setAspectRatio(16, 9)}>16:9</button>
-      <button onClick={() => setAspectRatio(9, 16)}>9:16</button>
-      <button onClick={() => setAspectRatio(1, 1)}>1:1</button>
-      <button onClick={() => setAspectRatio(4, 3)}>4:3</button>
-      <button onClick={() => setAspectRatio(3, 4)}>3:4</button>
-      <button onClick={() => setImage("images/background.jpg", 1500, 1065)}>
+      <button onClick={() => changeCropperCropperAspectRatio(16, 9)}>16:9</button>
+      <button onClick={() => changeCropperCropperAspectRatio(9, 16)}>9:16</button>
+      <button onClick={() => changeCropperCropperAspectRatio(1, 1)}>1:1</button>
+      <button onClick={() => changeCropperCropperAspectRatio(4, 3)}>4:3</button>
+      <button onClick={() => changeCropperCropperAspectRatio(3, 4)}>3:4</button>
+      <button onClick={() => initializeCropperImage("images/background.jpg", 1500, 1065)}>
         Image 1
       </button>
-      <button onClick={() => setImage("images/background-2.jpg", 1000, 333)}>
+      <button onClick={() => initializeCropperImage("images/background-2.jpg", 1000, 333)}>
         Image 2
       </button>
       */
