@@ -4,16 +4,9 @@ import { CanvasUserLayerFrame } from "./frames";
 import { getOrCreateStore } from "~/domains";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 import { checkAndResizeImage } from "~/utils/check-and-resize-image";
-
-export const TICK = "CANVAS/TICK" as const;
-export const COMPLETE = "CANVAS/COMPLETE" as const;
-export const SET_FRAME = "CANVAS/SET_FRAME" as const;
-export const ADD_USER_IMAGE_AND_SET_FRAME = "CANVAS/ADD_USER_IMAGE_AND_SET_FRAME" as const;
-export const SET_DEFAULT_FRAME = "CANVAS/SET_DEFAULT_FRAME" as const;
+import * as types from "./types";
 
 // Container Actions
-
-export const SET_SVG_POSITION_AND_SIZE = "CANVAS/CONTAINER/SET_SVG_POSITION_AND_SIZE" as const;
 
 const setSvgPositionAndSize = ({
   x,
@@ -26,7 +19,7 @@ const setSvgPositionAndSize = ({
   width: number;
   height: number;
 }) => ({
-  type: SET_SVG_POSITION_AND_SIZE,
+  type: types.SET_SVG_POSITION_AND_SIZE,
   payload: {
     x,
     y,
@@ -41,27 +34,21 @@ const containerActions = {
 
 // Sticker Actions
 
-export const ADD = "CANVAS/CANVAS_STICKER_LAYER/ADD" as const;
-export const REMOVE = "CANVAS/CANVAS_SRICKER_LAYER/REMOVE" as const;
-export const SET_ACTIVE = "CANVAS/CANVAS_STICKER_LAYER/SET_ACTIVE" as const;
-export const START_DRAG = "CANVAS/CANVAS_STICKER_LAYER/START_DRAG" as const;
-export const START_TRANSFORM = "CANVAS/CANVAS_STICKER_LAYER/START_TRANSFORM" as const;
-
 export const addCanvasStickerLayer = (
   dataUrl: string,
   width: number,
   height: number
 ) => ({
-  type: ADD,
+  type: types.ADD,
   payload: { dataUrl, width, height },
 });
 
 export const removeCanvasStickerLayer = () => ({
-  type: REMOVE,
+  type: types.REMOVE,
 });
 
 export const setCanvasStickerLayerActive = (index: number) => ({
-  type: SET_ACTIVE,
+  type: types.SET_ACTIVE,
   payload: { index },
 });
 
@@ -69,7 +56,7 @@ export const startCanvasStickerLayerTransform = (x: number, y: number) => {
   const { container } = getOrCreateStore().getState().canvas;
 
   return {
-    type: START_TRANSFORM,
+    type: types.START_TRANSFORM,
     payload: { x, y, container },
   };
 };
@@ -80,7 +67,7 @@ export const startCanvasStickerLayerDrag = (
   const { container } = getOrCreateStore().getState().canvas;
 
   return {
-    type: START_DRAG,
+    type: types.START_DRAG,
     payload: { cursorPositions, container },
   };
 };
@@ -135,11 +122,6 @@ const stickerThunkActions = {
 // User Actions
 
 import { FeColorMatrix } from "~/types/FeColorMatrix";
-export const USER_ADD = "CANVAS/CANVAS_USER_LAYER/USER_ADD" as const;
-export const USER_REMOVE = "CANVAS/CANVAS_USER_LAYER/USER_REMOVE" as const;
-export const USER_START_DRAG = "CANVAS/CANVAS_USER_LAYER/USER_START_DRAG" as const;
-export const USER_SET_POSITION = "CANVAS/CANVAS_USER_LAYER/USER_SET_POSITION" as const;
-export const FILTER_SET_VALUE = "CANVAS/CANVAS_FILTER/SET_VALUE" as const;
 
 export const addCanvasUserLayer = (
   index: number,
@@ -147,7 +129,7 @@ export const addCanvasUserLayer = (
   width: number,
   height: number
 ) => ({
-  type: USER_ADD,
+  type: types.USER_ADD,
   payload: {
     index,
     dataUrl,
@@ -157,7 +139,7 @@ export const addCanvasUserLayer = (
 });
 
 export const removeCanvasUserLayer = (index: number) => ({
-  type: USER_REMOVE,
+  type: types.USER_REMOVE,
   payload: { index },
 });
 
@@ -170,7 +152,7 @@ export const startCanvasUserLayerDrag = (
   const { container } = getOrCreateStore().getState().canvas;
 
   return {
-    type: USER_START_DRAG,
+    type: types.USER_START_DRAG,
     payload: {
       index,
       clipPathX,
@@ -190,7 +172,7 @@ export const setCanvasUserLayerPosition = (
   const { container } = getOrCreateStore().getState().canvas;
 
   return {
-    type: USER_SET_POSITION,
+    type: types.USER_SET_POSITION,
     payload: {
       index,
       clipPathX,
@@ -206,7 +188,7 @@ export const setUserLayerFilterValue = (
   type: FeColorMatrix,
   value: number
 ) => ({
-  type: FILTER_SET_VALUE,
+  type: types.FILTER_SET_VALUE,
   payload: {
     index,
     type,
@@ -266,17 +248,17 @@ export const tick = (cursorPositions: CursorPosition[]) => {
   const { container } = getOrCreateStore().getState().canvas;
 
   return {
-    type: TICK,
+    type: types.TICK,
     payload: { container, cursorPositions },
   };
 };
 
 export const complete = () => ({
-  type: COMPLETE,
+  type: types.COMPLETE,
 });
 
 export const setFrame = (frame: CanvasUserLayerFrame, index: number) => ({
-  type: SET_FRAME,
+  type: types.SET_FRAME,
   payload: { frame, index },
 });
 
@@ -284,7 +266,7 @@ export const setDefaultFrame = () => {
   const { layers } = getOrCreateStore().getState().canvas.users;
 
   return {
-    type: SET_DEFAULT_FRAME,
+    type: types.SET_DEFAULT_FRAME,
     payload: {
       width: layers[0] ? layers[0].width : 0,
       height: layers[0] ? layers[0].height : 0,
@@ -297,7 +279,7 @@ export const addCanvasUserLayerAndSetFrame = (
   width: number,
   height: number
 ) => ({
-  type: ADD_USER_IMAGE_AND_SET_FRAME,
+  type: types.ADD_USER_IMAGE_AND_SET_FRAME,
   payload: {
     dataUrl,
     width,

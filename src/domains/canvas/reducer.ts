@@ -1,22 +1,4 @@
-import {
-  Actions,
-  SET_FRAME,
-  ADD_USER_IMAGE_AND_SET_FRAME,
-  SET_SVG_POSITION_AND_SIZE,
-  SET_DEFAULT_FRAME,
-  TICK,
-  COMPLETE,
-  ADD,
-  START_DRAG,
-  START_TRANSFORM,
-  SET_ACTIVE,
-  REMOVE,
-  USER_ADD,
-  USER_REMOVE,
-  USER_START_DRAG,
-  USER_SET_POSITION,
-  FILTER_SET_VALUE,
-} from "./actions";
+import { Actions } from "./actions";
 import { canvasUserLayerFrame } from "./frames";
 import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
 import { angleBetweenTwoPoints } from "~/utils/angle-between-two-points";
@@ -24,6 +6,7 @@ import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
 import * as uuid from "uuid";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
+import * as types from "./types";
 
 // Container Reducer
 
@@ -52,7 +35,7 @@ const containerReducer = (
   action: Actions
 ): CanvasContainerState => {
   switch (action.type) {
-    case SET_SVG_POSITION_AND_SIZE: {
+    case types.SET_SVG_POSITION_AND_SIZE: {
       const { x, y, width, height } = action.payload;
       const { width: frameWidth, height: frameHeight } = state;
 
@@ -78,7 +61,7 @@ const containerReducer = (
       };
     }
 
-    case ADD_USER_IMAGE_AND_SET_FRAME: {
+    case types.ADD_USER_IMAGE_AND_SET_FRAME: {
       const { width, height } = action.payload;
 
       return {
@@ -88,7 +71,7 @@ const containerReducer = (
       };
     }
 
-    case SET_DEFAULT_FRAME: {
+    case types.SET_DEFAULT_FRAME: {
       const { width, height } = action.payload;
 
       return {
@@ -98,7 +81,7 @@ const containerReducer = (
       };
     }
 
-    case SET_FRAME: {
+    case types.SET_FRAME: {
       const { frame } = action.payload;
       const { width, height } = canvasUserLayerFrame[frame];
 
@@ -189,7 +172,7 @@ const stickerReducer = (
   action: Actions
 ): CanvasStickersState => {
   switch (action.type) {
-    case ADD: {
+    case types.ADD: {
       const { layers } = state;
       const { dataUrl, width, height } = action.payload;
 
@@ -218,7 +201,7 @@ const stickerReducer = (
       };
     }
 
-    case REMOVE: {
+    case types.REMOVE: {
       const { layers } = state;
 
       return {
@@ -227,7 +210,7 @@ const stickerReducer = (
       };
     }
 
-    case SET_ACTIVE: {
+    case types.SET_ACTIVE: {
       const { layers } = state;
       const { index } = action.payload;
 
@@ -237,7 +220,7 @@ const stickerReducer = (
       };
     }
 
-    case START_DRAG: {
+    case types.START_DRAG: {
       const { layers } = state;
       const { cursorPositions, container } = action.payload;
       const index = layers.length - 1;
@@ -284,7 +267,7 @@ const stickerReducer = (
       };
     }
 
-    case START_TRANSFORM: {
+    case types.START_TRANSFORM: {
       const { layers } = state;
       const { x, y, container } = action.payload;
       const sticker = layers[layers.length - 1];
@@ -317,7 +300,7 @@ const stickerReducer = (
       };
     }
 
-    case TICK: {
+    case types.TICK: {
       const { layers, isMultiTouching, isDragging, isTransforming } = state;
       const { cursorPositions, container } = action.payload;
       const { displayRatio } = container;
@@ -414,7 +397,7 @@ const stickerReducer = (
       return state;
     }
 
-    case COMPLETE: {
+    case types.COMPLETE: {
       return {
         ...state,
         isDragging: false,
@@ -466,7 +449,7 @@ const userReducer = (
   action: Actions
 ): CanvasUsersState => {
   switch (action.type) {
-    case SET_DEFAULT_FRAME: {
+    case types.SET_DEFAULT_FRAME: {
       const { layers } = state;
       const { width, height } = action.payload;
 
@@ -496,7 +479,7 @@ const userReducer = (
       };
     }
 
-    case ADD_USER_IMAGE_AND_SET_FRAME: {
+    case types.ADD_USER_IMAGE_AND_SET_FRAME: {
       const { frames, layers } = state;
       const { dataUrl, width, height } = action.payload;
 
@@ -530,7 +513,7 @@ const userReducer = (
       };
     }
 
-    case USER_ADD: {
+    case types.USER_ADD: {
       const { layers } = state;
       const { index, dataUrl, width, height } = action.payload;
 
@@ -554,7 +537,7 @@ const userReducer = (
       };
     }
 
-    case USER_REMOVE: {
+    case types.USER_REMOVE: {
       const { layers } = state;
       const { index } = action.payload;
 
@@ -566,7 +549,7 @@ const userReducer = (
       };
     }
 
-    case USER_START_DRAG: {
+    case types.USER_START_DRAG: {
       const { layers } = state;
       const {
         index,
@@ -597,7 +580,7 @@ const userReducer = (
       };
     }
 
-    case USER_SET_POSITION: {
+    case types.USER_SET_POSITION: {
       const {
         layers,
         isDragging,
@@ -649,7 +632,7 @@ const userReducer = (
 
     //
 
-    case FILTER_SET_VALUE: {
+    case types.FILTER_SET_VALUE: {
       const { layers } = state;
       const { index, type, value } = action.payload;
       const userLayer = layers[index];
@@ -670,7 +653,7 @@ const userReducer = (
       };
     }
 
-    case SET_FRAME: {
+    case types.SET_FRAME: {
       const { frame, index } = action.payload;
       const canvasUserFrame = canvasUserLayerFrame[frame];
 
@@ -686,7 +669,7 @@ const userReducer = (
       };
     }
 
-    case COMPLETE: {
+    case types.COMPLETE: {
       return {
         ...state,
         isDragging: false,
