@@ -1,22 +1,25 @@
-export const SET_ACTUAL_SIZE = "CANVAS/CONTAINER/SET_ACTUAL_SIZE" as const;
+export const SET_SVG_POSITION_AND_SIZE = "CANVAS/CONTAINER/SET_SVG_POSITION_AND_SIZE" as const;
 
-const setActualSize = ({
+const setSvgPositionAndSize = ({
   x,
   y,
   width,
+  height,
 }: {
   x: number;
   y: number;
   width: number;
+  height: number;
 }) => ({
-  type: SET_ACTUAL_SIZE,
+  type: SET_SVG_POSITION_AND_SIZE,
   payload: {
-    actualX: x,
-    actualY: y,
-    actualWidth: width,
+    x,
+    y,
+    width,
+    height,
   },
 });
 
 export const actions = {
-  setActualSize,
+  setSvgPositionAndSize,
 };

@@ -16,13 +16,6 @@ export const Canvas: React.FC = () => {
     dispatch,
   ]);
 
-  const handleOnResizeWindow = useCallback(() => {
-    const e = containerRef.current!;
-    const rect = e.getBoundingClientRect();
-
-    dispatch(actions.setActualSize(rect));
-  }, [dispatch]);
-
   const handleOnMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
@@ -41,9 +34,6 @@ export const Canvas: React.FC = () => {
     e.addEventListener("mouseleave", handleOnComplete);
     e.addEventListener("mousemove", handleOnMove);
     e.addEventListener("touchmove", handleOnMove, { passive: false });
-    addEventListener("resize", handleOnResizeWindow);
-
-    handleOnResizeWindow();
 
     return () => {
       e.removeEventListener("mouseup", handleOnComplete);
@@ -51,13 +41,8 @@ export const Canvas: React.FC = () => {
       e.removeEventListener("mouseleave", handleOnComplete);
       e.removeEventListener("mousemove", handleOnMove);
       e.removeEventListener("touchmove", handleOnMove);
-      removeEventListener("resize", handleOnResizeWindow);
     };
   }, []);
-
-  useEffect(() => {
-    handleOnResizeWindow();
-  }, [container.width, container.height]);
 
   return (
     <svg
@@ -65,6 +50,13 @@ export const Canvas: React.FC = () => {
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       ref={containerRef}
+      style={{
+        position: "fixed",
+        top: `${container.actualY}px`,
+        left: `${container.actualX}px`,
+        width: `${container.actualWidth}px`,
+        height: `${container.actualHeight}px`,
+      }}
     >
       <CanvasFilters />
       <CanvasUserLayers />
