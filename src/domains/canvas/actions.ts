@@ -1,7 +1,6 @@
 import { Dispatch } from "redux";
 import blueimpLoadImage from "blueimp-load-image";
 import { CanvasUserLayerFrame } from "./frames";
-import { getOrCreateStore } from "~/domains";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 import { checkAndResizeImage } from "~/utils/check-and-resize-image";
 import * as types from "./types";
@@ -52,25 +51,17 @@ export const setCanvasStickerLayerActive = (index: number) => ({
   payload: { index },
 });
 
-export const startCanvasStickerLayerTransform = (x: number, y: number) => {
-  const { container } = getOrCreateStore().getState().canvas;
-
-  return {
-    type: types.START_TRANSFORM,
-    payload: { x, y, container },
-  };
-};
+export const startCanvasStickerLayerTransform = (x: number, y: number) => ({
+  type: types.START_TRANSFORM,
+  payload: { x, y },
+});
 
 export const startCanvasStickerLayerDrag = (
   cursorPositions: CursorPosition[]
-) => {
-  const { container } = getOrCreateStore().getState().canvas;
-
-  return {
-    type: types.START_DRAG,
-    payload: { cursorPositions, container },
-  };
-};
+) => ({
+  type: types.START_DRAG,
+  payload: { cursorPositions },
+});
 
 export const addCanvasStickerLayerWithUrl = (url: string) => {
   return (dispatch: Dispatch) => {
@@ -148,40 +139,30 @@ export const startCanvasUserLayerDrag = (
   clipPathX: number,
   clipPathY: number,
   cursorPositions: CursorPosition[]
-) => {
-  const { container } = getOrCreateStore().getState().canvas;
-
-  return {
-    type: types.USER_START_DRAG,
-    payload: {
-      index,
-      clipPathX,
-      clipPathY,
-      cursorPositions,
-      displayRatio: container.displayRatio,
-    },
-  };
-};
+) => ({
+  type: types.USER_START_DRAG,
+  payload: {
+    index,
+    clipPathX,
+    clipPathY,
+    cursorPositions,
+  },
+});
 
 export const setCanvasUserLayerPosition = (
   index: number,
   clipPathX: number,
   clipPathY: number,
   cursorPositions: CursorPosition[]
-) => {
-  const { container } = getOrCreateStore().getState().canvas;
-
-  return {
-    type: types.USER_SET_POSITION,
-    payload: {
-      index,
-      clipPathX,
-      clipPathY,
-      cursorPositions,
-      displayRatio: container.displayRatio,
-    },
-  };
-};
+) => ({
+  type: types.USER_SET_POSITION,
+  payload: {
+    index,
+    clipPathX,
+    clipPathY,
+    cursorPositions,
+  },
+});
 
 export const setUserLayerFilterValue = (
   index: number,
@@ -244,14 +225,10 @@ export const userThunkActions = {
 
 // Common Actions
 
-export const tick = (cursorPositions: CursorPosition[]) => {
-  const { container } = getOrCreateStore().getState().canvas;
-
-  return {
-    type: types.TICK,
-    payload: { container, cursorPositions },
-  };
-};
+export const tick = (cursorPositions: CursorPosition[]) => ({
+  type: types.TICK,
+  payload: { cursorPositions },
+});
 
 export const complete = () => ({
   type: types.COMPLETE,
@@ -262,17 +239,9 @@ export const setFrame = (frame: CanvasUserLayerFrame, index: number) => ({
   payload: { frame, index },
 });
 
-export const setDefaultFrame = () => {
-  const { layers } = getOrCreateStore().getState().canvas.users;
-
-  return {
-    type: types.SET_DEFAULT_FRAME,
-    payload: {
-      width: layers[0] ? layers[0].width : 0,
-      height: layers[0] ? layers[0].height : 0,
-    },
-  };
-};
+export const setDefaultFrame = () => ({
+  type: types.SET_DEFAULT_FRAME,
+});
 
 export const addCanvasUserLayerAndSetFrame = (
   dataUrl: string,

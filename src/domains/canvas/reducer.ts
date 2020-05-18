@@ -21,6 +21,7 @@ const containerInitialState: CanvasContainerState = {
 };
 
 const containerReducer = (
+  parentState: CanvasState,
   state = containerInitialState,
   action: Actions
 ): CanvasContainerState => {
@@ -62,7 +63,9 @@ const containerReducer = (
     }
 
     case types.SET_DEFAULT_FRAME: {
-      const { width, height } = action.payload;
+      const { layers } = parentState.users;
+      const width = layers[0] ? layers[0].width : 0;
+      const height = layers[0] ? layers[0].height : 0;
 
       return {
         ...state,
@@ -149,6 +152,7 @@ const CANVAS_STICKER_LAYER_MIN_WIDTH = 200;
 const CANVAS_STICKER_LAYER_MIN_HEIGHT = 200;
 
 const stickerReducer = (
+  parentState: CanvasState,
   state = stickerInitialState,
   action: Actions
 ): CanvasStickersState => {
@@ -203,7 +207,8 @@ const stickerReducer = (
 
     case types.START_DRAG: {
       const { layers } = state;
-      const { cursorPositions, container } = action.payload;
+      const { container } = parentState;
+      const { cursorPositions } = action.payload;
       const index = layers.length - 1;
       const sticker = layers[index];
       const isMultiTouching = cursorPositions.length > 1;
@@ -250,7 +255,8 @@ const stickerReducer = (
 
     case types.START_TRANSFORM: {
       const { layers } = state;
-      const { x, y, container } = action.payload;
+      const { container } = parentState;
+      const { x, y } = action.payload;
       const sticker = layers[layers.length - 1];
       const centerX = sticker.x + (sticker.width * sticker.scale.current) / 2;
       const centerY = sticker.y + (sticker.height * sticker.scale.current) / 2;
@@ -283,7 +289,8 @@ const stickerReducer = (
 
     case types.TICK: {
       const { layers, isMultiTouching, isDragging, isTransforming } = state;
-      const { cursorPositions, container } = action.payload;
+      const { cursorPositions } = action.payload;
+      const { container } = parentState;
       const { displayRatio } = container;
 
       if (!layers.length) {
@@ -417,13 +424,15 @@ const calculateCanvasUserLayerRelativeCoordinates = (
 });
 
 const userReducer = (
+  parentState: CanvasState,
   state = userInitialState,
   action: Actions
 ): CanvasUsersState => {
   switch (action.type) {
     case types.SET_DEFAULT_FRAME: {
       const { layers } = state;
-      const { width, height } = action.payload;
+      const width = layers[0] ? layers[0].width : 0;
+      const height = layers[0] ? layers[0].height : 0;
 
       // ToDo: 1 枚目の画像の他のフレームでの座標位置が消えてしまう
       if (layers[0]) {
@@ -523,13 +532,8 @@ const userReducer = (
 
     case types.USER_START_DRAG: {
       const { layers } = state;
-      const {
-        index,
-        cursorPositions,
-        clipPathX,
-        clipPathY,
-        displayRatio,
-      } = action.payload;
+      const { displayRatio } = parentState.container;
+      const { index, cursorPositions, clipPathX, clipPathY } = action.payload;
       const userLayer = layers[index];
 
       if (userLayer === null) {
@@ -560,13 +564,8 @@ const userReducer = (
         differenceFromStartingY,
         canDragging,
       } = state;
-      const {
-        index,
-        clipPathX,
-        clipPathY,
-        cursorPositions,
-        displayRatio,
-      } = action.payload;
+      const { displayRatio } = parentState.container;
+      const { index, clipPathX, clipPathY, cursorPositions } = action.payload;
       const user = layers[index];
 
       if (!user || !canDragging) {
@@ -699,7 +698,7 @@ export default (
   },
   action: Actions
 ): CanvasState => ({
-  container: containerReducer(state.container, action),
-  stickers: stickerReducer(state.stickers, action),
-  users: userReducer(state.users, action),
+  container: containerReducer(state, state.container, action),
+  stickers: stickerReducer(state, state.stickers, action),
+  users: userReducer(state, state.users, action),
 });
