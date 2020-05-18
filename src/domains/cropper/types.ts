@@ -1,0 +1,19 @@
+export const TICK = "CROPPER/TICK" as const;
+export const COMPLETE = "CROPPER/COMPLETE" as const;
+
+// Container
+
+export const SET_ACTUAL_SIZE = "CROPPER/CONTAINER/SET_ACTUAL_SIZE" as const;
+export const SET_SVG_POSITION_AND_SIZE = "CROPPER/CONTAINER/SET_SVG_POSITION_AND_SIZE" as const;
+
+// Cropper
+
+export const START_CROPPER_MOVING = "CROPPER/CROPPER/START_MOVING" as const;
+export const START_CROPPER_TRANSFORMING = "CROPPER/CROPPER/START_TRANSFORMING" as const;
+export const CHANGE_FREE_ASPECT = "CROPPER/CROPPER/CHANGE_FREE_ASPECT" as const;
+export const SET_ASPECT_RATIO = "CROPPER/CROPPER/SET_ASPECT_RATIO" as const;
+
+// Images
+
+export const SET_IMAGE = "CROPPER/IMAGE/SET" as const;
+export const START_IMAGE_TRANSFORMING = "CROPPER/IMAGE/START_TRANSFORMING" as const;

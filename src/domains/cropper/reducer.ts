@@ -1,4 +1,5 @@
-import { Actions, SET_SVG_POSITION_AND_SIZE } from "./actions";
+import { Actions } from "./actions";
+import * as types from "./types";
 
 // Container
 
@@ -20,7 +21,7 @@ const containerInitialState: CropperContainerState = {
 
 const containerReducer = (state = containerInitialState, action: Actions) => {
   switch (action.type) {
-    case SET_SVG_POSITION_AND_SIZE: {
+    case types.SET_SVG_POSITION_AND_SIZE: {
       const { x, y, width, height, image } = action.payload;
       const { width: imageWidth, height: imageHeight } = image;
 
@@ -53,13 +54,6 @@ const containerReducer = (state = containerInitialState, action: Actions) => {
 
 // Cropper
 
-import {
-  CHANGE_FREE_ASPECT,
-  SET_ASPECT_RATIO,
-  START_CROPPER_MOVING,
-  START_CROPPER_TRANSFORMING,
-} from "./actions";
-import { COMPLETE, TICK } from "~/domains/cropper/actions";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
 
@@ -239,7 +233,7 @@ const distanceFromCropperStartPosition = (
 
 const cropperReducer = (state = cropperInitialState, action: Actions) => {
   switch (action.type) {
-    case START_CROPPER_MOVING: {
+    case types.START_CROPPER_MOVING: {
       const { position } = state;
       const { container, cursorPositions, image } = action.payload;
 
@@ -267,7 +261,7 @@ const cropperReducer = (state = cropperInitialState, action: Actions) => {
       };
     }
 
-    case START_CROPPER_TRANSFORMING: {
+    case types.START_CROPPER_TRANSFORMING: {
       const { container, image, cursorPositions } = action.payload;
       const { position } = state;
 
@@ -308,7 +302,7 @@ const cropperReducer = (state = cropperInitialState, action: Actions) => {
       };
     }
 
-    case CHANGE_FREE_ASPECT: {
+    case types.CHANGE_FREE_ASPECT: {
       const { freeAspect, scale, scaleX, scaleY } = state;
       const nextFreeAspect = !freeAspect;
 
@@ -327,7 +321,7 @@ const cropperReducer = (state = cropperInitialState, action: Actions) => {
       };
     }
 
-    case SET_ASPECT_RATIO: {
+    case types.SET_ASPECT_RATIO: {
       const { widthRatio, heightRatio, index } = action.payload;
       const { freeAspect, scale, scaleX, scaleY, width, height } = state;
 
@@ -372,7 +366,7 @@ const cropperReducer = (state = cropperInitialState, action: Actions) => {
       };
     }
 
-    case TICK: {
+    case types.TICK: {
       const { container, cursorPositions } = action.payload;
       const { isCropperTransforming, isCropperMoving } = state;
 
@@ -387,7 +381,7 @@ const cropperReducer = (state = cropperInitialState, action: Actions) => {
       return state;
     }
 
-    case COMPLETE:
+    case types.COMPLETE:
       return {
         ...state,
         isCropperMoving: false,
@@ -401,7 +395,6 @@ const cropperReducer = (state = cropperInitialState, action: Actions) => {
 
 // Images
 
-import { SET_IMAGE, START_IMAGE_TRANSFORMING } from "./actions";
 import { angleBetweenTwoPoints } from "~/utils/angle-between-two-points";
 
 export type CropperImageState = {
@@ -448,7 +441,7 @@ const imageInitialState: CropperImageState = {
 
 const imageReducer = (state = imageInitialState, action: Actions) => {
   switch (action.type) {
-    case SET_IMAGE: {
+    case types.SET_IMAGE: {
       const { url, width, height } = action.payload;
 
       return {
@@ -473,7 +466,7 @@ const imageReducer = (state = imageInitialState, action: Actions) => {
       };
     }
 
-    case START_IMAGE_TRANSFORMING: {
+    case types.START_IMAGE_TRANSFORMING: {
       const positions = action.payload;
 
       if (positions.length < 2) {
@@ -506,7 +499,7 @@ const imageReducer = (state = imageInitialState, action: Actions) => {
       };
     }
 
-    case TICK: {
+    case types.TICK: {
       const { cursorPositions } = action.payload;
       const { rotate, isImageTransforming } = state;
 
@@ -551,7 +544,7 @@ const imageReducer = (state = imageInitialState, action: Actions) => {
       };
     }
 
-    case COMPLETE:
+    case types.COMPLETE:
       return {
         ...state,
         isImageTransforming: false,
