@@ -1,13 +1,15 @@
-import { Dispatch } from "redux";
 import blueimpLoadImage from "blueimp-load-image";
+import { Dispatch } from "redux";
 import { CanvasUserLayerFrame } from "./frames";
-import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
-import { checkAndResizeImage } from "~/utils/check-and-resize-image";
 import * as types from "./types";
+import { convertUrlToImage } from "./utils";
+import { FeColorMatrix } from "~/types/FeColorMatrix";
+import { checkAndResizeImage } from "~/utils/check-and-resize-image";
+import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 
-// Container Actions
+// Container
 
-const setSvgPositionAndSize = ({
+const updateCanvasContainerRect = ({
   x,
   y,
   width,
@@ -18,7 +20,7 @@ const setSvgPositionAndSize = ({
   width: number;
   height: number;
 }) => ({
-  type: types.SET_SVG_POSITION_AND_SIZE,
+  type: types.CANVAS_CONTAINER_UPDATE_RECT,
   payload: {
     x,
     y,
@@ -27,43 +29,37 @@ const setSvgPositionAndSize = ({
   },
 });
 
-const containerActions = {
-  setSvgPositionAndSize,
-};
+// Stickers
 
-// Sticker Actions
-
-export const addCanvasStickerLayer = (
+const addCanvasStickerLayer = (
   dataUrl: string,
   width: number,
   height: number
 ) => ({
-  type: types.ADD,
+  type: types.CANVAS_STICKER_LAYER_ADD,
   payload: { dataUrl, width, height },
 });
 
-export const removeCanvasStickerLayer = () => ({
-  type: types.REMOVE,
+const removeCanvasStickerLayer = () => ({
+  type: types.CANVAS_SRICKER_LAYER_REMOVE,
 });
 
-export const setCanvasStickerLayerActive = (index: number) => ({
-  type: types.SET_ACTIVE,
+const changeCanvasStickerLayerOrder = (index: number) => ({
+  type: types.CANVAS_STICKER_LAYER_CHANGE_ORDER,
   payload: { index },
 });
 
-export const startCanvasStickerLayerTransform = (x: number, y: number) => ({
-  type: types.START_TRANSFORM,
+const startCanvasStickerLayerTransform = (x: number, y: number) => ({
+  type: types.CANVAS_STICKER_LAYER_START_TRANSFORM,
   payload: { x, y },
 });
 
-export const startCanvasStickerLayerDrag = (
-  cursorPositions: CursorPosition[]
-) => ({
-  type: types.START_DRAG,
+const startCanvasStickerLayerDrag = (cursorPositions: CursorPosition[]) => ({
+  type: types.CANVAS_STICKER_LAYER_START_DRAG,
   payload: { cursorPositions },
 });
 
-export const addCanvasStickerLayerWithUrl = (url: string) => {
+const addCanvasStickerLayerWithUrl = (url: string) => {
   return (dispatch: Dispatch) => {
     return new Promise((resolve, reject) => {
       const image = new Image();
@@ -98,29 +94,15 @@ export const addCanvasStickerLayerWithUrl = (url: string) => {
   };
 };
 
-const stickerActions = {
-  addCanvasStickerLayer,
-  startCanvasStickerLayerTransform,
-  startCanvasStickerLayerDrag,
-  setCanvasStickerLayerActive,
-  removeCanvasStickerLayer,
-};
+// Users
 
-const stickerThunkActions = {
-  addCanvasStickerLayerWithUrl,
-};
-
-// User Actions
-
-import { FeColorMatrix } from "~/types/FeColorMatrix";
-
-export const addCanvasUserLayer = (
+const addCanvasUserLayer = (
   index: number,
   dataUrl: string,
   width: number,
   height: number
 ) => ({
-  type: types.USER_ADD,
+  type: types.CANVAS_USER_LAYER_ADD,
   payload: {
     index,
     dataUrl,
@@ -129,18 +111,18 @@ export const addCanvasUserLayer = (
   },
 });
 
-export const removeCanvasUserLayer = (index: number) => ({
-  type: types.USER_REMOVE,
+const removeCanvasUserLayer = (index: number) => ({
+  type: types.CANVAS_USER_LAYER_REMOVE,
   payload: { index },
 });
 
-export const startCanvasUserLayerDrag = (
+const startCanvasUserLayerDrag = (
   index: number,
   clipPathX: number,
   clipPathY: number,
   cursorPositions: CursorPosition[]
 ) => ({
-  type: types.USER_START_DRAG,
+  type: types.CANVAS_USER_LAYER_START_DRAG,
   payload: {
     index,
     clipPathX,
@@ -149,13 +131,13 @@ export const startCanvasUserLayerDrag = (
   },
 });
 
-export const setCanvasUserLayerPosition = (
+const tickCanvasUserLayer = (
   index: number,
   clipPathX: number,
   clipPathY: number,
   cursorPositions: CursorPosition[]
 ) => ({
-  type: types.USER_SET_POSITION,
+  type: types.CANVAS_USER_LAYER_TICK,
   payload: {
     index,
     clipPathX,
@@ -164,12 +146,12 @@ export const setCanvasUserLayerPosition = (
   },
 });
 
-export const setUserLayerFilterValue = (
+const updateCanvasUserLayerFilter = (
   index: number,
   type: FeColorMatrix,
   value: number
 ) => ({
-  type: types.FILTER_SET_VALUE,
+  type: types.CANVAS_USER_LAYER_UPDATE_FILTER,
   payload: {
     index,
     type,
@@ -177,19 +159,8 @@ export const setUserLayerFilterValue = (
   },
 });
 
-const convertUrlToImage = (url: string): Promise<HTMLImageElement> => {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-
-    image.onerror = () => reject();
-    image.onload = () => resolve(image);
-
-    image.src = url;
-  });
-};
-
 // TODO: `blueimpLoadImage` のエラー処理をちゃんとする
-export const addCanvasUserLayerFromFile = (file: File, index: number) => {
+const addCanvasUserLayerFromFile = (file: File, index: number) => {
   return (dispatch: Dispatch) => {
     return new Promise((resolve) => {
       blueimpLoadImage(
@@ -211,44 +182,15 @@ export const addCanvasUserLayerFromFile = (file: File, index: number) => {
   };
 };
 
-export const userActions = {
-  addCanvasUserLayer,
-  removeCanvasUserLayer,
-  setCanvasUserLayerPosition,
-  startCanvasUserLayerDrag,
-  setUserLayerFilterValue,
-};
-
-export const userThunkActions = {
-  addCanvasUserLayerFromFile,
-};
-
-// Common Actions
-
-export const tick = (cursorPositions: CursorPosition[]) => ({
-  type: types.TICK,
+const tickCanvasLayerSticker = (cursorPositions: CursorPosition[]) => ({
+  type: types.CANVAS_STICKER_LAYER_TICK,
   payload: { cursorPositions },
 });
 
-export const complete = () => ({
-  type: types.COMPLETE,
-});
+// Common
 
-export const setFrame = (frame: CanvasUserLayerFrame, index: number) => ({
-  type: types.SET_FRAME,
-  payload: { frame, index },
-});
-
-export const setDefaultFrame = () => ({
-  type: types.SET_DEFAULT_FRAME,
-});
-
-export const addCanvasUserLayerAndSetFrame = (
-  dataUrl: string,
-  width: number,
-  height: number
-) => ({
-  type: types.ADD_USER_IMAGE_AND_SET_FRAME,
+const initializeCanvas = (dataUrl: string, width: number, height: number) => ({
+  type: types.CANVAS_INITIALIZE,
   payload: {
     dataUrl,
     width,
@@ -256,8 +198,21 @@ export const addCanvasUserLayerAndSetFrame = (
   },
 });
 
+const complete = () => ({
+  type: types.CANVAS_COMPLETE,
+});
+
+const enableCollage = (frame: CanvasUserLayerFrame, index: number) => ({
+  type: types.CANVAS_ENABLE_COLLAGE,
+  payload: { frame, index },
+});
+
+const disableCollage = () => ({
+  type: types.CANVAS_DISABLE_COLLAGE,
+});
+
 // TODO: `blueimpLoadImage` のエラー処理をちゃんとする
-export const addCanvasUserLayerAndSetFrameFromFile = (file: File) => {
+const addCanvasUserLayerAndSetFrameFromFile = (file: File) => {
   return (dispatch: Dispatch) => {
     return new Promise((resolve) => {
       blueimpLoadImage(
@@ -270,7 +225,7 @@ export const addCanvasUserLayerAndSetFrameFromFile = (file: File) => {
           const result = checkAndResizeImage(image);
           const { width, height, dataUrl } = result!;
 
-          dispatch(addCanvasUserLayerAndSetFrame(dataUrl, width, height));
+          dispatch(initializeCanvas(dataUrl, width, height));
 
           resolve();
         },
@@ -280,20 +235,30 @@ export const addCanvasUserLayerAndSetFrameFromFile = (file: File) => {
   };
 };
 
+// Main
+
 export const actions = {
-  ...containerActions,
-  ...stickerActions,
-  ...userActions,
-  tick,
+  updateCanvasContainerRect,
+  addCanvasStickerLayer,
+  startCanvasStickerLayerTransform,
+  startCanvasStickerLayerDrag,
+  changeCanvasStickerLayerOrder,
+  removeCanvasStickerLayer,
+  addCanvasUserLayer,
+  removeCanvasUserLayer,
+  tickCanvasUserLayer,
+  startCanvasUserLayerDrag,
+  updateCanvasUserLayerFilter,
+  tickCanvasLayerSticker,
   complete,
-  setFrame,
-  addCanvasUserLayerAndSetFrame,
-  setDefaultFrame,
+  enableCollage,
+  initializeCanvas,
+  disableCollage,
 };
 
 export const thunkActions = {
-  ...stickerThunkActions,
-  ...userThunkActions,
+  addCanvasStickerLayerWithUrl,
+  addCanvasUserLayerFromFile,
   addCanvasUserLayerAndSetFrameFromFile,
 };
 

@@ -10,7 +10,7 @@ export const CanvasStickerLayers: React.FC = () => {
   const { stickers, container } = useSelector(({ canvas }: State) => canvas);
 
   const handleOnSelect = useCallback(
-    (index: number) => dispatch(actions.setCanvasStickerLayerActive(index)),
+    (index: number) => dispatch(actions.changeCanvasStickerLayerOrder(index)),
     [dispatch]
   );
 

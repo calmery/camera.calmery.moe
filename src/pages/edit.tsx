@@ -53,7 +53,7 @@ const Edit: NextPage = () => {
   useEffect(() => {
     const e = ref.current!;
     const resizeObserver = new ResizeObserver(() => {
-      dispatch(actions.setSvgPositionAndSize(e.getBoundingClientRect()));
+      dispatch(actions.updateCanvasContainerRect(e.getBoundingClientRect()));
     });
 
     resizeObserver.observe(e);

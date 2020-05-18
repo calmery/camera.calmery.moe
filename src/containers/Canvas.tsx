@@ -21,7 +21,9 @@ export const Canvas: React.FC = () => {
       event.preventDefault();
       event.stopPropagation();
 
-      dispatch(actions.tick(convertEventToCursorPositions(event)));
+      dispatch(
+        actions.tickCanvasLayerSticker(convertEventToCursorPositions(event))
+      );
     },
     [dispatch]
   );

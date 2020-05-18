@@ -40,3 +40,16 @@ export const progressCanvasStickerLayerTransform = (
 
   return layers;
 };
+
+//
+
+export const convertUrlToImage = (url: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+
+    image.onerror = () => reject();
+    image.onload = () => resolve(image);
+
+    image.src = url;
+  });
+};

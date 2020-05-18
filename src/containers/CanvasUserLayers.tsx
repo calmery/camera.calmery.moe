@@ -45,7 +45,7 @@ export const CanvasUserLayers: React.FC = () => {
       event: MouseEvent | TouchEvent
     ) => {
       dispatch(
-        actions.setCanvasUserLayerPosition(
+        actions.tickCanvasUserLayer(
           index,
           clipPathX,
           clipPathY,
