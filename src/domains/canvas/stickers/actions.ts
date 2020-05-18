@@ -75,6 +75,7 @@ export const addCanvasStickerLayerWithUrl = (url: string) => {
         resolve();
       };
 
+      image.crossOrigin = "anonymous";
       image.src = url;
     });
   };

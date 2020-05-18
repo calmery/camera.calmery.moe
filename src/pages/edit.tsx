@@ -9,6 +9,7 @@ import { Page } from "~/components/Page";
 import { withRedux } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { Spacing } from "~/styles/spacing";
+import { CanvasStickers } from "~/containers/CanvasStickers";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -73,6 +74,7 @@ const Edit: NextPage = () => {
             <CanvasSizeDetector ref={ref} />
           </CanvasContainer>
           <BottomBar>
+            <CanvasStickers />
             <Menu />
           </BottomBar>
         </FlexColumn>
