@@ -19,10 +19,15 @@ const containerInitialState: CropperContainerState = {
   displayRatio: 0,
 };
 
-const containerReducer = (state = containerInitialState, action: Actions) => {
+const containerReducer = (
+  parentState: CropperState,
+  state = containerInitialState,
+  action: Actions
+) => {
   switch (action.type) {
     case types.SET_SVG_POSITION_AND_SIZE: {
-      const { x, y, width, height, image } = action.payload;
+      const { image } = parentState;
+      const { x, y, width, height } = action.payload;
       const { width: imageWidth, height: imageHeight } = image;
 
       let svgWidth = width;
@@ -231,11 +236,16 @@ const distanceFromCropperStartPosition = (
   ];
 };
 
-const cropperReducer = (state = cropperInitialState, action: Actions) => {
+const cropperReducer = (
+  parentState: CropperState,
+  state = cropperInitialState,
+  action: Actions
+) => {
   switch (action.type) {
     case types.START_CROPPER_MOVING: {
       const { position } = state;
-      const { container, cursorPositions, image } = action.payload;
+      const { container, image } = parentState;
+      const { cursorPositions } = action.payload;
 
       if (image.isImageTransforming) {
         return state;
@@ -262,7 +272,8 @@ const cropperReducer = (state = cropperInitialState, action: Actions) => {
     }
 
     case types.START_CROPPER_TRANSFORMING: {
-      const { container, image, cursorPositions } = action.payload;
+      const { container, image } = parentState;
+      const { cursorPositions } = action.payload;
       const { position } = state;
 
       if (image.isImageTransforming) {
@@ -367,7 +378,8 @@ const cropperReducer = (state = cropperInitialState, action: Actions) => {
     }
 
     case types.TICK: {
-      const { container, cursorPositions } = action.payload;
+      const { container } = parentState;
+      const { cursorPositions } = action.payload;
       const { isCropperTransforming, isCropperMoving } = state;
 
       if (isCropperMoving) {
@@ -439,7 +451,11 @@ const imageInitialState: CropperImageState = {
   },
 };
 
-const imageReducer = (state = imageInitialState, action: Actions) => {
+const imageReducer = (
+  parentState: CropperState,
+  state = imageInitialState,
+  action: Actions
+) => {
   switch (action.type) {
     case types.SET_IMAGE: {
       const { url, width, height } = action.payload;
@@ -571,7 +587,7 @@ export default (
   },
   action: Actions
 ): CropperState => ({
-  container: containerReducer(state.container, action),
-  cropper: cropperReducer(state.cropper, action),
-  image: imageReducer(state.image, action),
+  container: containerReducer(state, state.container, action),
+  cropper: cropperReducer(state, state.cropper, action),
+  image: imageReducer(state, state.image, action),
 });

@@ -1,5 +1,4 @@
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
-import { getOrCreateStore } from "..";
 import * as types from "./types";
 
 // Container
@@ -14,22 +13,15 @@ const setSvgPositionAndSize = ({
   y: number;
   width: number;
   height: number;
-}) => {
-  const {
-    cropper: { image },
-  } = getOrCreateStore().getState();
-
-  return {
-    type: types.SET_SVG_POSITION_AND_SIZE,
-    payload: {
-      x,
-      y,
-      width,
-      height,
-      image,
-    },
-  };
-};
+}) => ({
+  type: types.SET_SVG_POSITION_AND_SIZE,
+  payload: {
+    x,
+    y,
+    width,
+    height,
+  },
+});
 
 const containerActions = {
   setSvgPositionAndSize,
@@ -37,23 +29,15 @@ const containerActions = {
 
 // Cropper
 
-const startCropperMoving = (cursorPositions: CursorPosition[]) => {
-  const { container, image } = getOrCreateStore().getState().cropper;
+const startCropperMoving = (cursorPositions: CursorPosition[]) => ({
+  type: types.START_CROPPER_MOVING,
+  payload: { cursorPositions },
+});
 
-  return {
-    type: types.START_CROPPER_MOVING,
-    payload: { container, image, cursorPositions },
-  };
-};
-
-const startCropperTransforming = (cursorPositions: CursorPosition[]) => {
-  const { container, image } = getOrCreateStore().getState().cropper;
-
-  return {
-    type: types.START_CROPPER_TRANSFORMING,
-    payload: { container, image, cursorPositions },
-  };
-};
+const startCropperTransforming = (cursorPositions: CursorPosition[]) => ({
+  type: types.START_CROPPER_TRANSFORMING,
+  payload: { cursorPositions },
+});
 
 const changeFreeAspect = () => ({
   type: types.CHANGE_FREE_ASPECT,
@@ -94,14 +78,10 @@ const imageActions = {
 
 // Common
 
-const tick = (cursorPositions: CursorPosition[]) => {
-  const { container } = getOrCreateStore().getState().cropper;
-
-  return {
-    type: types.TICK,
-    payload: { container, cursorPositions },
-  };
-};
+const tick = (cursorPositions: CursorPosition[]) => ({
+  type: types.TICK,
+  payload: { cursorPositions },
+});
 
 const complete = () => ({
   type: types.COMPLETE,
