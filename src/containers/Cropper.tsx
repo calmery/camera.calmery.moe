@@ -27,21 +27,6 @@ export const Cropper: React.FC = () => {
     dispatch,
   ]);
 
-  // Global Events
-
-  const handleOnUpdateContainerSize = useCallback(() => {
-    const e = containerRef.current!;
-    const rect = e.getBoundingClientRect();
-
-    dispatch(
-      actions.setActualSize({
-        x: rect.x,
-        y: rect.y,
-        width: rect.width,
-      })
-    );
-  }, [dispatch, image.width, containerRef.current]);
-
   // Image Events
 
   const handleOnStartImageTransform = useCallback(
@@ -92,12 +77,9 @@ export const Cropper: React.FC = () => {
     e.addEventListener("mouseup", handleOnComplete, false);
     e.addEventListener("mouseleave", handleOnComplete, false);
     e.addEventListener("touchend", handleOnComplete, false);
-    addEventListener("resize", handleOnUpdateContainerSize, false);
     addEventListener("touchstart", handleOnTouchStartDocument, {
       passive: false,
     });
-
-    handleOnUpdateContainerSize();
 
     return () => {
       e.removeEventListener("touchstart", handleOnStartImageTransform);
@@ -106,14 +88,9 @@ export const Cropper: React.FC = () => {
       e.removeEventListener("mouseup", handleOnComplete);
       e.removeEventListener("mouseleave", handleOnComplete);
       e.removeEventListener("touchend", handleOnComplete);
-      removeEventListener("resize", handleOnUpdateContainerSize);
       removeEventListener("touchstart", handleOnTouchStartDocument);
     };
   }, []);
-
-  useEffect(() => {
-    handleOnUpdateContainerSize();
-  }, [image.width, image.height]);
 
   const displayRatio = container.displayRatio;
 
