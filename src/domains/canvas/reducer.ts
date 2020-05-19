@@ -1,6 +1,6 @@
 import * as uuid from "uuid";
 import { Actions } from "./actions";
-import { canvasUserLayerFrame } from "./frames";
+import { canvasUserLayerFrame, CanvasUserLayerFrame } from "./frames";
 import * as types from "./types";
 import {
   calculateCanvasUserLayerRelativeCoordinates,
@@ -409,6 +409,7 @@ const userInitialState: CanvasUsersState = {
   differenceFromStartingY: 0,
   layers: [],
   frames: [],
+  selectedFrame: null,
 };
 
 const userReducer = (
@@ -445,6 +446,7 @@ const userReducer = (
             d: `M0 0H${width}V${height}H0V0Z`,
           },
         ],
+        selectedFrame: null,
       };
     }
 
@@ -625,6 +627,10 @@ const userReducer = (
           ...f,
           id: uuid.v4(),
         })),
+        selectedFrame: {
+          type: frame,
+          index,
+        },
       };
     }
 
@@ -674,6 +680,10 @@ export interface CanvasUsersState {
   differenceFromStartingY: number;
   layers: (CanvasUserLayer | null)[];
   frames: CanvasUserFrame[];
+  selectedFrame: {
+    type: CanvasUserLayerFrame;
+    index: number;
+  } | null;
 }
 
 export interface CanvasState {

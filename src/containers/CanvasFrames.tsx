@@ -1,7 +1,7 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled, { css } from "styled-components";
-import { Typography } from "~/styles/typography";
+import { State } from "~/domains";
 import { Spacing } from "~/styles/spacing";
 import { actions } from "~/domains/canvas/actions";
 import {
@@ -64,6 +64,7 @@ const CollageButton = styled.div<{ selected?: boolean }>`
 
 export const CanvasFrames: React.FC = () => {
   const dispatch = useDispatch();
+  const { selectedFrame } = useSelector(({ canvas }: State) => canvas.users);
   const handleOnClickEnableCollage = (
     frame: CanvasUserLayerFrame,
     index: number
@@ -74,7 +75,10 @@ export const CanvasFrames: React.FC = () => {
     <Container>
       <Horizontal>
         <HorizontalInner>
-          <CollageButton selected onClick={handleOnClickDisableCollage}>
+          <CollageButton
+            selected={!selectedFrame}
+            onClick={handleOnClickDisableCollage}
+          >
             <object type="image/svg+xml" data={`/images/collage/disable.svg`} />
           </CollageButton>
           {canvasUserLayerFrame[CanvasUserLayerFrame.W3H4].frames.map(
@@ -82,6 +86,13 @@ export const CanvasFrames: React.FC = () => {
               <CollageButton
                 onClick={() =>
                   handleOnClickEnableCollage(CanvasUserLayerFrame.W3H4, index)
+                }
+                selected={
+                  !!(
+                    selectedFrame &&
+                    selectedFrame.type === CanvasUserLayerFrame.W3H4 &&
+                    selectedFrame.index === index
+                  )
                 }
                 key={index}
               >
@@ -97,6 +108,13 @@ export const CanvasFrames: React.FC = () => {
               <CollageButton
                 onClick={() =>
                   handleOnClickEnableCollage(CanvasUserLayerFrame.W4H3, index)
+                }
+                selected={
+                  !!(
+                    selectedFrame &&
+                    selectedFrame.type === CanvasUserLayerFrame.W4H3 &&
+                    selectedFrame.index === index
+                  )
                 }
                 key={index}
               >
