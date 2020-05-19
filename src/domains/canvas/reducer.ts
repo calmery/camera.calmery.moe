@@ -80,8 +80,9 @@ const containerReducer = (
 
     case types.CANVAS_DISABLE_COLLAGE: {
       const { layers } = parentState.users;
-      const width = layers[0] ? layers[0].width : 0;
-      const height = layers[0] ? layers[0].height : 0;
+      const layer = layers.find((layer) => layer)!;
+      const width = layer.width;
+      const height = layer.height;
 
       return {
         ...state,
@@ -405,6 +406,7 @@ const stickerReducer = (
 const userInitialState: CanvasUsersState = {
   isDragging: false,
   canDragging: false,
+  enabledCollage: false,
   differenceFromStartingX: 0,
   differenceFromStartingY: 0,
   layers: [],
@@ -426,17 +428,12 @@ const userReducer = (
       const height = layer.height;
 
       // ToDo: 1 枚目の画像の他のフレームでの座標位置が消えてしまう
-      layers[0] = {
-        ...layer,
-        x: 0,
-        y: 0,
-      };
-
-      console.log(layer);
+      layers[0] = layer;
 
       return {
         ...state,
         canDragging: false,
+        enabledCollage: false,
         layers,
         frames: [
           {
@@ -629,6 +626,7 @@ const userReducer = (
           ...f,
           id: uuid.v4(),
         })),
+        enabledCollage: true,
         selectedFrame: {
           type: frame,
           index,
@@ -678,6 +676,7 @@ export interface CanvasStickersState {
 export interface CanvasUsersState {
   isDragging: boolean;
   canDragging: boolean;
+  enabledCollage: boolean;
   differenceFromStartingX: number;
   differenceFromStartingY: number;
   layers: (CanvasUserLayer | null)[];

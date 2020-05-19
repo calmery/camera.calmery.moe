@@ -75,6 +75,7 @@ export const CanvasUserLayers: React.FC = () => {
             <CanvasUserLayerComponent
               layer={layer}
               frame={frame}
+              enabledCollage={canvas.users.enabledCollage}
               key={i}
               onStart={(clipPath: DOMRect, event: MouseEvent | TouchEvent) =>
                 handleOnStart(i, clipPath.x, clipPath.y, event)

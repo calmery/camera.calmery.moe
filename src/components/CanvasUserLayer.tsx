@@ -5,12 +5,13 @@ import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 export const CanvasUserLayerComponent: React.FC<{
   layer: CanvasUserLayer;
   frame: CanvasUserFrame;
+  enabledCollage: boolean;
   onStart: (clipPath: DOMRect, event: MouseEvent | TouchEvent) => void;
   onMove: (clipPath: DOMRect, event: MouseEvent | TouchEvent) => void;
 }> = (props) => {
   const pathRef = useRef<SVGPathElement>(null);
   const rectRef = useRef<SVGRectElement>(null);
-  const { frame, layer, onMove, onStart } = props;
+  const { frame, layer, onMove, onStart, enabledCollage } = props;
 
   const handleOnMoveStart = useCallback(
     (event: MouseEvent | TouchEvent) => {
@@ -66,8 +67,8 @@ export const CanvasUserLayerComponent: React.FC<{
         <svg
           width={layer.width}
           height={layer.height}
-          x={layer.x}
-          y={layer.y}
+          x={enabledCollage ? layer.x : 0}
+          y={enabledCollage ? layer.y : 0}
           viewBox={`0 0 ${layer.width} ${layer.height}`}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
