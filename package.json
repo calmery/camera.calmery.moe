@@ -1,18 +1,4 @@
 {
-  "babel": {
-    "presets": [
-      "next/babel"
-    ],
-    "plugins": [
-      [
-        "babel-plugin-styled-components",
-        {
-          "pure": true,
-          "ssr": true
-        }
-      ]
-    ]
-  },
   "dependencies": {
     "@sentry/browser": "5.15.5",
     "blueimp-load-image": "5.12.0",
