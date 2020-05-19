@@ -65,7 +65,7 @@ export const Canvas: React.FC = () => {
     >
       <CanvasFilters />
       <CanvasUserLayers />
-      <CanvasStickerLayers />
+      {pathname !== "/collage" && <CanvasStickerLayers />}
     </svg>
   );
 };
