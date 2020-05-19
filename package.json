@@ -44,7 +44,7 @@
     "react-test-renderer": "16.13.1",
     "resize-observer-polyfill": "1.5.1",
     "ts-jest": "26.0.0",
-    "typescript": "3.9.2"
+    "typescript": "3.9.3"
   },
   "eslintConfig": {
     "env": {
