@@ -78,7 +78,7 @@ export const CanvasEmptyUserLayer: React.FC<{
           d={frame.d}
           fill="none"
           stroke={Colors.gray}
-          strokeWidth={2 * displayRatio}
+          strokeWidth={displayRatio}
           strokeDasharray="8 8"
         />
       </svg>
