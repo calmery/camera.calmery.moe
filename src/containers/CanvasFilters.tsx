@@ -8,8 +8,10 @@ export const CanvasFilters = () => {
 
   return (
     <defs>
-      {users.layers.map(
-        (userLayer, index) =>
+      {users.frames.map((_, index) => {
+        const userLayer = users.layers[index];
+
+        return (
           userLayer && (
             <CanvasFilter
               id={users.frames[index].id}
@@ -17,7 +19,8 @@ export const CanvasFilters = () => {
               key={index}
             />
           )
-      )}
+        );
+      })}
     </defs>
   );
 };

@@ -420,17 +420,19 @@ const userReducer = (
   switch (action.type) {
     case types.CANVAS_DISABLE_COLLAGE: {
       const { layers } = state;
-      const width = layers[0] ? layers[0].width : 0;
-      const height = layers[0] ? layers[0].height : 0;
+      const layer = layers.find((layer) => layer)!;
+
+      const width = layer.width;
+      const height = layer.height;
 
       // ToDo: 1 枚目の画像の他のフレームでの座標位置が消えてしまう
-      if (layers[0]) {
-        layers[0] = {
-          ...layers[0],
-          x: 0,
-          y: 0,
-        };
-      }
+      layers[0] = {
+        ...layer,
+        x: 0,
+        y: 0,
+      };
+
+      console.log(layer);
 
       return {
         ...state,
