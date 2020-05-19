@@ -5,10 +5,8 @@
     ],
     "plugins": [
       [
-        "styled-components",
+        "babel-plugin-styled-components",
         {
-          "displayName": false,
-          "fileName": false,
           "pure": true,
           "ssr": true
         }
