@@ -1,15 +1,24 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { State } from "~/domains";
 import { Colors } from "~/styles/colors";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
+import { thunkActions } from "~/domains/canvas/actions";
+import { getImageFile } from "~/utils/get-image-file";
 
 export const CanvasEmptyUserLayer: React.FC<{
   frame: CanvasUserFrame;
-  onClick: () => void;
+  index: number;
 }> = (props) => {
-  const { frame, onClick } = props;
+  const dispatch = useDispatch();
+  const { frame, index } = props;
   const { displayRatio } = useSelector(({ canvas }: State) => canvas.container);
+
+  const handOnClickEmptyUserImage = useCallback(async () => {
+    dispatch(
+      thunkActions.addCanvasUserLayerFromFile(await getImageFile(), index)
+    );
+  }, [dispatch, index]);
 
   return (
     <svg
@@ -28,7 +37,7 @@ export const CanvasEmptyUserLayer: React.FC<{
       )}
 
       <g clipPath={`url(#clip-path-${frame.id})`}>
-        <g onClick={onClick}>
+        <g onClick={handOnClickEmptyUserImage}>
           <rect
             x="0"
             y="0"

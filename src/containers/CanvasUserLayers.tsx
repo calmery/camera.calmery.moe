@@ -3,20 +3,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { CanvasUserLayerComponent } from "~/components/CanvasUserLayer";
 import { CanvasEmptyUserLayer } from "~/containers/CanvasEmptyUserLayer";
 import { State } from "~/domains";
-import { actions, thunkActions } from "~/domains/canvas/actions";
-import { getImageFile } from "~/utils/get-image-file";
+import { actions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
 export const CanvasUserLayers: React.FC = () => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
   const { users } = canvas;
-
-  const handOnClickEmptyUserImage = async (index: number) => {
-    dispatch(
-      thunkActions.addCanvasUserLayerFromFile(await getImageFile(), index)
-    );
-  };
 
   const handleOnStart = useCallback(
     (
@@ -78,13 +71,7 @@ export const CanvasUserLayers: React.FC = () => {
           );
         }
 
-        return (
-          <CanvasEmptyUserLayer
-            frame={frame}
-            onClick={() => handOnClickEmptyUserImage(i)}
-            key={i}
-          />
-        );
+        return <CanvasEmptyUserLayer frame={frame} index={i} key={i} />;
       })}
     </>
   );
