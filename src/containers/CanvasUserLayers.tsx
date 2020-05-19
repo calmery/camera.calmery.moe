@@ -5,11 +5,18 @@ import { CanvasEmptyUserLayer } from "~/containers/CanvasEmptyUserLayer";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
+import { useRouter } from "next/router";
+import { Colors } from "~/styles/colors";
 
 export const CanvasUserLayers: React.FC = () => {
   const dispatch = useDispatch();
+  const { pathname } = useRouter();
   const canvas = useSelector(({ canvas }: State) => canvas);
   const { users } = canvas;
+
+  const handleOnRemove = (index: number) => {
+    dispatch(actions.removeCanvasUserLayer(index));
+  };
 
   const handleOnStart = useCallback(
     (
@@ -49,6 +56,14 @@ export const CanvasUserLayers: React.FC = () => {
     [dispatch]
   );
 
+  let layerCount = 0;
+
+  users.layers.forEach((layer) => {
+    if (layer) {
+      layerCount += 1;
+    }
+  });
+
   return (
     <>
       {users.frames.map((_, i: number) => {
@@ -73,6 +88,30 @@ export const CanvasUserLayers: React.FC = () => {
 
         return <CanvasEmptyUserLayer frame={frame} index={i} key={i} />;
       })}
+      {layerCount > 1 &&
+        pathname === "/collage" &&
+        users.frames.map((_, i) => {
+          const layer = users.layers[i];
+          const frame = users.frames[i];
+
+          if (!layer) {
+            return null;
+          }
+
+          return (
+            <circle
+              key={i}
+              fill={Colors.gray}
+              cx={frame.x + frame.width}
+              cy={frame.y}
+              r={12 * canvas.container.displayRatio}
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => handleOnRemove(i)}
+            />
+          );
+        })}
     </>
   );
 };

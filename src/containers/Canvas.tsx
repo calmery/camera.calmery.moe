@@ -6,11 +6,13 @@ import { CanvasUserLayers } from "./CanvasUserLayers";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
+import { useRouter } from "next/router";
 
 export const Canvas: React.FC = () => {
   const containerRef = useRef<SVGSVGElement>(null);
   const dispatch = useDispatch();
   const { container } = useSelector(({ canvas }: State) => canvas);
+  const { pathname } = useRouter();
 
   const handleOnComplete = useCallback(() => dispatch(actions.complete()), [
     dispatch,
@@ -59,6 +61,7 @@ export const Canvas: React.FC = () => {
         width: `${container.actualWidth}px`,
         height: `${container.actualHeight}px`,
       }}
+      overflow={pathname === "/collage" ? "visible" : undefined}
     >
       <CanvasFilters />
       <CanvasUserLayers />
