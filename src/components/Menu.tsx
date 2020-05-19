@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/router";
 import styled, { css } from "styled-components";
 import { Colors, GradientColors } from "~/styles/colors";
@@ -37,9 +37,14 @@ const Divider = styled.div`
   flex-shrink: 0;
 `;
 
-const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
+const IconContainer = styled.div`
   height: 32px;
   margin-right: ${Spacing.l}px;
+  cursor: pointer;
+`;
+
+const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
+  height: 32px;
   pointer-events: none;
 
   ${({ selected }) =>
@@ -57,36 +62,50 @@ const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
 `;
 
 export const Menu = () => {
-  const { pathname } = useRouter();
+  const { pathname, push } = useRouter();
+  const handleOnClickRouterPush = useCallback(
+    (pathname: string) => push(pathname),
+    []
+  );
 
   return (
     <Container>
       <PrimaryButtons>
-        <Icon
-          selected={pathname === "/edit"}
-          type="image/svg+xml"
-          data="/images/menu/stickers.svg"
-        />
-        <Icon
-          selected={pathname === "/tune"}
-          type="image/svg+xml"
-          data="/images/menu/tune.svg"
-        />
-        <Icon
-          selected={pathname === "/crop"}
-          type="image/svg+xml"
-          data="/images/menu/crop.svg"
-        />
-        <Icon
-          selected={pathname === "/collage"}
-          type="image/svg+xml"
-          data="/images/menu/collage.svg"
-        />
+        <IconContainer onClick={() => handleOnClickRouterPush("/edit")}>
+          <Icon
+            selected={pathname === "/edit"}
+            type="image/svg+xml"
+            data="/images/menu/stickers.svg"
+          />
+        </IconContainer>
+        <IconContainer onClick={() => handleOnClickRouterPush("/tune")}>
+          <Icon
+            selected={pathname === "/tune"}
+            type="image/svg+xml"
+            data="/images/menu/tune.svg"
+          />
+        </IconContainer>
+        <IconContainer onClick={() => handleOnClickRouterPush("/crop")}>
+          <Icon
+            selected={pathname === "/crop"}
+            type="image/svg+xml"
+            data="/images/menu/crop.svg"
+          />
+        </IconContainer>
+        <IconContainer onClick={() => handleOnClickRouterPush("/collage")}>
+          <Icon
+            selected={pathname === "/collage"}
+            type="image/svg+xml"
+            data="/images/menu/collage.svg"
+          />
+        </IconContainer>
       </PrimaryButtons>
 
       <Divider />
       <SecondaryButtons>
-        <Icon type="image/svg+xml" data="/images/menu/save.svg" />
+        <IconContainer onClick={() => handleOnClickRouterPush("/save")}>
+          <Icon type="image/svg+xml" data="/images/menu/save.svg" />
+        </IconContainer>
       </SecondaryButtons>
     </Container>
   );
