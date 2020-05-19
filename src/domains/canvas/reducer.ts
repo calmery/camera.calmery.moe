@@ -27,6 +27,12 @@ const containerInitialState: CanvasContainerState = {
   actualWidth: 0,
   actualHeight: 0,
   displayRatio: 0,
+  display: {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  },
 };
 
 const containerReducer = (
@@ -58,6 +64,7 @@ const containerReducer = (
         actualWidth: svgWidth,
         actualHeight: svgHeight,
         displayRatio: frameWidth / svgWidth,
+        display: action.payload,
       };
     }
 
@@ -84,13 +91,34 @@ const containerReducer = (
     }
 
     case types.CANVAS_ENABLE_COLLAGE: {
+      const { display } = state;
       const { frame } = action.payload;
-      const { width, height } = canvasUserLayerFrame[frame];
+      const { width: frameWidth, height: frameHeight } = canvasUserLayerFrame[
+        frame
+      ];
+
+      // ToDo: 外に切り出す
+      let svgWidth = display.width;
+      let svgHeight = frameHeight * (display.width / frameWidth);
+      let svgX = display.x;
+      let svgY = display.y + (display.height - svgHeight) / 2;
+
+      if (svgHeight > display.height) {
+        svgHeight = display.height;
+        svgWidth = frameWidth * (display.height / frameHeight);
+        svgX = display.x + (display.width - svgWidth) / 2;
+        svgY = display.y;
+      }
 
       return {
         ...state,
-        width,
-        height,
+        width: frameWidth,
+        height: frameHeight,
+        actualX: svgX,
+        actualY: svgY,
+        actualWidth: svgWidth,
+        actualHeight: svgHeight,
+        displayRatio: frameWidth / svgWidth,
       };
     }
 
@@ -622,6 +650,12 @@ export interface CanvasContainerState {
   actualWidth: number;
   actualHeight: number;
   displayRatio: number;
+  display: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
 }
 
 export interface CanvasStickersState {

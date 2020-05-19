@@ -56,6 +56,8 @@ const Edit: NextPage = () => {
       dispatch(actions.updateCanvasContainerRect(e.getBoundingClientRect()));
     });
 
+    dispatch(actions.updateCanvasContainerRect(e.getBoundingClientRect()));
+
     resizeObserver.observe(e);
 
     return () => {
