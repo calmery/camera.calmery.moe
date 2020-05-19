@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { CanvasUserLayerComponent } from "~/components/CanvasUserLayer";
-import { CanvasEmptyUserLayer } from "~/components/CanvasEmptyUserLayer";
+import { CanvasEmptyUserLayer } from "~/containers/CanvasEmptyUserLayer";
 import { State } from "~/domains";
 import { actions, thunkActions } from "~/domains/canvas/actions";
 import { getImageFile } from "~/utils/get-image-file";
