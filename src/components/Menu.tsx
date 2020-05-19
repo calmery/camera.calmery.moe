@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/router";
 import styled, { css } from "styled-components";
 import { Colors, GradientColors } from "~/styles/colors";
 import { Spacing } from "~/styles/spacing";
@@ -56,13 +57,31 @@ const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
 `;
 
 export const Menu = () => {
+  const { pathname } = useRouter();
+
   return (
     <Container>
       <PrimaryButtons>
-        <Icon type="image/svg+xml" data="/images/menu/stickers.svg" />
-        <Icon disabled type="image/svg+xml" data="/images/menu/tune.svg" />
-        <Icon selected type="image/svg+xml" data="/images/menu/crop.svg" />
-        <Icon type="image/svg+xml" data="/images/menu/collage.svg" />
+        <Icon
+          selected={pathname === "/edit"}
+          type="image/svg+xml"
+          data="/images/menu/stickers.svg"
+        />
+        <Icon
+          selected={pathname === "/tune"}
+          type="image/svg+xml"
+          data="/images/menu/tune.svg"
+        />
+        <Icon
+          selected={pathname === "/crop"}
+          type="image/svg+xml"
+          data="/images/menu/crop.svg"
+        />
+        <Icon
+          selected={pathname === "/collage"}
+          type="image/svg+xml"
+          data="/images/menu/collage.svg"
+        />
       </PrimaryButtons>
 
       <Divider />
