@@ -70,7 +70,7 @@ const Preview: NextPage = () => {
   return (
     <>
       <div ref={ref}>
-        <Canvas />
+        <Canvas preview />
       </div>
       <button onClick={onClickDownload}>Download</button>
     </>
