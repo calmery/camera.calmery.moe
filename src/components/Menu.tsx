@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import styled, { css } from "styled-components";
 import { Colors, GradientColors } from "~/styles/colors";
 import { Spacing } from "~/styles/spacing";
+import { useSelector } from "react-redux";
+import { State } from "~/domains";
 
 const Container = styled.div`
   box-sizing: border-box;
@@ -37,10 +39,16 @@ const Divider = styled.div`
   flex-shrink: 0;
 `;
 
-const IconContainer = styled.div`
+const IconContainer = styled.div<{ disabled?: boolean }>`
   height: 32px;
   margin-right: ${Spacing.l}px;
   cursor: pointer;
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      cursor: not-allowed;
+    `}
 `;
 
 const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
@@ -63,6 +71,9 @@ const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
 
 export const Menu = () => {
   const { pathname, push } = useRouter();
+  const collage = useSelector(
+    ({ canvas }: State) => canvas.users.enabledCollage
+  );
   const handleOnClickRouterPush = useCallback(
     (pathname: string) => push(pathname),
     []
@@ -85,8 +96,14 @@ export const Menu = () => {
             data="/images/menu/tune.svg"
           />
         </IconContainer>
-        <IconContainer onClick={() => handleOnClickRouterPush("/crop")}>
+        <IconContainer
+          disabled={collage}
+          onClick={
+            !collage ? () => handleOnClickRouterPush("/crop") : undefined
+          }
+        >
           <Icon
+            disabled={collage}
             selected={pathname === "/crop"}
             type="image/svg+xml"
             data="/images/menu/crop.svg"
