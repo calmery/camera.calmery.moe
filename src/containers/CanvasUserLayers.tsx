@@ -8,7 +8,9 @@ import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-p
 import { useRouter } from "next/router";
 import { Colors } from "~/styles/colors";
 
-export const CanvasUserLayers: React.FC = () => {
+export const CanvasUserLayers: React.FC<{ preview: boolean }> = ({
+  preview,
+}) => {
   const dispatch = useDispatch();
   const { pathname } = useRouter();
   const canvas = useSelector(({ canvas }: State) => canvas);
@@ -25,14 +27,15 @@ export const CanvasUserLayers: React.FC = () => {
       clipPathY: number,
       event: MouseEvent | TouchEvent
     ) => {
-      dispatch(
-        actions.startCanvasUserLayerDrag(
-          index,
-          clipPathX,
-          clipPathY,
-          convertEventToCursorPositions(event)
-        )
-      );
+      !preview &&
+        dispatch(
+          actions.startCanvasUserLayerDrag(
+            index,
+            clipPathX,
+            clipPathY,
+            convertEventToCursorPositions(event)
+          )
+        );
     },
     [dispatch]
   );
@@ -44,14 +47,15 @@ export const CanvasUserLayers: React.FC = () => {
       clipPathY: number,
       event: MouseEvent | TouchEvent
     ) => {
-      dispatch(
-        actions.tickCanvasUserLayer(
-          index,
-          clipPathX,
-          clipPathY,
-          convertEventToCursorPositions(event)
-        )
-      );
+      !preview &&
+        dispatch(
+          actions.tickCanvasUserLayer(
+            index,
+            clipPathX,
+            clipPathY,
+            convertEventToCursorPositions(event)
+          )
+        );
     },
     [dispatch]
   );
@@ -87,9 +91,15 @@ export const CanvasUserLayers: React.FC = () => {
           );
         }
 
+        // preview モードでは CanvasemptyLayer は表示しない
+        if (preview) {
+          return null;
+        }
+
         return <CanvasEmptyUserLayer frame={frame} index={i} key={i} />;
       })}
-      {layerCount > 1 &&
+      {!preview &&
+        layerCount > 1 &&
         pathname === "/collage" &&
         users.frames.map((_, i) => {
           const layer = users.layers[i];

@@ -8,26 +8,30 @@ import { actions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 import { useRouter } from "next/router";
 
-export const Canvas: React.FC = () => {
+export const Canvas: React.FC<{ preview?: boolean }> = ({
+  preview = false,
+}) => {
   const containerRef = useRef<SVGSVGElement>(null);
   const dispatch = useDispatch();
   const { container } = useSelector(({ canvas }: State) => canvas);
   const { pathname } = useRouter();
 
-  const handleOnComplete = useCallback(() => dispatch(actions.complete()), [
-    dispatch,
-  ]);
+  const handleOnComplete = useCallback(
+    () => !preview && dispatch(actions.complete()),
+    [dispatch, preview]
+  );
 
   const handleOnMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
       event.stopPropagation();
 
-      dispatch(
-        actions.tickCanvasLayerSticker(convertEventToCursorPositions(event))
-      );
+      !preview &&
+        dispatch(
+          actions.tickCanvasLayerSticker(convertEventToCursorPositions(event))
+        );
     },
-    [dispatch]
+    [dispatch, preview]
   );
 
   useEffect(() => {
@@ -64,8 +68,8 @@ export const Canvas: React.FC = () => {
       overflow={pathname === "/collage" ? "visible" : undefined}
     >
       <CanvasFilters />
-      <CanvasUserLayers />
-      {pathname !== "/collage" && <CanvasStickerLayers />}
+      <CanvasUserLayers preview={preview} />
+      {pathname !== "/collage" && <CanvasStickerLayers preview={preview} />}
     </svg>
   );
 };

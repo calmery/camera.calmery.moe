@@ -5,7 +5,9 @@ import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
-export const CanvasStickerLayers: React.FC = () => {
+export const CanvasStickerLayers: React.FC<{ preview: boolean }> = ({
+  preview,
+}) => {
   const dispatch = useDispatch();
   const { stickers, container } = useSelector(({ canvas }: State) => canvas);
 
@@ -38,7 +40,7 @@ export const CanvasStickerLayers: React.FC = () => {
           <CanvasStickerLayerComponent
             key={index}
             displayRatio={container.displayRatio}
-            selected={index === stickers.layers.length - 1}
+            selected={!preview && index === stickers.layers.length - 1}
             handleOnClickRemoveButton={handleOnClickRemoveButton}
             handleOnPress={handleOnPress}
             handleOnPressTransformCircle={handleOnPressTransformCircle}
