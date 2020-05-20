@@ -1,7 +1,8 @@
 import React, { useRef, useCallback } from "react";
 import { NextPage } from "next";
-import { withRedux, NextPageContextWithRedux } from "~/domains";
+import { withRedux, NextPageContextWithRedux, State } from "~/domains";
 import { Canvas } from "~/containers/Canvas";
+import { useSelector } from "react-redux";
 
 const convertDataUrlToBlob = (dataUrl: string) => {
   const type = dataUrl.split(",")[0].split(":")[1].split(";")[0];
@@ -52,6 +53,9 @@ export const download = (name: string, body: string) => {
 };
 
 const Preview: NextPage = () => {
+  const { width, height } = useSelector(
+    ({ canvas }: State) => canvas.container
+  );
   const ref: React.Ref<HTMLDivElement> = useRef(null);
   const onClickDownload = useCallback(async () => {
     if (!ref.current) {
@@ -61,8 +65,8 @@ const Preview: NextPage = () => {
 
     const dataUrl = await convertSvgToDataUrl(
       ref.current.innerHTML,
-      2000,
-      1420
+      width,
+      height
     );
     download(`${new Date().toISOString()}.png`, dataUrl);
   }, []);
