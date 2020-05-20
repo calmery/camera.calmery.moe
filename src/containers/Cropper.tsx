@@ -9,6 +9,7 @@ export const Cropper: React.FC = () => {
   const { container, cropper, image } = useSelector(
     ({ cropper }: State) => cropper
   );
+  const canvas = useSelector(({ canvas }: State) => canvas);
   const containerRef = useRef<SVGSVGElement>(null);
 
   // Events
@@ -83,6 +84,17 @@ export const Cropper: React.FC = () => {
     addEventListener("touchstart", handleOnTouchStartDocument, {
       passive: false,
     });
+
+    const { users } = canvas;
+    const { dataUrl, width, height } = users.layers.find((user) => user)!;
+
+    dispatch(
+      actions.initializeCropperImage({
+        url: dataUrl,
+        width,
+        height,
+      })
+    );
 
     return () => {
       e.removeEventListener("touchstart", handleOnStartImageTransform);

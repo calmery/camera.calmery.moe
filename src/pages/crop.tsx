@@ -155,8 +155,8 @@ const Crop: NextPage = () => {
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
   const { image, cropper } = useSelector(({ cropper }: State) => cropper);
-  const initializeCropperImage = (url: string, width: number, height: number) =>
-    dispatch(actions.initializeCropperImage({ url, width, height }));
+  // const initializeCropperImage = (url: string, width: number, height: number) =>
+  //   dispatch(actions.initializeCropperImage({ url, width, height }));
   const changeCropperCropperAspectRatio = (
     index: number,
     w: number,
@@ -178,9 +178,9 @@ const Crop: NextPage = () => {
 
   // Debug
 
-  useEffect(() => {
-    initializeCropperImage("images/background.jpg", 1500, 1065);
-  }, []);
+  // useEffect(() => {
+  //   initializeCropperImage("images/background.jpg", 1500, 1065);
+  // }, []);
 
   let rotate = image.rotate.current;
 

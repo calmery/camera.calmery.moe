@@ -60,11 +60,6 @@ const startCropperImageTransform = (payload: CursorPosition[]) => ({
   payload,
 });
 
-const imageActions = {
-  initializeCropperImage,
-  startCropperImageTransform,
-};
-
 // Common
 
 const tickCropper = (cursorPositions: CursorPosition[]) => ({
