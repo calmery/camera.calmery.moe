@@ -104,7 +104,11 @@ export const Menu = () => {
       <Divider />
       <SecondaryButtons>
         <IconContainer onClick={() => handleOnClickRouterPush("/save")}>
-          <Icon type="image/svg+xml" data="/images/menu/save.svg" />
+          <Icon
+            selected={pathname === "/save"}
+            type="image/svg+xml"
+            data="/images/menu/save.svg"
+          />
         </IconContainer>
       </SecondaryButtons>
     </Container>

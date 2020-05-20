@@ -58,13 +58,17 @@ export const Canvas: React.FC<{ preview?: boolean }> = ({
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       ref={containerRef}
-      style={{
-        position: "fixed",
-        top: `${container.actualY}px`,
-        left: `${container.actualX}px`,
-        width: `${container.actualWidth}px`,
-        height: `${container.actualHeight}px`,
-      }}
+      style={
+        !preview
+          ? {
+              position: "fixed",
+              top: `${container.actualY}px`,
+              left: `${container.actualX}px`,
+              width: `${container.actualWidth}px`,
+              height: `${container.actualHeight}px`,
+            }
+          : {}
+      }
       overflow={pathname === "/collage" ? "visible" : undefined}
     >
       <CanvasFilters />
