@@ -1,15 +1,13 @@
-import React, { useRef, useCallback, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { NextPage } from "next";
 import styled from "styled-components";
-import { withRedux, State } from "~/domains";
-import { Canvas } from "~/containers/Canvas";
-import { useSelector, useDispatch } from "react-redux";
-import { convertSvgToDataUrl } from "~/utils/convert-svg-to-url";
-import { Spacing } from "~/styles/spacing";
 import { Page } from "~/components/Page";
 import { Menu } from "~/components/Menu";
-import ResizeObserver from "resize-observer-polyfill";
-import { actions } from "~/domains/canvas/actions";
+import { Canvas } from "~/containers/Canvas";
+import { withRedux, State } from "~/domains";
+import { Spacing } from "~/styles/spacing";
+import { convertSvgToDataUrl } from "~/utils/convert-svg-to-url";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -34,7 +32,7 @@ const BottomBar = styled.div`
   padding-top: ${Spacing.l}px;
 `;
 
-const Preview: NextPage = () => {
+const Save: NextPage = () => {
   const {
     userFrames,
     userLayers,
@@ -77,22 +75,15 @@ const Preview: NextPage = () => {
           <ControlBar>
             <img src="/images/close.svg" />
           </ControlBar>
+          <Canvas save containerRef={ref} />
           <BottomBar>
             <Menu />
           </BottomBar>
         </FlexColumn>
       </Page>
-      <div
-        ref={ref}
-        style={{
-          display: "none",
-        }}
-      >
-        <Canvas preview />
-      </div>
       <img ref={imageRef} />
     </>
   );
 };
 
-export default withRedux(Preview);
+export default withRedux(Save);

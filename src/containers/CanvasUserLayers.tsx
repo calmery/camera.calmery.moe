@@ -8,9 +8,7 @@ import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-p
 import { useRouter } from "next/router";
 import { Colors } from "~/styles/colors";
 
-export const CanvasUserLayers: React.FC<{ preview: boolean }> = ({
-  preview,
-}) => {
+export const CanvasUserLayers: React.FC<{ save: boolean }> = ({ save }) => {
   const dispatch = useDispatch();
   const { pathname } = useRouter();
   const canvas = useSelector(({ canvas }: State) => canvas);
@@ -27,7 +25,7 @@ export const CanvasUserLayers: React.FC<{ preview: boolean }> = ({
       clipPathY: number,
       event: MouseEvent | TouchEvent
     ) => {
-      !preview &&
+      !save &&
         dispatch(
           actions.startCanvasUserLayerDrag(
             index,
@@ -47,7 +45,7 @@ export const CanvasUserLayers: React.FC<{ preview: boolean }> = ({
       clipPathY: number,
       event: MouseEvent | TouchEvent
     ) => {
-      !preview &&
+      !save &&
         dispatch(
           actions.tickCanvasUserLayer(
             index,
@@ -92,14 +90,14 @@ export const CanvasUserLayers: React.FC<{ preview: boolean }> = ({
           );
         }
 
-        // preview モードでは CanvasemptyLayer は表示しない
-        if (preview) {
+        // save モードでは CanvasemptyLayer は表示しない
+        if (save) {
           return null;
         }
 
         return <CanvasEmptyUserLayer frame={frame} index={i} key={i} />;
       })}
-      {!preview &&
+      {!save &&
         layerCount > 1 &&
         pathname === "/collage" &&
         users.userFrames.map((_, i) => {

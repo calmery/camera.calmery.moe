@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback, forwardRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ResizeObserver from "resize-observer-polyfill";
 import styled from "styled-components";
@@ -21,10 +21,11 @@ const CanvasSizeDetector = styled.div`
 `;
 
 export const Canvas: React.FC<{
-  preview?: boolean;
+  save?: boolean;
   users?: boolean;
   stickers?: boolean;
-}> = ({ preview = false, users = true, stickers = true }) => {
+  containerRef?: any;
+}> = ({ save = false, users = true, stickers = true, containerRef }) => {
   const displayableRef = useRef<HTMLDivElement>(null);
   const ref = useRef<SVGSVGElement>(null);
   const dispatch = useDispatch();
@@ -38,8 +39,8 @@ export const Canvas: React.FC<{
   } = useSelector(({ canvas }: State) => canvas);
 
   const handleOnComplete = useCallback(
-    () => !preview && dispatch(actions.complete()),
-    [dispatch, preview]
+    () => !save && dispatch(actions.complete()),
+    [dispatch, save]
   );
 
   const handleOnMove = useCallback(
@@ -47,12 +48,12 @@ export const Canvas: React.FC<{
       event.preventDefault();
       event.stopPropagation();
 
-      !preview &&
+      !save &&
         dispatch(
           actions.tickCanvasLayerSticker(convertEventToCursorPositions(event))
         );
     },
-    [dispatch, preview]
+    [dispatch, save]
   );
 
   useEffect(() => {
@@ -78,31 +79,32 @@ export const Canvas: React.FC<{
       <CanvasContainer>
         <CanvasSizeDetector ref={displayableRef} />
       </CanvasContainer>
-      <svg
-        viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        ref={ref}
-        style={
-          !preview
-            ? {
-                position: "fixed",
-                top: `${styleTop}px`,
-                left: `${styleLeft}px`,
-                width: `${styleWidth}px`,
-                height: `${styleHeight}px`,
-              }
-            : {}
-        }
-        overflow={!preview ? "visible" : undefined}
-        onMouseUp={handleOnComplete}
-        onMouseLeave={handleOnComplete}
-        onTouchEnd={handleOnComplete}
-        onMouseMove={handleOnMove}
+      <div
+        ref={containerRef}
+        style={{
+          position: "fixed",
+          top: `${styleTop}px`,
+          left: `${styleLeft}px`,
+          width: `${styleWidth}px`,
+          height: `${styleHeight}px`,
+          opacity: save ? 0 : 1,
+        }}
       >
-        {users && <CanvasUserLayers preview={preview} />}
-        {stickers && <CanvasStickerLayers preview={preview} />}
-      </svg>
+        <svg
+          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+          ref={ref}
+          overflow={!save ? "visible" : undefined}
+          onMouseUp={handleOnComplete}
+          onMouseLeave={handleOnComplete}
+          onTouchEnd={handleOnComplete}
+          onMouseMove={handleOnMove}
+        >
+          {users && <CanvasUserLayers save={save} />}
+          {stickers && <CanvasStickerLayers save={save} />}
+        </svg>
+      </div>
     </>
   );
 };
