@@ -147,27 +147,68 @@ export default (state = initialState, action: Actions): CanvasState => {
     }
 
     case types.CANVAS_DISABLE_COLLAGE: {
-      const { userLayers } = state;
-      const layer = userLayers.find((layer) => layer)!;
-      const width = layer.width;
-      const height = layer.height;
+      const {
+        userLayers,
+        displayableLeft,
+        displayableTop,
+        displayableWidth,
+        displayableHeight,
+        viewBoxWidth,
+        viewBoxHeight,
+      } = state;
 
-      userLayers[0] = layer;
+      if (userLayers[0]) {
+        const { width, height } = userLayers[0];
+
+        return {
+          ...state,
+          viewBoxWidth: width,
+          viewBoxHeight: height,
+          isCollaging: false,
+          userLayers,
+          userFrames: [
+            {
+              id: uuid.v4(),
+              width,
+              height,
+              x: 0,
+              y: 0,
+              path: `M0 0H${width}V${height}H0V0Z`,
+            },
+          ],
+        };
+      }
+
+      let svgWidth = displayableWidth;
+      let svgHeight = viewBoxHeight * (displayableWidth / viewBoxWidth);
+      let svgX = displayableLeft;
+      let svgY = displayableTop + (displayableHeight - svgHeight) / 2;
+
+      if (svgHeight > displayableHeight) {
+        svgHeight = displayableHeight;
+        svgWidth = viewBoxWidth * (displayableHeight / viewBoxHeight);
+        svgX = displayableLeft + (displayableWidth - svgWidth) / 2;
+        svgY = displayableTop;
+      }
 
       return {
         ...state,
-        viewBoxWidth: width,
-        viewBoxHeight: height,
+        styleWidth: svgWidth,
+        styleHeight: svgHeight,
+        styleTop: svgY,
+        styleLeft: svgX,
+        viewBoxWidth: svgWidth,
+        viewBoxHeight: svgHeight,
         isCollaging: false,
         userLayers,
         userFrames: [
           {
             id: uuid.v4(),
-            width,
-            height,
+            width: svgWidth,
+            height: svgHeight,
             x: 0,
             y: 0,
-            path: `M0 0H${width}V${height}H0V0Z`,
+            path: `M0 0H${svgWidth}V${svgHeight}H0V0Z`,
           },
         ],
       };
