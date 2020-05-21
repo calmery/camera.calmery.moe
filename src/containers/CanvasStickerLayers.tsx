@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { CanvasStickerLayerComponent } from "~/components/CanvasStickerLayer";
+import { CanvasStickerLayer } from "~/components/CanvasStickerLayer";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
@@ -9,7 +9,8 @@ export const CanvasStickerLayers: React.FC<{ preview: boolean }> = ({
   preview,
 }) => {
   const dispatch = useDispatch();
-  const { stickers, container } = useSelector(({ canvas }: State) => canvas);
+  const canvas = useSelector(({ canvas }: State) => canvas);
+  const stickers = canvas;
 
   const handleOnSelect = useCallback(
     (index: number) => dispatch(actions.changeCanvasStickerLayerOrder(index)),
@@ -35,12 +36,12 @@ export const CanvasStickerLayers: React.FC<{ preview: boolean }> = ({
 
   return (
     <>
-      {stickers.layers.map((sticker, index) => {
+      {stickers.stickerLayers.map((sticker, index) => {
         return (
-          <CanvasStickerLayerComponent
+          <CanvasStickerLayer
             key={index}
-            displayRatio={container.displayRatio}
-            selected={!preview && index === stickers.layers.length - 1}
+            displayMagnification={canvas.displayMagnification}
+            selected={!preview && index === stickers.stickerLayers.length - 1}
             handleOnClickRemoveButton={handleOnClickRemoveButton}
             handleOnPress={handleOnPress}
             handleOnPressTransformCircle={handleOnPressTransformCircle}

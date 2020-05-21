@@ -49,9 +49,10 @@ const BottomBar = styled.div`
 const Preview: NextPage = () => {
   const dRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
-  const { container, users, stickers } = useSelector(
-    ({ canvas }: State) => canvas
-  );
+  const canvas = useSelector(({ canvas }: State) => canvas);
+  const users = canvas;
+  const stickers = canvas;
+  const container = canvas;
   const ref: React.Ref<HTMLDivElement> = useRef(null);
   const imageRef: React.Ref<HTMLImageElement> = useRef(null);
 
@@ -59,8 +60,8 @@ const Preview: NextPage = () => {
     (async () => {
       const dataUrl = await convertSvgToDataUrl(
         ref.current!.innerHTML,
-        container.width,
-        container.height
+        container.viewBoxWidth,
+        container.viewBoxHeight
       );
 
       const e = imageRef.current!;
@@ -72,10 +73,10 @@ const Preview: NextPage = () => {
   useEffect(() => {
     const e = imageRef.current!;
     e.style.position = "fixed";
-    e.style.top = `${container.actualY}px`;
-    e.style.left = `${container.actualX}px`;
-    e.style.width = `${container.actualWidth}px`;
-    e.style.height = `${container.actualHeight}px`;
+    e.style.top = `${container.styleTop}px`;
+    e.style.left = `${container.styleLeft}px`;
+    e.style.width = `${container.styleWidth}px`;
+    e.style.height = `${container.styleHeight}px`;
   }, [container]);
 
   useEffect(() => {

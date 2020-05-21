@@ -1,20 +1,20 @@
 import React from "react";
-import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
+import { CanvasLayer } from "~/types/CanvasLayer";
 
-export const CanvasStickerLayerComponent: React.FC<{
+export const CanvasStickerLayer: React.FC<{
   selected: boolean;
-  displayRatio: number;
+  displayMagnification: number;
   handleOnPressTransformCircle: (
     event: React.MouseEvent | React.TouchEvent
   ) => void;
   handleOnPress: (event: React.MouseEvent | React.TouchEvent) => void;
   handleOnSelect: () => void;
   handleOnClickRemoveButton: () => void;
-  sticker: CanvasStickerLayer;
+  sticker: CanvasLayer;
 }> = (props) => {
   const {
     sticker,
-    displayRatio,
+    displayMagnification,
     selected,
     handleOnSelect,
     handleOnPress,
@@ -22,22 +22,22 @@ export const CanvasStickerLayerComponent: React.FC<{
     handleOnClickRemoveButton,
   } = props;
 
-  const { dataUrl, x, y, width, height, rotate, scale } = sticker;
+  const { dataUrl, x, y, width, height, angle, scale } = sticker;
 
   return (
     <svg
-      width={width * scale.current}
-      height={height * scale.current}
+      width={width * scale}
+      height={height * scale}
       x={x}
       y={y}
-      viewBox={`0 0 ${width * scale.current} ${height * scale.current}`}
+      viewBox={`0 0 ${width * scale} ${height * scale}`}
       overflow="visible"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
     >
       <g
-        transform={`rotate(${rotate.current}, ${(width * scale.current) / 2}, ${
-          (height * scale.current) / 2
+        transform={`rotate(${angle}, ${(width * scale) / 2}, ${
+          (height * scale) / 2
         })`}
       >
         <image
@@ -52,8 +52,10 @@ export const CanvasStickerLayerComponent: React.FC<{
               style={{ cursor: "move" }}
               fillOpacity="0"
               stroke="#FFF"
-              strokeWidth={2 * displayRatio}
-              strokeDasharray={`${8 * displayRatio} ${8 * displayRatio}`}
+              strokeWidth={2 * displayMagnification}
+              strokeDasharray={`${8 * displayMagnification} ${
+                8 * displayMagnification
+              }`}
               width="100%"
               height="100%"
               x="0"
@@ -64,17 +66,17 @@ export const CanvasStickerLayerComponent: React.FC<{
             <circle
               style={{ cursor: "pointer" }}
               fill="#FFF"
-              cx={width * scale.current}
+              cx={width * scale}
               cy="0"
-              r={12 * displayRatio}
+              r={12 * displayMagnification}
               onClick={handleOnClickRemoveButton}
             ></circle>
             <circle
               style={{ cursor: "se-resize" }}
               fill="#FFF"
-              cx={width * scale.current}
-              cy={height * scale.current}
-              r={12 * displayRatio}
+              cx={width * scale}
+              cy={height * scale}
+              r={12 * displayMagnification}
               onMouseDown={handleOnPressTransformCircle}
               onTouchStart={handleOnPressTransformCircle}
             ></circle>

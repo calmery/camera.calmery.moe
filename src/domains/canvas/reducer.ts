@@ -6,7 +6,7 @@ import {
   calculateCanvasUserLayerRelativeCoordinates,
   progressCanvasStickerLayerTransform,
 } from "./utils";
-import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
+import { CanvasLayer } from "~/types/CanvasLayer";
 import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 import { angleBetweenTwoPoints } from "~/utils/angle-between-two-points";
@@ -17,256 +17,239 @@ import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
 const CANVAS_STICKER_LAYER_MIN_WIDTH = 200;
 const CANVAS_STICKER_LAYER_MIN_HEIGHT = 200;
 
-// Container Reducer
+// Types
 
-const containerInitialState: CanvasContainerState = {
-  width: 0,
-  height: 0,
-  actualX: 0,
-  actualY: 0,
-  actualWidth: 0,
-  actualHeight: 0,
-  displayRatio: 0,
-  display: {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
+export interface CanvasState {
+  viewBoxWidth: number;
+  viewBoxHeight: number;
+  styleTop: number;
+  styleLeft: number;
+  styleWidth: number;
+  styleHeight: number;
+  displayableTop: number;
+  displayableLeft: number;
+  displayableWidth: number;
+  displayableHeight: number;
+  displayMagnification: number;
+  isCollaging: boolean;
+  isUserLayerDragging: boolean;
+  isStickerLayerDragging: boolean;
+  isStickerLayerTransforming: boolean;
+  userFrames: CanvasUserFrame[];
+  userLayers: (CanvasUserLayer | null)[];
+  stickerLayers: CanvasLayer[];
+  temporaries: {
+    pointerOffsetX: number;
+    pointerOffsetY: number;
+    previousAngle: number;
+    angleBetweenFingers: number;
+    previousScale: number;
+    distanceBetweenFingers: number;
+  };
+}
+
+const initialState: CanvasState = {
+  viewBoxWidth: 0,
+  viewBoxHeight: 0,
+  styleLeft: 0,
+  styleTop: 0,
+  styleWidth: 0,
+  styleHeight: 0,
+  displayMagnification: 0,
+  displayableLeft: 0,
+  displayableTop: 0,
+  displayableWidth: 0,
+  displayableHeight: 0,
+  isStickerLayerDragging: false,
+  isStickerLayerTransforming: false,
+  stickerLayers: [],
+  isUserLayerDragging: false,
+  isCollaging: false,
+  userLayers: [],
+  userFrames: [],
+  temporaries: {
+    pointerOffsetX: 0,
+    pointerOffsetY: 0,
+    previousAngle: 0,
+    angleBetweenFingers: 0,
+    previousScale: 0,
+    distanceBetweenFingers: 0,
   },
 };
 
-const containerReducer = (
-  parentState: CanvasState,
-  state = containerInitialState,
-  action: Actions
-): CanvasContainerState => {
+// Main
+
+export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
     case types.CANVAS_CONTAINER_UPDATE_RECT: {
       const { x, y, width, height } = action.payload;
-      const { width: frameWidth, height: frameHeight } = state;
+      const { viewBoxWidth, viewBoxHeight } = state;
 
       let svgWidth = width;
-      let svgHeight = frameHeight * (width / frameWidth);
+      let svgHeight = viewBoxHeight * (width / viewBoxWidth);
       let svgX = x;
       let svgY = y + (height - svgHeight) / 2;
 
       if (svgHeight > height) {
         svgHeight = height;
-        svgWidth = frameWidth * (height / frameHeight);
+        svgWidth = viewBoxWidth * (height / viewBoxHeight);
         svgX = x + (width - svgWidth) / 2;
         svgY = y;
       }
 
       return {
         ...state,
-        actualX: svgX,
-        actualY: svgY,
-        actualWidth: svgWidth,
-        actualHeight: svgHeight,
-        displayRatio: frameWidth / svgWidth,
-        display: action.payload,
+        styleLeft: svgX,
+        styleTop: svgY,
+        styleWidth: svgWidth,
+        styleHeight: svgHeight,
+        displayMagnification: viewBoxWidth / svgWidth,
+        displayableLeft: x,
+        displayableTop: y,
+        displayableWidth: width,
+        displayableHeight: height,
       };
     }
 
     case types.CANVAS_INITIALIZE: {
-      const { width, height } = action.payload;
+      const { userFrames, userLayers } = state;
+      const { dataUrl, width, height } = action.payload;
+
+      userLayers[0] = {
+        dataUrl,
+        width,
+        height,
+        x: 0,
+        y: 0,
+        blur: 0,
+        hue: 0,
+        saturate: 1,
+        angle: 0,
+        scale: 1,
+      };
+
+      userFrames[0] = {
+        id: uuid.v4(),
+        width,
+        height,
+        x: 0,
+        y: 0,
+        path: `M0 0H${width}V${height}H0V0Z`,
+      };
 
       return {
         ...state,
-        width,
-        height,
+        viewBoxWidth: width,
+        viewBoxHeight: height,
+        userFrames,
+        userLayers,
       };
     }
 
     case types.CANVAS_DISABLE_COLLAGE: {
-      const { layers } = parentState.users;
-      const layer = layers.find((layer) => layer)!;
+      const { userLayers } = state;
+      const layer = userLayers.find((layer) => layer)!;
       const width = layer.width;
       const height = layer.height;
 
-      return {
-        ...state,
-        width,
-        height,
-      };
-    }
-
-    case types.CANVAS_ENABLE_COLLAGE: {
-      const { display } = state;
-      const { frame } = action.payload;
-      const { width: frameWidth, height: frameHeight } = canvasUserLayerFrame[
-        frame
-      ];
-
-      // ToDo: 外に切り出す
-      let svgWidth = display.width;
-      let svgHeight = frameHeight * (display.width / frameWidth);
-      let svgX = display.x;
-      let svgY = display.y + (display.height - svgHeight) / 2;
-
-      if (svgHeight > display.height) {
-        svgHeight = display.height;
-        svgWidth = frameWidth * (display.height / frameHeight);
-        svgX = display.x + (display.width - svgWidth) / 2;
-        svgY = display.y;
-      }
+      userLayers[0] = layer;
 
       return {
         ...state,
-        width: frameWidth,
-        height: frameHeight,
-        actualX: svgX,
-        actualY: svgY,
-        actualWidth: svgWidth,
-        actualHeight: svgHeight,
-        displayRatio: frameWidth / svgWidth,
-      };
-    }
-
-    default:
-      return state;
-  }
-};
-
-// Sticker Reducer
-
-const stickerInitialState: CanvasStickersState = {
-  isDragging: false,
-  isTransforming: false,
-  isMultiTouching: false,
-  referenceX: 0,
-  referenceY: 0,
-  layers: [],
-};
-
-const stickerReducer = (
-  parentState: CanvasState,
-  state = stickerInitialState,
-  action: Actions
-): CanvasStickersState => {
-  switch (action.type) {
-    case types.CANVAS_STICKER_LAYER_ADD: {
-      const { layers } = state;
-      const { dataUrl, width, height } = action.payload;
-
-      return {
-        ...state,
-        layers: [
-          ...layers,
+        viewBoxWidth: width,
+        viewBoxHeight: height,
+        isCollaging: false,
+        userLayers,
+        userFrames: [
           {
-            dataUrl,
+            id: uuid.v4(),
             width,
             height,
             x: 0,
             y: 0,
-            scale: {
-              current: 1,
-              previous: 1,
-              reference: 0,
-            },
-            rotate: {
-              current: 0,
-              previous: 0,
-              reference: 0,
-            },
+            path: `M0 0H${width}V${height}H0V0Z`,
           },
         ],
       };
     }
 
-    case types.CANVAS_SRICKER_LAYER_REMOVE: {
-      const { layers } = state;
+    case types.CANVAS_ENABLE_COLLAGE: {
+      const {
+        displayableWidth,
+        displayableHeight,
+        displayableLeft,
+        displayableTop,
+      } = state;
+      const { frame, index } = action.payload;
+      const { width: frameWidth, height: frameHeight } = canvasUserLayerFrame[
+        frame
+      ];
+      const canvasUserFrame = canvasUserLayerFrame[frame];
 
-      return {
-        ...state,
-        layers: layers.slice(0, layers.length - 1),
-      };
-    }
+      // ToDo: 外に切り出す
+      let svgWidth = displayableWidth;
+      let svgHeight = frameHeight * (displayableWidth / frameWidth);
+      let svgX = displayableLeft;
+      let svgY = displayableTop + (displayableHeight - svgHeight) / 2;
 
-    case types.CANVAS_STICKER_LAYER_CHANGE_ORDER: {
-      const { layers } = state;
-      const { index } = action.payload;
-
-      return {
-        ...state,
-        layers: [...layers.filter((_, i) => i !== index), layers[index]],
-      };
-    }
-
-    case types.CANVAS_STICKER_LAYER_START_DRAG: {
-      const { layers } = state;
-      const { container } = parentState;
-      const { cursorPositions } = action.payload;
-      const index = layers.length - 1;
-      const sticker = layers[index];
-      const isMultiTouching = cursorPositions.length > 1;
-
-      if (isMultiTouching) {
-        const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = cursorPositions;
-
-        layers[index] = {
-          ...sticker,
-          scale: {
-            ...sticker.scale,
-            previous: sticker.scale.current,
-            reference: distanceBetweenTwoPoints(x1, y1, x2, y2),
-          },
-          rotate: {
-            ...sticker.rotate,
-            previous: sticker.rotate.current,
-            reference: angleBetweenTwoPoints(x1, y1, x2, y2),
-          },
-        };
-
-        return {
-          ...state,
-          isTransforming: true,
-          isMultiTouching: true,
-          layers,
-        };
+      if (svgHeight > displayableHeight) {
+        svgHeight = displayableHeight;
+        svgWidth = frameWidth * (displayableHeight / frameHeight);
+        svgX = displayableLeft + (displayableWidth - svgWidth) / 2;
+        svgY = displayableTop;
       }
 
-      const [{ x, y }] = cursorPositions;
-      const {
-        actualX: canvasBaseX,
-        actualY: canvasBaseY,
-        displayRatio,
-      } = container;
-
-      const relativeX = (x - canvasBaseX) * displayRatio;
-      const relativeY = (y - canvasBaseY) * displayRatio;
-
       return {
         ...state,
-        referenceX: relativeX - sticker.x,
-        referenceY: relativeY - sticker.y,
-        isDragging: true,
+        viewBoxWidth: frameWidth,
+        viewBoxHeight: frameHeight,
+        styleLeft: svgX,
+        styleTop: svgY,
+        styleWidth: svgWidth,
+        styleHeight: svgHeight,
+        displayMagnification: frameWidth / svgWidth,
+        userFrames: canvasUserFrame.frames[index].map((f) => ({
+          ...f,
+          id: uuid.v4(),
+        })),
+        isCollaging: true,
+      };
+    }
+
+    // Stickers
+
+    case types.CANVAS_COMPLETE: {
+      return {
+        ...state,
+        isUserLayerDragging: false,
+        isStickerLayerDragging: false,
+        isStickerLayerTransforming: false,
       };
     }
 
     case types.CANVAS_STICKER_LAYER_START_TRANSFORM: {
-      const { layers } = state;
-      const { container } = parentState;
+      const { stickerLayers } = state;
       const { x, y } = action.payload;
-      const sticker = layers[layers.length - 1];
-      const centerX = sticker.x + (sticker.width * sticker.scale.current) / 2;
-      const centerY = sticker.y + (sticker.height * sticker.scale.current) / 2;
+      const sticker = stickerLayers[stickerLayers.length - 1];
+      const centerX = sticker.x + (sticker.width * sticker.scale) / 2;
+      const centerY = sticker.y + (sticker.height * sticker.scale) / 2;
 
       const {
-        actualX: canvasBaseX,
-        actualY: canvasBaseY,
-        displayRatio,
-      } = container;
+        styleLeft: canvasBaseX,
+        styleTop: canvasBaseY,
+        displayMagnification,
+      } = state;
 
-      const relativeX = (x - canvasBaseX) * displayRatio;
-      const relativeY = (y - canvasBaseY) * displayRatio;
+      const relativeX = (x - canvasBaseX) * displayMagnification;
+      const relativeY = (y - canvasBaseY) * displayMagnification;
 
-      layers[layers.length - 1] = {
-        ...sticker,
-        scale: {
-          ...sticker.scale,
-          previous: sticker.scale.current,
-          reference: distanceBetweenTwoPoints(
+      return {
+        ...state,
+        isStickerLayerTransforming: true,
+        temporaries: {
+          ...state.temporaries,
+          previousScale: sticker.scale,
+          distanceBetweenFingers: distanceBetweenTwoPoints(
             centerX,
             centerY,
             relativeX,
@@ -274,49 +257,50 @@ const stickerReducer = (
           ),
         },
       };
-
-      return {
-        ...state,
-        isTransforming: true,
-      };
     }
 
     case types.CANVAS_STICKER_LAYER_TICK: {
-      const { layers, isMultiTouching, isDragging, isTransforming } = state;
+      const {
+        stickerLayers,
+        isStickerLayerDragging,
+        isStickerLayerTransforming,
+      } = state;
       const { cursorPositions } = action.payload;
-      const { container } = parentState;
-      const { displayRatio } = container;
+      const { displayMagnification } = state;
 
-      if (!layers.length) {
+      if (!stickerLayers.length) {
         return state;
       }
 
-      const sticker = layers[layers.length - 1];
+      const sticker = stickerLayers[stickerLayers.length - 1];
 
-      if (isTransforming) {
-        const { rotate, scale, x, y, width, height } = sticker;
+      if (isStickerLayerTransforming) {
+        const { temporaries } = state;
+        const { angle, scale, x, y, width, height } = sticker;
 
         let nextX = x;
         let nextY = y;
-        let nextAngle = rotate.current;
-        let nextScale = scale.current;
+        let nextAngle = angle;
+        let nextScale = scale;
 
-        if (isMultiTouching) {
+        if (cursorPositions.length > 1) {
           const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = cursorPositions;
 
           nextAngle =
-            rotate.previous +
+            temporaries.previousAngle +
             angleBetweenTwoPoints(x1, y1, x2, y2) -
-            rotate.reference;
+            temporaries.angleBetweenFingers;
           const currentLength = distanceBetweenTwoPoints(x1, y1, x2, y2);
-          nextScale = (currentLength / scale.reference) * scale.previous;
+          nextScale =
+            (currentLength / temporaries.distanceBetweenFingers) *
+            temporaries.previousScale;
         } else {
-          const centerX = x + (width * scale.current) / 2;
-          const centerY = y + (height * scale.current) / 2;
+          const centerX = x + (width * scale) / 2;
+          const centerY = y + (height * scale) / 2;
           const relativeX =
-            (cursorPositions[0].x - container.actualX) * displayRatio;
+            (cursorPositions[0].x - state.styleLeft) * displayMagnification;
           const relativeY =
-            (cursorPositions[0].y - container.actualY) * displayRatio;
+            (cursorPositions[0].y - state.styleTop) * displayMagnification;
 
           // 回転ボタン初期位置と中心座標の度の差を求めて足す
           nextAngle =
@@ -324,13 +308,13 @@ const stickerReducer = (
             angleBetweenTwoPoints(
               centerY,
               centerX,
-              y + height * scale.current,
-              x + width * scale.current
+              y + height * scale,
+              x + width * scale
             );
           nextScale =
             (distanceBetweenTwoPoints(centerX, centerY, relativeX, relativeY) /
-              scale.reference) *
-            scale.previous;
+              temporaries.distanceBetweenFingers) *
+            temporaries.previousScale;
         }
 
         // 最小値を見て縮小するかどうかを決める
@@ -338,13 +322,13 @@ const stickerReducer = (
           width * nextScale > CANVAS_STICKER_LAYER_MIN_WIDTH &&
           height * nextScale > CANVAS_STICKER_LAYER_MIN_HEIGHT
         ) {
-          nextX = x + (width * scale.current - width * nextScale) / 2;
-          nextY = y + (height * scale.current - height * nextScale) / 2;
+          nextX = x + (width * scale - width * nextScale) / 2;
+          nextY = y + (height * scale - height * nextScale) / 2;
 
           return {
             ...state,
-            layers: progressCanvasStickerLayerTransform(
-              state.layers,
+            stickerLayers: progressCanvasStickerLayerTransform(
+              state.stickerLayers,
               nextX,
               nextY,
               nextScale,
@@ -355,182 +339,173 @@ const stickerReducer = (
 
         return {
           ...state,
-          layers: progressCanvasStickerLayerTransform(
-            state.layers,
+          stickerLayers: progressCanvasStickerLayerTransform(
+            state.stickerLayers,
             nextX,
             nextY,
-            scale.current,
+            scale,
             nextAngle
           ),
         };
       }
 
-      if (isDragging) {
+      if (isStickerLayerDragging) {
         const [{ x, y }] = cursorPositions;
-        const relativeX = (x - container.actualX) * displayRatio;
-        const relativeY = (y - container.actualY) * displayRatio;
+        const relativeX = (x - state.styleLeft) * displayMagnification;
+        const relativeY = (y - state.styleTop) * displayMagnification;
 
-        layers[layers.length - 1] = {
+        stickerLayers[stickerLayers.length - 1] = {
           ...sticker,
-          x: relativeX - state.referenceX,
-          y: relativeY - state.referenceY,
+          x: relativeX - state.temporaries.pointerOffsetX,
+          y: relativeY - state.temporaries.pointerOffsetY,
         };
 
         return {
           ...state,
-          layers,
+          stickerLayers,
         };
       }
 
       return state;
     }
 
-    case types.CANVAS_COMPLETE: {
-      return {
-        ...state,
-        isDragging: false,
-        isMultiTouching: false,
-        isTransforming: false,
-      };
-    }
-
-    //
-
-    default:
-      return state;
-  }
-};
-
-// User Reducer
-
-const userInitialState: CanvasUsersState = {
-  isDragging: false,
-  canDragging: false,
-  enabledCollage: false,
-  differenceFromStartingX: 0,
-  differenceFromStartingY: 0,
-  layers: [],
-  frames: [],
-  selectedFrame: null,
-};
-
-const userReducer = (
-  parentState: CanvasState,
-  state = userInitialState,
-  action: Actions
-): CanvasUsersState => {
-  switch (action.type) {
-    case types.CANVAS_DISABLE_COLLAGE: {
-      const { layers } = state;
-      const layer = layers.find((layer) => layer)!;
-
-      const width = layer.width;
-      const height = layer.height;
-
-      // ToDo: 1 枚目の画像の他のフレームでの座標位置が消えてしまう
-      layers[0] = layer;
+    case types.CANVAS_STICKER_LAYER_ADD: {
+      const { stickerLayers } = state;
+      const { dataUrl, width, height } = action.payload;
 
       return {
         ...state,
-        canDragging: false,
-        enabledCollage: false,
-        layers,
-        frames: [
+        stickerLayers: [
+          ...stickerLayers,
           {
-            id: uuid.v4(),
+            dataUrl,
             width,
             height,
             x: 0,
             y: 0,
-            d: `M0 0H${width}V${height}H0V0Z`,
+            scale: 1,
+            angle: 0,
           },
         ],
-        selectedFrame: null,
       };
     }
 
-    case types.CANVAS_INITIALIZE: {
-      const { frames, layers } = state;
-      const { dataUrl, width, height } = action.payload;
-
-      layers[0] = {
-        dataUrl,
-        width,
-        height,
-        x: 0,
-        y: 0,
-        filter: {
-          blur: 0,
-          hueRotate: 0,
-          luminanceToAlpha: false,
-          saturate: 1,
-        },
-      };
-
-      frames[0] = {
-        id: uuid.v4(),
-        width,
-        height,
-        x: 0,
-        y: 0,
-        d: `M0 0H${width}V${height}H0V0Z`,
-      };
+    case types.CANVAS_SRICKER_LAYER_REMOVE: {
+      const { stickerLayers } = state;
 
       return {
         ...state,
-        frames,
-        layers,
+        stickerLayers: stickerLayers.slice(0, stickerLayers.length - 1),
       };
     }
+
+    case types.CANVAS_STICKER_LAYER_CHANGE_ORDER: {
+      const { stickerLayers } = state;
+      const { index } = action.payload;
+
+      return {
+        ...state,
+        stickerLayers: [
+          ...stickerLayers.filter((_, i) => i !== index),
+          stickerLayers[index],
+        ],
+      };
+    }
+
+    case types.CANVAS_STICKER_LAYER_START_DRAG: {
+      const { stickerLayers } = state;
+      const { cursorPositions } = action.payload;
+      const index = stickerLayers.length - 1;
+      const sticker = stickerLayers[index];
+      const isMultiTouching = cursorPositions.length > 1;
+
+      if (isMultiTouching) {
+        const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = cursorPositions;
+
+        return {
+          ...state,
+          isStickerLayerTransforming: true,
+          stickerLayers,
+          temporaries: {
+            ...state.temporaries,
+            previousAngle: sticker.angle,
+            angleBetweenFingers: angleBetweenTwoPoints(x1, y1, x2, y2),
+            previousScale: sticker.scale,
+            distanceBetweenFingers: distanceBetweenTwoPoints(x1, y1, x2, y2),
+          },
+        };
+      }
+
+      const [{ x, y }] = cursorPositions;
+      const {
+        styleLeft: canvasBaseX,
+        styleTop: canvasBaseY,
+        displayMagnification,
+      } = state;
+
+      const relativeX = (x - canvasBaseX) * displayMagnification;
+      const relativeY = (y - canvasBaseY) * displayMagnification;
+
+      return {
+        ...state,
+        isStickerLayerDragging: true,
+        temporaries: {
+          ...state.temporaries,
+          pointerOffsetX: relativeX - sticker.x,
+          pointerOffsetY: relativeY - sticker.y,
+        },
+      };
+    }
+
+    // Users
 
     case types.CANVAS_USER_LAYER_ADD: {
-      const { layers } = state;
+      const { userLayers } = state;
       const { index, dataUrl, width, height } = action.payload;
 
-      layers[index] = {
+      userLayers[index] = {
         dataUrl,
         width,
         height,
         x: 0,
         y: 0,
-        filter: {
-          blur: 0,
-          hueRotate: 0,
-          luminanceToAlpha: false,
-          saturate: 1,
-        },
+        blur: 0,
+        hue: 0,
+        saturate: 1,
+        angle: 0,
+        scale: 1,
       };
 
       return {
         ...state,
-        layers,
+        userLayers,
       };
     }
 
     case types.CANVAS_USER_LAYER_REMOVE: {
-      const { layers } = state;
+      const { userLayers } = state;
       const { index } = action.payload;
 
-      layers[index] = null;
+      userLayers[index] = null;
 
       return {
         ...state,
-        layers,
+        userLayers,
       };
     }
 
     case types.CANVAS_USER_LAYER_START_DRAG: {
-      const { layers } = state;
-      const { displayRatio } = parentState.container;
+      const { userLayers } = state;
+      const { displayMagnification } = state;
       const { index, cursorPositions, clipPathX, clipPathY } = action.payload;
-      const userLayer = layers[index];
+      const userLayer = userLayers[index];
 
       if (userLayer === null) {
         return state;
       }
 
       const { x, y } = calculateCanvasUserLayerRelativeCoordinates(
-        displayRatio,
+        displayMagnification,
         clipPathX,
         clipPathY,
         cursorPositions[0].x,
@@ -539,171 +514,80 @@ const userReducer = (
 
       return {
         ...state,
-        differenceFromStartingX: x - userLayer.x,
-        differenceFromStartingY: y - userLayer.y,
-        isDragging: true,
+        isUserLayerDragging: true,
+        temporaries: {
+          ...state.temporaries,
+          pointerOffsetX: x - userLayer.x,
+          pointerOffsetY: y - userLayer.y,
+        },
       };
     }
 
     case types.CANVAS_USER_LAYER_TICK: {
       const {
-        layers,
-        isDragging,
-        differenceFromStartingX,
-        differenceFromStartingY,
-        canDragging,
+        userLayers,
+        isUserLayerDragging,
+        isCollaging,
+        temporaries: { pointerOffsetX, pointerOffsetY },
       } = state;
-      const { displayRatio } = parentState.container;
+      const { displayMagnification } = state;
       const { index, clipPathX, clipPathY, cursorPositions } = action.payload;
-      const user = layers[index];
+      const user = userLayers[index];
 
-      if (!user || !canDragging) {
+      if (!user || !isCollaging) {
         return state;
       }
 
       const [{ x, y }] = cursorPositions;
 
-      if (isDragging) {
+      if (isUserLayerDragging) {
         const {
           x: currentX,
           y: currentY,
         } = calculateCanvasUserLayerRelativeCoordinates(
-          displayRatio,
+          displayMagnification,
           clipPathX,
           clipPathY,
           x,
           y
         );
 
-        layers[index] = {
+        userLayers[index] = {
           ...user,
-          x: currentX - differenceFromStartingX,
-          y: currentY - differenceFromStartingY,
+          x: currentX - pointerOffsetX,
+          y: currentY - pointerOffsetY,
         };
 
         return {
           ...state,
-          layers,
+          userLayers,
         };
       }
 
       return state;
     }
 
-    //
-
     case types.CANVAS_USER_LAYER_UPDATE_FILTER: {
-      const { layers } = state;
+      const { userLayers } = state;
       const { index, type, value } = action.payload;
-      const userLayer = layers[index];
+      const userLayer = userLayers[index];
 
       if (userLayer) {
-        layers[index] = {
+        userLayers[index] = {
           ...userLayer,
-          filter: {
-            ...userLayer.filter,
-            [type]: value,
-          },
+          [type]: value,
         };
       }
 
       return {
         ...state,
-        layers,
+        userLayers,
       };
     }
 
-    case types.CANVAS_ENABLE_COLLAGE: {
-      const { frame, index } = action.payload;
-      const canvasUserFrame = canvasUserLayerFrame[frame];
-
-      // ToDo: 表示サイズが変わるので Svg の Rect を取得し直す必要がある
-      // ToDo: container にも必要！
-      return {
-        ...state,
-        canDragging: true,
-        frames: canvasUserFrame.frames[index].map((f) => ({
-          ...f,
-          id: uuid.v4(),
-        })),
-        enabledCollage: true,
-        selectedFrame: {
-          type: frame,
-          index,
-        },
-      };
-    }
-
-    case types.CANVAS_COMPLETE: {
-      return {
-        ...state,
-        isDragging: false,
-      };
-    }
+    // Default
 
     default:
       return state;
   }
 };
-
-// Types
-
-export interface CanvasContainerState {
-  width: number;
-  height: number;
-  actualX: number;
-  actualY: number;
-  actualWidth: number;
-  actualHeight: number;
-  displayRatio: number;
-  display: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
-}
-
-export interface CanvasStickersState {
-  isDragging: boolean;
-  isTransforming: boolean;
-  isMultiTouching: boolean;
-  referenceX: number;
-  referenceY: number;
-  layers: CanvasStickerLayer[];
-}
-
-export interface CanvasUsersState {
-  isDragging: boolean;
-  canDragging: boolean;
-  enabledCollage: boolean;
-  differenceFromStartingX: number;
-  differenceFromStartingY: number;
-  layers: (CanvasUserLayer | null)[];
-  frames: CanvasUserFrame[];
-  selectedFrame: {
-    type: CanvasUserLayerFrame;
-    index: number;
-  } | null;
-}
-
-export interface CanvasState {
-  container: CanvasContainerState;
-  stickers: CanvasStickersState;
-  users: CanvasUsersState;
-}
-
-// Main
-
-export default (
-  state = {
-    container: containerInitialState,
-    stickers: stickerInitialState,
-    users: userInitialState,
-  },
-  action: Actions
-): CanvasState => ({
-  container: containerReducer(state, state.container, action),
-  stickers: stickerReducer(state, state.stickers, action),
-  users: userReducer(state, state.users, action),
-});

@@ -13,7 +13,7 @@ export const Canvas: React.FC<{ preview?: boolean }> = ({
 }) => {
   const containerRef = useRef<SVGSVGElement>(null);
   const dispatch = useDispatch();
-  const { container } = useSelector(({ canvas }: State) => canvas);
+  const container = useSelector(({ canvas }: State) => canvas);
   const { pathname } = useRouter();
 
   const handleOnComplete = useCallback(
@@ -54,7 +54,7 @@ export const Canvas: React.FC<{ preview?: boolean }> = ({
 
   return (
     <svg
-      viewBox={`0 0 ${container.width} ${container.height}`}
+      viewBox={`0 0 ${container.viewBoxWidth} ${container.viewBoxHeight}`}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       ref={containerRef}
@@ -62,10 +62,10 @@ export const Canvas: React.FC<{ preview?: boolean }> = ({
         !preview
           ? {
               position: "fixed",
-              top: `${container.actualY}px`,
-              left: `${container.actualX}px`,
-              width: `${container.actualWidth}px`,
-              height: `${container.actualHeight}px`,
+              top: `${container.styleTop}px`,
+              left: `${container.styleLeft}px`,
+              width: `${container.styleWidth}px`,
+              height: `${container.styleHeight}px`,
             }
           : {}
       }

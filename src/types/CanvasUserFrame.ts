@@ -1,8 +1,8 @@
-export type CanvasUserFrame = {
+export interface CanvasUserFrame {
   id: string;
-  width: number;
-  height: number;
   x: number;
   y: number;
-  d: string;
-};
+  width: number;
+  height: number;
+  path: string;
+}

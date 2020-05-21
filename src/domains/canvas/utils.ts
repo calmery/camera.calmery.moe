@@ -1,22 +1,22 @@
-import { CanvasStickerLayer } from "~/types/CanvasStickerLayer";
+import { CanvasLayer } from "~/types/CanvasLayer";
 
 //
 
 export const calculateCanvasUserLayerRelativeCoordinates = (
-  displayRatio: number,
+  displayMagnification: number,
   clipPathX: number,
   clipPathY: number,
   x: number,
   y: number
 ) => ({
-  x: (x - clipPathX) * displayRatio,
-  y: (y - clipPathY) * displayRatio,
+  x: (x - clipPathX) * displayMagnification,
+  y: (y - clipPathY) * displayMagnification,
 });
 
 //
 
 export const progressCanvasStickerLayerTransform = (
-  layers: CanvasStickerLayer[],
+  layers: CanvasLayer[],
   x: number,
   y: number,
   nextScale: number,
@@ -28,14 +28,8 @@ export const progressCanvasStickerLayerTransform = (
     ...sticker,
     x,
     y,
-    scale: {
-      ...sticker.scale,
-      current: nextScale,
-    },
-    rotate: {
-      ...sticker.rotate,
-      current: nextAngle,
-    },
+    scale: nextScale,
+    angle: nextAngle,
   };
 
   return layers;

@@ -1,6 +1,5 @@
 export enum FeColorMatrix {
   blur = "blur",
-  hueRotate = "hueRotate",
-  luminanceToAlpha = "luminanceToAlpha",
+  hue = "hue",
   saturate = "saturate",
 }

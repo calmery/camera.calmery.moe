@@ -107,7 +107,7 @@ export const Cropper: React.FC = () => {
     };
   }, []);
 
-  const displayRatio = container.displayRatio;
+  const displayMagnification = container.displayMagnification;
 
   let sx = cropper.scaleX.current;
   let sy = cropper.scaleY.current;
@@ -126,10 +126,10 @@ export const Cropper: React.FC = () => {
       overflow="visible"
       style={{
         position: "fixed",
-        top: `${container.actualY}px`,
-        left: `${container.actualX}px`,
-        width: `${container.actualWidth}px`,
-        height: `${container.actualHeight}px`,
+        top: `${container.styleTop}px`,
+        left: `${container.styleLeft}px`,
+        width: `${container.styleWidth}px`,
+        height: `${container.styleHeight}px`,
       }}
     >
       {/* 画像範囲外のでは枠線が黒のクロップ領域を表示する */}
@@ -152,7 +152,7 @@ export const Cropper: React.FC = () => {
           fill="#3c3c3c"
           cx={cropper.position.x + cropper.width * sx}
           cy={cropper.position.y + cropper.height * sy}
-          r={12 * displayRatio}
+          r={12 * displayMagnification}
           onMouseDown={handleOnStartCropperTransform}
           onTouchStart={handleOnStartCropperTransform}
         ></circle>
@@ -244,7 +244,7 @@ export const Cropper: React.FC = () => {
           fill="#FFF"
           cx={cropper.position.x + cropper.width * sx}
           cy={cropper.position.y + cropper.height * sy}
-          r={12 * displayRatio}
+          r={12 * displayMagnification}
           onMouseDown={handleOnStartCropperTransform}
           onTouchStart={handleOnStartCropperTransform}
         ></circle>

@@ -12,7 +12,7 @@ export const CanvasEmptyUserLayer: React.FC<{
 }> = (props) => {
   const dispatch = useDispatch();
   const { frame, index } = props;
-  const { displayRatio } = useSelector(({ canvas }: State) => canvas.container);
+  const { displayMagnification } = useSelector(({ canvas }: State) => canvas);
 
   const handOnClickEmptyUserImage = useCallback(async () => {
     dispatch(
@@ -33,7 +33,7 @@ export const CanvasEmptyUserLayer: React.FC<{
       >
         {frame.d && (
           <clipPath id={`clip-path-${frame.id}`}>
-            <path d={frame.d} />
+            <path d={frame.path} />
           </clipPath>
         )}
 
@@ -75,10 +75,10 @@ export const CanvasEmptyUserLayer: React.FC<{
         overflow="visible"
       >
         <path
-          d={frame.d}
+          d={frame.path}
           fill="none"
           stroke={Colors.gray}
-          strokeWidth={displayRatio}
+          strokeWidth={displayMagnification}
           strokeDasharray="8 8"
         />
       </svg>

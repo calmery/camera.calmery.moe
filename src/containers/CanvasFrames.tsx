@@ -64,7 +64,7 @@ const CollageButton = styled.div<{ selected?: boolean }>`
 
 export const CanvasFrames: React.FC = () => {
   const dispatch = useDispatch();
-  const { selectedFrame } = useSelector(({ canvas }: State) => canvas.users);
+  const { selectedUserLayerFrame } = useSelector(({ ui }: State) => ui);
   const handleOnClickEnableCollage = (
     frame: CanvasUserLayerFrame,
     index: number
@@ -76,7 +76,7 @@ export const CanvasFrames: React.FC = () => {
       <Horizontal>
         <HorizontalInner>
           <CollageButton
-            selected={!selectedFrame}
+            selected={!selectedUserLayerFrame}
             onClick={handleOnClickDisableCollage}
           >
             <object type="image/svg+xml" data={`/images/collage/disable.svg`} />
@@ -89,9 +89,10 @@ export const CanvasFrames: React.FC = () => {
                 }
                 selected={
                   !!(
-                    selectedFrame &&
-                    selectedFrame.type === CanvasUserLayerFrame.W3H4 &&
-                    selectedFrame.index === index
+                    selectedUserLayerFrame &&
+                    selectedUserLayerFrame.frame ===
+                      CanvasUserLayerFrame.W3H4 &&
+                    selectedUserLayerFrame.index === index
                   )
                 }
                 key={index}
@@ -111,9 +112,10 @@ export const CanvasFrames: React.FC = () => {
                 }
                 selected={
                   !!(
-                    selectedFrame &&
-                    selectedFrame.type === CanvasUserLayerFrame.W4H3 &&
-                    selectedFrame.index === index
+                    selectedUserLayerFrame &&
+                    selectedUserLayerFrame.frame ===
+                      CanvasUserLayerFrame.W4H3 &&
+                    selectedUserLayerFrame.index === index
                   )
                 }
                 key={index}

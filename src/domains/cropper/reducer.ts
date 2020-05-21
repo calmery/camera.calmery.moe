@@ -9,11 +9,11 @@ const CROPPER_DEFAULT_HEIGHT = 180;
 // Container
 
 const containerInitialState: CropperContainerState = {
-  actualX: 0,
-  actualY: 0,
-  actualWidth: 0,
-  actualHeight: 0,
-  displayRatio: 0,
+  styleLeft: 0,
+  styleTop: 0,
+  styleWidth: 0,
+  styleHeight: 0,
+  displayMagnification: 0,
 };
 
 const containerReducer = (
@@ -41,11 +41,11 @@ const containerReducer = (
 
       return {
         ...state,
-        actualX: svgX,
-        actualY: svgY,
-        actualWidth: svgWidth,
-        actualHeight: svgHeight,
-        displayRatio: imageWidth / svgWidth,
+        styleLeft: svgX,
+        styleTop: svgY,
+        styleWidth: svgWidth,
+        styleHeight: svgHeight,
+        displayMagnification: imageWidth / svgWidth,
       };
     }
 
@@ -102,10 +102,12 @@ const cropperReducer = (
       }
 
       const valueAtTransformStartX =
-        (cursorPositions[0].x - container.actualX) * container.displayRatio -
+        (cursorPositions[0].x - container.styleLeft) *
+          container.displayMagnification -
         position.x;
       const valueAtTransformStartY =
-        (cursorPositions[0].y - container.actualY) * container.displayRatio -
+        (cursorPositions[0].y - container.styleTop) *
+          container.displayMagnification -
         position.y;
 
       return {
@@ -140,22 +142,26 @@ const cropperReducer = (
           valueAtTransformStart: distanceBetweenTwoPoints(
             position.x,
             position.y,
-            (cursorPositionX - container.actualX) * container.displayRatio,
-            (cursorPositionY - container.actualY) * container.displayRatio
+            (cursorPositionX - container.styleLeft) *
+              container.displayMagnification,
+            (cursorPositionY - container.styleTop) *
+              container.displayMagnification
           ),
         },
         scaleX: {
           ...state.scaleX,
           previous: state.scaleX.current,
           valueAtTransformStart:
-            (cursorPositionX - container.actualX) * container.displayRatio -
+            (cursorPositionX - container.styleLeft) *
+              container.displayMagnification -
             position.x,
         },
         scaleY: {
           ...state.scaleY,
           previous: state.scaleY.current,
           valueAtTransformStart:
-            (cursorPositionY - container.actualY) * container.displayRatio -
+            (cursorPositionY - container.styleTop) *
+              container.displayMagnification -
             position.y,
         },
       };
@@ -215,8 +221,10 @@ const cropperReducer = (
         const { position } = state;
         const { x, y } = cursorPositions[0];
 
-        const relativeX = (x - container.actualX) * container.displayRatio;
-        const relativeY = (y - container.actualY) * container.displayRatio;
+        const relativeX =
+          (x - container.styleLeft) * container.displayMagnification;
+        const relativeY =
+          (y - container.styleTop) * container.displayMagnification;
 
         const nextX = relativeX - position.valueAtTransformStartX;
         const nextY = relativeY - position.valueAtTransformStartY;
@@ -237,12 +245,12 @@ const cropperReducer = (
 
         if (cropper.freeAspect) {
           let nextScaleX =
-            (((x - container.actualX) * container.displayRatio -
+            (((x - container.styleLeft) * container.displayMagnification -
               cropper.position.x) /
               cropper.scaleX.valueAtTransformStart) *
             cropper.scaleX.previous;
           let nextScaleY =
-            (((y - container.actualY) * container.displayRatio -
+            (((y - container.styleTop) * container.displayMagnification -
               cropper.position.y) /
               cropper.scaleY.valueAtTransformStart) *
             cropper.scaleY.previous;
@@ -272,8 +280,8 @@ const cropperReducer = (
           (distanceBetweenTwoPoints(
             cropper.position.x,
             cropper.position.y,
-            (x - container.actualX) * container.displayRatio,
-            (y - container.actualY) * container.displayRatio
+            (x - container.styleLeft) * container.displayMagnification,
+            (y - container.styleTop) * container.displayMagnification
           ) /
             cropper.scale.valueAtTransformStart) *
           cropper.scale.previous;
@@ -281,9 +289,9 @@ const cropperReducer = (
         if (
           cropper.width * nextScale >= CROPPER_DEFAULT_WIDTH &&
           !(
-            (x - container.actualX) * container.displayRatio <
+            (x - container.styleLeft) * container.displayMagnification <
               cropper.position.x ||
-            (y - container.actualY) * container.displayRatio <
+            (y - container.styleTop) * container.displayMagnification <
               cropper.position.y
           )
         ) {
@@ -460,11 +468,11 @@ const imageReducer = (
 // Types
 
 export interface CropperContainerState {
-  actualX: number;
-  actualY: number;
-  actualWidth: number;
-  actualHeight: number;
-  displayRatio: number;
+  styleLeft: number;
+  styleTop: number;
+  styleWidth: number;
+  styleHeight: number;
+  displayMagnification: number;
 }
 
 export interface CropperCropperState {

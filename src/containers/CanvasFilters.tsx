@@ -4,17 +4,17 @@ import { State } from "~/domains";
 import { CanvasFilter } from "~/components/CanvasFilter";
 
 export const CanvasFilters = () => {
-  const { users } = useSelector(({ canvas }: State) => canvas);
+  const users = useSelector(({ canvas }: State) => canvas);
 
   return (
     <defs>
-      {users.frames.map((_, index) => {
-        const userLayer = users.layers[index];
+      {users.userFrames.map((_, index) => {
+        const userLayer = users.userLayers[index];
 
         return (
           userLayer && (
             <CanvasFilter
-              id={users.frames[index].id}
+              id={users.userFrames[index].id}
               {...userLayer}
               key={index}
             />

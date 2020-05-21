@@ -14,7 +14,7 @@ export const CanvasUserLayers: React.FC<{ preview: boolean }> = ({
   const dispatch = useDispatch();
   const { pathname } = useRouter();
   const canvas = useSelector(({ canvas }: State) => canvas);
-  const { users } = canvas;
+  const users = canvas;
 
   const handleOnRemove = (index: number) => {
     dispatch(actions.removeCanvasUserLayer(index));
@@ -62,7 +62,7 @@ export const CanvasUserLayers: React.FC<{ preview: boolean }> = ({
 
   let layerCount = 0;
 
-  users.layers.forEach((layer) => {
+  users.userLayers.forEach((layer) => {
     if (layer) {
       layerCount += 1;
     }
@@ -70,16 +70,16 @@ export const CanvasUserLayers: React.FC<{ preview: boolean }> = ({
 
   return (
     <>
-      {users.frames.map((_, i: number) => {
-        const layer = users.layers[i];
-        const frame = users.frames[i];
+      {users.userFrames.map((_, i: number) => {
+        const layer = users.userLayers[i];
+        const frame = users.userFrames[i];
 
         if (layer) {
           return (
             <CanvasUserLayerComponent
               layer={layer}
               frame={frame}
-              enabledCollage={canvas.users.enabledCollage}
+              isCollaging={canvas.isCollaging}
               key={i}
               onStart={(clipPath: DOMRect, event: MouseEvent | TouchEvent) =>
                 handleOnStart(i, clipPath.x, clipPath.y, event)
@@ -101,9 +101,9 @@ export const CanvasUserLayers: React.FC<{ preview: boolean }> = ({
       {!preview &&
         layerCount > 1 &&
         pathname === "/collage" &&
-        users.frames.map((_, i) => {
-          const layer = users.layers[i];
-          const frame = users.frames[i];
+        users.userFrames.map((_, i) => {
+          const layer = users.userLayers[i];
+          const frame = users.userFrames[i];
 
           if (!layer) {
             return null;
@@ -115,7 +115,7 @@ export const CanvasUserLayers: React.FC<{ preview: boolean }> = ({
               fill={Colors.gray}
               cx={frame.x + frame.width}
               cy={frame.y}
-              r={12 * canvas.container.displayRatio}
+              r={12 * canvas.displayMagnification}
               style={{
                 cursor: "pointer",
               }}

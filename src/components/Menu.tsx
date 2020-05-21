@@ -71,9 +71,7 @@ const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
 
 export const Menu = () => {
   const { pathname, push } = useRouter();
-  const collage = useSelector(
-    ({ canvas }: State) => canvas.users.enabledCollage
-  );
+  const collage = useSelector(({ canvas }: State) => canvas.isCollaging);
   const handleOnClickRouterPush = useCallback(
     (pathname: string) => push(pathname),
     []
