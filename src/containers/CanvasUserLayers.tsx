@@ -79,6 +79,7 @@ export const CanvasUserLayers: React.FC<{ preview: boolean }> = ({
             <CanvasUserLayerComponent
               layer={layer}
               frame={frame}
+              id={i}
               isCollaging={canvas.isCollaging}
               key={i}
               onStart={(clipPath: DOMRect, event: MouseEvent | TouchEvent) =>

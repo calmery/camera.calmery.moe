@@ -3,6 +3,7 @@ import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 
 export const CanvasUserLayerComponent: React.FC<{
+  id: number;
   layer: CanvasUserLayer;
   frame: CanvasUserFrame;
   isCollaging: boolean;
@@ -11,7 +12,7 @@ export const CanvasUserLayerComponent: React.FC<{
 }> = (props) => {
   const pathRef = useRef<SVGPathElement>(null);
   const rectRef = useRef<SVGRectElement>(null);
-  const { frame, layer, onMove, onStart, isCollaging } = props;
+  const { id, frame, layer, onMove, onStart, isCollaging } = props;
 
   const handleOnMoveStart = useCallback(
     (event: MouseEvent | TouchEvent) => {
@@ -59,6 +60,14 @@ export const CanvasUserLayerComponent: React.FC<{
       xmlnsXlink="http://www.w3.org/1999/xlink"
       style={{ cursor: "move" }}
     >
+      <defs>
+        <filter id={`canvas-user-layer-filter-${id}`}>
+          <feGaussianBlur stdDeviation={`${layer.blur}`} />
+          <feColorMatrix type="hueRotate" values={`${layer.hue}`} />
+          <feColorMatrix type="saturate" values={`${layer.saturate}`} />
+        </filter>
+      </defs>
+
       <clipPath id={`clip-path-${frame.id}`}>
         <path d={frame.path} ref={pathRef} />
       </clipPath>
@@ -79,7 +88,7 @@ export const CanvasUserLayerComponent: React.FC<{
               xlinkHref={layer.dataUrl}
               width="100%"
               height="100%"
-              filter={`url(#filter-${frame.id})`}
+              filter={`url(#canvas-user-layer-filter-${id})`}
             />
           </g>
         </svg>

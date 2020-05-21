@@ -81,7 +81,7 @@ const Edit: NextPage = () => {
           </BottomBar>
         </FlexColumn>
       </Page>
-      <Canvas />
+      <Canvas stickers={false} />
     </>
   );
 };

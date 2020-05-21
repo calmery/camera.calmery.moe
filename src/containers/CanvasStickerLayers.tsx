@@ -9,8 +9,9 @@ export const CanvasStickerLayers: React.FC<{ preview: boolean }> = ({
   preview,
 }) => {
   const dispatch = useDispatch();
-  const canvas = useSelector(({ canvas }: State) => canvas);
-  const stickers = canvas;
+  const { displayMagnification, stickerLayers } = useSelector(
+    ({ canvas }: State) => canvas
+  );
 
   const handleOnSelect = useCallback(
     (index: number) => dispatch(actions.changeCanvasStickerLayerOrder(index)),
@@ -36,12 +37,12 @@ export const CanvasStickerLayers: React.FC<{ preview: boolean }> = ({
 
   return (
     <>
-      {stickers.stickerLayers.map((sticker, index) => {
+      {stickerLayers.map((sticker, index) => {
         return (
           <CanvasStickerLayer
             key={index}
-            displayMagnification={canvas.displayMagnification}
-            selected={!preview && index === stickers.stickerLayers.length - 1}
+            displayMagnification={displayMagnification}
+            selected={!preview && index === stickerLayers.length - 1}
             handleOnClickRemoveButton={handleOnClickRemoveButton}
             handleOnPress={handleOnPress}
             handleOnPressTransformCircle={handleOnPressTransformCircle}
