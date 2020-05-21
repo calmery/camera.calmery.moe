@@ -28,18 +28,6 @@ const ControlBar = styled.div`
   }
 `;
 
-const CanvasContainer = styled.div`
-  box-sizing: border-box;
-  padding: 0 24px;
-  flex-grow: 1;
-  height: fit-content;
-`;
-
-const CanvasSizeDetector = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
 const BottomBar = styled.div`
   width: 100%;
   flex-shrink: 0;
@@ -47,12 +35,17 @@ const BottomBar = styled.div`
 `;
 
 const Preview: NextPage = () => {
-  const dRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
-  const canvas = useSelector(({ canvas }: State) => canvas);
-  const users = canvas;
-  const stickers = canvas;
-  const container = canvas;
+  const {
+    userFrames,
+    userLayers,
+    stickerLayers,
+    viewBoxWidth,
+    viewBoxHeight,
+    styleTop,
+    styleLeft,
+    styleWidth,
+    styleHeight,
+  } = useSelector(({ canvas }: State) => canvas);
   const ref: React.Ref<HTMLDivElement> = useRef(null);
   const imageRef: React.Ref<HTMLImageElement> = useRef(null);
 
@@ -60,37 +53,22 @@ const Preview: NextPage = () => {
     (async () => {
       const dataUrl = await convertSvgToDataUrl(
         ref.current!.innerHTML,
-        container.viewBoxWidth,
-        container.viewBoxHeight
+        viewBoxWidth,
+        viewBoxHeight
       );
 
-      const e = imageRef.current!;
-
-      e.src = dataUrl;
+      imageRef.current!.src = dataUrl;
     })();
-  }, [ref.current!, users.layers, users.frames, stickers.layers]);
+  }, [ref, userFrames.length, userLayers.length, stickerLayers.length]);
 
   useEffect(() => {
     const e = imageRef.current!;
     e.style.position = "fixed";
-    e.style.top = `${container.styleTop}px`;
-    e.style.left = `${container.styleLeft}px`;
-    e.style.width = `${container.styleWidth}px`;
-    e.style.height = `${container.styleHeight}px`;
-  }, [container]);
-
-  useEffect(() => {
-    const e = dRef.current!;
-    const resizeObserver = new ResizeObserver(() => {
-      dispatch(actions.updateCanvasContainerRect(e.getBoundingClientRect()));
-    });
-
-    resizeObserver.observe(e);
-
-    return () => {
-      resizeObserver.unobserve(e);
-    };
-  }, []);
+    e.style.top = `${styleTop}px`;
+    e.style.left = `${styleLeft}px`;
+    e.style.width = `${styleWidth}px`;
+    e.style.height = `${styleHeight}px`;
+  }, [styleTop, styleLeft, styleWidth, styleHeight]);
 
   return (
     <>
@@ -99,9 +77,6 @@ const Preview: NextPage = () => {
           <ControlBar>
             <img src="/images/close.svg" />
           </ControlBar>
-          <CanvasContainer>
-            <CanvasSizeDetector ref={dRef} />
-          </CanvasContainer>
           <BottomBar>
             <Menu />
           </BottomBar>
