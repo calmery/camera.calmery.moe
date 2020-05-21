@@ -83,7 +83,22 @@ export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
     case types.CANVAS_CONTAINER_UPDATE_RECT: {
       const { x, y, width, height } = action.payload;
-      const { viewBoxWidth, viewBoxHeight } = state;
+      const { userFrames } = state;
+      let { viewBoxWidth, viewBoxHeight } = state;
+
+      if (userFrames.length === 0) {
+        userFrames[0] = {
+          id: uuid.v4(),
+          width,
+          height,
+          x: 0,
+          y: 0,
+          path: `M0 0H${width}V${height}H0V0Z`,
+        };
+
+        viewBoxWidth = width;
+        viewBoxHeight = height;
+      }
 
       let svgWidth = width;
       let svgHeight = viewBoxHeight * (width / viewBoxWidth);
@@ -99,6 +114,8 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        viewBoxWidth,
+        viewBoxHeight,
         styleLeft: svgX,
         styleTop: svgY,
         styleWidth: svgWidth,
@@ -108,6 +125,7 @@ export default (state = initialState, action: Actions): CanvasState => {
         displayableTop: y,
         displayableWidth: width,
         displayableHeight: height,
+        userFrames,
       };
     }
 
