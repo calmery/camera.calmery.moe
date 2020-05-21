@@ -85,8 +85,8 @@ export const Cropper: React.FC = () => {
       passive: false,
     });
 
-    const { users } = canvas;
-    const { dataUrl, width, height } = users.layers.find((user) => user)!;
+    const { userLayers } = canvas;
+    const { dataUrl, width, height } = userLayers.find((user) => user)!;
 
     dispatch(
       actions.initializeCropperImage({
