@@ -618,6 +618,7 @@ export default (state = initialState, action: Actions): CanvasState => {
           ...styles,
           viewBoxWidth: width,
           viewBoxHeight: height,
+          displayMagnification: width / styles.styleWidth,
           userLayers,
           userFrames: [
             {
