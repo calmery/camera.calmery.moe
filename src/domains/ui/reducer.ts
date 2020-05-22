@@ -1,10 +1,10 @@
 import { Actions } from "../canvas/actions";
 import { CANVAS_ENABLE_COLLAGE, CANVAS_DISABLE_COLLAGE } from "../canvas/types";
-import { CanvasUserLayerFrame } from "../canvas/frames";
+import { CanvasUserLayerFrameType } from "~/types/CanvasUserLayerFrameType";
 
 export interface UiState {
   selectedUserLayerFrame: {
-    frame: CanvasUserLayerFrame;
+    frame: CanvasUserLayerFrameType;
     index: number;
   } | null;
 }

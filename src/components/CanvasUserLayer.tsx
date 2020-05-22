@@ -1,53 +1,15 @@
-import React, { useRef, useEffect, useCallback } from "react";
-import { CanvasUserFrame } from "~/types/CanvasUserFrame";
+import React from "react";
+import { CanvasUserLayerFrame } from "~/types/CanvasUserLayerFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 
 export const CanvasUserLayerComponent: React.FC<{
   id: number;
   layer: CanvasUserLayer;
-  frame: CanvasUserFrame;
+  frame: CanvasUserLayerFrame;
   isCollaging: boolean;
-  onStart: (clipPath: DOMRect, event: MouseEvent | TouchEvent) => void;
-  onMove: (clipPath: DOMRect, event: MouseEvent | TouchEvent) => void;
+  onStart: (event: React.MouseEvent | React.TouchEvent) => void;
 }> = (props) => {
-  const pathRef = useRef<SVGPathElement>(null);
-  const rectRef = useRef<SVGRectElement>(null);
-  const { id, frame, layer, onMove, onStart, isCollaging } = props;
-
-  const handleOnMoveStart = useCallback(
-    (event: MouseEvent | TouchEvent) => {
-      const e = pathRef.current!.getBoundingClientRect();
-      onStart(e, event);
-    },
-    [onStart]
-  );
-
-  const handleOnMove = useCallback(
-    (event: MouseEvent | TouchEvent) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      const e = pathRef.current!.getBoundingClientRect();
-      onMove(e, event);
-    },
-    [onMove]
-  );
-
-  useEffect(() => {
-    const e = rectRef.current!;
-
-    e.addEventListener("touchstart", handleOnMoveStart);
-    e.addEventListener("mousedown", handleOnMoveStart);
-    e.addEventListener("mousemove", handleOnMove);
-    e.addEventListener("touchmove", handleOnMove, { passive: false });
-
-    return () => {
-      e.removeEventListener("touchstart", handleOnMoveStart);
-      e.removeEventListener("mousedown", handleOnMoveStart);
-      e.removeEventListener("mousemove", handleOnMove);
-      e.removeEventListener("touchmove", handleOnMove);
-    };
-  });
+  const { id, frame, layer, onStart, isCollaging } = props;
 
   return (
     <svg
@@ -69,7 +31,7 @@ export const CanvasUserLayerComponent: React.FC<{
       </defs>
 
       <clipPath id={`canvas-user-layer-frame-${id}`}>
-        <path d={frame.path} ref={pathRef} />
+        <path d={frame.path} />
       </clipPath>
 
       <g clipPath={`url(#canvas-user-layer-frame-${id})`}>
@@ -96,10 +58,11 @@ export const CanvasUserLayerComponent: React.FC<{
 
       <g clipPath={`url(#canvas-user-layer-frame-${id})`}>
         <rect
-          ref={rectRef}
           width={frame.width}
           height={frame.height}
           fillOpacity={0}
+          onTouchStart={onStart}
+          onMouseDown={onStart}
         />
       </g>
     </svg>

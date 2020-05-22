@@ -2,12 +2,12 @@ import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { State } from "~/domains";
 import { Colors } from "~/styles/colors";
-import { CanvasUserFrame } from "~/types/CanvasUserFrame";
+import { CanvasUserLayerFrame } from "~/types/CanvasUserLayerFrame";
 import { thunkActions } from "~/domains/canvas/actions";
 import { getImageFile } from "~/utils/get-image-file";
 
 export const CanvasEmptyUserLayer: React.FC<{
-  frame: CanvasUserFrame;
+  frame: CanvasUserLayerFrame;
   index: number;
 }> = (props) => {
   const dispatch = useDispatch();
@@ -32,12 +32,12 @@ export const CanvasEmptyUserLayer: React.FC<{
         xmlnsXlink="http://www.w3.org/1999/xlink"
       >
         {frame.path && (
-          <clipPath id={`clip-path-${frame.id}`}>
+          <clipPath id={`canvas-user-layer-filter-${index}`}>
             <path d={frame.path} />
           </clipPath>
         )}
 
-        <g clipPath={`url(#clip-path-${frame.id})`}>
+        <g clipPath={`url(#canvas-user-layer-filter-${index})`}>
           <g onClick={handOnClickEmptyUserImage}>
             <rect
               x="0"

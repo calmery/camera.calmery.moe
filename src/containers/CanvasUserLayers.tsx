@@ -19,38 +19,11 @@ export const CanvasUserLayers: React.FC<{ save: boolean }> = ({ save }) => {
   };
 
   const handleOnStart = useCallback(
-    (
-      index: number,
-      clipPathX: number,
-      clipPathY: number,
-      event: MouseEvent | TouchEvent
-    ) => {
+    (index: number, event: React.MouseEvent | React.TouchEvent) => {
       !save &&
         dispatch(
           actions.startCanvasUserLayerDrag(
             index,
-            clipPathX,
-            clipPathY,
-            convertEventToCursorPositions(event)
-          )
-        );
-    },
-    [dispatch]
-  );
-
-  const handleOnMove = useCallback(
-    (
-      index: number,
-      clipPathX: number,
-      clipPathY: number,
-      event: MouseEvent | TouchEvent
-    ) => {
-      !save &&
-        dispatch(
-          actions.tickCanvasUserLayer(
-            index,
-            clipPathX,
-            clipPathY,
             convertEventToCursorPositions(event)
           )
         );
@@ -80,12 +53,7 @@ export const CanvasUserLayers: React.FC<{ save: boolean }> = ({ save }) => {
               id={i}
               isCollaging={canvas.isCollaging}
               key={i}
-              onStart={(clipPath: DOMRect, event: MouseEvent | TouchEvent) =>
-                handleOnStart(i, clipPath.x, clipPath.y, event)
-              }
-              onMove={(clipPath: DOMRect, event: MouseEvent | TouchEvent) =>
-                handleOnMove(i, clipPath.x, clipPath.y, event)
-              }
+              onStart={(event) => handleOnStart(i, event)}
             />
           );
         }

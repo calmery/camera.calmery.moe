@@ -118,30 +118,11 @@ const removeCanvasUserLayer = (index: number) => ({
 
 const startCanvasUserLayerDrag = (
   index: number,
-  clipPathX: number,
-  clipPathY: number,
   cursorPositions: CursorPosition[]
 ) => ({
   type: types.CANVAS_USER_LAYER_START_DRAG,
   payload: {
     index,
-    clipPathX,
-    clipPathY,
-    cursorPositions,
-  },
-});
-
-const tickCanvasUserLayer = (
-  index: number,
-  clipPathX: number,
-  clipPathY: number,
-  cursorPositions: CursorPosition[]
-) => ({
-  type: types.CANVAS_USER_LAYER_TICK,
-  payload: {
-    index,
-    clipPathX,
-    clipPathY,
     cursorPositions,
   },
 });
@@ -182,8 +163,8 @@ const addCanvasUserLayerFromFile = (file: File, index: number) => {
   };
 };
 
-const tickCanvasLayerSticker = (cursorPositions: CursorPosition[]) => ({
-  type: types.CANVAS_STICKER_LAYER_TICK,
+const tickCanvas = (cursorPositions: CursorPosition[]) => ({
+  type: types.CANVAS_TICK,
   payload: { cursorPositions },
 });
 
@@ -246,10 +227,9 @@ export const actions = {
   removeCanvasStickerLayer,
   addCanvasUserLayer,
   removeCanvasUserLayer,
-  tickCanvasUserLayer,
   startCanvasUserLayerDrag,
   updateCanvasUserLayerFilter,
-  tickCanvasLayerSticker,
+  tickCanvas,
   complete,
   enableCollage,
   initializeCanvas,

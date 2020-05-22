@@ -48,10 +48,9 @@ export const Canvas: React.FC<{
       event.preventDefault();
       event.stopPropagation();
 
-      !save &&
-        dispatch(
-          actions.tickCanvasLayerSticker(convertEventToCursorPositions(event))
-        );
+      if (!save) {
+        dispatch(actions.tickCanvas(convertEventToCursorPositions(event)));
+      }
     },
     [dispatch, save]
   );

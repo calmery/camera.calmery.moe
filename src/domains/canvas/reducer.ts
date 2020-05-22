@@ -44,6 +44,7 @@ export interface CanvasState {
     angleBetweenFingers: number;
     previousScale: number;
     distanceBetweenFingers: number;
+    selectedUserLayerIndex: number;
   };
 }
 
@@ -73,6 +74,7 @@ const initialState: CanvasState = {
     angleBetweenFingers: 0,
     previousScale: 0,
     distanceBetweenFingers: 0,
+    selectedUserLayerIndex: 0,
   },
 };
 
@@ -310,14 +312,57 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case types.CANVAS_STICKER_LAYER_TICK: {
+    case types.CANVAS_TICK: {
       const {
         stickerLayers,
         isStickerLayerDragging,
         isStickerLayerTransforming,
+        userLayers,
+        isUserLayerDragging,
+        isCollaging,
+        styleTop,
+        styleLeft,
+        temporaries: { pointerOffsetX, pointerOffsetY, selectedUserLayerIndex },
+        userFrames,
       } = state;
       const { cursorPositions } = action.payload;
       const { displayMagnification } = state;
+
+      if (isUserLayerDragging) {
+        const user = userLayers[selectedUserLayerIndex];
+        const userFrame = userFrames[selectedUserLayerIndex];
+
+        const clipPathX = styleLeft + userFrame.x / displayMagnification;
+        const clipPathY = styleTop + userFrame.y / displayMagnification;
+
+        if (!user || !isCollaging) {
+          return state;
+        }
+
+        const [{ x, y }] = cursorPositions;
+
+        const {
+          x: currentX,
+          y: currentY,
+        } = calculateCanvasUserLayerRelativeCoordinates(
+          displayMagnification,
+          clipPathX,
+          clipPathY,
+          x,
+          y
+        );
+
+        userLayers[selectedUserLayerIndex] = {
+          ...user,
+          x: currentX - pointerOffsetX,
+          y: currentY - pointerOffsetY,
+        };
+
+        return {
+          ...state,
+          userLayers,
+        };
+      }
 
       if (!stickerLayers.length) {
         return state;
@@ -546,10 +591,19 @@ export default (state = initialState, action: Actions): CanvasState => {
     }
 
     case types.CANVAS_USER_LAYER_START_DRAG: {
-      const { userLayers } = state;
-      const { displayMagnification } = state;
-      const { index, cursorPositions, clipPathX, clipPathY } = action.payload;
+      const {
+        userLayers,
+        styleTop,
+        styleLeft,
+        displayMagnification,
+        userFrames,
+      } = state;
+      const { index, cursorPositions } = action.payload;
+      const userFrame = userFrames[index];
       const userLayer = userLayers[index];
+
+      const clipPathX = styleLeft + userFrame.x / displayMagnification;
+      const clipPathY = styleTop + userFrame.y / displayMagnification;
 
       if (userLayer === null) {
         return state;
@@ -570,52 +624,9 @@ export default (state = initialState, action: Actions): CanvasState => {
           ...state.temporaries,
           pointerOffsetX: x - userLayer.x,
           pointerOffsetY: y - userLayer.y,
+          selectedUserLayerIndex: index,
         },
       };
-    }
-
-    case types.CANVAS_USER_LAYER_TICK: {
-      const {
-        userLayers,
-        isUserLayerDragging,
-        isCollaging,
-        temporaries: { pointerOffsetX, pointerOffsetY },
-      } = state;
-      const { displayMagnification } = state;
-      const { index, clipPathX, clipPathY, cursorPositions } = action.payload;
-      const user = userLayers[index];
-
-      if (!user || !isCollaging) {
-        return state;
-      }
-
-      const [{ x, y }] = cursorPositions;
-
-      if (isUserLayerDragging) {
-        const {
-          x: currentX,
-          y: currentY,
-        } = calculateCanvasUserLayerRelativeCoordinates(
-          displayMagnification,
-          clipPathX,
-          clipPathY,
-          x,
-          y
-        );
-
-        userLayers[index] = {
-          ...user,
-          x: currentX - pointerOffsetX,
-          y: currentY - pointerOffsetY,
-        };
-
-        return {
-          ...state,
-          userLayers,
-        };
-      }
-
-      return state;
     }
 
     case types.CANVAS_USER_LAYER_UPDATE_FILTER: {
