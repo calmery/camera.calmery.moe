@@ -139,6 +139,10 @@ export default (state = initialState, action: Actions): CanvasState => {
         saturate: 1,
         angle: 0,
         scale: 1,
+        croppedWidth: width,
+        croppedHeight: height,
+        croppedX: 0,
+        croppedY: 0,
       };
 
       userFrames[0] = {
@@ -552,6 +556,10 @@ export default (state = initialState, action: Actions): CanvasState => {
         saturate: 1,
         angle: 0,
         scale: 1,
+        croppedWidth: width,
+        croppedHeight: height,
+        croppedX: 0,
+        croppedY: 0,
       };
 
       return {
@@ -569,6 +577,18 @@ export default (state = initialState, action: Actions): CanvasState => {
       return {
         ...state,
         userLayers,
+      };
+    }
+
+    case types.CANVAS_USER_LAYER_START_CROP: {
+      const { index } = action.payload;
+
+      return {
+        ...state,
+        temporaries: {
+          ...state.temporaries,
+          selectedUserLayerIndex: index,
+        },
       };
     }
 
@@ -620,6 +640,64 @@ export default (state = initialState, action: Actions): CanvasState => {
         userLayers[index] = {
           ...userLayer,
           [type]: value,
+        };
+      }
+
+      return {
+        ...state,
+        userLayers,
+      };
+    }
+
+    case types.CANVAS_USER_LAYER_UPDATE_CROP: {
+      const {
+        userLayers,
+        temporaries,
+        isCollaging,
+        displayableTop,
+        displayableLeft,
+        displayableWidth,
+        displayableHeight,
+      } = state;
+      const { x, y, width, height } = action.payload;
+      const userLayer = userLayers[temporaries.selectedUserLayerIndex];
+
+      if (userLayer) {
+        userLayers[temporaries.selectedUserLayerIndex] = {
+          ...userLayer,
+          croppedX: x,
+          croppedY: y,
+          croppedWidth: width,
+          croppedHeight: height,
+        };
+      }
+
+      if (!isCollaging) {
+        const styles = calculateCanvasPositionAndSize(
+          width,
+          height,
+          displayableTop,
+          displayableLeft,
+          displayableWidth,
+          displayableHeight
+        );
+
+        return {
+          ...state,
+          ...styles,
+          userLayers,
+          userFrames: [
+            {
+              width: width,
+              height: height,
+              x: 0,
+              y: 0,
+              path: `M0 0H${width}V${height}H0V0Z`,
+            },
+          ],
+          viewBoxWidth: width,
+          viewBoxHeight: height,
+          displayMagnification: width / styles.styleWidth,
         };
       }
 

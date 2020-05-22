@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "~/domains";
 import { actions } from "~/domains/cropper/actions";
+import { actions as canvasActions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
 export const Cropper: React.FC = () => {
@@ -116,6 +117,15 @@ export const Cropper: React.FC = () => {
     sx = cropper.scale.current;
     sy = cropper.scale.current;
   }
+
+  const x = cropper.position.x;
+  const y = cropper.position.y;
+  const width = cropper.width * sx;
+  const height = cropper.height * sx;
+
+  useEffect(() => {
+    dispatch(canvasActions.updateCanvasUserLayerCrop(x, y, width, height));
+  }, [x, y, width, height]);
 
   return (
     <svg

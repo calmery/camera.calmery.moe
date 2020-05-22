@@ -35,12 +35,13 @@ export const CanvasUserLayerComponent: React.FC<{
       </clipPath>
 
       <g clipPath={`url(#canvas-user-layer-frame-${id})`}>
+        {/* TODO: 切り取った画像がめっちゃ小さくなることがある、1000px 以下の画像（適当に変更する）は拡大表示したい */}
         <svg
-          width={layer.width}
-          height={layer.height}
+          width={layer.croppedWidth}
+          height={layer.croppedHeight}
           x={isCollaging ? layer.x : 0}
           y={isCollaging ? layer.y : 0}
-          viewBox={`0 0 ${layer.width} ${layer.height}`}
+          viewBox={`${layer.croppedX} ${layer.croppedY} ${layer.croppedWidth} ${layer.croppedHeight}`}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           overflow="visible"
@@ -48,8 +49,8 @@ export const CanvasUserLayerComponent: React.FC<{
           <g transform={`rotate(0, ${layer.width / 2}, ${layer.height / 2})`}>
             <image
               xlinkHref={layer.dataUrl}
-              width="100%"
-              height="100%"
+              width={layer.width}
+              height={layer.height}
               filter={`url(#canvas-user-layer-filter-${id})`}
             />
           </g>

@@ -116,6 +116,11 @@ const removeCanvasUserLayer = (index: number) => ({
   payload: { index },
 });
 
+const startCanvasUserLayerCrop = (index: number) => ({
+  type: types.CANVAS_USER_LAYER_START_CROP,
+  payload: { index },
+});
+
 const startCanvasUserLayerDrag = (
   index: number,
   cursorPositions: CursorPosition[]
@@ -138,6 +143,16 @@ const updateCanvasUserLayerFilter = (
     type,
     value,
   },
+});
+
+const updateCanvasUserLayerCrop = (
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) => ({
+  type: types.CANVAS_USER_LAYER_UPDATE_CROP,
+  payload: { x, y, width, height },
 });
 
 // TODO: `blueimpLoadImage` のエラー処理をちゃんとする
@@ -227,8 +242,10 @@ export const actions = {
   removeCanvasStickerLayer,
   addCanvasUserLayer,
   removeCanvasUserLayer,
+  startCanvasUserLayerCrop,
   startCanvasUserLayerDrag,
   updateCanvasUserLayerFilter,
+  updateCanvasUserLayerCrop,
   tickCanvas,
   complete,
   enableCollage,
