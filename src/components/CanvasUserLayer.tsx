@@ -68,11 +68,11 @@ export const CanvasUserLayerComponent: React.FC<{
         </filter>
       </defs>
 
-      <clipPath id={`clip-path-${frame.id}`}>
+      <clipPath id={`canvas-user-layer-frame-${id}`}>
         <path d={frame.path} ref={pathRef} />
       </clipPath>
 
-      <g clipPath={`url(#clip-path-${frame.id})`}>
+      <g clipPath={`url(#canvas-user-layer-frame-${id})`}>
         <svg
           width={layer.width}
           height={layer.height}
@@ -94,7 +94,7 @@ export const CanvasUserLayerComponent: React.FC<{
         </svg>
       </g>
 
-      <g clipPath={`url(#clip-path-${frame.id})`}>
+      <g clipPath={`url(#canvas-user-layer-frame-${id})`}>
         <rect
           ref={rectRef}
           width={frame.width}

@@ -1,13 +1,12 @@
-import * as uuid from "uuid";
 import { Actions } from "./actions";
-import { canvasUserLayerFrame, CanvasUserLayerFrame } from "./frames";
+import { canvasUserLayerFrame } from "./frames";
 import * as types from "./types";
 import {
   calculateCanvasUserLayerRelativeCoordinates,
   progressCanvasStickerLayerTransform,
 } from "./utils";
 import { CanvasLayer } from "~/types/CanvasLayer";
-import { CanvasUserFrame } from "~/types/CanvasUserFrame";
+import { CanvasUserLayerFrame } from "~/types/CanvasUserLayerFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 import { angleBetweenTwoPoints } from "~/utils/angle-between-two-points";
 import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
@@ -35,7 +34,7 @@ export interface CanvasState {
   isUserLayerDragging: boolean;
   isStickerLayerDragging: boolean;
   isStickerLayerTransforming: boolean;
-  userFrames: CanvasUserFrame[];
+  userFrames: CanvasUserLayerFrame[];
   userLayers: (CanvasUserLayer | null)[];
   stickerLayers: CanvasLayer[];
   temporaries: {
@@ -88,7 +87,6 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       if (userFrames.length === 0) {
         userFrames[0] = {
-          id: uuid.v4(),
           width,
           height,
           x: 0,
@@ -147,7 +145,6 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
 
       userFrames[0] = {
-        id: uuid.v4(),
         width,
         height,
         x: 0,
@@ -186,7 +183,6 @@ export default (state = initialState, action: Actions): CanvasState => {
           userLayers,
           userFrames: [
             {
-              id: uuid.v4(),
               width,
               height,
               x: 0,
@@ -221,7 +217,6 @@ export default (state = initialState, action: Actions): CanvasState => {
         userLayers,
         userFrames: [
           {
-            id: uuid.v4(),
             width: svgWidth,
             height: svgHeight,
             x: 0,
@@ -267,10 +262,7 @@ export default (state = initialState, action: Actions): CanvasState => {
         styleWidth: svgWidth,
         styleHeight: svgHeight,
         displayMagnification: frameWidth / svgWidth,
-        userFrames: canvasUserFrame.frames[index].map((f) => ({
-          ...f,
-          id: uuid.v4(),
-        })),
+        userFrames: canvasUserFrame.frames[index],
         isCollaging: true,
       };
     }

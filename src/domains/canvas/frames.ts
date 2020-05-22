@@ -1,22 +1,14 @@
-export enum CanvasUserLayerFrame {
-  W3H4 = "3:4",
-  W4H3 = "4:3",
-}
+import { CanvasUserLayerFrame } from "~/types/CanvasUserLayerFrame";
+import { CanvasUserLayerFrameType } from "~/types/CanvasUserLayerFrameType";
 
 export const canvasUserLayerFrame: {
-  [_ in CanvasUserLayerFrame]: {
+  [_ in CanvasUserLayerFrameType]: {
     width: number;
     height: number;
-    frames: {
-      width: number;
-      height: number;
-      x: number;
-      y: number;
-      path: string;
-    }[][];
+    frames: CanvasUserLayerFrame[][];
   };
 } = {
-  [CanvasUserLayerFrame.W3H4]: {
+  [CanvasUserLayerFrameType.W3H4]: {
     width: 900,
     height: 1200,
     frames: [
@@ -100,7 +92,7 @@ export const canvasUserLayerFrame: {
       ],
     ],
   },
-  [CanvasUserLayerFrame.W4H3]: {
+  [CanvasUserLayerFrameType.W4H3]: {
     width: 1200,
     height: 900,
     frames: [

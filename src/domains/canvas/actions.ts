@@ -1,6 +1,6 @@
 import blueimpLoadImage from "blueimp-load-image";
 import { Dispatch } from "redux";
-import { CanvasUserLayerFrame } from "./frames";
+import { CanvasUserLayerFrameType } from "~/types/CanvasUserLayerFrameType";
 import * as types from "./types";
 import { convertUrlToImage } from "./utils";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
@@ -202,7 +202,7 @@ const complete = () => ({
   type: types.CANVAS_COMPLETE,
 });
 
-const enableCollage = (frame: CanvasUserLayerFrame, index: number) => ({
+const enableCollage = (frame: CanvasUserLayerFrameType, index: number) => ({
   type: types.CANVAS_ENABLE_COLLAGE,
   payload: { frame, index },
 });

@@ -4,10 +4,8 @@ import styled, { css } from "styled-components";
 import { State } from "~/domains";
 import { Spacing } from "~/styles/spacing";
 import { actions } from "~/domains/canvas/actions";
-import {
-  canvasUserLayerFrame,
-  CanvasUserLayerFrame,
-} from "~/domains/canvas/frames";
+import { canvasUserLayerFrame } from "~/domains/canvas/frames";
+import { CanvasUserLayerFrameType } from "~/types/CanvasUserLayerFrameType";
 import { GradientColors } from "~/styles/colors";
 
 const Horizontal = styled.div`
@@ -66,7 +64,7 @@ export const CanvasFrames: React.FC = () => {
   const dispatch = useDispatch();
   const { selectedUserLayerFrame } = useSelector(({ ui }: State) => ui);
   const handleOnClickEnableCollage = (
-    frame: CanvasUserLayerFrame,
+    frame: CanvasUserLayerFrameType,
     index: number
   ) => dispatch(actions.enableCollage(frame, index));
   const handleOnClickDisableCollage = () => dispatch(actions.disableCollage());
@@ -81,17 +79,20 @@ export const CanvasFrames: React.FC = () => {
           >
             <object type="image/svg+xml" data={`/images/collage/disable.svg`} />
           </CollageButton>
-          {canvasUserLayerFrame[CanvasUserLayerFrame.W3H4].frames.map(
+          {canvasUserLayerFrame[CanvasUserLayerFrameType.W3H4].frames.map(
             (_, index) => (
               <CollageButton
                 onClick={() =>
-                  handleOnClickEnableCollage(CanvasUserLayerFrame.W3H4, index)
+                  handleOnClickEnableCollage(
+                    CanvasUserLayerFrameType.W3H4,
+                    index
+                  )
                 }
                 selected={
                   !!(
                     selectedUserLayerFrame &&
                     selectedUserLayerFrame.frame ===
-                      CanvasUserLayerFrame.W3H4 &&
+                      CanvasUserLayerFrameType.W3H4 &&
                     selectedUserLayerFrame.index === index
                   )
                 }
@@ -104,17 +105,20 @@ export const CanvasFrames: React.FC = () => {
               </CollageButton>
             )
           )}
-          {canvasUserLayerFrame[CanvasUserLayerFrame.W4H3].frames.map(
+          {canvasUserLayerFrame[CanvasUserLayerFrameType.W4H3].frames.map(
             (_, index) => (
               <CollageButton
                 onClick={() =>
-                  handleOnClickEnableCollage(CanvasUserLayerFrame.W4H3, index)
+                  handleOnClickEnableCollage(
+                    CanvasUserLayerFrameType.W4H3,
+                    index
+                  )
                 }
                 selected={
                   !!(
                     selectedUserLayerFrame &&
                     selectedUserLayerFrame.frame ===
-                      CanvasUserLayerFrame.W4H3 &&
+                      CanvasUserLayerFrameType.W4H3 &&
                     selectedUserLayerFrame.index === index
                   )
                 }
