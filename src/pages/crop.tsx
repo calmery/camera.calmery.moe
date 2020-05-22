@@ -155,8 +155,6 @@ const Crop: NextPage = () => {
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
   const { image, cropper } = useSelector(({ cropper }: State) => cropper);
-  // const initializeCropperImage = (url: string, width: number, height: number) =>
-  //   dispatch(actions.initializeCropperImage({ url, width, height }));
   const changeCropperCropperAspectRatio = (
     index: number,
     w: number,
@@ -177,10 +175,6 @@ const Crop: NextPage = () => {
   }, []);
 
   // Debug
-
-  // useEffect(() => {
-  //   initializeCropperImage("images/background.jpg", 1500, 1065);
-  // }, []);
 
   let rotate = image.rotate.current;
 
@@ -268,24 +262,5 @@ const Crop: NextPage = () => {
     </>
   );
 };
-
-/*
-      <input
-        type="checkbox"
-        defaultChecked={freeAspect}
-        onChange={() => changeFreeAspect()}
-      />
-      <button onClick={() => changeCropperCropperAspectRatio(16, 9)}>16:9</button>
-      <button onClick={() => changeCropperCropperAspectRatio(9, 16)}>9:16</button>
-      <button onClick={() => changeCropperCropperAspectRatio(1, 1)}>1:1</button>
-      <button onClick={() => changeCropperCropperAspectRatio(4, 3)}>4:3</button>
-      <button onClick={() => changeCropperCropperAspectRatio(3, 4)}>3:4</button>
-      <button onClick={() => initializeCropperImage("images/background.jpg", 1500, 1065)}>
-        Image 1
-      </button>
-      <button onClick={() => initializeCropperImage("images/background-2.jpg", 1000, 333)}>
-        Image 2
-      </button>
-      */
 
 export default withRedux(Crop);
