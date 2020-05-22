@@ -35,6 +35,6 @@ export const checkAndResizeImage = (image: HTMLImageElement) => {
   return {
     width: renderWidth,
     height: renderHeight,
-    dataUrl: canvas.toDataURL("image/jpeg"),
+    dataUrl: canvas.toDataURL("image/png"),
   };
 };

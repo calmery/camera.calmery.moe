@@ -180,7 +180,7 @@ const addCanvasUserLayerFromFile = (file: File, index: number) => {
         file,
         async (canvas) => {
           const image = await convertUrlToImage(
-            (canvas as HTMLCanvasElement).toDataURL()
+            (canvas as HTMLCanvasElement).toDataURL("image/png")
           );
           // ToDo: null のときはサイズエラーになっている
           const result = checkAndResizeImage(image);
