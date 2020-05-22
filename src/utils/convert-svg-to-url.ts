@@ -31,7 +31,7 @@ export const convertSvgToDataUrl = (
       }
 
       context.drawImage(image, 0, 0, width, height);
-      const blob = convertDataUrlToBlob(canvas.toDataURL("image/png"));
+      const blob = convertDataUrlToBlob(canvas.toDataURL("image/jpeg"));
       resolve(URL.createObjectURL(blob));
     };
 
