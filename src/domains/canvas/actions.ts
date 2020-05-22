@@ -132,14 +132,9 @@ const startCanvasUserLayerDrag = (
   },
 });
 
-const updateCanvasUserLayerFilter = (
-  index: number,
-  type: FeColorMatrix,
-  value: number
-) => ({
+const updateCanvasUserLayerFilter = (type: FeColorMatrix, value: number) => ({
   type: types.CANVAS_USER_LAYER_UPDATE_FILTER,
   payload: {
-    index,
     type,
     value,
   },
@@ -194,6 +189,11 @@ const addCanvasUserLayerFromFile = (file: File, index: number) => {
     });
   };
 };
+
+const startCanvasUserLayerFilter = (index: number) => ({
+  type: types.CANVAS_USER_LAYER_START_FILTER,
+  payload: { index },
+});
 
 const tickCanvas = (cursorPositions: CursorPosition[]) => ({
   type: types.CANVAS_TICK,
@@ -262,6 +262,7 @@ export const actions = {
   startCanvasUserLayerCrop,
   startCanvasUserLayerDrag,
   updateCanvasUserLayerFilter,
+  startCanvasUserLayerFilter,
   updateCanvasUserLayerCrop,
   tickCanvas,
   complete,

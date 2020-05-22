@@ -61,7 +61,12 @@ export const CanvasUserLayerComponent: React.FC<{
                 layer.height / 2
               })`}
             >
-              <image xlinkHref={layer.dataUrl} width="100%" height="100%" />
+              <image
+                xlinkHref={layer.dataUrl}
+                filter={`url(#canvas-user-layer-filter-${id})`}
+                width="100%"
+                height="100%"
+              />
             </g>
           </svg>
         </svg>

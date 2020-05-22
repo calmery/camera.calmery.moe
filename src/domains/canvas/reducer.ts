@@ -46,6 +46,7 @@ export interface CanvasState {
     previousScale: number;
     distanceBetweenFingers: number;
     selectedUserLayerIndex: number;
+    selectedUserLayerFilterIndex: number;
   };
 }
 
@@ -76,6 +77,7 @@ const initialState: CanvasState = {
     previousScale: 0,
     distanceBetweenFingers: 0,
     selectedUserLayerIndex: 0,
+    selectedUserLayerFilterIndex: 0,
   },
 };
 
@@ -558,6 +560,18 @@ export default (state = initialState, action: Actions): CanvasState => {
 
     // Users
 
+    case types.CANVAS_USER_LAYER_START_FILTER: {
+      const { index } = action.payload;
+
+      return {
+        ...state,
+        temporaries: {
+          ...state.temporaries,
+          selectedUserLayerFilterIndex: index,
+        },
+      };
+    }
+
     case types.CANVAS_USER_LAYER_ADD: {
       const {
         userLayers,
@@ -704,12 +718,12 @@ export default (state = initialState, action: Actions): CanvasState => {
     }
 
     case types.CANVAS_USER_LAYER_UPDATE_FILTER: {
-      const { userLayers } = state;
-      const { index, type, value } = action.payload;
-      const userLayer = userLayers[index];
+      const { userLayers, temporaries } = state;
+      const { type, value } = action.payload;
+      const userLayer = userLayers[temporaries.selectedUserLayerFilterIndex];
 
       if (userLayer) {
-        userLayers[index] = {
+        userLayers[temporaries.selectedUserLayerFilterIndex] = {
           ...userLayer,
           [type]: value,
         };
