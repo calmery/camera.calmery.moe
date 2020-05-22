@@ -7,6 +7,7 @@ import { CanvasStickerLayers } from "./CanvasStickerLayers";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
+import { Colors } from "~/styles/colors";
 
 const CanvasContainer = styled.div`
   box-sizing: border-box;
@@ -100,6 +101,11 @@ export const Canvas: React.FC<{
           onTouchEnd={handleOnComplete}
           onMouseMove={handleOnMove}
         >
+          <rect
+            fill={Colors.lightGray}
+            width={viewBoxWidth}
+            height={viewBoxHeight}
+          ></rect>
           {users && <CanvasUserLayers save={save} />}
           {stickers && <CanvasStickerLayers save={save} />}
         </svg>
