@@ -4,6 +4,7 @@ import * as types from "./types";
 import {
   calculateCanvasUserLayerRelativeCoordinates,
   progressCanvasStickerLayerTransform,
+  calculateCanvasPositionAndSize,
 } from "./utils";
 import { CanvasLayer } from "~/types/CanvasLayer";
 import { CanvasUserLayerFrame } from "~/types/CanvasUserLayerFrame";
@@ -100,27 +101,21 @@ export default (state = initialState, action: Actions): CanvasState => {
         viewBoxHeight = height;
       }
 
-      let svgWidth = width;
-      let svgHeight = viewBoxHeight * (width / viewBoxWidth);
-      let svgX = x;
-      let svgY = y + (height - svgHeight) / 2;
-
-      if (svgHeight > height) {
-        svgHeight = height;
-        svgWidth = viewBoxWidth * (height / viewBoxHeight);
-        svgX = x + (width - svgWidth) / 2;
-        svgY = y;
-      }
+      const styles = calculateCanvasPositionAndSize(
+        viewBoxWidth,
+        viewBoxHeight,
+        y,
+        x,
+        width,
+        height
+      );
 
       return {
         ...state,
+        ...styles,
         viewBoxWidth,
         viewBoxHeight,
-        styleLeft: svgX,
-        styleTop: svgY,
-        styleWidth: svgWidth,
-        styleHeight: svgHeight,
-        displayMagnification: viewBoxWidth / svgWidth,
+        displayMagnification: viewBoxWidth / styles.styleWidth,
         displayableLeft: x,
         displayableTop: y,
         displayableWidth: width,
@@ -195,35 +190,29 @@ export default (state = initialState, action: Actions): CanvasState => {
         };
       }
 
-      let svgWidth = displayableWidth;
-      let svgHeight = viewBoxHeight * (displayableWidth / viewBoxWidth);
-      let svgX = displayableLeft;
-      let svgY = displayableTop + (displayableHeight - svgHeight) / 2;
-
-      if (svgHeight > displayableHeight) {
-        svgHeight = displayableHeight;
-        svgWidth = viewBoxWidth * (displayableHeight / viewBoxHeight);
-        svgX = displayableLeft + (displayableWidth - svgWidth) / 2;
-        svgY = displayableTop;
-      }
+      const styles = calculateCanvasPositionAndSize(
+        viewBoxWidth,
+        viewBoxHeight,
+        displayableTop,
+        displayableLeft,
+        displayableWidth,
+        displayableHeight
+      );
 
       return {
         ...state,
-        styleWidth: svgWidth,
-        styleHeight: svgHeight,
-        styleTop: svgY,
-        styleLeft: svgX,
-        viewBoxWidth: svgWidth,
-        viewBoxHeight: svgHeight,
+        ...styles,
+        viewBoxWidth: styles.styleWidth,
+        viewBoxHeight: styles.styleHeight,
         isCollaging: false,
         userLayers,
         userFrames: [
           {
-            width: svgWidth,
-            height: svgHeight,
+            width: styles.styleWidth,
+            height: styles.styleHeight,
             x: 0,
             y: 0,
-            path: `M0 0H${svgWidth}V${svgHeight}H0V0Z`,
+            path: `M0 0H${styles.styleWidth}V${styles.styleHeight}H0V0Z`,
           },
         ],
       };
@@ -242,28 +231,21 @@ export default (state = initialState, action: Actions): CanvasState => {
       ];
       const canvasUserFrame = canvasUserLayerFrame[frame];
 
-      // ToDo: 外に切り出す
-      let svgWidth = displayableWidth;
-      let svgHeight = frameHeight * (displayableWidth / frameWidth);
-      let svgX = displayableLeft;
-      let svgY = displayableTop + (displayableHeight - svgHeight) / 2;
-
-      if (svgHeight > displayableHeight) {
-        svgHeight = displayableHeight;
-        svgWidth = frameWidth * (displayableHeight / frameHeight);
-        svgX = displayableLeft + (displayableWidth - svgWidth) / 2;
-        svgY = displayableTop;
-      }
+      const styles = calculateCanvasPositionAndSize(
+        frameWidth,
+        frameHeight,
+        displayableTop,
+        displayableLeft,
+        displayableWidth,
+        displayableHeight
+      );
 
       return {
         ...state,
+        ...styles,
         viewBoxWidth: frameWidth,
         viewBoxHeight: frameHeight,
-        styleLeft: svgX,
-        styleTop: svgY,
-        styleWidth: svgWidth,
-        styleHeight: svgHeight,
-        displayMagnification: frameWidth / svgWidth,
+        displayMagnification: frameWidth / styles.styleWidth,
         userFrames: canvasUserFrame.frames[index],
         isCollaging: true,
       };

@@ -47,3 +47,33 @@ export const convertUrlToImage = (url: string): Promise<HTMLImageElement> => {
     image.src = url;
   });
 };
+
+//
+
+export const calculateCanvasPositionAndSize = (
+  viewBoxWidth: number,
+  viewBoxHeight: number,
+  displayableTop: number,
+  displayableLeft: number,
+  displayableWidth: number,
+  displayableHeight: number
+) => {
+  let styleWidth = displayableWidth;
+  let styleHeight = viewBoxHeight * (displayableWidth / viewBoxWidth);
+  let styleLeft = displayableLeft;
+  let styleTop = displayableTop + (displayableHeight - styleHeight) / 2;
+
+  if (styleHeight > displayableHeight) {
+    styleHeight = displayableHeight;
+    styleWidth = viewBoxWidth * (displayableHeight / viewBoxHeight);
+    styleLeft = displayableLeft + (displayableWidth - styleWidth) / 2;
+    styleTop = displayableTop;
+  }
+
+  return {
+    styleTop,
+    styleLeft,
+    styleWidth,
+    styleHeight,
+  };
+};
