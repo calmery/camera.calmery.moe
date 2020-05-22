@@ -44,16 +44,26 @@ export const CanvasUserLayerComponent: React.FC<{
           viewBox={`${layer.croppedX} ${layer.croppedY} ${layer.croppedWidth} ${layer.croppedHeight}`}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          overflow="visible"
         >
-          <g transform={`rotate(0, ${layer.width / 2}, ${layer.height / 2})`}>
-            <image
-              xlinkHref={layer.dataUrl}
-              width={layer.width}
-              height={layer.height}
-              filter={`url(#canvas-user-layer-filter-${id})`}
-            />
-          </g>
+          {/* TODO: ヤバイですね☆ */}
+          <svg
+            width={layer.width * layer.croppedScale}
+            height={layer.height * layer.croppedScale}
+            x={layer.croppedImageX}
+            y={layer.croppedImageY}
+            viewBox={`0 0 ${layer.width} ${layer.height}`}
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            overflow="visible"
+          >
+            <g
+              transform={`rotate(${layer.croppedAngle}, ${layer.width / 2}, ${
+                layer.height / 2
+              })`}
+            >
+              <image xlinkHref={layer.dataUrl} width="100%" height="100%" />
+            </g>
+          </svg>
         </svg>
       </g>
 

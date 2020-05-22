@@ -13,6 +13,10 @@ const containerInitialState: CropperContainerState = {
   styleTop: 0,
   styleWidth: 0,
   styleHeight: 0,
+  displayableTop: 0,
+  displayableLeft: 0,
+  displayableWidth: 0,
+  displayableHeight: 0,
   displayMagnification: 0,
 };
 
@@ -22,6 +26,37 @@ const containerReducer = (
   action: Actions
 ) => {
   switch (action.type) {
+    case types.CROPPER_IMAGE_INITIALIZE: {
+      const {
+        displayableTop,
+        displayableLeft,
+        displayableWidth,
+        displayableHeight,
+      } = state;
+      const { width: imageWidth, height: imageHeight } = action.payload;
+
+      let svgWidth = displayableWidth;
+      let svgHeight = imageHeight * (displayableWidth / imageWidth);
+      let svgX = displayableLeft;
+      let svgY = displayableTop + (displayableHeight - svgHeight) / 2;
+
+      if (svgHeight > displayableHeight) {
+        svgHeight = displayableHeight;
+        svgWidth = imageWidth * (displayableHeight / imageHeight);
+        svgX = displayableLeft + (displayableWidth - svgWidth) / 2;
+        svgY = displayableTop;
+      }
+
+      return {
+        ...state,
+        styleLeft: svgX,
+        styleTop: svgY,
+        styleWidth: svgWidth,
+        styleHeight: svgHeight,
+        displayMagnification: imageWidth / svgWidth,
+      };
+    }
+
     case types.CROPPER_CONTAINER_UPDATE_RECT: {
       const { image } = parentState;
       const { x, y, width, height } = action.payload;
@@ -46,6 +81,10 @@ const containerReducer = (
         styleWidth: svgWidth,
         styleHeight: svgHeight,
         displayMagnification: imageWidth / svgWidth,
+        displayableTop: y,
+        displayableLeft: x,
+        displayableWidth: width,
+        displayableHeight: height,
       };
     }
 
@@ -92,6 +131,42 @@ const cropperReducer = (
   action: Actions
 ) => {
   switch (action.type) {
+    case types.CROPPER_IMAGE_INITIALIZE: {
+      const {
+        cropperWidth,
+        cropperHeight,
+        cropperX,
+        cropperY,
+        cropperScale,
+        cropperScaleX,
+        cropperScaleY,
+      } = action.payload;
+
+      return {
+        ...cropperInitialState,
+        // ToDo: 初期値を別に定義して Canvas 側でも使いたい
+        width: cropperWidth || CROPPER_DEFAULT_WIDTH,
+        height: cropperHeight || CROPPER_DEFAULT_HEIGHT,
+        position: {
+          ...state.position,
+          x: cropperX,
+          y: cropperY,
+        },
+        scale: {
+          ...state.scale,
+          current: cropperScale,
+        },
+        scaleX: {
+          ...state.scaleX,
+          current: cropperScaleX,
+        },
+        scaleY: {
+          ...state.scaleY,
+          current: cropperScaleY,
+        },
+      };
+    }
+
     case types.CROPPER_CROPPER_START_DRAG: {
       const { position } = state;
       const { container, image } = parentState;
@@ -352,26 +427,33 @@ const imageReducer = (
 ) => {
   switch (action.type) {
     case types.CROPPER_IMAGE_INITIALIZE: {
-      const { url, width, height } = action.payload;
+      const {
+        url,
+        width,
+        height,
+        imageScale,
+        imageAngle,
+        imageX,
+        imageY,
+      } = action.payload;
 
       return {
+        ...imageInitialState,
         url,
         width,
         height,
         isImageTransforming: false,
         position: {
-          x: 0,
-          y: 0,
+          x: imageX,
+          y: imageY,
         },
         scale: {
-          current: 1,
-          previous: 1,
-          valueAtTransformStart: 0,
+          ...imageInitialState.scale,
+          current: imageScale,
         },
         rotate: {
-          current: 0,
-          previous: 0,
-          valueAtTransformStart: 0,
+          ...imageInitialState.scale,
+          current: imageAngle,
         },
       };
     }
@@ -472,6 +554,10 @@ export interface CropperContainerState {
   styleTop: number;
   styleWidth: number;
   styleHeight: number;
+  displayableTop: number;
+  displayableLeft: number;
+  displayableWidth: number;
+  displayableHeight: number;
   displayMagnification: number;
 }
 

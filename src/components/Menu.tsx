@@ -94,14 +94,8 @@ export const Menu = () => {
             data="/images/menu/tune.svg"
           />
         </IconContainer>
-        <IconContainer
-          disabled={collage}
-          onClick={
-            !collage ? () => handleOnClickRouterPush("/crop") : undefined
-          }
-        >
+        <IconContainer onClick={() => handleOnClickRouterPush("/crop")}>
           <Icon
-            disabled={collage}
             selected={pathname === "/crop"}
             type="image/svg+xml"
             data="/images/menu/crop.svg"

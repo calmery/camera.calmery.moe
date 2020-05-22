@@ -50,6 +50,17 @@ const initializeCropperImage = (payload: {
   url: string;
   width: number;
   height: number;
+  cropperWidth: number;
+  cropperHeight: number;
+  cropperX: number;
+  cropperY: number;
+  imageX: number;
+  imageY: number;
+  imageAngle: number;
+  imageScale: number;
+  cropperScale: number;
+  cropperScaleX: number;
+  cropperScaleY: number;
 }) => ({
   type: types.CROPPER_IMAGE_INITIALIZE,
   payload,

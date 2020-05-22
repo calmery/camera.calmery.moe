@@ -3,8 +3,10 @@ import styled, { css } from "styled-components";
 import { NextPage } from "next";
 import { useDispatch, useSelector } from "react-redux";
 import { withRedux, State } from "~/domains";
+import { Canvas } from "~/containers/Canvas";
 import { Cropper } from "~/containers/Cropper";
 import { actions } from "~/domains/cropper/actions";
+import { actions as canvasActions } from "~/domains/canvas/actions";
 import { Page } from "~/components/Page";
 import { Spacing } from "~/styles/spacing";
 import { Colors, GradientColors } from "~/styles/colors";
@@ -31,18 +33,6 @@ const ControlBar = styled.div`
   }
 `;
 
-const Canvas = styled.div`
-  box-sizing: border-box;
-  padding: 24px;
-  flex-grow: 1;
-  height: fit-content;
-`;
-
-const CanvasSizeDetector = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
 const BottomBar = styled.div`
   width: 100%;
   flex-shrink: 0;
@@ -59,6 +49,7 @@ const Rotate = styled.div`
 
 const AspectRatioContainer = styled.div`
   margin-bottom: ${Spacing.l}px;
+  display: flex;
 `;
 
 const AspectRatio = styled.div<{ selected?: boolean }>`
@@ -121,6 +112,36 @@ const AspectRatioTitle = styled.div<{ selected?: boolean }>`
     `}
 `;
 
+const CropTargetImages = styled.div`
+  align-items: center;
+  height: 54px;
+  display: flex;
+`;
+
+const CropTargetImage = styled.div`
+  ${Mixin.clickable};
+
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: ${Spacing.m}px;
+  cursor: pointer;
+
+  &:first-child {
+    margin-left: ${Spacing.l}px;
+  }
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 2px;
+    box-sizing: border-box;
+    border: 1px solid ${Colors.lightGray};
+  }
+`;
+
 const aspectRatios = [
   {
     w: 1,
@@ -151,12 +172,15 @@ const aspectRatios = [
 const Crop: NextPage = () => {
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
+  const canvas = useSelector(({ canvas }: State) => canvas);
   const { image, cropper } = useSelector(({ cropper }: State) => cropper);
   const changeCropperCropperAspectRatio = (
     index: number,
     w: number,
     h: number
   ) => dispatch(actions.changeCropperCropperAspectRatio(index, w, h));
+
+  const isImageExists = canvas.userLayers.some((l) => !!l);
 
   // Debug
 
@@ -175,67 +199,109 @@ const Crop: NextPage = () => {
           <ControlBar>
             <img src="/images/close.svg" />
           </ControlBar>
-          <Cropper />
+          {isImageExists && <Cropper />}
+          {!isImageExists && <Canvas />}
           <BottomBar>
-            <Rotate>{Math.floor(rotate)}°</Rotate>
-            <AspectRatioContainer>
-              <HorizontalScrollView
-                rootElement={(element) => setRootElement(element)}
-              >
-                {rootElement && (
-                  <>
-                    <HorizontalScrollViewItem rootElement={rootElement}>
-                      <AspectRatioFree
-                        selected={cropper.selectedIndex === -1}
-                        onClick={
-                          // ToDo: FreeAspect を true にする処理が必要になる
-                          () => {
-                            console.log;
-                          }
-                        }
-                      >
-                        <AspectRatioIcon
-                          selected={cropper.selectedIndex === -1}
-                        >
-                          <img src="/images/crop/free.svg" />
-                        </AspectRatioIcon>
-                        <AspectRatioTitle
-                          selected={cropper.selectedIndex === -1}
-                        >
-                          Free
-                        </AspectRatioTitle>
-                      </AspectRatioFree>
-                    </HorizontalScrollViewItem>
-                    {aspectRatios.map(({ w, h }, index) => {
-                      return (
-                        <HorizontalScrollViewItem
-                          rootElement={rootElement}
-                          key={index}
-                        >
-                          <AspectRatio
-                            selected={cropper.selectedIndex === index}
-                            onClick={() =>
-                              changeCropperCropperAspectRatio(index, w, h)
+            <div style={{ marginTop: `${Spacing.l}px` }}></div>
+            {isImageExists && (
+              <>
+                <Rotate>{Math.floor(rotate)}°</Rotate>
+                <AspectRatioContainer>
+                  <HorizontalScrollView
+                    rootElement={(element) => setRootElement(element)}
+                  >
+                    {rootElement && (
+                      <>
+                        <HorizontalScrollViewItem rootElement={rootElement}>
+                          <AspectRatioFree
+                            selected={cropper.selectedIndex === -1}
+                            onClick={
+                              // ToDo: FreeAspect を true にする処理が必要になる
+                              () => {
+                                console.log;
+                              }
                             }
                           >
                             <AspectRatioIcon
-                              selected={cropper.selectedIndex === index}
+                              selected={cropper.selectedIndex === -1}
                             >
-                              <img src={`/images/crop/${w}-${h}.svg`} />
+                              <img src="/images/crop/free.svg" />
                             </AspectRatioIcon>
                             <AspectRatioTitle
-                              selected={cropper.selectedIndex === index}
+                              selected={cropper.selectedIndex === -1}
                             >
-                              {w}:{h}
+                              Free
                             </AspectRatioTitle>
-                          </AspectRatio>
+                          </AspectRatioFree>
                         </HorizontalScrollViewItem>
+                        {aspectRatios.map(({ w, h }, index) => {
+                          return (
+                            <HorizontalScrollViewItem
+                              rootElement={rootElement}
+                              key={index}
+                            >
+                              <AspectRatio
+                                selected={cropper.selectedIndex === index}
+                                onClick={() =>
+                                  changeCropperCropperAspectRatio(index, w, h)
+                                }
+                              >
+                                <AspectRatioIcon
+                                  selected={cropper.selectedIndex === index}
+                                >
+                                  <img src={`/images/crop/${w}-${h}.svg`} />
+                                </AspectRatioIcon>
+                                <AspectRatioTitle
+                                  selected={cropper.selectedIndex === index}
+                                >
+                                  {w}:{h}
+                                </AspectRatioTitle>
+                              </AspectRatio>
+                            </HorizontalScrollViewItem>
+                          );
+                        })}
+                      </>
+                    )}
+                  </HorizontalScrollView>
+                  <CropTargetImages>
+                    {canvas.userLayers.map((userLayer, index) => {
+                      if (!userLayer) {
+                        return null;
+                      }
+
+                      return (
+                        <CropTargetImage
+                          key={index}
+                          onClick={() => {
+                            const {
+                              dataUrl,
+                              width,
+                              height,
+                              cropper,
+                            } = userLayer;
+
+                            dispatch(
+                              canvasActions.startCanvasUserLayerCrop(index)
+                            );
+
+                            dispatch(
+                              actions.initializeCropperImage({
+                                url: dataUrl,
+                                width,
+                                height,
+                                ...cropper,
+                              })
+                            );
+                          }}
+                        >
+                          <img src={userLayer.dataUrl} />
+                        </CropTargetImage>
                       );
                     })}
-                  </>
-                )}
-              </HorizontalScrollView>
-            </AspectRatioContainer>
+                  </CropTargetImages>
+                </AspectRatioContainer>
+              </>
+            )}
             <Menu />
           </BottomBar>
         </FlexColumn>

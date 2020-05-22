@@ -24,6 +24,9 @@ export const Cropper: React.FC = () => {
   const { container, cropper, image } = useSelector(
     ({ cropper }: State) => cropper
   );
+  const {
+    temporaries: { selectedUserLayerIndex },
+  } = useSelector(({ canvas }: State) => canvas);
   const canvas = useSelector(({ canvas }: State) => canvas);
   const containerRef = useRef<SVGSVGElement>(null);
   const displayableRef = useRef<HTMLDivElement>(null);
@@ -110,13 +113,24 @@ export const Cropper: React.FC = () => {
     dispatch(actions.updateCropperContainerRect(d.getBoundingClientRect()));
 
     const { userLayers } = canvas;
-    const { dataUrl, width, height } = userLayers.find((user) => user)!;
+    let userLayer = userLayers[selectedUserLayerIndex];
+
+    if (!userLayer) {
+      const i = userLayers.findIndex((l) => l);
+      userLayer = userLayers[i]!;
+
+      // selectedUserLayerIndex で指定された画像がない場合、userLayers の画像存在確認、先頭の画像を使用する
+      dispatch(canvasActions.startCanvasUserLayerCrop(i));
+    }
+
+    const { dataUrl, width, height, cropper } = userLayer;
 
     dispatch(
       actions.initializeCropperImage({
         url: dataUrl,
         width,
         height,
+        ...cropper,
       })
     );
 
@@ -145,11 +159,46 @@ export const Cropper: React.FC = () => {
   const x = cropper.position.x;
   const y = cropper.position.y;
   const width = cropper.width * sx;
-  const height = cropper.height * sx;
+  const height = cropper.height * sy;
+  const rotate = image.rotate;
+  const scale = image.scale;
 
   useEffect(() => {
-    dispatch(canvasActions.updateCanvasUserLayerCrop(x, y, width, height));
-  }, [x, y, width, height]);
+    dispatch(
+      canvasActions.updateCanvasUserLayerCrop(
+        x,
+        y,
+        width,
+        height,
+        rotate.current,
+        scale.current,
+        image.position.x,
+        image.position.y,
+        {
+          cropperWidth: cropper.width,
+          cropperHeight: cropper.height,
+          cropperX: cropper.position.x,
+          cropperY: cropper.position.y,
+          imageX: image.position.x,
+          imageY: image.position.y,
+          imageAngle: image.rotate.current,
+          imageScale: image.scale.current,
+          cropperScale: cropper.scale.current,
+          cropperScaleX: cropper.scaleX.current,
+          cropperScaleY: cropper.scaleY.current,
+        }
+      )
+    );
+  }, [
+    x,
+    y,
+    width,
+    height,
+    rotate.current,
+    scale.current,
+    image.position.x,
+    image.position.y,
+  ]);
 
   return (
     <>

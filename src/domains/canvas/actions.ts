@@ -149,10 +149,27 @@ const updateCanvasUserLayerCrop = (
   x: number,
   y: number,
   width: number,
-  height: number
+  height: number,
+  angle: number,
+  scale: number,
+  imageX: number,
+  imageY: number,
+  cropper: {
+    cropperWidth: number;
+    cropperHeight: number;
+    cropperX: number;
+    cropperY: number;
+    imageX: number;
+    imageY: number;
+    imageAngle: number;
+    imageScale: number;
+    cropperScale: number;
+    cropperScaleX: number;
+    cropperScaleY: number;
+  }
 ) => ({
   type: types.CANVAS_USER_LAYER_UPDATE_CROP,
-  payload: { x, y, width, height },
+  payload: { x, y, width, height, angle, scale, imageX, imageY, cropper },
 });
 
 // TODO: `blueimpLoadImage` のエラー処理をちゃんとする
