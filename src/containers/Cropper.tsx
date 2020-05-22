@@ -294,6 +294,7 @@ export const Cropper: React.FC = () => {
                 image.height / 2
               })`}
             >
+              <rect fill="#fff" width={image.width} height={image.height} />
               <image xlinkHref={image.url} width="100%" height="100%" />
             </g>
           </svg>
