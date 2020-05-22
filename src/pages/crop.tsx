@@ -1,18 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { NextPage } from "next";
 import { useDispatch, useSelector } from "react-redux";
 import { withRedux, State } from "~/domains";
 import { Cropper } from "~/containers/Cropper";
 import { actions } from "~/domains/cropper/actions";
-import CropperPreview from "~/containers/CropperPreview";
 import { Page } from "~/components/Page";
 import { Spacing } from "~/styles/spacing";
 import { Colors, GradientColors } from "~/styles/colors";
 import { Typography } from "~/styles/typography";
 import { HorizontalScrollView } from "~/components/HorizontalScrollView";
 import { HorizontalScrollViewItem } from "~/components/HorizontalScrollViewItem";
-import ResizeObserver from "resize-observer-polyfill";
 import { Menu } from "~/components/Menu";
 import { Mixin } from "~/styles/mixin";
 
@@ -151,7 +149,6 @@ const aspectRatios = [
 ];
 
 const Crop: NextPage = () => {
-  const ref = useRef<HTMLDivElement>(null);
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
   const { image, cropper } = useSelector(({ cropper }: State) => cropper);
@@ -160,19 +157,6 @@ const Crop: NextPage = () => {
     w: number,
     h: number
   ) => dispatch(actions.changeCropperCropperAspectRatio(index, w, h));
-
-  useEffect(() => {
-    const e = ref.current!;
-    const resizeObserver = new ResizeObserver(() => {
-      dispatch(actions.updateCropperContainerRect(e.getBoundingClientRect()));
-    });
-
-    resizeObserver.observe(e);
-
-    return () => {
-      resizeObserver.unobserve(e);
-    };
-  }, []);
 
   // Debug
 
@@ -191,9 +175,7 @@ const Crop: NextPage = () => {
           <ControlBar>
             <img src="/images/close.svg" />
           </ControlBar>
-          <Canvas>
-            <CanvasSizeDetector ref={ref} />
-          </Canvas>
+          <Cropper />
           <BottomBar>
             <Rotate>{Math.floor(rotate)}°</Rotate>
             <AspectRatioContainer>
@@ -258,7 +240,6 @@ const Crop: NextPage = () => {
           </BottomBar>
         </FlexColumn>
       </Page>
-      <Cropper />
     </>
   );
 };
