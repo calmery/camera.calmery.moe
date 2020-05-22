@@ -148,8 +148,8 @@ export default (state = initialState, action: Actions): CanvasState => {
         croppedImageX: 0,
         croppedImageY: 0,
         cropper: {
-          cropperWidth: 0,
-          cropperHeight: 0,
+          cropperWidth: width,
+          cropperHeight: height,
           cropperX: 0,
           cropperY: 0,
           imageX: 0,
@@ -589,8 +589,8 @@ export default (state = initialState, action: Actions): CanvasState => {
         croppedImageX: 0,
         croppedImageY: 0,
         cropper: {
-          cropperWidth: 0,
-          cropperHeight: 0,
+          cropperWidth: width,
+          cropperHeight: height,
           cropperX: 0,
           cropperY: 0,
           imageX: 0,
