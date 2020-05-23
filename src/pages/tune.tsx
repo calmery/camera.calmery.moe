@@ -210,30 +210,22 @@ const Tune: NextPage = () => {
                     case FeColorMatrix.saturate:
                       return (
                         <>
-                          <button
-                            onClick={() => {
+                          <input
+                            type="range"
+                            min="-1"
+                            max="2"
+                            step="0.1"
+                            onChange={(event) => {
+                              const v = event.target.value;
+
                               dispatch(
                                 canvasActions.updateCanvasUserLayerFilter(
                                   FeColorMatrix.saturate,
-                                  userLayer!.saturate - 1
+                                  parseFloat(v)
                                 )
                               );
                             }}
-                          >
-                            -
-                          </button>
-                          <button
-                            onClick={() => {
-                              dispatch(
-                                canvasActions.updateCanvasUserLayerFilter(
-                                  FeColorMatrix.saturate,
-                                  userLayer!.saturate + 1
-                                )
-                              );
-                            }}
-                          >
-                            +
-                          </button>
+                          />
                         </>
                       );
                   }
