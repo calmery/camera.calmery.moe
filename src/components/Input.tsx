@@ -55,14 +55,25 @@ const ViewItem = styled.div`
 
 // Props
 
-const defaultValue = 1;
-const max = 10;
-const min = -2;
-const step = 0.1;
+interface InputProps {
+  id: string;
+  min: number;
+  max: number;
+  defaultValue: number;
+  step: number;
+  onChange: (v: number) => void;
+}
 
 // Render
 
-export const Input = () => {
+export const Input: React.FC<InputProps> = ({
+  id,
+  min,
+  max,
+  defaultValue,
+  step,
+  onChange,
+}) => {
   const [isChanging, setChanging] = useState(false);
 
   const [styles, setStyles] = useState({ x: 0, y: 0, w: 0, h: 0 });
@@ -118,7 +129,9 @@ export const Input = () => {
     setX(x);
     // TODO: `x` が `-1` になることがある
     const ratio = Math.abs(Math.round((x / (styles.w - 36)) * (range / step)));
-    setValue(parseFloat((min + step * ratio).toFixed(1)));
+    const v = parseFloat((min + step * ratio).toFixed(1));
+    setValue(v);
+    onChange(v);
   };
 
   // ToDo: click にもこの処理いるかも
@@ -152,7 +165,7 @@ export const Input = () => {
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            <linearGradient id="gradient">
+            <linearGradient id={`gradient-${id}`}>
               <stop stopColor="#FF91BE" />
               <stop offset="1" stopColor="#91C3FF" />
             </linearGradient>
@@ -165,7 +178,7 @@ export const Input = () => {
             rx="4"
             fill={Colors.lightGray}
           />
-          <clipPath id="gradient-clip">
+          <clipPath id={`gradient-clip-${id}`}>
             <rect
               width={defaultX < x ? x - defaultX + 18 : defaultX - x}
               x={defaultX < x ? defaultX : x}
@@ -180,8 +193,8 @@ export const Input = () => {
             height={styles.h}
             x="0"
             y="0"
-            fill="url(#gradient)"
-            clipPath="url(#gradient-clip)"
+            fill={`url(#gradient-${id})`}
+            clipPath={`url(#gradient-clip-${id})`}
           />
         </Svg>
         <Circle

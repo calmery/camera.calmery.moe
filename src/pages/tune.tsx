@@ -15,6 +15,7 @@ import { HorizontalScrollViewItem } from "~/components/HorizontalScrollViewItem"
 import { Menu } from "~/components/Menu";
 import { Mixin } from "~/styles/mixin";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
+import { Input } from "~/components/Input";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -165,71 +166,78 @@ const Tune: NextPage = () => {
             <div style={{ marginTop: `${Spacing.l}px` }}></div>
             {isImageExists && (
               <FilterContainer>
-                {(() => {
-                  switch (ui.selectedFilterType) {
-                    case FeColorMatrix.blur:
-                      return (
-                        <input
-                          type="range"
-                          min="0"
-                          max="8"
-                          step="1"
-                          onChange={(event) => {
-                            const v = event.target.value;
-
-                            dispatch(
-                              canvasActions.updateCanvasUserLayerFilter(
-                                FeColorMatrix.blur,
-                                parseInt(v, 10)
-                              )
-                            );
-                          }}
-                        />
+                <div
+                  style={{
+                    display:
+                      FeColorMatrix.blur === ui.selectedFilterType
+                        ? "block"
+                        : "none",
+                  }}
+                >
+                  <Input
+                    id={FeColorMatrix.blur}
+                    min={0}
+                    max={12}
+                    step={1}
+                    defaultValue={userLayer.blur}
+                    onChange={(value: number) => {
+                      dispatch(
+                        canvasActions.updateCanvasUserLayerFilter(
+                          FeColorMatrix.blur,
+                          value
+                        )
                       );
-
-                    case FeColorMatrix.hue:
-                      return (
-                        <input
-                          type="range"
-                          min="0"
-                          max="359"
-                          step="1"
-                          onChange={(event) => {
-                            const v = event.target.value;
-
-                            dispatch(
-                              canvasActions.updateCanvasUserLayerFilter(
-                                FeColorMatrix.hue,
-                                parseInt(v, 10)
-                              )
-                            );
-                          }}
-                        />
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    display:
+                      FeColorMatrix.hue === ui.selectedFilterType
+                        ? "block"
+                        : "none",
+                  }}
+                >
+                  <Input
+                    id={FeColorMatrix.hue}
+                    min={0}
+                    max={359}
+                    step={1}
+                    defaultValue={userLayer.hue}
+                    onChange={(value: number) => {
+                      dispatch(
+                        canvasActions.updateCanvasUserLayerFilter(
+                          FeColorMatrix.hue,
+                          value
+                        )
                       );
-
-                    case FeColorMatrix.saturate:
-                      return (
-                        <>
-                          <input
-                            type="range"
-                            min="-1"
-                            max="2"
-                            step="0.1"
-                            onChange={(event) => {
-                              const v = event.target.value;
-
-                              dispatch(
-                                canvasActions.updateCanvasUserLayerFilter(
-                                  FeColorMatrix.saturate,
-                                  parseFloat(v)
-                                )
-                              );
-                            }}
-                          />
-                        </>
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    display:
+                      FeColorMatrix.saturate === ui.selectedFilterType
+                        ? "block"
+                        : "none",
+                  }}
+                >
+                  <Input
+                    id={FeColorMatrix.saturate}
+                    min={-1}
+                    max={2}
+                    step={0.1}
+                    defaultValue={userLayer.saturate}
+                    onChange={(value: number) => {
+                      dispatch(
+                        canvasActions.updateCanvasUserLayerFilter(
+                          FeColorMatrix.saturate,
+                          value
+                        )
                       );
-                  }
-                })()}
+                    }}
+                  />
+                </div>
               </FilterContainer>
             )}
             {isImageExists && (

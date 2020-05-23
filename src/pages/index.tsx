@@ -16,7 +16,6 @@ import { Button } from "~/components/Button";
 import { useDispatch } from "react-redux";
 import { withRedux } from "~/domains";
 import { actions, thunkActions } from "~/domains/canvas/actions";
-import { Input } from "~/components/Input";
 
 const Columns = styled.div`
   height: 100%;
@@ -221,8 +220,6 @@ const Index: NextPage = () => {
           <Logo>
             <Image src="/images/logos/camera.calmery.moe.svg" />
           </Logo>
-
-          <Input />
 
           <Buttons>
             <Button primary>
