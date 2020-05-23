@@ -80,6 +80,7 @@ export const Canvas: React.FC<{
         <CanvasSizeDetector ref={displayableRef} />
       </CanvasContainer>
       <div
+        id="tutorial-canvas"
         ref={containerRef}
         style={{
           position: "fixed",
