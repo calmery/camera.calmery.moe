@@ -95,7 +95,6 @@ export const Canvas: React.FC<{
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           ref={ref}
-          overflow={!save ? "visible" : undefined}
           onMouseUp={handleOnComplete}
           onMouseLeave={handleOnComplete}
           onTouchEnd={handleOnComplete}
