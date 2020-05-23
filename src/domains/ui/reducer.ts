@@ -15,7 +15,7 @@ export interface UiState {
 
 const initialState: UiState = {
   selectedUserLayerFrame: null,
-  selectedFilterType: FeColorMatrix.blur,
+  selectedFilterType: FeColorMatrix.saturate,
 };
 
 export default (

@@ -264,7 +264,7 @@ const Tune: NextPage = () => {
                                 ui.selectedFilterType === FeColorMatrix.blur
                               }
                             >
-                              <img src="/images/crop/free.svg" />
+                              <img src="/images/tune/blur.svg" />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
@@ -291,7 +291,7 @@ const Tune: NextPage = () => {
                                 ui.selectedFilterType === FeColorMatrix.hue
                               }
                             >
-                              <img src="/images/crop/free.svg" />
+                              <img src="/images/tune/hue.svg" />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
@@ -320,7 +320,7 @@ const Tune: NextPage = () => {
                                 ui.selectedFilterType === FeColorMatrix.saturate
                               }
                             >
-                              <img src="/images/crop/free.svg" />
+                              <img src="/images/tune/saturate.svg" />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
