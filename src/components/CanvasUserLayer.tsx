@@ -23,9 +23,12 @@ export const CanvasUserLayerComponent: React.FC<{
       style={{ cursor: "move" }}
     >
       <defs>
-        <filter id={`canvas-user-layer-filter-${id}`}>
-          {/* Safari で stdDeviation が 0 のときに画像の色がおかしくなる */}
-          {layer.blur !== 0 && <feGaussianBlur stdDeviation={0} />}
+        <filter
+          id={`canvas-user-layer-filter-${id}`}
+          colorInterpolationFilters="sRGB"
+        >
+          {/* Safari で stdDeviation が 0 のときに画像の色がおかしくなる。`color-interpolation-filters="sRGB"` で解決する */}
+          <feGaussianBlur stdDeviation={layer.blur} />
           <feColorMatrix type="hueRotate" values={`${layer.hue}`} />
           <feColorMatrix type="saturate" values={`${layer.saturate}`} />
         </filter>
