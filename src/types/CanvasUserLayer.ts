@@ -1,6 +1,7 @@
 import { CanvasLayer } from "./CanvasLayer";
 
 export interface CanvasUserLayer extends CanvasLayer {
+  dominantColorLightness: number;
   croppedX: number;
   croppedY: number;
   croppedWidth: number;

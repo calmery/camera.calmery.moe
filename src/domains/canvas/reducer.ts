@@ -151,7 +151,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
     case types.CANVAS_INITIALIZE: {
       const { userFrames, userLayers } = state;
-      const { dataUrl, width, height } = action.payload;
+      const { dataUrl, width, height, lightness } = action.payload;
 
       userLayers[0] = {
         dataUrl,
@@ -172,6 +172,7 @@ export default (state = initialState, action: Actions): CanvasState => {
         croppedScale: 1,
         croppedImageX: 0,
         croppedImageY: 0,
+        dominantColorLightness: lightness,
         cropper: {
           cropperWidth: width,
           cropperHeight: height,
@@ -604,12 +605,13 @@ export default (state = initialState, action: Actions): CanvasState => {
         displayableWidth,
         displayableHeight,
       } = state;
-      const { index, dataUrl, width, height } = action.payload;
+      const { index, dataUrl, width, height, lightness } = action.payload;
 
       userLayers[index] = {
         dataUrl,
         width,
         height,
+        dominantColorLightness: lightness,
         x: 0,
         y: 0,
         blur: 0,

@@ -6,6 +6,8 @@ import { convertUrlToImage } from "./utils";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
 import { checkAndResizeImage } from "~/utils/check-and-resize-image";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
+import { getDominangColor } from "~/utils/get-dominant-color";
+import { getLightness } from "~/utils/get-lightness";
 
 // Container
 
@@ -100,7 +102,8 @@ const addCanvasUserLayer = (
   index: number,
   dataUrl: string,
   width: number,
-  height: number
+  height: number,
+  lightness: number
 ) => ({
   type: types.CANVAS_USER_LAYER_ADD,
   payload: {
@@ -108,6 +111,7 @@ const addCanvasUserLayer = (
     dataUrl,
     width,
     height,
+    lightness,
   },
 });
 
@@ -181,7 +185,12 @@ const addCanvasUserLayerFromFile = (file: File, index: number) => {
           const result = checkAndResizeImage(image);
           const { width, height, dataUrl } = result!;
 
-          dispatch(addCanvasUserLayer(index, dataUrl, width, height));
+          const colors = await getDominangColor(dataUrl);
+          const lightness = getLightness(colors);
+
+          dispatch(
+            addCanvasUserLayer(index, dataUrl, width, height, lightness)
+          );
           resolve();
         },
         { canvas: true, orientation: true }
@@ -202,12 +211,18 @@ const tickCanvas = (cursorPositions: CursorPosition[]) => ({
 
 // Common
 
-const initializeCanvas = (dataUrl: string, width: number, height: number) => ({
+const initializeCanvas = (
+  dataUrl: string,
+  width: number,
+  height: number,
+  lightness: number
+) => ({
   type: types.CANVAS_INITIALIZE,
   payload: {
     dataUrl,
     width,
     height,
+    lightness,
   },
 });
 
@@ -237,8 +252,10 @@ const addCanvasUserLayerAndSetFrameFromFile = (file: File) => {
           // ToDo: null のときはサイズエラーになっている
           const result = checkAndResizeImage(image);
           const { width, height, dataUrl } = result!;
+          const colors = await getDominangColor(dataUrl);
+          const lightness = getLightness(colors);
 
-          dispatch(initializeCanvas(dataUrl, width, height));
+          dispatch(initializeCanvas(dataUrl, width, height, lightness));
 
           resolve();
         },
