@@ -36,24 +36,49 @@ const CharacterContainer = styled.div`
 const Character = styled.div`
   width: 100%;
   max-width: 500px;
-  padding-left: 16px;
   display: flex;
+  position: relative;
+  margin: 0 16px;
 `;
 
 const CharacterImage = styled.img`
   width: 160px;
   height: 138px;
   flex-shrink: 0;
+  position: absolute;
 `;
 
 const CharacterMessage = styled.div`
   background: ${GradientColors.page};
-  padding: ${Spacing.l}px;
-  border-radius: 100%;
-  display: flex;
-  align-items: center;
+  font-family: SmartFontUI, sans-serif;
+  width: 100%;
+  height: 80px;
+  border-radius: 4px;
   flex: 1;
-  margin: 16px 0;
+  bottom: 0;
+  box-sizing: border-box;
+  padding: 16px;
+  padding-left: 160px;
+  padding-right: 48px;
+  position: absolute;
+`;
+
+const CharacterPetal = styled.img`
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  width: 16px;
+  height: 16px;
+  bottom: 16px;
+  right: 16px;
+  position: absolute;
+  animation: rotate 4s linear infinite;
 `;
 
 interface TutorialProps {
@@ -183,11 +208,13 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
         style={(() => {
           if (
             containerRect.height -
-              (focusElementRect.y + focusElementRect.height) >
+              (focusElementRect.y + focusElementRect.height + 16) >
             138 + 16 + 16
           ) {
             return {
-              top: `${focusElementRect.y + focusElementRect.height + 16}px`,
+              top: `${
+                focusElementRect.y + focusElementRect.height + 16 + 16
+              }px`,
             };
           }
 
@@ -205,6 +232,7 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
             {scenario.message.slice(0, count)}
           </CharacterMessage>
           <CharacterImage src={scenario.characterImageUrl} />
+          <CharacterPetal src="/images/petal.svg" />
         </Character>
       </CharacterContainer>
     </Container>
