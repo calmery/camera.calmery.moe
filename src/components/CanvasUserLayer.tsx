@@ -81,19 +81,19 @@ export const CanvasUserLayerComponent: React.FC<{
               />
             </g>
           </svg>
+          {stickerLayer && (
+            <CanvasStickerLayerBorder
+              baseX={(isCollaging ? layer.x : 0) + frame.x}
+              baseY={(isCollaging ? layer.y : 0) + frame.y}
+              displayMagnification={displayMagnification}
+              stickerLayer={stickerLayer}
+              backgroundBrightness={layer.dominantColorLightness}
+            />
+          )}
         </svg>
       </g>
 
       <g clipPath={`url(#canvas-user-layer-frame-${id})`}>
-        {stickerLayer && (
-          <CanvasStickerLayerBorder
-            baseX={frame.x}
-            baseY={frame.y}
-            displayMagnification={displayMagnification}
-            stickerLayer={stickerLayer}
-            backgroundBrightness={layer.dominantColorLightness}
-          />
-        )}
         <rect
           width={frame.width}
           height={frame.height}
