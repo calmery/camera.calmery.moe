@@ -106,7 +106,7 @@ export const CanvasUserLayerComponent: React.FC<{
                 <rect
                   style={{ cursor: "move" }}
                   fillOpacity="0"
-                  stroke="#FFF"
+                  stroke={layer.dominantColorLightness > 0.5 ? "#000" : "#FFF"}
                   strokeWidth={2 * displayMagnification}
                   strokeDasharray={`${8 * displayMagnification} ${
                     8 * displayMagnification
