@@ -26,7 +26,7 @@ export const CanvasStickerLayerBorder: React.FC<CanvasStickerLayerBorderProps> =
         stickerLayer.height * stickerLayer.scale
       }`}
       overflow="visible"
-      xmlns="http://www.w3.org/2000/svg"
+      xmlns="http://www.w3.org/23c3c3c/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
     >
       <g
@@ -37,7 +37,7 @@ export const CanvasStickerLayerBorder: React.FC<CanvasStickerLayerBorderProps> =
         <rect
           style={{ cursor: "move" }}
           fillOpacity="0"
-          stroke={backgroundBrightness > 0.5 ? "#000" : "#FFF"}
+          stroke={backgroundBrightness > 0.5 ? "#3c3c3c" : "#FFF"}
           strokeWidth={2 * displayMagnification}
           strokeDasharray={`${8 * displayMagnification} ${
             8 * displayMagnification
@@ -47,6 +47,19 @@ export const CanvasStickerLayerBorder: React.FC<CanvasStickerLayerBorderProps> =
           x="0"
           y="0"
         ></rect>
+        <circle
+          fill={backgroundBrightness > 0.5 ? "#3c3c3c" : "#FFF"}
+          cx={stickerLayer.width * stickerLayer.scale}
+          cy="0"
+          r={12 * displayMagnification}
+        />
+        <circle
+          style={{ cursor: "se-resize" }}
+          fill={backgroundBrightness > 0.5 ? "#3c3c3c" : "#FFF"}
+          cx={stickerLayer.width * stickerLayer.scale}
+          cy={stickerLayer.height * stickerLayer.scale}
+          r={12 * displayMagnification}
+        />
       </g>
     </svg>
   );

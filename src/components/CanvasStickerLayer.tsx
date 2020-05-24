@@ -51,11 +51,6 @@ export const CanvasStickerLayer: React.FC<{
             <rect
               style={{ cursor: "move" }}
               fillOpacity="0"
-              // stroke="#FFF"
-              // strokeWidth={2 * displayMagnification}
-              // strokeDasharray={`${8 * displayMagnification} ${
-              //   8 * displayMagnification
-              // }`}
               width="100%"
               height="100%"
               x="0"
@@ -65,7 +60,7 @@ export const CanvasStickerLayer: React.FC<{
             ></rect>
             <circle
               style={{ cursor: "pointer" }}
-              fill="#FFF"
+              fillOpacity="0"
               cx={width * scale}
               cy="0"
               r={12 * displayMagnification}
@@ -73,7 +68,7 @@ export const CanvasStickerLayer: React.FC<{
             ></circle>
             <circle
               style={{ cursor: "se-resize" }}
-              fill="#FFF"
+              fillOpacity="0"
               cx={width * scale}
               cy={height * scale}
               r={12 * displayMagnification}
