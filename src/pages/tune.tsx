@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { NextPage } from "next";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import { Menu } from "~/components/Menu";
 import { Mixin } from "~/styles/mixin";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
 import { Input } from "~/components/Input";
+import { thunkActions } from "~/domains/canvas/actions";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -145,6 +146,13 @@ const Tune: NextPage = () => {
   const canvas = useSelector(({ canvas }: State) => canvas);
   const ui = useSelector(({ ui }: State) => ui);
   const isImageExists = canvas.userLayers.some((l) => !!l);
+  const { essentialLayers } = useSelector(({ canvas }: State) => canvas);
+
+  useEffect(() => {
+    if (essentialLayers.length === 0) {
+      dispatch(thunkActions.addCanvasEssentialLayerWithUrl("/images/logo.png"));
+    }
+  }, []);
 
   let userLayer =
     canvas.userLayers[canvas.temporaries.selectedUserLayerFilterIndex];

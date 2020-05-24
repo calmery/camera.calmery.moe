@@ -8,6 +8,7 @@ import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 import { Colors } from "~/styles/colors";
+import { CanvasEssentialLayers } from "./CanvasEssentialLayers";
 
 const CanvasContainer = styled.div`
   box-sizing: border-box;
@@ -108,6 +109,7 @@ export const Canvas: React.FC<{
           ></rect>
           {users && <CanvasUserLayers save={save} />}
           {stickers && <CanvasStickerLayers save={save} />}
+          <CanvasEssentialLayers />
         </svg>
       </div>
     </>
