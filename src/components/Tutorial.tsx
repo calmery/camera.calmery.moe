@@ -52,7 +52,6 @@ const CharacterMessage = styled.div`
   border-radius: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
   flex: 1;
   margin: 16px 0;
 `;
@@ -68,6 +67,7 @@ interface TutorialProps {
 
 export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
   const [currentScenario, setCurrentScenario] = useState(0);
+  const [timer, setTimer] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerRect, setContainerRect] = useState({ width: 0, height: 0 });
   const [focusElementRect, setFocusElementRect] = useState({
@@ -77,21 +77,55 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
     height: 0,
   });
 
+  const [count, setCount] = useState(1);
+
+  const { width, height } = containerRect;
+  const scenario = scenarios[currentScenario];
+
+  const updateTextCount = () => {
+    if (count >= scenario.message.length) {
+      return;
+    }
+
+    setCount(count + 1);
+  };
+
+  const resetTextCount = () => {
+    setCount(1);
+  };
+
+  useEffect(() => {
+    // First
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    const t = setTimeout(() => {
+      updateTextCount();
+    }, 75);
+
+    setTimer(t);
+  }, [count]);
+
   const updateFocusElementRect = useCallback(() => {
     const { focusElementId } = scenarios[currentScenario];
-    console.log(`#${focusElementId}`);
     const e = document.getElementById(focusElementId);
     setFocusElementRect(e!.getBoundingClientRect());
   }, [currentScenario]);
 
-  const nextScenario = useCallback(() => {
+  const nextScenario = () => {
+    if (count < scenario.message.length) {
+      setCount(scenarios[currentScenario].message.length);
+      return;
+    }
+
     if (scenarios.length > currentScenario + 1) {
       setCurrentScenario(currentScenario + 1);
       return;
     }
 
     onEnd();
-  }, [currentScenario, onEnd]);
+  };
 
   useEffect(() => {
     const e = containerRef.current!;
@@ -110,8 +144,9 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
 
   useEffect(updateFocusElementRect, [currentScenario]);
 
-  const { width, height } = containerRect;
-  const scenario = scenarios[currentScenario];
+  useEffect(() => {
+    resetTextCount();
+  }, [scenario.message]);
 
   return (
     <Container ref={containerRef} onClick={nextScenario}>
@@ -166,7 +201,9 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
         })()}
       >
         <Character>
-          <CharacterMessage>{scenario.message}</CharacterMessage>
+          <CharacterMessage>
+            {scenario.message.slice(0, count)}
+          </CharacterMessage>
           <CharacterImage src={scenario.characterImageUrl} />
         </Character>
       </CharacterContainer>
