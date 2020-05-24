@@ -28,7 +28,6 @@ const CharacterContainer = styled.div`
   height: 138px;
   left: 0;
   right: 0;
-  bottom: 0;
   position: fixed;
   display: flex;
   justify-content: center;
@@ -115,13 +114,12 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
   const scenario = scenarios[currentScenario];
 
   return (
-    <Container ref={containerRef}>
+    <Container ref={containerRef} onClick={nextScenario}>
       <svg
         width={width}
         height={height}
         viewBox={`0 0 ${width} ${height}`}
         xmlns="http://www.w3.org/2000/svg"
-        onClick={nextScenario}
       >
         <defs>
           <mask id="tutorial-focus">
@@ -146,7 +144,27 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
         />
       </svg>
       <CloseButton src="/images/close.svg" onClick={onEnd} />
-      <CharacterContainer>
+      <CharacterContainer
+        style={(() => {
+          if (
+            containerRect.height -
+              (focusElementRect.y + focusElementRect.height) >
+            138 + 16 + 16
+          ) {
+            return {
+              top: `${focusElementRect.y + focusElementRect.height + 16}px`,
+            };
+          }
+
+          if (focusElementRect.y > 138 + 16 + 16) {
+            return {
+              top: `${focusElementRect.y - 16 - 16 - 138}px`,
+            };
+          }
+
+          return {};
+        })()}
+      >
         <Character>
           <CharacterMessage>{scenario.message}</CharacterMessage>
           <CharacterImage src={scenario.characterImageUrl} />
