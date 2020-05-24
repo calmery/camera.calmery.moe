@@ -51,11 +51,11 @@ export const CanvasStickerLayer: React.FC<{
             <rect
               style={{ cursor: "move" }}
               fillOpacity="0"
-              stroke="#FFF"
-              strokeWidth={2 * displayMagnification}
-              strokeDasharray={`${8 * displayMagnification} ${
-                8 * displayMagnification
-              }`}
+              // stroke="#FFF"
+              // strokeWidth={2 * displayMagnification}
+              // strokeDasharray={`${8 * displayMagnification} ${
+              //   8 * displayMagnification
+              // }`}
               width="100%"
               height="100%"
               x="0"

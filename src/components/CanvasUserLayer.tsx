@@ -1,6 +1,8 @@
 import React from "react";
 import { CanvasUserLayerFrame } from "~/types/CanvasUserLayerFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
+import { useSelector } from "react-redux";
+import { State } from "~/domains";
 
 export const CanvasUserLayerComponent: React.FC<{
   id: number;
@@ -9,7 +11,12 @@ export const CanvasUserLayerComponent: React.FC<{
   isCollaging: boolean;
   onStart: (event: React.MouseEvent | React.TouchEvent) => void;
 }> = (props) => {
+  const { stickerLayers, displayMagnification } = useSelector(
+    ({ canvas }: State) => canvas
+  );
   const { id, frame, layer, onStart, isCollaging } = props;
+
+  const stickerLayer = stickerLayers[stickerLayers.length - 1];
 
   return (
     <svg
@@ -77,6 +84,42 @@ export const CanvasUserLayerComponent: React.FC<{
       </g>
 
       <g clipPath={`url(#canvas-user-layer-frame-${id})`}>
+        {stickerLayer && (
+          <>
+            <svg
+              width={stickerLayer.width * stickerLayer.scale}
+              height={stickerLayer.height * stickerLayer.scale}
+              x={stickerLayer.x - frame.x}
+              y={stickerLayer.y - frame.y}
+              viewBox={`0 0 ${stickerLayer.width * stickerLayer.scale} ${
+                stickerLayer.height * stickerLayer.scale
+              }`}
+              overflow="visible"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+            >
+              <g
+                transform={`rotate(${stickerLayer.angle}, ${
+                  (stickerLayer.width * stickerLayer.scale) / 2
+                }, ${(stickerLayer.height * stickerLayer.scale) / 2})`}
+              >
+                <rect
+                  style={{ cursor: "move" }}
+                  fillOpacity="0"
+                  stroke="#FFF"
+                  strokeWidth={2 * displayMagnification}
+                  strokeDasharray={`${8 * displayMagnification} ${
+                    8 * displayMagnification
+                  }`}
+                  width="100%"
+                  height="100%"
+                  x="0"
+                  y="0"
+                ></rect>
+              </g>
+            </svg>
+          </>
+        )}
         <rect
           width={frame.width}
           height={frame.height}
