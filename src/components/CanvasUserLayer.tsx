@@ -83,8 +83,8 @@ export const CanvasUserLayerComponent: React.FC<{
           </svg>
           {stickerLayer && (
             <CanvasStickerLayerBorder
-              baseX={(isCollaging ? layer.x : 0) + frame.x}
-              baseY={(isCollaging ? layer.y : 0) + frame.y}
+              baseX={(isCollaging ? layer.x : 0) + frame.x - layer.croppedX}
+              baseY={(isCollaging ? layer.y : 0) + frame.y - layer.croppedY}
               displayMagnification={displayMagnification}
               stickerLayer={stickerLayer}
               backgroundBrightness={layer.dominantColorLightness}
