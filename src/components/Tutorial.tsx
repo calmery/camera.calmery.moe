@@ -242,6 +242,8 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
       </svg>
       <CloseButton src="/images/close.svg" onClick={onEnd} />
       <CharacterContainer
+        className="animate__bounceIn"
+        key={`${containerRect.width}-${containerRect.height}-${focusElementRect.x}-${focusElementRect.y}`}
         style={(() => {
           if (
             containerRect.height -

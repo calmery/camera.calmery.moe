@@ -35,6 +35,10 @@ class App extends NextApp {
     return (
       <>
         <GlobalStyle />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
+        />
         <Component {...pageProps} />
       </>
     );
