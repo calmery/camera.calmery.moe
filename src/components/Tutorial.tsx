@@ -121,14 +121,19 @@ const Progress = styled.div<{ parcent: number }>`
 
 interface TutorialProps {
   onEnd: () => void;
+  skip?: boolean;
   scenarios: {
     characterImageUrl: string;
-    focusElementId: string;
+    focusElementId: string | null;
     message: string;
   }[];
 }
 
-export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
+export const Tutorial: React.FC<TutorialProps> = ({
+  onEnd,
+  scenarios,
+  skip = true,
+}) => {
   const [currentScenario, setCurrentScenario] = useState(0);
   const [timer, setTimer] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -172,8 +177,13 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
 
   const updateFocusElementRect = useCallback(() => {
     const { focusElementId } = scenarios[currentScenario];
-    const e = document.getElementById(focusElementId);
-    setFocusElementRect(e!.getBoundingClientRect());
+
+    if (focusElementId) {
+      const e = document.getElementById(focusElementId);
+      setFocusElementRect(e!.getBoundingClientRect());
+    } else {
+      setFocusElementRect({ x: 0, y: 0, width: 0, height: 0 });
+    }
   }, [currentScenario]);
 
   const nextScenario = () => {
@@ -222,14 +232,16 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
         <defs>
           <mask id="tutorial-focus">
             <rect width="100%" height="100%" fill="white" />
-            <rect
-              x={focusElementRect.x - 16}
-              y={focusElementRect.y - 16}
-              width={focusElementRect.width + 32}
-              height={focusElementRect.height + 32}
-              rx="4"
-              fill="black"
-            />
+            {scenario.focusElementId && (
+              <rect
+                x={focusElementRect.x - 16}
+                y={focusElementRect.y - 16}
+                width={focusElementRect.width + 32}
+                height={focusElementRect.height + 32}
+                rx="4"
+                fill="black"
+              />
+            )}
           </mask>
         </defs>
 
@@ -241,11 +253,17 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
           mask="url(#tutorial-focus)"
         />
       </svg>
-      <CloseButton src="/images/close.svg" onClick={onEnd} />
+      {skip && <CloseButton src="/images/close.svg" onClick={onEnd} />}
       <CharacterContainer
         className="animate__bounceIn"
         key={`${containerRect.width}-${containerRect.height}-${focusElementRect.x}-${focusElementRect.y}`}
         style={(() => {
+          if (!scenario.focusElementId) {
+            return {
+              top: `${containerRect.height / 2 - 138 / 2}px`,
+            };
+          }
+
           if (
             containerRect.height -
               (focusElementRect.y + focusElementRect.height + 16) >

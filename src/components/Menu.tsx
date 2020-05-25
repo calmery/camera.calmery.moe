@@ -78,7 +78,7 @@ export const Menu = () => {
   );
 
   return (
-    <Container>
+    <Container id="tutorial-menu">
       <PrimaryButtons>
         <IconContainer onClick={() => handleOnClickRouterPush("/edit")}>
           <Icon

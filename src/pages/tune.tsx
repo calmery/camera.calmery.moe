@@ -19,6 +19,7 @@ import { Input } from "~/components/Input";
 import { thunkActions } from "~/domains/canvas/actions";
 import { Tutorial } from "~/components/Tutorial";
 import { ControlBar } from "~/components/ControlBar";
+import { FirstLanding } from "~/components/FirstLanding";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -362,6 +363,7 @@ const Tune: NextPage = () => {
           </BottomBar>
         </FlexColumn>
       </Page>
+      <FirstLanding />
       {isTutorial && (
         <Tutorial
           scenarios={
@@ -381,13 +383,18 @@ const Tune: NextPage = () => {
                     characterImageUrl: "https://static.calmery.moe/s/1/15.png",
                     focusElementId: "tutorial-filters",
                     message:
-                      "色んなフィルターを使って自分好みの画像にしちゃおう！\n試してみてね！",
+                      "色んなフィルターを使って自分好みの画像にしちゃおう！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+                    focusElementId: "tutorial-filter-targets",
+                    message: "他の画像にフィルターをかけたい？",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/11.png",
                     focusElementId: "tutorial-filter-targets",
                     message:
-                      "他の画像にフィルターをかけたい？\nここでフィルターをかけたい画像をタップしてみよう！",
+                      "ここでフィルターをかけたい画像をタップしてみよう！",
                   },
                 ]
               : [

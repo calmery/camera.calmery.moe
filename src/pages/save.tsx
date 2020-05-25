@@ -10,6 +10,7 @@ import { Spacing } from "~/styles/spacing";
 import { convertSvgToDataUrl } from "~/utils/convert-svg-to-url";
 import { Tutorial } from "~/components/Tutorial";
 import { ControlBar } from "~/components/ControlBar";
+import { FirstLanding } from "~/components/FirstLanding";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -72,6 +73,7 @@ const Save: NextPage = () => {
         </FlexColumn>
       </Page>
       <img ref={imageRef} id="tutorial-save-image" />
+      <FirstLanding />
       {isTutorial && (
         <Tutorial
           scenarios={[
@@ -86,10 +88,20 @@ const Save: NextPage = () => {
               message: "画像を長押しすると保存できるよ！",
             },
             {
+              characterImageUrl: "https://static.calmery.moe/s/1/15.png",
+              focusElementId: "tutorial-save-image",
+              message: "とっても素敵！",
+            },
+            {
               characterImageUrl: "https://static.calmery.moe/s/1/11.png",
               focusElementId: "tutorial-save-image",
               message:
-                "Twitter で「#かるめりちゃんカメラ」のタグを付けてツイートしてみよう！\n使ってくれてありがとう！",
+                "Twitter で「#かるめりちゃんカメラ」を付けてツイートしてみて！",
+            },
+            {
+              characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+              focusElementId: "tutorial-save-image",
+              message: "使ってくれてありがとう！",
             },
           ]}
           onEnd={() => setTutorial(false)}

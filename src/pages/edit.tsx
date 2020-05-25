@@ -11,6 +11,7 @@ import { withRedux, State } from "~/domains";
 import { Tutorial } from "~/components/Tutorial";
 import { useSelector, useDispatch } from "react-redux";
 import { thunkActions } from "~/domains/canvas/actions";
+import { FirstLanding } from "~/components/FirstLanding";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -49,6 +50,7 @@ const Edit: NextPage = () => {
           </BottomBar>
         </FlexColumn>
       </Page>
+      <FirstLanding />
       {isTutorial && (
         <Tutorial
           scenarios={[
@@ -56,12 +58,12 @@ const Edit: NextPage = () => {
               characterImageUrl: "https://static.calmery.moe/s/2/3.png",
               focusElementId: "tutorial-canvas",
               message:
-                "ここには読み込んだ画像、追加したスタンプが表示されているよ！",
+                "ここには読み込んだ画像、追加したスタンプが表示されるよ！",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/2/8.png",
               focusElementId: "tutorial-canvas",
-              message: "画面をタッチして自由に動かしてみて！",
+              message: "画像を読み込んだら画面をタッチ！自由に動かしてみて！",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/2/11.png",

@@ -56,7 +56,7 @@ const Collage: NextPage = () => {
               characterImageUrl: "https://static.calmery.moe/s/2/5.png",
               focusElementId: "tutorial-collage-canvas-frames",
               message:
-                "ここに色んなフレームが用意されているよ！\nタップして選んでみよう！",
+                "ここに色んなフレームが用意されているよ！タップして選んでみよう！",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/1/10.png",
@@ -70,9 +70,9 @@ const Collage: NextPage = () => {
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/1/7.png",
-              focusElementId: "tutorial-collage-canvas-frames",
+              focusElementId: "tutorial-control-bar-beta",
               message:
-                "お問い合わせからこんなフレームが欲しい！ってリクエストを送ってみてね！\nもちろん匿名で大丈夫だよ！",
+                "ここからこんなフレームが欲しい！ってリクエストを送ってみて！",
             },
           ]}
           onEnd={() => setTutorial(false)}

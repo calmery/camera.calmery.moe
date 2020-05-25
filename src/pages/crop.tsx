@@ -17,6 +17,7 @@ import { Menu } from "~/components/Menu";
 import { Mixin } from "~/styles/mixin";
 import { Tutorial } from "~/components/Tutorial";
 import { ControlBar } from "~/components/ControlBar";
+import { FirstLanding } from "~/components/FirstLanding";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -297,6 +298,7 @@ const Crop: NextPage = () => {
           </BottomBar>
         </FlexColumn>
       </Page>
+      <FirstLanding />
       {isTutorial && (
         <Tutorial
           scenarios={
@@ -310,8 +312,12 @@ const Crop: NextPage = () => {
                   {
                     characterImageUrl: "https://static.calmery.moe/s/1/5.png",
                     focusElementId: "tutorial-cropper",
-                    message:
-                      "画面をタップしてクロップ位置を調整したり...2 本指で大きさを変えてみよう！",
+                    message: "画面をタップしてクロップ位置を調整したり...",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/5.png",
+                    focusElementId: "tutorial-cropper",
+                    message: "2 本指でタッチして画像の大きさを変えてみよう！",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/1/16.png",
@@ -347,13 +353,17 @@ const Crop: NextPage = () => {
                     characterImageUrl: "https://static.calmery.moe/s/2/3.png",
                     focusElementId: "tutorial-crop-aspect-ratios",
                     message:
-                      "ここで対比を選べるよ！\n比率を保ったままクロップしたいというときに使おう！",
+                      "ここで対比を選べるよ！\n比率を保ったまま操作したいときに使おう！",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/4.png",
                     focusElementId: "tutorial-crop-target-images",
-                    message:
-                      "他の画像をクロップしたい？\nここでクロップしたい画像をタップしてみて！",
+                    message: "他の画像をクロップしたい？",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/4.png",
+                    focusElementId: "tutorial-crop-target-images",
+                    message: "ここでクロップしたい画像をタップしてみて！",
                   },
                 ]
               : [

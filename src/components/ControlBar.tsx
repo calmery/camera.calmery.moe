@@ -10,7 +10,6 @@ const Container = styled.div`
   justify-content: space-between;
 
   img {
-    width: 16px;
     height: 16px;
   }
 `;
@@ -20,6 +19,11 @@ export const ControlBar: React.FC<{
 }> = ({ onClickHelpButton }) => (
   <Container>
     <img src="/images/close.svg" />
-    <img src="/images/help.svg" onClick={onClickHelpButton} />
+    <img id="tutorial-control-bar-beta" src="/images/beta.svg" />
+    <img
+      id="tutorial-control-bar-usage"
+      src="/images/help.svg"
+      onClick={onClickHelpButton}
+    />
   </Container>
 );
