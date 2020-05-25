@@ -18,7 +18,7 @@ const Container = styled.div`
 
 const CloseButton = styled.img`
   top: 24px;
-  right: 24px;
+  left: 24px;
   position: fixed;
   filter: brightness(0) invert(1);
 `;

@@ -21,7 +21,6 @@ export const FirstLanding: React.FC = () => {
 
   return (
     <Tutorial
-      skip={false}
       scenarios={[
         {
           characterImageUrl: "https://static.calmery.moe/s/2/3.png",
