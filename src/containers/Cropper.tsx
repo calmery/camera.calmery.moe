@@ -206,6 +206,7 @@ export const Cropper: React.FC = () => {
         <CanvasSizeDetector ref={displayableRef} />
       </CanvasContainer>
       <svg
+        id="tutorial-cropper"
         ref={containerRef}
         viewBox={`0 0 ${image.width} ${image.height}`}
         xmlns="http://www.w3.org/2000/svg"

@@ -17,22 +17,13 @@ import { Mixin } from "~/styles/mixin";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
 import { Input } from "~/components/Input";
 import { thunkActions } from "~/domains/canvas/actions";
+import { Tutorial } from "~/components/Tutorial";
+import { ControlBar } from "~/components/ControlBar";
 
 const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-`;
-
-const ControlBar = styled.div`
-  height: 16px;
-  padding: ${Spacing.l}px;
-  flex-shrink: 0;
-
-  img {
-    width: 16px;
-    height: 16px;
-  }
 `;
 
 const BottomBar = styled.div`
@@ -142,6 +133,7 @@ const FilterContainer = styled.div`
 
 const Tune: NextPage = () => {
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
+  const [isTutorial, setTutorial] = useState(false);
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
   const ui = useSelector(({ ui }: State) => ui);
@@ -166,14 +158,14 @@ const Tune: NextPage = () => {
     <>
       <Page>
         <FlexColumn>
-          <ControlBar>
+          <ControlBar onClickHelpButton={() => setTutorial(true)}>
             <img src="/images/close.svg" />
           </ControlBar>
           <Canvas />
           <BottomBar>
             <div style={{ marginTop: `${Spacing.l}px` }}></div>
             {isImageExists && (
-              <FilterContainer>
+              <FilterContainer id="tutorial-filter-input">
                 <div
                   style={{
                     display:
@@ -252,6 +244,7 @@ const Tune: NextPage = () => {
               <>
                 <FilterTypeContainer>
                   <HorizontalScrollView
+                    id="tutorial-filters"
                     rootElement={(element) => setRootElement(element)}
                   >
                     {rootElement && (
@@ -342,7 +335,7 @@ const Tune: NextPage = () => {
                       </>
                     )}
                   </HorizontalScrollView>
-                  <TuneTargetImages>
+                  <TuneTargetImages id="tutorial-filter-targets">
                     {canvas.userLayers.map((userLayer, index) => {
                       if (!userLayer) {
                         return null;
@@ -369,6 +362,45 @@ const Tune: NextPage = () => {
           </BottomBar>
         </FlexColumn>
       </Page>
+      {isTutorial && (
+        <Tutorial
+          scenarios={
+            isImageExists
+              ? [
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
+                    focusElementId: "tutorial-canvas",
+                    message: "ここにフィルターをかける画像が表示されているよ！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+                    focusElementId: "tutorial-filter-input",
+                    message: "ここがフィルターの値を変更するところ！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/15.png",
+                    focusElementId: "tutorial-filters",
+                    message:
+                      "色んなフィルターを使って自分好みの画像にしちゃおう！\n試してみてね！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+                    focusElementId: "tutorial-filter-targets",
+                    message:
+                      "他の画像にフィルターをかけたい？\nここでフィルターをかけたい画像をタップしてみよう！",
+                  },
+                ]
+              : [
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
+                    focusElementId: "tutorial-canvas",
+                    message: "まずはここをタップして画像を読み込んでみて！",
+                  },
+                ]
+          }
+          onEnd={() => setTutorial(false)}
+        />
+      )}
     </>
   );
 };

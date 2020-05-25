@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { NextPage } from "next";
 import styled from "styled-components";
@@ -8,22 +8,13 @@ import { Canvas } from "~/containers/Canvas";
 import { withRedux, State } from "~/domains";
 import { Spacing } from "~/styles/spacing";
 import { convertSvgToDataUrl } from "~/utils/convert-svg-to-url";
+import { Tutorial } from "~/components/Tutorial";
+import { ControlBar } from "~/components/ControlBar";
 
 const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-`;
-
-const ControlBar = styled.div`
-  height: 16px;
-  padding: ${Spacing.l}px;
-  flex-shrink: 0;
-
-  img {
-    width: 16px;
-    height: 16px;
-  }
 `;
 
 const BottomBar = styled.div`
@@ -46,6 +37,7 @@ const Save: NextPage = () => {
   } = useSelector(({ canvas }: State) => canvas);
   const ref: React.Ref<HTMLDivElement> = useRef(null);
   const imageRef: React.Ref<HTMLImageElement> = useRef(null);
+  const [isTutorial, setTutorial] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -72,16 +64,37 @@ const Save: NextPage = () => {
     <>
       <Page>
         <FlexColumn>
-          <ControlBar>
-            <img src="/images/close.svg" />
-          </ControlBar>
+          <ControlBar onClickHelpButton={() => setTutorial(true)} />
           <Canvas save containerRef={ref} />
           <BottomBar>
             <Menu />
           </BottomBar>
         </FlexColumn>
       </Page>
-      <img ref={imageRef} />
+      <img ref={imageRef} id="tutorial-save-image" />
+      {isTutorial && (
+        <Tutorial
+          scenarios={[
+            {
+              characterImageUrl: "https://static.calmery.moe/s/1/12.png",
+              focusElementId: "tutorial-save-image",
+              message: "完成〜！",
+            },
+            {
+              characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+              focusElementId: "tutorial-save-image",
+              message: "画像を長押しすると保存できるよ！",
+            },
+            {
+              characterImageUrl: "https://static.calmery.moe/s/1/11.png",
+              focusElementId: "tutorial-save-image",
+              message:
+                "Twitter で「#かるめりちゃんカメラ」のタグを付けてツイートしてみよう！\n使ってくれてありがとう！",
+            },
+          ]}
+          onEnd={() => setTutorial(false)}
+        />
+      )}
     </>
   );
 };

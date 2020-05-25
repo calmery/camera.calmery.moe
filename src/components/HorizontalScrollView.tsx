@@ -19,9 +19,10 @@ const Horizontal = styled.div`
 `;
 
 export const HorizontalScrollView: React.FC<{
+  id?: string;
   rootElement?: (instance: HTMLDivElement | null) => void;
-}> = ({ children, rootElement }) => (
-  <Container ref={rootElement}>
+}> = ({ id, children, rootElement }) => (
+  <Container id={id} ref={rootElement}>
     <Horizontal>{children}</Horizontal>
   </Container>
 );

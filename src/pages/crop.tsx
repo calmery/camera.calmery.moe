@@ -15,22 +15,13 @@ import { HorizontalScrollView } from "~/components/HorizontalScrollView";
 import { HorizontalScrollViewItem } from "~/components/HorizontalScrollViewItem";
 import { Menu } from "~/components/Menu";
 import { Mixin } from "~/styles/mixin";
+import { Tutorial } from "~/components/Tutorial";
+import { ControlBar } from "~/components/ControlBar";
 
 const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-`;
-
-const ControlBar = styled.div`
-  height: 16px;
-  padding: ${Spacing.l}px;
-  flex-shrink: 0;
-
-  img {
-    width: 16px;
-    height: 16px;
-  }
 `;
 
 const BottomBar = styled.div`
@@ -179,6 +170,7 @@ const Crop: NextPage = () => {
     w: number,
     h: number
   ) => dispatch(actions.changeCropperCropperAspectRatio(index, w, h));
+  const [isTutorial, setTutorial] = useState(false);
 
   const isImageExists = canvas.userLayers.some((l) => !!l);
 
@@ -196,18 +188,17 @@ const Crop: NextPage = () => {
     <>
       <Page>
         <FlexColumn>
-          <ControlBar>
-            <img src="/images/close.svg" />
-          </ControlBar>
+          <ControlBar onClickHelpButton={() => setTutorial(true)} />
           {isImageExists && <Cropper />}
           {!isImageExists && <Canvas />}
           <BottomBar>
             <div style={{ marginTop: `${Spacing.l}px` }}></div>
             {isImageExists && (
               <>
-                <Rotate>{Math.floor(rotate)}°</Rotate>
+                <Rotate id="tutorial-crop-angle">{Math.floor(rotate)}°</Rotate>
                 <AspectRatioContainer>
                   <HorizontalScrollView
+                    id="tutorial-crop-aspect-ratios"
                     rootElement={(element) => setRootElement(element)}
                   >
                     {rootElement && (
@@ -263,7 +254,7 @@ const Crop: NextPage = () => {
                       </>
                     )}
                   </HorizontalScrollView>
-                  <CropTargetImages>
+                  <CropTargetImages id="tutorial-crop-target-images">
                     {canvas.userLayers.map((userLayer, index) => {
                       if (!userLayer) {
                         return null;
@@ -306,6 +297,76 @@ const Crop: NextPage = () => {
           </BottomBar>
         </FlexColumn>
       </Page>
+      {isTutorial && (
+        <Tutorial
+          scenarios={
+            isImageExists
+              ? [
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
+                    focusElementId: "tutorial-cropper",
+                    message: "ここにはクロップする画像が表示されているよ！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/5.png",
+                    focusElementId: "tutorial-cropper",
+                    message:
+                      "画面をタップしてクロップ位置を調整したり...2 本指で大きさを変えてみよう！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/16.png",
+                    focusElementId: "tutorial-crop-angle",
+                    message: `回した角度はここで確認！もうちょっと回してみようかな？`,
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/10.png",
+                    focusElementId: "tutorial-crop-angle",
+                    message: "あれっ...もしかしてパソコン...？",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/10.png",
+                    focusElementId: "tutorial-crop-angle",
+                    message: "...",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/6.png",
+                    focusElementId: "tutorial-crop-angle",
+                    message: "......",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/2.png",
+                    focusElementId: "tutorial-crop-angle",
+                    message: "パソコンからだと回転できないみたい...ごめんね...",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/7.png",
+                    focusElementId: "tutorial-crop-angle",
+                    message: "気を取り直して...！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+                    focusElementId: "tutorial-crop-aspect-ratios",
+                    message:
+                      "ここで対比を選べるよ！\n比率を保ったままクロップしたいというときに使おう！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/4.png",
+                    focusElementId: "tutorial-crop-target-images",
+                    message:
+                      "他の画像をクロップしたい？\nここでクロップしたい画像をタップしてみて！",
+                  },
+                ]
+              : [
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
+                    focusElementId: "tutorial-canvas",
+                    message: "まずはここをタップして画像を読み込んでみて！",
+                  },
+                ]
+          }
+          onEnd={() => setTutorial(false)}
+        />
+      )}
     </>
   );
 };

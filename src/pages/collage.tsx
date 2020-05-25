@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
 import styled from "styled-components";
-import { ControlBar } from "~/components/ControlBar";
 import { Menu } from "~/components/Menu";
 import { Page } from "~/components/Page";
 import { Canvas } from "~/containers/Canvas";
@@ -10,6 +9,8 @@ import { Spacing } from "~/styles/spacing";
 import { withRedux, State } from "~/domains";
 import { useSelector, useDispatch } from "react-redux";
 import { thunkActions } from "~/domains/canvas/actions";
+import { Tutorial } from "~/components/Tutorial";
+import { ControlBar } from "~/components/ControlBar";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -26,6 +27,7 @@ const BottomBar = styled.div`
 const Collage: NextPage = () => {
   const dispatch = useDispatch();
   const { essentialLayers } = useSelector(({ canvas }: State) => canvas);
+  const [isTutorial, setTutorial] = useState(false);
 
   useEffect(() => {
     if (essentialLayers.length === 0) {
@@ -34,16 +36,49 @@ const Collage: NextPage = () => {
   }, []);
 
   return (
-    <Page>
-      <FlexColumn>
-        <ControlBar />
-        <Canvas stickers={false} />
-        <BottomBar>
-          <CanvasFrames />
-          <Menu />
-        </BottomBar>
-      </FlexColumn>
-    </Page>
+    <>
+      <Page>
+        <FlexColumn>
+          <ControlBar onClickHelpButton={() => setTutorial(true)} />
+          <Canvas stickers={false} />
+          <BottomBar>
+            <div id="tutorial-collage-canvas-frames">
+              <CanvasFrames />
+            </div>
+            <Menu />
+          </BottomBar>
+        </FlexColumn>
+      </Page>
+      {isTutorial && (
+        <Tutorial
+          scenarios={[
+            {
+              characterImageUrl: "https://static.calmery.moe/s/2/5.png",
+              focusElementId: "tutorial-collage-canvas-frames",
+              message:
+                "ここに色んなフレームが用意されているよ！\nタップして選んでみよう！",
+            },
+            {
+              characterImageUrl: "https://static.calmery.moe/s/1/10.png",
+              focusElementId: "tutorial-collage-canvas-frames",
+              message: "あれっ...もしかして...",
+            },
+            {
+              characterImageUrl: "https://static.calmery.moe/s/2/18.png",
+              focusElementId: "tutorial-collage-canvas-frames",
+              message: "使いたいフレームがない...！？",
+            },
+            {
+              characterImageUrl: "https://static.calmery.moe/s/1/7.png",
+              focusElementId: "tutorial-collage-canvas-frames",
+              message:
+                "お問い合わせからこんなフレームが欲しい！ってリクエストを送ってみてね！\nもちろん匿名で大丈夫だよ！",
+            },
+          ]}
+          onEnd={() => setTutorial(false)}
+        />
+      )}
+    </>
   );
 };
 
