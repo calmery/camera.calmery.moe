@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import ResizeObserver from "resize-observer-polyfill";
-import { GradientColors } from "~/styles/colors";
+import { GradientColors, Colors } from "~/styles/colors";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
+import { Mixin } from "~/styles/mixin";
 
 const Container = styled.div`
   width: 100%;
@@ -79,6 +80,42 @@ const CharacterPetal = styled.img`
   right: 16px;
   position: absolute;
   animation: rotate 4s linear infinite;
+`;
+
+const ProgressBar = styled.div`
+  width: 100%;
+  height: 48px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: fixed;
+`;
+
+const ProgressImage = styled.div<{ parcent: number }>`
+  ${Mixin.animation};
+
+  width: ${({ parcent }) => `${parcent}%`};
+  height: 100%;
+  text-align: right;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+
+  img {
+    height: 100%;
+  }
+`;
+
+const Progress = styled.div<{ parcent: number }>`
+  ${Mixin.animation};
+
+  width: ${({ parcent }) => `${parcent}%`};
+  height: 4px;
+  background: ${Colors.white};
+  border-radius: ${({ parcent }) => (parcent === 100 ? "0" : "0 4px 4px 0")};
+  bottom: 0;
+  left: 0;
+  position: absolute;
 `;
 
 interface TutorialProps {
@@ -235,6 +272,16 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
           <CharacterPetal src="/images/petal.svg" />
         </Character>
       </CharacterContainer>
+      <ProgressBar>
+        <Progress
+          parcent={((currentScenario + 1) / scenarios.length) * 100}
+        ></Progress>
+        <ProgressImage
+          parcent={((currentScenario + 1) / scenarios.length) * 100}
+        >
+          <img src="/images/tutorial/run.gif" />
+        </ProgressImage>
+      </ProgressBar>
     </Container>
   );
 };

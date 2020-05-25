@@ -62,6 +62,7 @@ export const withRedux = (Component: NextPage) => {
     props = {},
     state,
   }: {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     props?: object;
     state?: State;
   }) => {
