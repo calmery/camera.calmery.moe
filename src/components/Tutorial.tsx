@@ -62,6 +62,7 @@ const CharacterMessage = styled.div`
   padding-left: 160px;
   padding-right: 48px;
   position: absolute;
+  white-space: pre-line;
 `;
 
 const CharacterPetal = styled.img`
@@ -263,7 +264,9 @@ export const Tutorial: React.FC<TutorialProps> = ({ onEnd, scenarios }) => {
             };
           }
 
-          return {};
+          return {
+            bottom: `${48 + 16}px`,
+          };
         })()}
       >
         <Character>
