@@ -16,6 +16,7 @@ const Container = styled.div`
   justify-content: space-between;
 
   img {
+    cursor: pointer;
     height: 16px;
   }
 `;
