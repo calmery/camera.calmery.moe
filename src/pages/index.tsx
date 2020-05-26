@@ -245,15 +245,16 @@ const Index: NextPage = () => {
       >
         <ModalTitle>お問い合わせ</ModalTitle>
         <ModalText>
-          ご感想や不具合の報告は <ModalTextRoboto>Twitter</ModalTextRoboto> の{" "}
+          ご感想や不具合の報告は次の <ModalTextRoboto>Google</ModalTextRoboto>{" "}
+          フォームまでお願いします。
+          <br />
           <a
-            href="https://twitter.com/calmeryme"
+            href="https://forms.gle/37ucm5pkdZV7L4HAA"
             target="_blank"
             rel="noopener noreferrer"
           >
-            @calmeryme
-          </a>{" "}
-          までお願いします。感想貰えるとめっちゃ嬉しいのでよろしくね！
+            https://forms.gle/37ucm5pkdZV7L4HAA
+          </a>
         </ModalText>
       </Modal>
 
