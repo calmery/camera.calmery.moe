@@ -1,6 +1,10 @@
 import { Actions } from "./actions";
 import { Actions as CanvasActions } from "../canvas/actions";
-import { UI_CHANGE_FILTER_TYPE } from "./types";
+import {
+  UI_CHANGE_FILTER_TYPE,
+  UI_IMAGE_LOAD_ERROR,
+  UI_IMAGE_LOAD_ERROR_RESOLVE,
+} from "./types";
 import { CANVAS_ENABLE_COLLAGE, CANVAS_DISABLE_COLLAGE } from "../canvas/types";
 import { CanvasUserLayerFrameType } from "~/types/CanvasUserLayerFrameType";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
@@ -11,11 +15,13 @@ export interface UiState {
     index: number;
   } | null;
   selectedFilterType: FeColorMatrix;
+  isImageLoadError: boolean;
 }
 
 const initialState: UiState = {
   selectedUserLayerFrame: null,
   selectedFilterType: FeColorMatrix.saturate,
+  isImageLoadError: false,
 };
 
 export default (
@@ -23,6 +29,15 @@ export default (
   action: CanvasActions | Actions
 ): UiState => {
   switch (action.type) {
+    case UI_IMAGE_LOAD_ERROR: {
+      const { resolve } = action.payload;
+
+      return {
+        ...state,
+        isImageLoadError: resolve,
+      };
+    }
+
     case CANVAS_ENABLE_COLLAGE:
       return {
         ...state,

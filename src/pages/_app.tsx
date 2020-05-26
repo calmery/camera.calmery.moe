@@ -3,6 +3,7 @@ import NextApp from "next/app";
 import { createGlobalStyle } from "styled-components";
 import "~/utils/sentry";
 import Head from "next/head";
+import { Common } from "~/containers/Common";
 
 export const GlobalStyle = createGlobalStyle`
   html, body, #__next {
@@ -85,6 +86,7 @@ class App extends NextApp {
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
         />
+        <Common />
         <Component {...pageProps} />
       </>
     );

@@ -6,6 +6,7 @@ import { CanvasUserLayerFrame } from "~/types/CanvasUserLayerFrame";
 import { thunkActions } from "~/domains/canvas/actions";
 import { getImageFile } from "~/utils/get-image-file";
 import { CanvasStickerLayerBorder } from "~/components/CanvasStickerLayerBorder";
+import { actions as uiActions } from "~/domains/ui/actions";
 
 export const CanvasEmptyUserLayer: React.FC<{
   frame: CanvasUserLayerFrame;
@@ -18,9 +19,13 @@ export const CanvasEmptyUserLayer: React.FC<{
   );
 
   const handOnClickEmptyUserImage = useCallback(async () => {
-    dispatch(
-      thunkActions.addCanvasUserLayerFromFile(await getImageFile(), index)
-    );
+    try {
+      await dispatch(
+        thunkActions.addCanvasUserLayerFromFile(await getImageFile(), index)
+      );
+    } catch (_) {
+      dispatch(uiActions.imageLoadError(true));
+    }
   }, [dispatch, index]);
 
   const stickerLayer = stickerLayers[stickerLayers.length - 1];

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled, { css } from "styled-components";
 import { Colors, GradientColors } from "~/styles/colors";
 import { Mixin } from "~/styles/mixin";
@@ -55,17 +55,28 @@ type ButtonProps = {
   primary?: boolean;
   round?: boolean;
   onClick?: () => void;
+  onClickButton?: () => void;
 };
 
-export const Button: React.FC<ButtonProps> = (props: ButtonProps) =>
-  props.children ? (
+export const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
+  const handleOnClick = useCallback(() => {
+    props.onClick && props.onClick();
+    props.onClickButton && props.onClickButton();
+  }, [props.onClick]);
+
+  if (!props.children) {
+    return null;
+  }
+
+  return (
     <Container
       round={props.round === undefined ? true : props.round}
       disabled={props.disabled}
-      onClick={() => props.onClick && props.onClick()}
+      onClick={handleOnClick}
     >
       <Body {...props} round={props.round === undefined ? true : props.round}>
         <Text {...props}>{props.children}</Text>
       </Body>
     </Container>
-  ) : null;
+  );
+};

@@ -15,8 +15,9 @@ import { Checkbox } from "~/components/Checkbox";
 import { Button } from "~/components/Button";
 import { useDispatch } from "react-redux";
 import { withRedux } from "~/domains";
-import { actions, thunkActions } from "~/domains/canvas/actions";
-import { Popup } from "~/components/Popup";
+import { thunkActions } from "~/domains/canvas/actions";
+import { getImageFile } from "~/utils/get-image-file";
+import { actions as uiActions } from "~/domains/ui/actions";
 
 const Columns = styled.div`
   height: 100%;
@@ -170,17 +171,17 @@ const Index: NextPage = () => {
 
   // Events
 
-  const handleOnChangeFile = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { files } = event.target;
-      const file = files![0];
-
-      await dispatch(thunkActions.addCanvasUserLayerAndSetFrameFromFile(file));
+  const handOnClickStartButton = useCallback(async () => {
+    try {
+      await dispatch(
+        thunkActions.addCanvasUserLayerFromFile(await getImageFile(), 0)
+      );
 
       Router.push("/edit");
-    },
-    [dispatch]
-  );
+    } catch (_) {
+      dispatch(uiActions.imageLoadError(true));
+    }
+  }, [dispatch]);
 
   const handleOnClickInformationVisible = useCallback(
     () => setInformationVisible(!isInformationVisible),
@@ -223,14 +224,8 @@ const Index: NextPage = () => {
           </Logo>
 
           <Buttons>
-            <Button primary>
+            <Button primary onClickButton={handOnClickStartButton}>
               画像を読み込んで始める！
-              <HiddenInput
-                type="file"
-                multiple={false}
-                accept="image/*"
-                onChange={handleOnChangeFile}
-              />
             </Button>
             <Button disabled>前回の続きから始める！</Button>
           </Buttons>

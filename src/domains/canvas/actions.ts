@@ -174,17 +174,20 @@ const updateCanvasUserLayerCrop = (
 // TODO: `blueimpLoadImage` のエラー処理をちゃんとする
 const addCanvasUserLayerFromFile = (file: File, index: number) => {
   return (dispatch: Dispatch) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       blueimpLoadImage(
         file,
         async (canvas) => {
+          if (canvas instanceof Event && canvas.type === "error") {
+            return reject();
+          }
+
           const image = await convertUrlToImage(
             (canvas as HTMLCanvasElement).toDataURL("image/png")
           );
-          // ToDo: null のときはサイズエラーになっている
+
           const result = checkAndResizeImage(image);
           const { width, height, dataUrl } = result!;
-
           const colors = await getDominangColor(dataUrl);
           const lightness = getLightness(colors);
 
