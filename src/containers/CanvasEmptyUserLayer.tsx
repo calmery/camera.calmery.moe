@@ -11,6 +11,7 @@ import { actions as uiActions } from "~/domains/ui/actions";
 export const CanvasEmptyUserLayer: React.FC<{
   frame: CanvasUserLayerFrame;
   index: number;
+  stickers: boolean;
 }> = (props) => {
   const dispatch = useDispatch();
   const { frame, index } = props;
@@ -72,7 +73,7 @@ export const CanvasEmptyUserLayer: React.FC<{
               />
             </svg>
           </g>
-          {stickerLayer && (
+          {props.stickers && stickerLayer && (
             <CanvasStickerLayerBorder
               baseX={frame.x}
               baseY={frame.y}

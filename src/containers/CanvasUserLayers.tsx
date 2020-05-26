@@ -8,7 +8,10 @@ import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-p
 import { useRouter } from "next/router";
 import { Colors } from "~/styles/colors";
 
-export const CanvasUserLayers: React.FC<{ save: boolean }> = ({ save }) => {
+export const CanvasUserLayers: React.FC<{
+  save: boolean;
+  stickers: boolean;
+}> = ({ save, stickers }) => {
   const dispatch = useDispatch();
   const { pathname } = useRouter();
   const canvas = useSelector(({ canvas }: State) => canvas);
@@ -48,6 +51,7 @@ export const CanvasUserLayers: React.FC<{ save: boolean }> = ({ save }) => {
         if (layer) {
           return (
             <CanvasUserLayerComponent
+              stickers={stickers}
               layer={layer}
               frame={frame}
               id={i}
@@ -63,7 +67,14 @@ export const CanvasUserLayers: React.FC<{ save: boolean }> = ({ save }) => {
           return null;
         }
 
-        return <CanvasEmptyUserLayer frame={frame} index={i} key={i} />;
+        return (
+          <CanvasEmptyUserLayer
+            stickers={stickers}
+            frame={frame}
+            index={i}
+            key={i}
+          />
+        );
       })}
       {!save &&
         layerCount > 1 &&

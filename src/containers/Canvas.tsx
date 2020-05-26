@@ -112,7 +112,7 @@ export const Canvas: React.FC<{
             width={viewBoxWidth}
             height={viewBoxHeight}
           ></rect>
-          {stickerLayer && (
+          {stickers && stickerLayer && (
             <CanvasStickerLayerBorder
               baseX={0}
               baseY={0}
@@ -121,7 +121,7 @@ export const Canvas: React.FC<{
               backgroundBrightness={1}
             />
           )}
-          {users && <CanvasUserLayers save={save} />}
+          {users && <CanvasUserLayers stickers={stickers} save={save} />}
           {stickers && <CanvasStickerLayers save={save} />}
           <CanvasEssentialLayers />
         </svg>

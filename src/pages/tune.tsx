@@ -162,7 +162,7 @@ const Tune: NextPage = () => {
           <ControlBar onClickHelpButton={() => setTutorial(true)}>
             <img src="/images/close.svg" />
           </ControlBar>
-          <Canvas />
+          <Canvas stickers={false} />
           <BottomBar>
             <div style={{ marginTop: `${Spacing.l}px` }}></div>
             {isImageExists && (

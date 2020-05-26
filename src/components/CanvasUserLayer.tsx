@@ -10,6 +10,7 @@ export const CanvasUserLayerComponent: React.FC<{
   layer: CanvasUserLayer;
   frame: CanvasUserLayerFrame;
   isCollaging: boolean;
+  stickers: boolean;
   onStart: (event: React.MouseEvent | React.TouchEvent) => void;
 }> = (props) => {
   const { stickerLayers, displayMagnification } = useSelector(
@@ -81,7 +82,7 @@ export const CanvasUserLayerComponent: React.FC<{
               />
             </g>
           </svg>
-          {stickerLayer && (
+          {props.stickers && stickerLayer && (
             <CanvasStickerLayerBorder
               baseX={(isCollaging ? layer.x : 0) + frame.x - layer.croppedX}
               baseY={(isCollaging ? layer.y : 0) + frame.y - layer.croppedY}
