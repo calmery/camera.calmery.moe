@@ -16,6 +16,7 @@ import { Button } from "~/components/Button";
 import { useDispatch } from "react-redux";
 import { withRedux } from "~/domains";
 import { actions, thunkActions } from "~/domains/canvas/actions";
+import { Popup } from "~/components/Popup";
 
 const Columns = styled.div`
   height: 100%;

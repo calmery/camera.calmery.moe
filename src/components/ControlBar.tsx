@@ -5,6 +5,8 @@ import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 import { Colors } from "~/styles/colors";
 import { Button } from "./Button";
+import { Popup } from "./Popup";
+import { useRouter } from "next/router";
 
 const Container = styled.div`
   height: 16px;
@@ -73,11 +75,13 @@ export const ControlBar: React.FC<{
   onClickHelpButton?: () => void;
 }> = ({ onClickHelpButton }) => {
   const [isOpenBetaMenu, setOpenBetaMenu] = useState(false);
+  const [isOpenPopup, setOpenPopup] = useState(false);
+  const { push } = useRouter();
 
   return (
     <>
       <Container>
-        <img src="/images/close.svg" />
+        <img src="/images/close.svg" onClick={() => setOpenPopup(true)} />
         <img
           id="tutorial-control-bar-beta"
           onClick={() => setOpenBetaMenu(true)}
@@ -130,6 +134,21 @@ export const ControlBar: React.FC<{
           ローカルストレージの内容を削除する
         </Button>
       </Modal>
+      {isOpenPopup && (
+        <Popup
+          characterImageUrl="https://static.calmery.moe/s/2/18.png"
+          onEnter={() => {
+            push("/");
+          }}
+          onCancel={() => setOpenPopup(false)}
+          enterText="トップに戻る"
+          cancalText="戻らない！"
+        >
+          トップに戻る？
+          <br />
+          気を付けて！編集内容は失われるよ！
+        </Popup>
+      )}
     </>
   );
 };
