@@ -2,6 +2,7 @@ import React from "react";
 import NextApp from "next/app";
 import { createGlobalStyle } from "styled-components";
 import "~/utils/sentry";
+import Head from "next/head";
 
 export const GlobalStyle = createGlobalStyle`
   html, body, #__next {
@@ -34,6 +35,9 @@ class App extends NextApp {
 
     return (
       <>
+        <Head>
+          <title>かるめりちゃんカメラ</title>
+        </Head>
         <GlobalStyle />
         <link
           rel="stylesheet"

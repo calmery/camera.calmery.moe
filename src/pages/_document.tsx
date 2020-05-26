@@ -1,5 +1,5 @@
 import React from "react";
-import NextDocument from "next/document";
+import NextDocument, { Html, Head, Main, NextScript } from "next/document";
 import { DocumentContext } from "next/dist/next-server/lib/utils";
 import { ServerStyleSheet } from "styled-components";
 
@@ -24,6 +24,21 @@ class Document extends NextDocument {
     } finally {
       serverStyleSheet.seal();
     }
+  }
+
+  render() {
+    return (
+      <Html>
+        <Head>
+          <title>かるめりちゃんカメラ</title>
+          {this.props.styles}
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
   }
 }
 
