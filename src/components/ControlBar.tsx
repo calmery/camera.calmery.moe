@@ -100,6 +100,14 @@ export const ControlBar: React.FC<{
               ご感想や不具合の報告、機能やフレームのリクエストは以下の{" "}
               <ModalTextRoboto>Google</ModalTextRoboto>{" "}
               フォームよりお願いします。
+              <br />
+              <a
+                href="https://forms.gle/37ucm5pkdZV7L4HAA"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                https://forms.gle/37ucm5pkdZV7L4HAA
+              </a>
             </ModalText>
           </div>
         </ModalConfig>
