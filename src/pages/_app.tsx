@@ -2,6 +2,7 @@ import React from "react";
 import NextApp from "next/app";
 import { createGlobalStyle } from "styled-components";
 import "~/utils/sentry";
+import Head from "next/head";
 
 export const GlobalStyle = createGlobalStyle`
   html, body, #__next {
@@ -34,6 +35,51 @@ class App extends NextApp {
 
     return (
       <>
+        <Head>
+          <title>かるめりちゃんカメラ</title>
+          <meta
+            name="description"
+            content="かわいいものが好き！うちの子、かるめりちゃんのファンサイトです。"
+          />
+          <meta
+            name="keywords"
+            content="Calmery,かるめり,かるめりちゃん,カメラ,写真"
+          />
+          <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1,minimum-scale=1"
+          />
+          <meta name="format-detection" content="telephone=no" />
+          <meta property="og:title" content="かるめりちゃんカメラ" />
+          <meta property="og:site_name" content="かるめりちゃんカメラ" />
+          <meta property="og:type" content="website" />
+          <meta
+            property="og:description"
+            content="かわいいものが好き！うちの子、かるめりちゃんのファンサイトです。"
+          />
+          <meta
+            property="og:url"
+            content="https://calmery.moe/images/ogp.jpg"
+          />
+          <meta property="og:image" content="images/ogp.jpg" />
+          <meta property="og:image:width" content="640" />
+          <meta property="og:image:height" content="320" />
+          <meta property="og:locale" content="ja_JP" />
+          <meta name="twitter:title" content="かるめりちゃんカメラ" />
+          <meta
+            name="twitter:description"
+            content="かわいいものが好き！うちの子、かるめりちゃんのファンサイトです。"
+          />
+          <meta name="twitter:site" content="@calmeryme" />
+          <meta name="twitter:creator" content="@calmeryme" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta
+            name="twitter:image"
+            content="https://calmery.moe/images/ogp.jpg"
+          />
+          <link rel="apple-touch-icon" href="/images/icons/192x192.jpg" />
+          <link rel="manifest" href="/manifest.json" />
+        </Head>
         <GlobalStyle />
         <link
           rel="stylesheet"

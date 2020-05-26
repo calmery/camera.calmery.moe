@@ -5,11 +5,11 @@ import { Mixin } from "~/styles/mixin";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 
-const Container = styled.div<Pick<ButtonProps, "disabled">>`
+const Container = styled.div<Pick<ButtonProps, "disabled" | "round">>`
   ${Typography.M};
 
   background: ${GradientColors.pinkToBlue};
-  border-radius: 50vh;
+  border-radius: ${({ round }) => (round ? "50vh" : "4px")};
   box-sizing: border-box;
   padding: 2px;
   text-align: center;
@@ -26,9 +26,9 @@ const Container = styled.div<Pick<ButtonProps, "disabled">>`
     `};
 `;
 
-const Body = styled.div<Pick<ButtonProps, "primary">>`
+const Body = styled.div<Pick<ButtonProps, "primary" | "round">>`
   background: ${({ primary }) => (primary ? "transparent" : Colors.white)};
-  border-radius: 50vh;
+  border-radius: ${({ round }) => (round ? "50vh" : "4px")};
   padding: ${Spacing.m - 2}px ${Spacing.l - 2}px;
   position: relative;
 `;
@@ -53,16 +53,18 @@ type ButtonProps = {
   children: string | React.ReactNode[];
   disabled?: boolean;
   primary?: boolean;
+  round?: boolean;
   onClick?: () => void;
 };
 
 export const Button: React.FC<ButtonProps> = (props: ButtonProps) =>
   props.children ? (
     <Container
+      round={props.round === undefined ? true : props.round}
       disabled={props.disabled}
       onClick={() => props.onClick && props.onClick()}
     >
-      <Body {...props}>
+      <Body {...props} round={props.round === undefined ? true : props.round}>
         <Text {...props}>{props.children}</Text>
       </Body>
     </Container>
