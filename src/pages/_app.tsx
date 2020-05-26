@@ -77,7 +77,8 @@ class App extends NextApp {
             name="twitter:image"
             content="https://calmery.moe/images/ogp.jpg"
           />
-          <link rel="apple-touch-icon" href="/images/icon.jpg" />
+          <link rel="apple-touch-icon" href="/images/icons/192x192.jpg" />
+          <link rel="manifest" href="/manifest.json" />
         </Head>
         <GlobalStyle />
         <link
