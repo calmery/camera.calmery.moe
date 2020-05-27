@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { NextPage } from "next";
 import Router from "next/router";
 import styled from "styled-components";
@@ -18,6 +18,7 @@ import { withRedux } from "~/domains";
 import { thunkActions } from "~/domains/canvas/actions";
 import { getImageFile } from "~/utils/get-image-file";
 import { actions as uiActions } from "~/domains/ui/actions";
+import { Popup } from "~/components/Popup";
 
 const Columns = styled.div`
   height: 100%;
@@ -172,12 +173,22 @@ const FooterMenu = styled.div`
 
 const Index: NextPage = () => {
   const dispatch = useDispatch();
+  const [isTermsAgreed, setTermsAgreed] = useState(false);
+  const [isShowTermsPopup, setShowTermsPopup] = useState(false);
   const [isInformationVisible, setInformationVisible] = useState(false);
   const [isSettingVisible, setSettingVisible] = useState(false);
 
-  // Events
+  useEffect(() => {
+    const maybeIsTermsAgreed = localStorage.getItem("terms-of-service");
 
-  const handOnClickStartButton = useCallback(async () => {
+    if (!maybeIsTermsAgreed) {
+      return;
+    }
+
+    setTermsAgreed(true);
+  }, []);
+
+  const pickupImage = useCallback(async () => {
     try {
       await dispatch(
         thunkActions.addCanvasUserLayerFromFile(await getImageFile(), 0)
@@ -188,6 +199,29 @@ const Index: NextPage = () => {
       dispatch(uiActions.imageLoadError(true));
     }
   }, [dispatch]);
+
+  const handleOnClickTermsAgreeButton = useCallback(() => {
+    localStorage.setItem("terms-of-service", new Date().toISOString());
+    setTermsAgreed(true);
+    setShowTermsPopup(false);
+
+    pickupImage();
+  }, [dispatch]);
+
+  const handleOnClickTermsCancelButton = useCallback(() => {
+    setShowTermsPopup(false);
+  }, []);
+
+  // Events
+
+  const handleOnClickStartButton = useCallback(() => {
+    if (!isTermsAgreed) {
+      setShowTermsPopup(true);
+      return;
+    }
+
+    pickupImage();
+  }, [isTermsAgreed]);
 
   const handleOnClickInformationVisible = useCallback(
     () => setInformationVisible(!isInformationVisible),
@@ -230,7 +264,7 @@ const Index: NextPage = () => {
           </Logo>
 
           <Buttons>
-            <Button primary onClickButton={handOnClickStartButton}>
+            <Button primary onClickButton={handleOnClickStartButton}>
               画像を読み込んで始める！
             </Button>
             <Button disabled>前回の続きから始める！</Button>
@@ -306,6 +340,22 @@ const Index: NextPage = () => {
           </div>
         </ModalConfig>
       </Modal>
+
+      {isShowTermsPopup && (
+        <Popup
+          characterImageUrl="https://static.calmery.moe/s/2/17.png"
+          onEnter={handleOnClickTermsAgreeButton}
+          onCancel={handleOnClickTermsCancelButton}
+          cancalText="同意しない"
+          enterText="同意する"
+        >
+          <a href="/terms" target="_blank" rel="noopener noreferrer">
+            利用規約
+          </a>{" "}
+          に同意して始める！
+          <br />
+        </Popup>
+      )}
     </>
   );
 };

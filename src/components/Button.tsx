@@ -62,7 +62,7 @@ export const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
   const handleOnClick = useCallback(() => {
     props.onClick && props.onClick();
     props.onClickButton && props.onClickButton();
-  }, [props.onClick]);
+  }, [props.onClick, props.onClickButton]);
 
   if (!props.children) {
     return null;

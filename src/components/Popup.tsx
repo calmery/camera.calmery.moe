@@ -132,11 +132,11 @@ export const Popup: React.FC<PopupProps> = ({
           <PopupInnerMessage>{children}</PopupInnerMessage>
           <PopupInnerButtons>
             {onCancel && (
-              <Button round={false} onClick={handleOnClickCancel}>
+              <Button round={false} onClickButton={handleOnClickCancel}>
                 {cancalText || "キャンセル"}
               </Button>
             )}
-            <Button round={false} primary onClick={handleOnClickEnter}>
+            <Button round={false} primary onClickButton={handleOnClickEnter}>
               {enterText || "わかった"}
             </Button>
           </PopupInnerButtons>
