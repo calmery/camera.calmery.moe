@@ -154,14 +154,20 @@ const ModalConfigDescription = styled.div`
   font-family: SmartFontUI, sans-serif;
 `;
 
-const HiddenInput = styled.input`
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  top: 0;
-  left: 0;
-  position: absolute;
-  cursor: pointer;
+const FooterMenu = styled.div`
+  margin-bottom: ${Spacing.s}px;
+  display: flex;
+  justify-content: center;
+
+  a {
+    color: ${Colors.black};
+    text-decoration: none;
+    margin-right: ${Spacing.s}px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 `;
 
 const Index: NextPage = () => {
@@ -230,6 +236,17 @@ const Index: NextPage = () => {
             <Button disabled>前回の続きから始める！</Button>
           </Buttons>
           <Footer>
+            <FooterMenu>
+              <a href="https://calmery.moe">Calmery.moe</a>
+              <a href="/terms">利用規約</a>
+              <a
+                href="https://forms.gle/37ucm5pkdZV7L4HAA"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                お問い合わせ
+              </a>
+            </FooterMenu>
             Made with <Image src="/images/heart.svg" /> by Calmery
           </Footer>
         </Columns>
