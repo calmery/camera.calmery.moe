@@ -1,12 +1,54 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ResizeObserver from "resize-observer-polyfill";
+import styled from "styled-components";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 import { Colors } from "~/styles/colors";
+import { Typography } from "~/styles/typography";
 
 // Constants
 
 const CIRCLE_RADIUS = 18;
 const BAR_HEIGHT = 8;
+
+// Styles
+
+const Container = styled.div`
+  position: relative;
+  user-select: none;
+  cursor: pointer;
+
+  &:active {
+    cursor: ew-resize;
+  }
+`;
+
+const CurrentValue = styled.div`
+  ${Typography.S};
+
+  width: ${CIRCLE_RADIUS * 2}px;
+  height: ${CIRCLE_RADIUS * 2}px;
+  top: 0;
+  position: absolute;
+  color: ${Colors.white};
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Values = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Value = styled.div`
+  ${Typography.S};
+
+  width: ${CIRCLE_RADIUS * 2}px;
+  font-weight: bold;
+  color: ${Colors.black};
+  text-align: center;
+`;
 
 // Types
 
@@ -114,11 +156,12 @@ export const InputRange: React.FC<InputRangeProps> = ({
 
       // Processing
 
-      const nextCircleStepCount = Math.round(currentX / stepWidth);
+      const nextStepCount = Math.round(currentX / stepWidth);
 
-      if (currentStepCount !== nextCircleStepCount) {
-        setCurrentStepCount(nextCircleStepCount);
-        onChange(min + nextCircleStepCount * step);
+      if (currentStepCount !== nextStepCount) {
+        setCurrentStepCount(nextStepCount);
+
+        onChange(parseFloat((min + nextStepCount * step).toFixed(1)));
       }
     },
     [
@@ -161,7 +204,7 @@ export const InputRange: React.FC<InputRangeProps> = ({
   const suffix = `${min}-${max}-${step}-${baseValue}-${defaultValue}`;
 
   return (
-    <div
+    <Container
       ref={containerRef}
       onMouseDown={handleOnBegin}
       onTouchStart={handleOnBegin}
@@ -214,6 +257,17 @@ export const InputRange: React.FC<InputRangeProps> = ({
           clipPath={`url(#gradient-clip-${suffix})`}
         />
       </svg>
-    </div>
+      <Values>
+        <Value>{min}</Value>
+        <Value>{max}</Value>
+      </Values>
+      <CurrentValue
+        style={{
+          left: `${currentX}px`,
+        }}
+      >
+        {parseFloat((min + currentStepCount * step).toFixed(1))}
+      </CurrentValue>
+    </Container>
   );
 };
