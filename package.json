@@ -23,7 +23,7 @@
     "@types/react": "16.9.35",
     "@types/react-redux": "7.1.9",
     "@types/react-test-renderer": "16.9.2",
-    "@types/redux-logger": "3.0.7",
+    "@types/redux-logger": "3.0.8",
     "@types/styled-components": "5.1.0",
     "@types/uuid": "8.0.0",
     "@typescript-eslint/eslint-plugin": "3.0.0",
