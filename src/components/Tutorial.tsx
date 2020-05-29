@@ -52,7 +52,7 @@ const CharacterImage = styled.img`
 
 const CharacterMessage = styled.div`
   background: ${GradientColors.page};
-  font-family: SmartFontUI, sans-serif;
+  font-family: "Sawarabi Gothic", sans-serif;
   width: 100%;
   height: 80px;
   border-radius: 4px;

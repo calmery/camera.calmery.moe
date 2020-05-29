@@ -56,7 +56,7 @@ const PopupInnerCharacter = styled.img`
 const PopupInnerMessage = styled.div`
   ${Typography.M};
 
-  font-family: SmartFontUI, sans-serif;
+  font-family: "Sawarabi Gothic", sans-serif;
   color: ${Colors.black};
   padding: ${Spacing.m}px ${Spacing.s}px;
 `;
@@ -66,7 +66,7 @@ const PopupInnerButtons = styled.div`
 
   > * {
     margin-left: ${Spacing.m}px;
-    font-family: SmartFontUI, sans-serif;
+    font-family: "Sawarabi Gothic", sans-serif;
 
     &:first-child {
       margin-left: 0;

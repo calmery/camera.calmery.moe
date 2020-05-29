@@ -63,7 +63,7 @@ const Buttons = styled.div`
   }
 
   & > * {
-    font-family: SmartFontUI;
+    font-family: "Sawarabi Gothic";
 
     ${Media.queries.pc} {
       max-width: 217px;
@@ -108,7 +108,7 @@ const ModalTitle = styled.div`
   ${Typography.L}
 
   color: ${Colors.black};
-  font-family: SmartFontUI, sans-serif;
+  font-family: "Sawarabi Gothic", sans-serif;
   margin-bottom: ${Spacing.s}px;
 `;
 
@@ -116,7 +116,7 @@ const ModalText = styled.div`
   ${Typography.S}
 
   color: ${Colors.black};
-  font-family: SmartFontUI, sans-serif;
+  font-family: "Sawarabi Gothic", sans-serif;
 
   a {
     color: ${Colors.black};
@@ -145,14 +145,14 @@ const ModalConfigTitle = styled.div`
 
   line-height: 32px;
   color: ${Colors.black};
-  font-family: SmartFontUI, sans-serif;
+  font-family: "Sawarabi Gothic", sans-serif;
 `;
 
 const ModalConfigDescription = styled.div`
   ${Typography.XS}
 
   color: ${Colors.gray};
-  font-family: SmartFontUI, sans-serif;
+  font-family: "Sawarabi Gothic", sans-serif;
 `;
 
 const FooterMenu = styled.div`

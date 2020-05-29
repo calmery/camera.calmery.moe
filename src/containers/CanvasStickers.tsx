@@ -106,7 +106,7 @@ const TitleContainer = styled.div`
 
 const Title = styled.div`
   ${Typography.S};
-  font-family: SmartFontUI, sans-serif;
+  font-family: "Sawarabi Gothic", sans-serif;
 `;
 
 const Stickers = styled.div`

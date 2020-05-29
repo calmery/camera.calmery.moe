@@ -14,20 +14,6 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
   }
-
-  /*
-   * "スマートフォントUI" licensed under the IPA Font License Agreement v1.0
-   * https://www.flopdesign.com/freefont/smartfont.html
-   * https://ipafont.ipa.go.jp/old/ipaexfont/download.html IPAexゴシック（Ver.002.01）
-   * https://ipafont.ipa.go.jp/ipa_font_license_v1.html
-   */
-  @font-face {
-    font-family: SmartFontUI;
-    font-display: swap;
-    src: url(fonts/SmartFontUI.woff2) format("woff2"),
-      url(fonts/SmartFontUI.woff) format("woff"),
-      url(fonts/SmartFontUI.ttf) format("truetype");
-  }
 `;
 
 class App extends NextApp {
@@ -80,6 +66,10 @@ class App extends NextApp {
           />
           <link rel="apple-touch-icon" href="/images/icons/192x192.jpg" />
           <link rel="manifest" href="/manifest.json" />
+          <link
+            href="https://fonts.googleapis.com/css?family=Sawarabi+Gothic"
+            rel="stylesheet"
+          ></link>
         </Head>
         <GlobalStyle />
         <link
