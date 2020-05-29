@@ -40,7 +40,7 @@ class App extends NextApp {
           <title>かるめりちゃんカメラ</title>
           <meta
             name="description"
-            content="かわいいものが好き！うちの子、かるめりちゃんのファンサイトです。"
+            content="うちの子、かるめりちゃんと一緒にお出かけしよう！"
           />
           <meta
             name="keywords"
@@ -56,7 +56,7 @@ class App extends NextApp {
           <meta property="og:type" content="website" />
           <meta
             property="og:description"
-            content="かわいいものが好き！うちの子、かるめりちゃんのファンサイトです。"
+            content="うちの子、かるめりちゃんと一緒にお出かけしよう！"
           />
           <meta
             property="og:url"
@@ -69,7 +69,7 @@ class App extends NextApp {
           <meta name="twitter:title" content="かるめりちゃんカメラ" />
           <meta
             name="twitter:description"
-            content="かわいいものが好き！うちの子、かるめりちゃんのファンサイトです。"
+            content="うちの子、かるめりちゃんと一緒にお出かけしよう！"
           />
           <meta name="twitter:site" content="@calmeryme" />
           <meta name="twitter:creator" content="@calmeryme" />
