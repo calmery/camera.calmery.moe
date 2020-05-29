@@ -21,6 +21,7 @@ const CloseButton = styled.img`
   left: 24px;
   position: fixed;
   filter: brightness(0) invert(1);
+  cursor: pointer;
 `;
 
 const CharacterContainer = styled.div`
