@@ -15,7 +15,7 @@ import { HorizontalScrollViewItem } from "~/components/HorizontalScrollViewItem"
 import { Menu } from "~/components/Menu";
 import { Mixin } from "~/styles/mixin";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
-import { Input } from "~/components/Input";
+import { InputRange } from "~/components/InputRange";
 import { thunkActions } from "~/domains/canvas/actions";
 import { Tutorial } from "~/components/Tutorial";
 import { ControlBar } from "~/components/ControlBar";
@@ -175,11 +175,11 @@ const Tune: NextPage = () => {
                         : "none",
                   }}
                 >
-                  <Input
-                    id={FeColorMatrix.blur}
+                  <InputRange
                     min={0}
                     max={12}
                     step={1}
+                    baseValue={0}
                     defaultValue={userLayer.blur}
                     onChange={(value: number) => {
                       dispatch(
@@ -199,11 +199,11 @@ const Tune: NextPage = () => {
                         : "none",
                   }}
                 >
-                  <Input
-                    id={FeColorMatrix.hue}
+                  <InputRange
                     min={0}
                     max={359}
                     step={1}
+                    baseValue={0}
                     defaultValue={userLayer.hue}
                     onChange={(value: number) => {
                       dispatch(
@@ -223,11 +223,11 @@ const Tune: NextPage = () => {
                         : "none",
                   }}
                 >
-                  <Input
-                    id={FeColorMatrix.saturate}
+                  <InputRange
                     min={-1}
                     max={2}
                     step={0.1}
+                    baseValue={1}
                     defaultValue={userLayer.saturate}
                     onChange={(value: number) => {
                       dispatch(
