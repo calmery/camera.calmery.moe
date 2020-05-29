@@ -221,7 +221,10 @@ export const InputRange: React.FC<InputRangeProps> = ({
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <linearGradient id={`gradient-${suffix}`}>
+          <linearGradient
+            id={`gradient-${suffix}`}
+            gradientTransform="rotate(45)"
+          >
             <stop stopColor="#FF91BE" />
             <stop offset="1" stopColor="#91C3FF" />
           </linearGradient>
@@ -241,10 +244,10 @@ export const InputRange: React.FC<InputRangeProps> = ({
           />
         </clipPath>
         <rect
-          width={containerRect.width - CIRCLE_RADIUS * 2}
-          height={BAR_HEIGHT}
           x={CIRCLE_RADIUS}
           y={(CIRCLE_RADIUS * 2 - BAR_HEIGHT) / 2}
+          width={containerRect.width - CIRCLE_RADIUS * 2}
+          height={BAR_HEIGHT}
           rx={BAR_HEIGHT / 2}
           fill={Colors.lightGray}
         />
