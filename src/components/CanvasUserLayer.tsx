@@ -40,6 +40,9 @@ export const CanvasUserLayerComponent: React.FC<{
           <feGaussianBlur stdDeviation={layer.blur} />
           <feColorMatrix type="hueRotate" values={`${layer.hue}`} />
           <feColorMatrix type="saturate" values={`${layer.saturate}`} />
+          <feComponentTransfer>
+            <feFuncA type="discrete" tableValues="1 1" />
+          </feComponentTransfer>
         </filter>
       </defs>
 
