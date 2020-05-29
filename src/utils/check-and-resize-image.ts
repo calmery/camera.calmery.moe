@@ -1,14 +1,8 @@
-const MIN_WIDTH = 200;
-const MIN_HEIGHT = 200;
-const MAX_WIDTH = 900;
+const MAX_WIDTH = 1200;
 const MAX_HEIGHT = 1200;
 
 export const checkAndResizeImage = (image: HTMLImageElement) => {
   const { width, height } = image;
-
-  if (width < MIN_WIDTH || height < MIN_HEIGHT) {
-    return null;
-  }
 
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d")!;
