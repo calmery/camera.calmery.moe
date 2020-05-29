@@ -117,6 +117,7 @@ const Stickers = styled.div`
 `;
 
 const Sticker = styled.img`
+  width: auto;
   height: 100%;
   cursor: pointer;
 `;
