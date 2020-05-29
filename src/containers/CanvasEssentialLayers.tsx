@@ -10,8 +10,19 @@ export const CanvasEssentialLayers: React.FC = () => {
     <>
       {essentialLayers.map((essentialLayer, i: number) => {
         const { width, height, dataUrl } = essentialLayer;
-        const w = viewBoxWidth / 3;
-        const h = height * (w / width);
+        let w = viewBoxWidth / 3;
+        let h = height * (w / width);
+
+        // ToDo: サイズ考えた方が良さそう
+        if (w < 200) {
+          w = 200;
+          h = height * (w / width);
+        }
+
+        if (viewBoxWidth < w) {
+          w = viewBoxWidth;
+          h = height * (w / width);
+        }
 
         return (
           <image
