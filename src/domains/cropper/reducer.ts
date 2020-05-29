@@ -242,6 +242,12 @@ const cropperReducer = (
       };
     }
 
+    case types.CROPPER_CROPPER_CHANGE_FREE_ASPECT_RATIO:
+      return {
+        ...state,
+        freeAspect: true,
+      };
+
     case types.CROPPER_CROPPER_CHANGE_ASPECT_RATIO: {
       const { widthRatio, heightRatio, index } = action.payload;
       const { freeAspect, scale, scaleX, scaleY, width, height } = state;
@@ -374,6 +380,14 @@ const cropperReducer = (
             ...state,
             scale: {
               ...state.scale,
+              current: nextScale,
+            },
+            scaleX: {
+              ...state.scaleX,
+              current: nextScale,
+            },
+            scaleY: {
+              ...state.scaleY,
               current: nextScale,
             },
           };

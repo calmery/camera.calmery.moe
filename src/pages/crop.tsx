@@ -171,6 +171,8 @@ const Crop: NextPage = () => {
     w: number,
     h: number
   ) => dispatch(actions.changeCropperCropperAspectRatio(index, w, h));
+  const changeCropperCropperFreeAspectRatio = () =>
+    dispatch(actions.changeCropperCropperFreeAspectRatio());
   const [isTutorial, setTutorial] = useState(false);
 
   const isImageExists = canvas.userLayers.some((l) => !!l);
@@ -206,22 +208,18 @@ const Crop: NextPage = () => {
                       <>
                         <HorizontalScrollViewItem rootElement={rootElement}>
                           <AspectRatioFree
-                            selected={cropper.selectedIndex === -1}
+                            selected={cropper.freeAspect}
                             onClick={
                               // ToDo: FreeAspect を true にする処理が必要になる
                               () => {
-                                console.log;
+                                changeCropperCropperFreeAspectRatio();
                               }
                             }
                           >
-                            <AspectRatioIcon
-                              selected={cropper.selectedIndex === -1}
-                            >
+                            <AspectRatioIcon selected={cropper.freeAspect}>
                               <img src="/images/crop/free.svg" />
                             </AspectRatioIcon>
-                            <AspectRatioTitle
-                              selected={cropper.selectedIndex === -1}
-                            >
+                            <AspectRatioTitle selected={cropper.freeAspect}>
                               Free
                             </AspectRatioTitle>
                           </AspectRatioFree>
@@ -233,18 +231,27 @@ const Crop: NextPage = () => {
                               key={index}
                             >
                               <AspectRatio
-                                selected={cropper.selectedIndex === index}
+                                selected={
+                                  !cropper.freeAspect &&
+                                  cropper.selectedIndex === index
+                                }
                                 onClick={() =>
                                   changeCropperCropperAspectRatio(index, w, h)
                                 }
                               >
                                 <AspectRatioIcon
-                                  selected={cropper.selectedIndex === index}
+                                  selected={
+                                    !cropper.freeAspect &&
+                                    cropper.selectedIndex === index
+                                  }
                                 >
                                   <img src={`/images/crop/${w}-${h}.svg`} />
                                 </AspectRatioIcon>
                                 <AspectRatioTitle
-                                  selected={cropper.selectedIndex === index}
+                                  selected={
+                                    !cropper.freeAspect &&
+                                    cropper.selectedIndex === index
+                                  }
                                 >
                                   {w}:{h}
                                 </AspectRatioTitle>

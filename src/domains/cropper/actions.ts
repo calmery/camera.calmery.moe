@@ -44,6 +44,10 @@ const changeCropperCropperAspectRatio = (
   payload: { index, widthRatio, heightRatio },
 });
 
+const changeCropperCropperFreeAspectRatio = () => ({
+  type: types.CROPPER_CROPPER_CHANGE_FREE_ASPECT_RATIO,
+});
+
 // Images
 
 const initializeCropperImage = (payload: {
@@ -87,6 +91,7 @@ export const actions = {
   startCropperCropperDrag,
   startCropperCropperTransform,
   changeCropperCropperAspectRatio,
+  changeCropperCropperFreeAspectRatio,
   initializeCropperImage,
   startCropperImageTransform,
   tickCropper,
