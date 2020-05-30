@@ -59,19 +59,22 @@ const containerReducer = (
 
     case types.CROPPER_CONTAINER_UPDATE_RECT: {
       const { image } = parentState;
-      const { x, y, width, height } = action.payload;
+      let { width } = action.payload;
+      const { x, y, height } = action.payload;
       const { width: imageWidth, height: imageHeight } = image;
+
+      width = width - 24 * 2;
 
       let svgWidth = width;
       let svgHeight = imageHeight * (width / imageWidth);
-      let svgX = x;
-      let svgY = y + (height - svgHeight) / 2;
+      let svgX = 24;
+      let svgY = (height - svgHeight) / 2;
 
       if (svgHeight > height) {
         svgHeight = height;
         svgWidth = imageWidth * (height / imageHeight);
-        svgX = x + (width - svgWidth) / 2;
-        svgY = y;
+        svgX = 24 + (width - svgWidth) / 2;
+        svgY = 0;
       }
 
       return {
@@ -83,7 +86,7 @@ const containerReducer = (
         displayMagnification: imageWidth / svgWidth,
         displayableTop: y,
         displayableLeft: x,
-        displayableWidth: width,
+        displayableWidth: width + 24 * 2,
         displayableHeight: height,
       };
     }
