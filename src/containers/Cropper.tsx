@@ -246,6 +246,23 @@ export const Cropper: React.FC = () => {
               onMouseDown={handleOnStartCropperTransform}
               onTouchStart={handleOnStartCropperTransform}
             ></circle>
+            <image
+              xlinkHref="/images/scale.svg"
+              width={12 * displayMagnification}
+              height={12 * displayMagnification}
+              x={
+                cropper.position.x +
+                cropper.width * sx -
+                (24 * displayMagnification - 12 * displayMagnification) / 2
+              }
+              y={
+                cropper.position.y +
+                cropper.height * sy -
+                (24 * displayMagnification - 12 * displayMagnification) / 2
+              }
+              onMouseDown={handleOnStartCropperTransform}
+              onTouchStart={handleOnStartCropperTransform}
+            />
           </g>
 
           {/* 切り取る対象となる画像 */}
@@ -339,6 +356,23 @@ export const Cropper: React.FC = () => {
               onMouseDown={handleOnStartCropperTransform}
               onTouchStart={handleOnStartCropperTransform}
             ></circle>
+            <image
+              xlinkHref="/images/scale.svg"
+              width={12 * displayMagnification}
+              height={12 * displayMagnification}
+              x={
+                cropper.position.x +
+                cropper.width * sx -
+                (24 * displayMagnification - 12 * displayMagnification) / 2
+              }
+              y={
+                cropper.position.y +
+                cropper.height * sy -
+                (24 * displayMagnification - 12 * displayMagnification) / 2
+              }
+              onMouseDown={handleOnStartCropperTransform}
+              onTouchStart={handleOnStartCropperTransform}
+            />
           </g>
         </svg>
       </svg>

@@ -60,6 +60,29 @@ export const CanvasStickerLayerBorder: React.FC<CanvasStickerLayerBorderProps> =
           cy={stickerLayer.height * stickerLayer.scale}
           r={12 * displayMagnification}
         />
+        <image
+          xlinkHref="/images/close.svg"
+          width={12 * displayMagnification}
+          height={12 * displayMagnification}
+          x={
+            stickerLayer.width * stickerLayer.scale -
+            (24 * displayMagnification - 12 * displayMagnification) / 2
+          }
+          y={0 - (24 * displayMagnification - 12 * displayMagnification) / 2}
+        />
+        <image
+          xlinkHref="/images/scale.svg"
+          width={12 * displayMagnification}
+          height={12 * displayMagnification}
+          x={
+            stickerLayer.width * stickerLayer.scale -
+            (24 * displayMagnification - 12 * displayMagnification) / 2
+          }
+          y={
+            stickerLayer.height * stickerLayer.scale -
+            (24 * displayMagnification - 12 * displayMagnification) / 2
+          }
+        />
       </g>
     </svg>
   );

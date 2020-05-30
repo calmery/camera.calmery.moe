@@ -88,17 +88,42 @@ export const CanvasUserLayers: React.FC<{
           }
 
           return (
-            <circle
-              key={i}
-              fill={Colors.gray}
-              cx={frame.x + frame.width}
-              cy={frame.y}
-              r={12 * canvas.displayMagnification}
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={() => handleOnRemove(i)}
-            />
+            <>
+              <circle
+                key={i}
+                fill={
+                  layer.dominantColorLightness <= 0.5
+                    ? Colors.white
+                    : Colors.black
+                }
+                cx={frame.x + frame.width}
+                cy={frame.y}
+                r={12 * canvas.displayMagnification}
+                style={{
+                  cursor: "pointer",
+                }}
+                onClick={() => handleOnRemove(i)}
+              />
+              <image
+                xlinkHref="/images/close.svg"
+                width={12 * canvas.displayMagnification}
+                height={12 * canvas.displayMagnification}
+                x={
+                  frame.x +
+                  frame.width -
+                  (24 * canvas.displayMagnification -
+                    12 * canvas.displayMagnification) /
+                    2
+                }
+                y={
+                  frame.y -
+                  (24 * canvas.displayMagnification -
+                    12 * canvas.displayMagnification) /
+                    2
+                }
+                onClick={() => handleOnRemove(i)}
+              />
+            </>
           );
         })}
     </>
