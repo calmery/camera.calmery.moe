@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { NextPage } from "next";
 import Router from "next/router";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { IconButton } from "~/components/IconButton";
 import { Page } from "~/components/Page";
 import { Colors } from "~/styles/colors";
@@ -117,6 +117,7 @@ const ModalText = styled.div`
 
   color: ${Colors.black};
   font-family: "Sawarabi Gothic", sans-serif;
+  margin-bottom: ${Spacing.m}px;
 
   a {
     color: ${Colors.black};
@@ -131,9 +132,16 @@ const ModalTextRoboto = styled.span`
   font-family: Roboto, sans-serif;
 `;
 
-const ModalConfig = styled.div`
+const ModalConfig = styled.div<{ disabled?: boolean }>`
   display: flex;
   margin-bottom: ${Spacing.l}px;
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      opacity: 0.46;
+      cursor: not-allowed;
+    `}
 
   > *:first-child {
     margin-right: ${Spacing.m}px;
@@ -309,7 +317,8 @@ const Index: NextPage = () => {
         visible={isSettingVisible}
         onClickCloseButton={handleOnClickSettingVisible}
       >
-        <ModalConfig>
+        <ModalText>ごめんなさい！現在、設定は利用できません。</ModalText>
+        <ModalConfig disabled>
           <div>
             <Checkbox
               onChange={() => {
@@ -324,7 +333,7 @@ const Index: NextPage = () => {
             </ModalConfigDescription>
           </div>
         </ModalConfig>
-        <ModalConfig>
+        <ModalConfig disabled>
           <div>
             <Checkbox
               onChange={() => {
