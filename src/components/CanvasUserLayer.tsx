@@ -61,11 +61,14 @@ export const CanvasUserLayerComponent: React.FC<{
           <g
             transform={
               isCollaging
-                ? `translate(-${
-                    (layer.croppedWidth * layer.scale - layer.croppedWidth) / 2
-                  }, -${
-                    (layer.croppedHeight * layer.scale - layer.croppedHeight) /
-                    2
+                ? `translate(${
+                    ((layer.croppedWidth * layer.scale - layer.croppedWidth) /
+                      2) *
+                    -1
+                  }, ${
+                    ((layer.croppedHeight * layer.scale - layer.croppedHeight) /
+                      2) *
+                    -1
                   }) scale(${layer.scale}) rotate(${layer.angle}, ${
                     layer.croppedWidth / 2
                   }, ${layer.croppedHeight / 2})`

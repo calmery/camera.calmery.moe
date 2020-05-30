@@ -366,12 +366,37 @@ export default (state = initialState, action: Actions): CanvasState => {
         const user = userLayers[selectedUserLayerIndex];
         const userFrame = userFrames[selectedUserLayerIndex];
 
-        const clipPathX = styleLeft + userFrame.x / displayMagnification;
-        const clipPathY = styleTop + userFrame.y / displayMagnification;
-
         if (!user || !isCollaging) {
           return state;
         }
+
+        if (cursorPositions.length > 1) {
+          const { temporaries } = state;
+          const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = cursorPositions;
+
+          const nextAngle =
+            temporaries.previousAngle +
+            angleBetweenTwoPoints(x1, y1, x2, y2) -
+            temporaries.angleBetweenFingers;
+          const currentLength = distanceBetweenTwoPoints(x1, y1, x2, y2);
+          const nextScale =
+            (currentLength / temporaries.distanceBetweenFingers) *
+            temporaries.previousScale;
+
+          userLayers[selectedUserLayerIndex] = {
+            ...user,
+            scale: nextScale,
+            angle: nextAngle,
+          };
+
+          return {
+            ...state,
+            userLayers,
+          };
+        }
+
+        const clipPathX = styleLeft + userFrame.x / displayMagnification;
+        const clipPathY = styleTop + userFrame.y / displayMagnification;
 
         const [{ x, y }] = cursorPositions;
 
@@ -741,6 +766,22 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       if (userLayer === null) {
         return state;
+      }
+
+      if (cursorPositions.length > 1) {
+        const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = cursorPositions;
+
+        return {
+          ...state,
+          isUserLayerDragging: true,
+          temporaries: {
+            ...state.temporaries,
+            previousScale: userLayer.scale,
+            previousAngle: userLayer.angle,
+            angleBetweenFingers: angleBetweenTwoPoints(x1, y1, x2, y2),
+            distanceBetweenFingers: distanceBetweenTwoPoints(x1, y1, x2, y2),
+          },
+        };
       }
 
       const { x, y } = calculateCanvasUserLayerRelativeCoordinates(
