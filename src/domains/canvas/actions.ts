@@ -34,12 +34,14 @@ const updateCanvasContainerRect = ({
 // Stickers
 
 const addCanvasStickerLayer = (
+  group: number,
+  id: number,
   dataUrl: string,
   width: number,
   height: number
 ) => ({
   type: types.CANVAS_STICKER_LAYER_ADD,
-  payload: { dataUrl, width, height },
+  payload: { group, id, dataUrl, width, height },
 });
 
 const removeCanvasStickerLayer = () => ({
@@ -61,7 +63,11 @@ const startCanvasStickerLayerDrag = (cursorPositions: CursorPosition[]) => ({
   payload: { cursorPositions },
 });
 
-const addCanvasStickerLayerWithUrl = (url: string) => {
+const addCanvasStickerLayerWithUrl = (
+  group: number,
+  id: number,
+  url: string
+) => {
   return (dispatch: Dispatch) => {
     return new Promise((resolve, reject) => {
       const image = new Image();
@@ -81,6 +87,8 @@ const addCanvasStickerLayerWithUrl = (url: string) => {
         context.drawImage(image, 0, 0, image.width, image.height);
         dispatch(
           addCanvasStickerLayer(
+            group,
+            id,
             canvas.toDataURL("image/png"),
             image.width,
             image.height

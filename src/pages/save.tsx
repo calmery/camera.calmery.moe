@@ -11,6 +11,7 @@ import { convertSvgToDataUrl } from "~/utils/convert-svg-to-url";
 import { Tutorial } from "~/components/Tutorial";
 import { ControlBar } from "~/components/ControlBar";
 import { FirstLanding } from "~/components/FirstLanding";
+import * as GA from "~/utils/google-analytics";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -72,7 +73,16 @@ const Save: NextPage = () => {
           </BottomBar>
         </FlexColumn>
       </Page>
-      <img ref={imageRef} id="tutorial-save-image" />
+      <img
+        ref={imageRef}
+        onTouchStart={() => {
+          GA.saveCanvas();
+        }}
+        onContextMenu={() => {
+          GA.saveCanvas();
+        }}
+        id="tutorial-save-image"
+      />
       <FirstLanding />
       {isTutorial && (
         <Tutorial

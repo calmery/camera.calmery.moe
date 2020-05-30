@@ -5,6 +5,8 @@ import { GradientColors, Colors } from "~/styles/colors";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 import { Mixin } from "~/styles/mixin";
+import { useRouter } from "next/router";
+import * as GA from "~/utils/google-analytics";
 
 const Container = styled.div`
   width: 100%;
@@ -135,6 +137,7 @@ export const Tutorial: React.FC<TutorialProps> = ({
   scenarios,
   skip = true,
 }) => {
+  const router = useRouter();
   const [currentScenario, setCurrentScenario] = useState(0);
   const [timer, setTimer] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -145,6 +148,10 @@ export const Tutorial: React.FC<TutorialProps> = ({
     width: 0,
     height: 0,
   });
+
+  useEffect(() => {
+    GA.showTutorial(router.route);
+  }, []);
 
   const [count, setCount] = useState(1);
 
@@ -254,7 +261,15 @@ export const Tutorial: React.FC<TutorialProps> = ({
           mask="url(#tutorial-focus)"
         />
       </svg>
-      {skip && <CloseButton src="/images/close.svg" onClick={onEnd} />}
+      {skip && (
+        <CloseButton
+          src="/images/close.svg"
+          onClick={() => {
+            GA.hideTutorial(router.route);
+            onEnd();
+          }}
+        />
+      )}
       <CharacterContainer
         className="animate__bounceIn"
         key={`${containerRect.width}-${containerRect.height}-${focusElementRect.x}-${focusElementRect.y}`}

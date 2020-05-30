@@ -7,6 +7,7 @@ import { Colors } from "~/styles/colors";
 import { Button } from "./Button";
 import { Popup } from "./Popup";
 import { useRouter } from "next/router";
+import * as GA from "~/utils/google-analytics";
 
 const Container = styled.div`
   height: 16px;
@@ -85,7 +86,10 @@ export const ControlBar: React.FC<{
         <img src="/images/close.svg" onClick={() => setOpenPopup(true)} />
         <img
           id="tutorial-control-bar-beta"
-          onClick={() => setOpenBetaMenu(true)}
+          onClick={() => {
+            GA.clickBetaButton();
+            setOpenBetaMenu(true);
+          }}
           src="/images/beta.svg"
         />
         <img

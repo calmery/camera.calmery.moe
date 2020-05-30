@@ -125,7 +125,8 @@ const Sticker = styled.img`
 export const CanvasStickers: React.FC = () => {
   const dispatch = useDispatch();
   const handleOnClickStickerImage = useCallback(
-    (url: string) => dispatch(thunkActions.addCanvasStickerLayerWithUrl(url)),
+    (group: number, id: number, url: string) =>
+      dispatch(thunkActions.addCanvasStickerLayerWithUrl(group, id, url)),
     [dispatch]
   );
 
@@ -133,18 +134,21 @@ export const CanvasStickers: React.FC = () => {
     <Container>
       <Horizontal>
         <HorizontalInner>
-          {CANVAS_STICKERS.map(({ name, urls }, key) => (
-            <StickerContainer key={key}>
+          {CANVAS_STICKERS.map(({ name, urls }, group) => (
+            <StickerContainer key={group}>
               <TitleContainer>
                 <img src="/images/stickers/line-store.svg" />
                 <Title>{name}</Title>
               </TitleContainer>
               <Stickers>
-                {urls.map((url, key) => (
+                {urls.map((url, id) => (
                   <Sticker
                     src={url}
-                    key={key}
-                    onClick={() => handleOnClickStickerImage(url)}
+                    key={id}
+                    onClick={() =>
+                      // URL と合わせる
+                      handleOnClickStickerImage(group + 1, id + 1, url)
+                    }
                   />
                 ))}
               </Stickers>

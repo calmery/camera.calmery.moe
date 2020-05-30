@@ -4,6 +4,7 @@ import { createGlobalStyle } from "styled-components";
 import "~/utils/sentry";
 import Head from "next/head";
 import { Common } from "~/containers/Common";
+import * as GA from "~/utils/google-analytics";
 
 export const GlobalStyle = createGlobalStyle`
   html, body, #__next {
@@ -17,6 +18,14 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 class App extends NextApp {
+  public componentDidMount = () => {
+    const { router } = this.props;
+
+    router.events.on("routeChangeComplete", (url) => {
+      GA.changePage(url);
+    });
+  };
+
   public render = () => {
     const { Component, pageProps } = this.props;
 

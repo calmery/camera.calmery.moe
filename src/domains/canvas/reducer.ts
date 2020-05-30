@@ -11,6 +11,7 @@ import { CanvasUserLayerFrame } from "~/types/CanvasUserLayerFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 import { angleBetweenTwoPoints } from "~/utils/angle-between-two-points";
 import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
+import * as GA from "~/utils/google-analytics";
 
 // Constants
 
@@ -216,6 +217,8 @@ export default (state = initialState, action: Actions): CanvasState => {
         viewBoxHeight,
       } = state;
 
+      GA.disableCollage();
+
       if (userLayers[0]) {
         const { width, height } = userLayers[0];
 
@@ -277,6 +280,8 @@ export default (state = initialState, action: Actions): CanvasState => {
         frame
       ];
       const canvasUserFrame = canvasUserLayerFrame[frame];
+
+      GA.enableCollage(frame, index);
 
       const styles = calculateCanvasPositionAndSize(
         frameWidth,
@@ -496,7 +501,9 @@ export default (state = initialState, action: Actions): CanvasState => {
 
     case types.CANVAS_STICKER_LAYER_ADD: {
       const { stickerLayers } = state;
-      const { dataUrl, width, height } = action.payload;
+      const { group, id, dataUrl, width, height } = action.payload;
+
+      GA.addCanvasStickerLayer(group, id);
 
       return {
         ...state,
@@ -510,6 +517,10 @@ export default (state = initialState, action: Actions): CanvasState => {
             y: 0,
             scale: 1,
             angle: 0,
+            ga: {
+              group,
+              id,
+            },
           },
         ],
       };
@@ -517,6 +528,12 @@ export default (state = initialState, action: Actions): CanvasState => {
 
     case types.CANVAS_SRICKER_LAYER_REMOVE: {
       const { stickerLayers } = state;
+      const stickerLayer = stickerLayers[stickerLayers.length - 1];
+
+      if (stickerLayer.ga) {
+        const { ga } = stickerLayer;
+        GA.removeCanvasStickerLayer(ga.group, ga.id);
+      }
 
       return {
         ...state,
@@ -607,6 +624,8 @@ export default (state = initialState, action: Actions): CanvasState => {
       } = state;
       const { index, dataUrl, width, height, lightness } = action.payload;
 
+      GA.addCanvasUserLayer();
+
       userLayers[index] = {
         dataUrl,
         width,
@@ -680,6 +699,8 @@ export default (state = initialState, action: Actions): CanvasState => {
     case types.CANVAS_USER_LAYER_REMOVE: {
       const { userLayers } = state;
       const { index } = action.payload;
+
+      GA.removeCanvasUserLayer();
 
       userLayers[index] = null;
 
