@@ -107,19 +107,62 @@ export const CanvasUserLayerComponent: React.FC<{
                   />
                 </g>
               </svg>
-              {/* {props.stickers && stickerLayer && (
-                <CanvasStickerLayerBorder
-                  baseX={(isCollaging ? layer.x : 0) + frame.x - layer.croppedX}
-                  baseY={(isCollaging ? layer.y : 0) + frame.y - layer.croppedY}
-                  displayMagnification={displayMagnification}
-                  stickerLayer={stickerLayer}
-                  backgroundBrightness={layer.dominantColorLightness}
-                />
-              )} */}
             </svg>
           </g>
         </svg>
       </g>
+
+      <mask id={`canvas-user-layer-mask-${id}`} x="0" y="0">
+        <g clipPath={`url(#canvas-user-layer-frame-${id})`}>
+          <g
+            transform={
+              isCollaging
+                ? `translate(${
+                    layer.x +
+                    ((layer.croppedWidth * layer.scale - layer.croppedWidth) /
+                      2) *
+                      -1
+                  }, ${
+                    layer.y +
+                    ((layer.croppedHeight * layer.scale - layer.croppedHeight) /
+                      2) *
+                      -1
+                  }) scale(${layer.scale}) rotate(${layer.angle}, ${
+                    layer.croppedWidth / 2
+                  }, ${layer.croppedHeight / 2})`
+                : undefined
+            }
+          >
+            <rect
+              fill="white"
+              x={layer.croppedImageX}
+              y={layer.croppedImageY}
+              width={layer.croppedWidth}
+              height={layer.croppedHeight}
+              transform={`
+
+                      rotate(
+                        ${layer.croppedAngle},
+                        ${layer.width / 2},
+                        ${layer.height / 2}
+                      )
+                    `}
+            />
+          </g>
+        </g>
+      </mask>
+
+      {props.stickers && stickerLayer && (
+        <g mask={`url(#canvas-user-layer-mask-${id})`}>
+          <CanvasStickerLayerBorder
+            baseX={frame.x}
+            baseY={frame.y}
+            displayMagnification={displayMagnification}
+            stickerLayer={stickerLayer}
+            backgroundBrightness={layer.dominantColorLightness}
+          />
+        </g>
+      )}
 
       <g clipPath={`url(#canvas-user-layer-frame-${id})`}>
         <rect
