@@ -11,7 +11,8 @@ import { Colors } from "~/styles/colors";
 export const CanvasUserLayers: React.FC<{
   save: boolean;
   stickers: boolean;
-}> = ({ save, stickers }) => {
+  stickerBorder: boolean;
+}> = ({ save, stickers, stickerBorder }) => {
   const dispatch = useDispatch();
   const { pathname } = useRouter();
   const canvas = useSelector(({ canvas }: State) => canvas);
@@ -52,6 +53,7 @@ export const CanvasUserLayers: React.FC<{
           return (
             <CanvasUserLayerComponent
               stickers={stickers}
+              stickerBorder={stickerBorder}
               layer={layer}
               frame={frame}
               id={i}
@@ -70,6 +72,7 @@ export const CanvasUserLayers: React.FC<{
         return (
           <CanvasEmptyUserLayer
             stickers={stickers}
+            stickerBorder={stickerBorder}
             frame={frame}
             index={i}
             key={i}

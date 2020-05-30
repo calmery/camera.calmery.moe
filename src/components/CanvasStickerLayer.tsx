@@ -3,6 +3,7 @@ import { CanvasLayer } from "~/types/CanvasLayer";
 
 export const CanvasStickerLayer: React.FC<{
   selected: boolean;
+  borderOnly: boolean;
   displayMagnification: number;
   handleOnPressTransformCircle: (
     event: React.MouseEvent | React.TouchEvent
@@ -20,6 +21,7 @@ export const CanvasStickerLayer: React.FC<{
     handleOnPress,
     handleOnPressTransformCircle,
     handleOnClickRemoveButton,
+    borderOnly,
   } = props;
 
   const { dataUrl, x, y, width, height, angle, scale } = sticker;
@@ -40,12 +42,22 @@ export const CanvasStickerLayer: React.FC<{
           (height * scale) / 2
         })`}
       >
-        <image
-          xlinkHref={dataUrl}
-          width="100%"
-          height="100%"
-          onClick={handleOnSelect}
-        ></image>
+        {!borderOnly && (
+          <image
+            xlinkHref={dataUrl}
+            width="100%"
+            height="100%"
+            onClick={handleOnSelect}
+          ></image>
+        )}
+        {borderOnly && (
+          <rect
+            width="100%"
+            height="100%"
+            fillOpacity="0"
+            onClick={handleOnSelect}
+          />
+        )}
         {selected && (
           <>
             <rect

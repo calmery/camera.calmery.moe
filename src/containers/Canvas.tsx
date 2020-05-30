@@ -121,8 +121,22 @@ export const Canvas: React.FC<{
               backgroundBrightness={1}
             />
           )}
-          {users && <CanvasUserLayers stickers={stickers} save={save} />}
-          {stickers && <CanvasStickerLayers save={save} />}
+          {users && (
+            <CanvasUserLayers
+              stickers={stickers}
+              stickerBorder={false}
+              save={save}
+            />
+          )}
+          {stickers && <CanvasStickerLayers save={save} borderOnly={false} />}
+          {stickers && (
+            <CanvasUserLayers
+              stickers={stickers}
+              stickerBorder={true}
+              save={save}
+            />
+          )}
+          {stickers && <CanvasStickerLayers save={save} borderOnly={true} />}
           <CanvasEssentialLayers />
         </svg>
       </div>
