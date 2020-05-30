@@ -220,21 +220,31 @@ export default (state = initialState, action: Actions): CanvasState => {
       GA.disableCollage();
 
       if (userLayers[0]) {
-        const { width, height } = userLayers[0];
+        const { croppedWidth, croppedHeight } = userLayers[0];
+
+        const styles = calculateCanvasPositionAndSize(
+          croppedWidth,
+          croppedHeight,
+          displayableTop,
+          displayableLeft,
+          displayableWidth,
+          displayableHeight
+        );
 
         return {
           ...state,
-          viewBoxWidth: width,
-          viewBoxHeight: height,
+          ...styles,
+          viewBoxWidth: croppedWidth,
+          viewBoxHeight: croppedHeight,
           isCollaging: false,
           userLayers,
           userFrames: [
             {
-              width,
-              height,
+              width: croppedWidth,
+              height: croppedHeight,
               x: 0,
               y: 0,
-              path: `M0 0H${width}V${height}H0V0Z`,
+              path: `M0 0H${croppedWidth}V${croppedHeight}H0V0Z`,
             },
           ],
         };
@@ -738,8 +748,6 @@ export default (state = initialState, action: Actions): CanvasState => {
     case types.CANVAS_USER_LAYER_START_CROP: {
       const { index } = action.payload;
 
-      console.log("CANVAS_USER_LAYER_START_CROP", index);
-
       return {
         ...state,
         temporaries: {
@@ -846,16 +854,40 @@ export default (state = initialState, action: Actions): CanvasState => {
       const userLayer = userLayers[temporaries.selectedUserLayerIndex];
 
       if (userLayer) {
+        // CanvasUserLayer の最小サイズ、最小サイズ未満になった場合は拡大する
+        let w = width;
+        let h = height;
+
+        if (w < h) {
+          if (h < 1200) {
+            w = w * (1200 / h);
+            h = 1200;
+          } else if (w < 1200) {
+            h = h * (1200 / w);
+            w = 1200;
+          }
+        } else {
+          if (w < 1200) {
+            h = h * (1200 / w);
+            w = 1200;
+          } else if (h < 1200) {
+            w = w * (1200 / h);
+            h = 1200;
+          }
+        }
+
+        const s = w / width;
+
         userLayers[temporaries.selectedUserLayerIndex] = {
           ...userLayer,
-          croppedX: x,
-          croppedY: y,
-          croppedWidth: width,
-          croppedHeight: height,
+          croppedX: x * s,
+          croppedY: y * s,
+          croppedWidth: w,
+          croppedHeight: h,
           croppedAngle: angle,
-          croppedScale: scale,
-          croppedImageX: imageX,
-          croppedImageY: imageY,
+          croppedScale: scale * s,
+          croppedImageX: imageX * s,
+          croppedImageY: imageY * s,
           cropper: cropper,
         };
 
@@ -875,16 +907,16 @@ export default (state = initialState, action: Actions): CanvasState => {
             userLayers,
             userFrames: [
               {
-                width: width,
-                height: height,
+                width: w,
+                height: h,
                 x: 0,
                 y: 0,
-                path: `M0 0H${width}V${height}H0V0Z`,
+                path: `M0 0H${w}V${h}H0V0Z`,
               },
             ],
-            viewBoxWidth: width,
-            viewBoxHeight: height,
-            displayMagnification: width / styles.styleWidth,
+            viewBoxWidth: w,
+            viewBoxHeight: h,
+            displayMagnification: w / styles.styleWidth,
           };
         }
 
