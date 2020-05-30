@@ -1,11 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { NextPage } from "next";
 import styled from "styled-components";
 import { Page } from "~/components/Page";
 import { Menu } from "~/components/Menu";
 import { Canvas } from "~/containers/Canvas";
 import { withRedux, State } from "~/domains";
+import { thunkActions } from "~/domains/canvas/actions";
 import { Spacing } from "~/styles/spacing";
 import { convertSvgToDataUrl } from "~/utils/convert-svg-to-url";
 import { Tutorial } from "~/components/Tutorial";
@@ -26,9 +27,11 @@ const BottomBar = styled.div`
 `;
 
 const Save: NextPage = () => {
+  const dispatch = useDispatch();
   const {
     userFrames,
     userLayers,
+    essentialLayers,
     stickerLayers,
     viewBoxWidth,
     viewBoxHeight,
@@ -40,8 +43,21 @@ const Save: NextPage = () => {
   const ref: React.Ref<HTMLDivElement> = useRef(null);
   const imageRef: React.Ref<HTMLImageElement> = useRef(null);
   const [isTutorial, setTutorial] = useState(false);
+  const isImageExists = userLayers.some((u) => u);
 
   useEffect(() => {
+    if (essentialLayers.length === 0) {
+      dispatch(thunkActions.addCanvasEssentialLayerWithUrl("/images/logo.png"));
+    }
+  }, []);
+
+  useEffect(() => {
+    const e = imageRef.current;
+
+    if (!e) {
+      return;
+    }
+
     (async () => {
       const dataUrl = await convertSvgToDataUrl(
         ref.current!.innerHTML,
@@ -49,35 +65,49 @@ const Save: NextPage = () => {
         viewBoxHeight
       );
 
-      imageRef.current!.src = dataUrl;
+      e.src = dataUrl;
     })();
-  }, [ref, userFrames.length, userLayers.length, stickerLayers.length]);
+  }, [
+    ref,
+    imageRef,
+    isImageExists,
+    userFrames.length,
+    userLayers.length,
+    stickerLayers.length,
+  ]);
 
   useEffect(() => {
-    const e = imageRef.current!;
+    const e = imageRef.current;
+
+    if (!e) {
+      return;
+    }
+
     e.style.position = "fixed";
     e.style.top = `${styleTop}px`;
     e.style.left = `${styleLeft}px`;
     e.style.width = `${styleWidth}px`;
     e.style.height = `${styleHeight}px`;
-  }, [styleTop, styleLeft, styleWidth, styleHeight]);
+  }, [imageRef, isImageExists, styleTop, styleLeft, styleWidth, styleHeight]);
 
   return (
     <>
       <Page>
         <FlexColumn>
           <ControlBar onClickHelpButton={() => setTutorial(true)} />
-          <Canvas save containerRef={ref} />
-          <img
-            ref={imageRef}
-            onTouchStart={() => {
-              GA.saveCanvas();
-            }}
-            onContextMenu={() => {
-              GA.saveCanvas();
-            }}
-            id="tutorial-save-image"
-          />
+          <Canvas save={isImageExists} containerRef={ref} />
+          {isImageExists && (
+            <img
+              ref={imageRef}
+              onTouchStart={() => {
+                GA.saveCanvas();
+              }}
+              onContextMenu={() => {
+                GA.saveCanvas();
+              }}
+              id="tutorial-save-image"
+            />
+          )}
           <BottomBar>
             <Menu />
           </BottomBar>
