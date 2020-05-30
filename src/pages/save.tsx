@@ -68,21 +68,21 @@ const Save: NextPage = () => {
         <FlexColumn>
           <ControlBar onClickHelpButton={() => setTutorial(true)} />
           <Canvas save containerRef={ref} />
+          <img
+            ref={imageRef}
+            onTouchStart={() => {
+              GA.saveCanvas();
+            }}
+            onContextMenu={() => {
+              GA.saveCanvas();
+            }}
+            id="tutorial-save-image"
+          />
           <BottomBar>
             <Menu />
           </BottomBar>
         </FlexColumn>
       </Page>
-      <img
-        ref={imageRef}
-        onTouchStart={() => {
-          GA.saveCanvas();
-        }}
-        onContextMenu={() => {
-          GA.saveCanvas();
-        }}
-        id="tutorial-save-image"
-      />
       <FirstLanding />
       {isTutorial && (
         <Tutorial
