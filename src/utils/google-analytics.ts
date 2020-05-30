@@ -103,12 +103,7 @@ export const saveCanvas = () => {
 };
 
 export const changePage = (url: string) => {
-  ReactGA.send({
-    hitType: "event",
-    eventCategory: "PAGE",
-    eventAction: "CHANGE",
-    eventLabel: url,
-  });
+  ReactGA.pageview(url);
 };
 
 export const clickBetaButton = () => {
