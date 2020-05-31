@@ -73,7 +73,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   <Container onClick={onClick}>
     <Background clicked={clicked} />
     <Icon clicked={clicked}>
-      <img src={src} />
+      <img src={src} alt="アイコン" />
     </Icon>
   </Container>
 );

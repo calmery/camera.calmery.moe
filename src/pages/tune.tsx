@@ -160,7 +160,7 @@ const Tune: NextPage = () => {
       <Page>
         <FlexColumn>
           <ControlBar onClickHelpButton={() => setTutorial(true)}>
-            <img src="/images/close.svg" />
+            <img src="/images/close.svg" alt="閉じる" />
           </ControlBar>
           <Canvas stickers={false} />
           <BottomBar>
@@ -266,7 +266,7 @@ const Tune: NextPage = () => {
                                 ui.selectedFilterType === FeColorMatrix.blur
                               }
                             >
-                              <img src="/images/tune/blur.svg" />
+                              <img src="/images/tune/blur.svg" alt="ぼかし" />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
@@ -293,7 +293,7 @@ const Tune: NextPage = () => {
                                 ui.selectedFilterType === FeColorMatrix.hue
                               }
                             >
-                              <img src="/images/tune/hue.svg" />
+                              <img src="/images/tune/hue.svg" alt="色相" />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
@@ -322,7 +322,7 @@ const Tune: NextPage = () => {
                                 ui.selectedFilterType === FeColorMatrix.saturate
                               }
                             >
-                              <img src="/images/tune/saturate.svg" />
+                              <img src="/images/tune/saturate.svg" alt="彩度" />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
@@ -351,7 +351,7 @@ const Tune: NextPage = () => {
                             );
                           }}
                         >
-                          <img src={userLayer.dataUrl} />
+                          <img src={userLayer.dataUrl} alt="編集画像" />
                         </TuneTargetImage>
                       );
                     })}

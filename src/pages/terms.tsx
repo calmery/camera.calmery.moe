@@ -65,7 +65,7 @@ const Terms: NextPage = () => {
       <Border />
       <Container>
         <Logo>
-          <img src="/images/logos/camera.calmery.moe.svg" />
+          <img src="/images/logos/camera.calmery.moe.svg" alt="ロゴ" />
         </Logo>
         <Title>利用規約</Title>
         <Text>

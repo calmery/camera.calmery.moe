@@ -137,12 +137,13 @@ export const CanvasStickers: React.FC = () => {
           {CANVAS_STICKERS.map(({ name, urls }, group) => (
             <StickerContainer key={group}>
               <TitleContainer>
-                <img src="/images/stickers/line-store.svg" />
+                <img src="/images/stickers/line-store.svg" alt="LINE STORE" />
                 <Title>{name}</Title>
               </TitleContainer>
               <Stickers>
                 {urls.map((url, id) => (
                   <Sticker
+                    alt="スタンプ"
                     src={url}
                     key={id}
                     onClick={() =>

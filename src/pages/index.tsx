@@ -250,7 +250,7 @@ const Index: NextPage = () => {
           <Header>
             <HeaderLogo>
               <a href="https://calmery.moe">
-                <Image src="/images/logos/calmery.moe.svg" />
+                <Image src="/images/logos/calmery.moe.svg" alt="ロゴ" />
               </a>
             </HeaderLogo>
             <HeaderIconButtons>
@@ -268,7 +268,7 @@ const Index: NextPage = () => {
           </Header>
 
           <Logo>
-            <Image src="/images/logos/camera.calmery.moe.svg" />
+            <Image src="/images/logos/camera.calmery.moe.svg" alt="ロゴ" />
           </Logo>
 
           <Buttons>
@@ -289,7 +289,7 @@ const Index: NextPage = () => {
                 お問い合わせ
               </a>
             </FooterMenu>
-            Made with <Image src="/images/heart.svg" /> by Calmery
+            Made with <Image src="/images/heart.svg" alt="ハート" /> by Calmery
           </Footer>
         </Columns>
       </Page>

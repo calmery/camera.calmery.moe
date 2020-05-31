@@ -106,6 +106,7 @@ const Save: NextPage = () => {
                 GA.saveCanvas();
               }}
               id="tutorial-save-image"
+              alt="出力画像"
             />
           )}
           <BottomBar>

@@ -132,7 +132,7 @@ export const Popup: React.FC<PopupProps> = ({
           key={children?.toString()}
           className="animate__bounceIn"
         >
-          <PopupInnerCharacter src={characterImageUrl} />
+          <PopupInnerCharacter src={characterImageUrl} alt="キャラクター" />
           <PopupInnerMessage>{children}</PopupInnerMessage>
           <PopupInnerButtons>
             {onCancel && (

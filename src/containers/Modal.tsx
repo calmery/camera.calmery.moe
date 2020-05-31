@@ -252,7 +252,7 @@ export const Modal: React.FC<ModalProps> = ({
       <Background onClick={onClickCloseButton} visible={visible} />
       <Body visible={visible}>
         <CloseButton onClick={onClickCloseButton}>
-          <img src="/images/modal/close.svg" />
+          <img src="/images/modal/close.svg" alt="閉じる" />
         </CloseButton>
         <Border />
         <Contents>{children}</Contents>

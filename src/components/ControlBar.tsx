@@ -83,7 +83,11 @@ export const ControlBar: React.FC<{
   return (
     <>
       <Container>
-        <img src="/images/close.svg" onClick={() => setOpenPopup(true)} />
+        <img
+          src="/images/close.svg"
+          onClick={() => setOpenPopup(true)}
+          alt="閉じる"
+        />
         <img
           id="tutorial-control-bar-beta"
           onClick={() => {
@@ -91,11 +95,13 @@ export const ControlBar: React.FC<{
             setOpenBetaMenu(true);
           }}
           src="/images/beta.svg"
+          alt="Beta"
         />
         <img
           id="tutorial-control-bar-usage"
           src="/images/help.svg"
           onClick={onClickHelpButton}
+          alt="ヘルプ"
         />
       </Container>
       <Modal
