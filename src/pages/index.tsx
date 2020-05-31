@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  useReducer,
+} from "react";
 import { NextPage } from "next";
 import Router from "next/router";
 import styled, { css } from "styled-components";
@@ -13,12 +19,13 @@ import { Modal } from "~/containers/Modal";
 import { Image } from "~/components/Image";
 import { Checkbox } from "~/components/Checkbox";
 import { Button } from "~/components/Button";
-import { useDispatch } from "react-redux";
-import { withRedux } from "~/domains";
+import { useDispatch, useSelector } from "react-redux";
+import { withRedux, State } from "~/domains";
 import { thunkActions } from "~/domains/canvas/actions";
 import { getImageFile } from "~/utils/get-image-file";
 import { actions as uiActions } from "~/domains/ui/actions";
 import { Popup } from "~/components/Popup";
+import { Loading } from "~/components/Loading";
 
 const Columns = styled.div`
   height: 100%;
@@ -181,6 +188,7 @@ const FooterMenu = styled.div`
 
 const Index: NextPage = () => {
   const dispatch = useDispatch();
+  const isLoading = useSelector(({ ui }: State) => !!ui.loading);
   const [isTermsAgreed, setTermsAgreed] = useState(false);
   const [isShowTermsPopup, setShowTermsPopup] = useState(false);
   const [isInformationVisible, setInformationVisible] = useState(false);
@@ -198,13 +206,17 @@ const Index: NextPage = () => {
 
   const pickupImage = useCallback(async () => {
     try {
-      await dispatch(
-        thunkActions.addCanvasUserLayerFromFile(await getImageFile(), 0)
-      );
+      const i = await getImageFile();
+
+      dispatch(uiActions.startLoading());
+
+      await dispatch(thunkActions.addCanvasUserLayerFromFile(i, 0));
 
       Router.push("/edit");
     } catch (_) {
       dispatch(uiActions.imageLoadError(true));
+    } finally {
+      dispatch(uiActions.finishLoading());
     }
   }, [dispatch]);
 
@@ -293,6 +305,8 @@ const Index: NextPage = () => {
           </Footer>
         </Columns>
       </Page>
+
+      {isLoading && <Loading />}
 
       <Modal
         visible={isInformationVisible}

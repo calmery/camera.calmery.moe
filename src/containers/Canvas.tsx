@@ -10,6 +10,7 @@ import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-p
 import { Colors } from "~/styles/colors";
 import { CanvasEssentialLayers } from "./CanvasEssentialLayers";
 import { CanvasStickerLayerBorder } from "~/components/CanvasStickerLayerBorder";
+import { Loading } from "~/components/Loading";
 
 const CanvasContainer = styled.div`
   box-sizing: border-box;
@@ -42,6 +43,7 @@ export const Canvas: React.FC<{
     stickerLayers,
     displayMagnification,
   } = useSelector(({ canvas }: State) => canvas);
+  const isLoading = useSelector(({ ui }: State) => !!ui.loading);
 
   const handleOnComplete = useCallback(
     () => !save && dispatch(actions.complete()),
@@ -140,6 +142,7 @@ export const Canvas: React.FC<{
           <CanvasEssentialLayers />
         </svg>
       </div>
+      {isLoading && <Loading />}
     </>
   );
 };

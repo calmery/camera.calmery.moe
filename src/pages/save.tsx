@@ -44,6 +44,7 @@ const Save: NextPage = () => {
   const imageRef: React.Ref<HTMLImageElement> = useRef(null);
   const [isTutorial, setTutorial] = useState(false);
   const isImageExists = userLayers.some((u) => u);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (essentialLayers.length === 0) {
@@ -65,7 +66,7 @@ const Save: NextPage = () => {
         viewBoxHeight
       );
 
-      e.src = dataUrl;
+      setPreviewUrl(dataUrl);
     })();
   }, [
     ref,
@@ -107,6 +108,10 @@ const Save: NextPage = () => {
               }}
               id="tutorial-save-image"
               alt="出力画像"
+              src={previewUrl || ""}
+              style={{
+                opacity: previewUrl ? 1 : 0,
+              }}
             />
           )}
           <BottomBar>

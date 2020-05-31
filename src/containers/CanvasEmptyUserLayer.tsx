@@ -22,11 +22,13 @@ export const CanvasEmptyUserLayer: React.FC<{
 
   const handOnClickEmptyUserImage = useCallback(async () => {
     try {
-      await dispatch(
-        thunkActions.addCanvasUserLayerFromFile(await getImageFile(), index)
-      );
+      const i = await getImageFile();
+      dispatch(uiActions.startLoading());
+      await dispatch(thunkActions.addCanvasUserLayerFromFile(i, index));
     } catch (_) {
       dispatch(uiActions.imageLoadError(true));
+    } finally {
+      dispatch(uiActions.finishLoading());
     }
   }, [dispatch, index]);
 
