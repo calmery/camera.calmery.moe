@@ -1,12 +1,22 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
-import styled from "styled-components";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ResizeObserver from "resize-observer-polyfill";
-import { GradientColors, Colors } from "~/styles/colors";
-import { Spacing } from "~/styles/spacing";
-import { Typography } from "~/styles/typography";
+import styled from "styled-components";
+import { Colors, GradientColors } from "~/styles/colors";
 import { Mixin } from "~/styles/mixin";
-import { useRouter } from "next/router";
-import * as GA from "~/utils/google-analytics";
+import { Spacing } from "~/styles/spacing";
+import { Typography, TypographyLineHeight } from "~/styles/typography";
+
+// Constants
+
+const EMPHASIS_ELEMENT_MARGIN = Spacing.m;
+const SPEECH_BUBBLE_HEIGHT = 138;
+const SPEECH_BUBBLE_MARGIN = Spacing.l;
+const SPEECH_BUBBLE_HEIGHT_WITH_MARGIN =
+  SPEECH_BUBBLE_HEIGHT + SPEECH_BUBBLE_MARGIN * 2;
+const SPEECH_BUBBLE_MAX_WIDTH = 480;
+const PROGRESS_BAR_HEIGHT = 48;
+
+// Styles
 
 const Container = styled.div`
   width: 100%;
@@ -16,60 +26,53 @@ const Container = styled.div`
   left: 0;
   right: 0;
   position: fixed;
+  z-index: 2147483647;
+  user-select: none;
 `;
 
-const CloseButton = styled.img`
-  top: 24px;
-  left: 24px;
-  position: fixed;
-  filter: brightness(0) invert(1);
+const SpeechBubbleContainer = styled.div`
+  width: 100%;
+  height: ${SPEECH_BUBBLE_HEIGHT}px;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+`;
+
+const SpeechBubble = styled.div`
+  width: 100%;
+  max-width: ${SPEECH_BUBBLE_MAX_WIDTH}px;
+  height: ${Spacing.m * 2 + TypographyLineHeight.S * 3}px;
+  background: ${GradientColors.page};
+  border-radius: 4px;
+  display: flex;
+  bottom: 0;
+  position: absolute;
   cursor: pointer;
 `;
 
-const CharacterContainer = styled.div`
+const SpeechBubbleCharacterImage = styled.img`
+  width: auto;
+  height: ${SPEECH_BUBBLE_HEIGHT}px;
+  margin-top: -${SPEECH_BUBBLE_HEIGHT - Spacing.m * 2 - TypographyLineHeight.S * 3}px;
+  margin-right: ${Spacing.s}px;
+`;
+
+const SpeechBubbleNoCharacterImage = styled.div`
+  width: ${Spacing.m}px;
+`;
+
+const SpeechBubbleMessage = styled.div`
   ${Typography.S};
-  width: 100%;
-  height: 138px;
-  left: 0;
-  right: 0;
-  position: fixed;
-  display: flex;
-  justify-content: center;
-`;
 
-const Character = styled.div`
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  position: relative;
-  margin: 0 16px;
-`;
-
-const CharacterImage = styled.img`
-  width: 160px;
-  height: 138px;
-  flex-shrink: 0;
-  position: absolute;
-`;
-
-const CharacterMessage = styled.div`
-  background: ${GradientColors.page};
+  color: ${Colors.black};
   font-family: "Sawarabi Gothic", sans-serif;
-  width: 100%;
-  height: 80px;
-  border-radius: 4px;
-  flex: 1;
+  flex-grow: 1;
+  padding: ${Spacing.m}px 0;
   bottom: 0;
-  box-sizing: border-box;
-  padding: 16px;
-  padding-left: 160px;
-  padding-right: 48px;
-  position: absolute;
-  white-space: pre-line;
 `;
 
-const CharacterPetal = styled.img`
-  @keyframes rotate {
+const SpeechBubblePetalImage = styled.img`
+  @keyframes petal {
     0% {
       transform: rotate(0deg);
     }
@@ -80,25 +83,38 @@ const CharacterPetal = styled.img`
 
   width: 16px;
   height: 16px;
-  bottom: 16px;
-  right: 16px;
-  position: absolute;
-  animation: rotate 4s linear infinite;
+  margin: ${Spacing.m}px;
+  margin-top: auto;
+  margin-left: ${Spacing.s}px;
+  animation: petal 4s linear infinite;
 `;
 
-const ProgressBar = styled.div`
+const ProgressBarContainer = styled.div`
   width: 100%;
-  height: 48px;
+  height: ${PROGRESS_BAR_HEIGHT}px;
   bottom: 0;
   left: 0;
   right: 0;
-  position: fixed;
+  position: absolute;
 `;
 
-const ProgressImage = styled.div<{ parcent: number }>`
+const ProgressBar = styled.div<{ scenarioProgress: number }>`
   ${Mixin.animation};
 
-  width: ${({ parcent }) => `${parcent}%`};
+  width: ${({ scenarioProgress }) => `${scenarioProgress}%`};
+  height: 4px;
+  background: ${Colors.white};
+  border-radius: ${({ scenarioProgress }) =>
+    scenarioProgress === 100 ? "0" : "0 4px 4px 0"};
+  bottom: 0;
+  left: 0;
+  position: absolute;
+`;
+
+const ProgressBarImage = styled.div<{ scenarioProgress: number }>`
+  ${Mixin.animation};
+
+  width: ${({ scenarioProgress }) => `${scenarioProgress}%`};
   height: 100%;
   text-align: right;
   bottom: 0;
@@ -110,217 +126,219 @@ const ProgressImage = styled.div<{ parcent: number }>`
   }
 `;
 
-const Progress = styled.div<{ parcent: number }>`
-  ${Mixin.animation};
-
-  width: ${({ parcent }) => `${parcent}%`};
-  height: 4px;
-  background: ${Colors.white};
-  border-radius: ${({ parcent }) => (parcent === 100 ? "0" : "0 4px 4px 0")};
-  bottom: 0;
-  left: 0;
-  position: absolute;
-`;
+// Types
 
 interface TutorialProps {
-  onEnd: () => void;
-  skip?: boolean;
   scenarios: {
-    characterImageUrl: string;
-    focusElementId: string | null;
+    characterImageUrl?: string;
+    emphasisElementId?: string;
     message: string;
   }[];
+  onComplete: () => void;
 }
 
+// Components
+
 export const Tutorial: React.FC<TutorialProps> = ({
-  onEnd,
   scenarios,
-  skip = true,
+  onComplete,
 }) => {
-  const router = useRouter();
-  const [currentScenario, setCurrentScenario] = useState(0);
-  const [timer, setTimer] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerRect, setContainerRect] = useState({ width: 0, height: 0 });
-  const [focusElementRect, setFocusElementRect] = useState({
+  const displayableRef = useRef<HTMLDivElement>(null);
+
+  const [displayableRect, setDisplayableRect] = useState({
     x: 0,
     y: 0,
     width: 0,
     height: 0,
   });
+  const [
+    emphasisElementRect,
+    setEmphasisElementRect,
+  ] = useState<DOMRect | null>(null);
+  const [speechBubbleY, setSpeechBubbleY] = useState(0);
+  const [scenarioIndex, setScenarioIndex] = useState(0);
+  const [scenarioProgress, setScenarioProgress] = useState(
+    (1 / scenarios.length) * 100
+  );
+  const [characterCount, setCharacterCount] = useState(0);
+  const [characterTimer, setCharacterTimer] = useState<number | null>(null);
+  const [progressBarImage, setProgressBarImage] = useState(0);
+
+  const scenario = scenarios[scenarioIndex]!;
+
+  // Hooks
 
   useEffect(() => {
-    GA.showTutorial(router.route);
-  }, []);
+    let speechBubbleY = (displayableRect.height - SPEECH_BUBBLE_HEIGHT) / 2;
 
-  const [count, setCount] = useState(1);
-
-  const { width, height } = containerRect;
-  const scenario = scenarios[currentScenario];
-
-  const updateTextCount = () => {
-    if (count >= scenario.message.length) {
+    if (!scenario.emphasisElementId) {
+      setEmphasisElementRect(null);
+      setSpeechBubbleY(speechBubbleY);
       return;
     }
 
-    setCount(count + 1);
-  };
+    const e = document.getElementById(scenario.emphasisElementId);
 
-  const resetTextCount = () => {
-    setCount(1);
-  };
-
-  useEffect(() => {
-    // First
-    if (timer) {
-      clearTimeout(timer);
+    if (!e) {
+      setEmphasisElementRect(null);
+      setSpeechBubbleY(speechBubbleY);
+      return;
     }
 
-    const t = setTimeout(() => {
-      updateTextCount();
-    }, 75);
+    const emphasisElementRect = e.getBoundingClientRect();
+    emphasisElementRect.x -= EMPHASIS_ELEMENT_MARGIN;
+    emphasisElementRect.y -= EMPHASIS_ELEMENT_MARGIN;
+    emphasisElementRect.width += EMPHASIS_ELEMENT_MARGIN * 2;
+    emphasisElementRect.height += EMPHASIS_ELEMENT_MARGIN * 2;
 
-    setTimer(t);
-  }, [count]);
-
-  const updateFocusElementRect = useCallback(() => {
-    const { focusElementId } = scenarios[currentScenario];
-
-    if (focusElementId) {
-      const e = document.getElementById(focusElementId);
-      setFocusElementRect(e!.getBoundingClientRect());
+    if (emphasisElementRect.y > SPEECH_BUBBLE_HEIGHT_WITH_MARGIN) {
+      speechBubbleY =
+        emphasisElementRect.y - (SPEECH_BUBBLE_HEIGHT + SPEECH_BUBBLE_MARGIN);
+    } else if (
+      displayableRect.height -
+        (emphasisElementRect.y + emphasisElementRect.height) -
+        PROGRESS_BAR_HEIGHT >
+      SPEECH_BUBBLE_HEIGHT_WITH_MARGIN
+    ) {
+      speechBubbleY =
+        emphasisElementRect.y +
+        emphasisElementRect.height +
+        SPEECH_BUBBLE_MARGIN;
     } else {
-      setFocusElementRect({ x: 0, y: 0, width: 0, height: 0 });
-    }
-  }, [currentScenario]);
-
-  const nextScenario = () => {
-    if (count < scenario.message.length) {
-      setCount(scenarios[currentScenario].message.length);
-      return;
+      speechBubbleY =
+        displayableRect.height -
+        PROGRESS_BAR_HEIGHT -
+        (SPEECH_BUBBLE_HEIGHT + SPEECH_BUBBLE_MARGIN);
     }
 
-    if (scenarios.length > currentScenario + 1) {
-      setCurrentScenario(currentScenario + 1);
-      return;
-    }
-
-    onEnd();
-  };
+    setEmphasisElementRect(emphasisElementRect);
+    setSpeechBubbleY(speechBubbleY);
+  }, [displayableRect, scenario]);
 
   useEffect(() => {
-    const e = containerRef.current!;
+    const e = displayableRef.current!;
     const resizeObserver = new ResizeObserver(() => {
-      setContainerRect(e.getBoundingClientRect());
-      updateFocusElementRect();
+      setDisplayableRect(e.getBoundingClientRect());
     });
 
+    setDisplayableRect(e.getBoundingClientRect());
     resizeObserver.observe(e);
-    setContainerRect(e.getBoundingClientRect());
 
     return () => {
       resizeObserver.unobserve(e);
     };
-  }, [containerRef]);
-
-  useEffect(updateFocusElementRect, [currentScenario]);
+  }, [displayableRef]);
 
   useEffect(() => {
-    resetTextCount();
-  }, [scenario.message]);
+    if (characterCount >= scenario.message.length) {
+      return;
+    }
+
+    setCharacterTimer(
+      setTimeout(() => {
+        setCharacterCount(characterCount + 1);
+      }, 80)
+    );
+  }, [characterCount, scenario]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setProgressBarImage(progressBarImage ? 0 : 1);
+    }, 800);
+  }, [progressBarImage]);
+
+  // Events
+
+  const handleOnClickSpeechBubble = useCallback(() => {
+    if (characterCount >= scenario.message.length) {
+      const nextScenarioIndex = scenarioIndex + 1;
+
+      if (!scenarios[nextScenarioIndex]) {
+        onComplete();
+      } else {
+        setScenarioProgress(((nextScenarioIndex + 1) / scenarios.length) * 100);
+        setScenarioIndex(nextScenarioIndex);
+        setCharacterCount(0);
+      }
+
+      return;
+    }
+
+    if (characterTimer) {
+      clearTimeout(characterTimer);
+    }
+
+    setCharacterCount(scenario.message.length);
+  }, [
+    scenarioIndex,
+    characterCount,
+    scenarios.length,
+    scenario.message,
+    characterTimer,
+  ]);
+
+  // Render
 
   return (
-    <Container ref={containerRef} onClick={nextScenario}>
+    <Container ref={displayableRef} onClick={handleOnClickSpeechBubble}>
       <svg
-        width={width}
-        height={height}
-        viewBox={`0 0 ${width} ${height}`}
+        width={displayableRect.width}
+        height={displayableRect.height}
+        viewBox={`0 0 ${displayableRect.width} ${displayableRect.height}`}
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <mask id="tutorial-focus">
-            <rect width="100%" height="100%" fill="white" />
-            {scenario.focusElementId && (
+          <mask id="tutorial-emphasis">
+            <rect width="100%" height="100%" fill="#FFF" />
+            {emphasisElementRect && (
               <rect
-                x={focusElementRect.x - 16}
-                y={focusElementRect.y - 16}
-                width={focusElementRect.width + 32}
-                height={focusElementRect.height + 32}
+                x={emphasisElementRect.x}
+                y={emphasisElementRect.y}
+                width={emphasisElementRect.width}
+                height={emphasisElementRect.height}
                 rx="4"
-                fill="black"
+                fill="#000"
               />
             )}
           </mask>
         </defs>
-
         <rect
           fill="#000"
           fillOpacity="0.48"
-          width={width}
-          height={height}
-          mask="url(#tutorial-focus)"
+          width="100%"
+          height="100%"
+          mask="url(#tutorial-emphasis)"
         />
       </svg>
-      {skip && (
-        <CloseButton
-          src="/images/close.svg"
-          onClick={() => {
-            GA.hideTutorial(router.route);
-            onEnd();
-          }}
-        />
-      )}
-      <CharacterContainer
-        className="animate__bounceIn"
-        key={`${containerRect.width}-${containerRect.height}-${focusElementRect.x}-${focusElementRect.y}`}
-        style={(() => {
-          if (!scenario.focusElementId) {
-            return {
-              top: `${containerRect.height / 2 - 138 / 2}px`,
-            };
-          }
-
-          if (
-            containerRect.height -
-              (focusElementRect.y + focusElementRect.height + 16) >
-            138 + 16 + 16
-          ) {
-            return {
-              top: `${
-                focusElementRect.y + focusElementRect.height + 16 + 16
-              }px`,
-            };
-          }
-
-          if (focusElementRect.y > 138 + 16 + 16) {
-            return {
-              top: `${focusElementRect.y - 16 - 16 - 138}px`,
-            };
-          }
-
-          return {
-            bottom: `${48 + 16}px`,
-          };
-        })()}
+      <SpeechBubbleContainer
+        style={{
+          top: `${speechBubbleY}px`,
+        }}
       >
-        <Character>
-          <CharacterMessage>
-            {scenario.message.slice(0, count)}
-          </CharacterMessage>
-          <CharacterImage src={scenario.characterImageUrl} />
-          <CharacterPetal src="/images/petal.svg" />
-        </Character>
-      </CharacterContainer>
-      <ProgressBar>
-        <Progress
-          parcent={((currentScenario + 1) / scenarios.length) * 100}
-        ></Progress>
-        <ProgressImage
-          parcent={((currentScenario + 1) / scenarios.length) * 100}
+        <SpeechBubble
+          className="animate__bounceIn"
+          key={scenario.emphasisElementId}
         >
-          <img src="/images/tutorial/run.gif" />
-        </ProgressImage>
-      </ProgressBar>
+          {scenario.characterImageUrl ? (
+            <SpeechBubbleCharacterImage
+              src={scenario.characterImageUrl}
+              alt="キャラクター"
+            />
+          ) : (
+            <SpeechBubbleNoCharacterImage />
+          )}
+          <SpeechBubbleMessage>
+            {scenario.message.slice(0, characterCount)}
+          </SpeechBubbleMessage>
+          <SpeechBubblePetalImage src="/images/petal.svg" alt="花弁" />
+        </SpeechBubble>
+      </SpeechBubbleContainer>
+      <ProgressBarContainer>
+        <ProgressBar scenarioProgress={scenarioProgress} />
+        <ProgressBarImage scenarioProgress={scenarioProgress}>
+          <img src={`/images/tutorial/${progressBarImage}.png`} alt="走る" />
+        </ProgressBarImage>
+      </ProgressBarContainer>
     </Container>
   );
 };

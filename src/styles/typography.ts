@@ -39,3 +39,4 @@ export const L = css`
 // Exports
 
 export const Typography = { XS, S, M, L };
+export const TypographyLineHeight = { XS: 14, S: 16, M: 18, L: 20 };

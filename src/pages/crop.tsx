@@ -313,75 +313,75 @@ const Crop: NextPage = () => {
               ? [
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-                    focusElementId: "tutorial-cropper",
+                    emphasisElementId: "tutorial-cropper",
                     message: "ここにはクロップする画像が表示されているよ！",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/1/5.png",
-                    focusElementId: "tutorial-cropper",
+                    emphasisElementId: "tutorial-cropper",
                     message: "画面をタップしてクロップ位置を調整したり...",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/1/5.png",
-                    focusElementId: "tutorial-cropper",
+                    emphasisElementId: "tutorial-cropper",
                     message: "2 本指でタッチして画像の大きさを変えてみよう！",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/1/16.png",
-                    focusElementId: "tutorial-crop-angle",
+                    emphasisElementId: "tutorial-crop-angle",
                     message: `回した角度はここで確認！もうちょっと回してみようかな？`,
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/1/10.png",
-                    focusElementId: "tutorial-crop-angle",
+                    emphasisElementId: "tutorial-crop-angle",
                     message: "あれっ...もしかしてパソコン...？",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/1/10.png",
-                    focusElementId: "tutorial-crop-angle",
+                    emphasisElementId: "tutorial-crop-angle",
                     message: "...",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/1/6.png",
-                    focusElementId: "tutorial-crop-angle",
+                    emphasisElementId: "tutorial-crop-angle",
                     message: "......",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/1/2.png",
-                    focusElementId: "tutorial-crop-angle",
+                    emphasisElementId: "tutorial-crop-angle",
                     message: "パソコンからだと回転できないみたい...ごめんね...",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/1/7.png",
-                    focusElementId: "tutorial-crop-angle",
+                    emphasisElementId: "tutorial-crop-angle",
                     message: "気を取り直して...！",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/3.png",
-                    focusElementId: "tutorial-crop-aspect-ratios",
+                    emphasisElementId: "tutorial-crop-aspect-ratios",
                     message:
                       "ここで対比を選べるよ！\n比率を保ったまま操作したいときに使おう！",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/4.png",
-                    focusElementId: "tutorial-crop-target-images",
+                    emphasisElementId: "tutorial-crop-target-images",
                     message: "他の画像をクロップしたい？",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/4.png",
-                    focusElementId: "tutorial-crop-target-images",
+                    emphasisElementId: "tutorial-crop-target-images",
                     message: "ここでクロップしたい画像をタップしてみて！",
                   },
                 ]
               : [
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-                    focusElementId: "tutorial-canvas",
+                    emphasisElementId: "tutorial-canvas",
                     message: "まずはここをタップして画像を読み込んでみて！",
                   },
                 ]
           }
-          onEnd={() => setTutorial(false)}
+          onComplete={() => setTutorial(false)}
         />
       )}
     </>

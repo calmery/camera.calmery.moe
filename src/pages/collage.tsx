@@ -54,28 +54,28 @@ const Collage: NextPage = () => {
           scenarios={[
             {
               characterImageUrl: "https://static.calmery.moe/s/2/5.png",
-              focusElementId: "tutorial-collage-canvas-frames",
+              emphasisElementId: "tutorial-collage-canvas-frames",
               message:
                 "ここに色んなフレームが用意されているよ！タップして選んでみよう！",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/1/10.png",
-              focusElementId: "tutorial-collage-canvas-frames",
+              emphasisElementId: "tutorial-collage-canvas-frames",
               message: "あれっ...もしかして...",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/2/18.png",
-              focusElementId: "tutorial-collage-canvas-frames",
+              emphasisElementId: "tutorial-collage-canvas-frames",
               message: "使いたいフレームがない...！？",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/1/7.png",
-              focusElementId: "tutorial-control-bar-beta",
+              emphasisElementId: "tutorial-control-bar-beta",
               message:
                 "ここからこんなフレームが欲しい！ってリクエストを送ってみて！",
             },
           ]}
-          onEnd={() => setTutorial(false)}
+          onComplete={() => setTutorial(false)}
         />
       )}
     </>

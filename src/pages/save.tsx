@@ -119,32 +119,32 @@ const Save: NextPage = () => {
           scenarios={[
             {
               characterImageUrl: "https://static.calmery.moe/s/1/12.png",
-              focusElementId: "tutorial-save-image",
+              emphasisElementId: "tutorial-save-image",
               message: "完成〜！",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-              focusElementId: "tutorial-save-image",
+              emphasisElementId: "tutorial-save-image",
               message: "画像を長押しすると保存できるよ！",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/1/15.png",
-              focusElementId: "tutorial-save-image",
+              emphasisElementId: "tutorial-save-image",
               message: "とっても素敵！",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/1/11.png",
-              focusElementId: "tutorial-save-image",
+              emphasisElementId: "tutorial-save-image",
               message:
                 "Twitter で「#かるめりちゃんカメラ」を付けてツイートしてみて！",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/2/3.png",
-              focusElementId: "tutorial-save-image",
+              emphasisElementId: "tutorial-save-image",
               message: "使ってくれてありがとう！",
             },
           ]}
-          onEnd={() => setTutorial(false)}
+          onComplete={() => setTutorial(false)}
         />
       )}
     </>

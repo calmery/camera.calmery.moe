@@ -371,28 +371,28 @@ const Tune: NextPage = () => {
               ? [
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-                    focusElementId: "tutorial-canvas",
+                    emphasisElementId: "tutorial-canvas",
                     message: "ここにフィルターをかける画像が表示されているよ！",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/3.png",
-                    focusElementId: "tutorial-filter-input",
+                    emphasisElementId: "tutorial-filter-input",
                     message: "ここがフィルターの値を変更するところ！",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/1/15.png",
-                    focusElementId: "tutorial-filters",
+                    emphasisElementId: "tutorial-filters",
                     message:
                       "色んなフィルターを使って自分好みの画像にしちゃおう！",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-                    focusElementId: "tutorial-filter-targets",
+                    emphasisElementId: "tutorial-filter-targets",
                     message: "他の画像にフィルターをかけたい？",
                   },
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-                    focusElementId: "tutorial-filter-targets",
+                    emphasisElementId: "tutorial-filter-targets",
                     message:
                       "ここでフィルターをかけたい画像をタップしてみよう！",
                   },
@@ -400,12 +400,12 @@ const Tune: NextPage = () => {
               : [
                   {
                     characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-                    focusElementId: "tutorial-canvas",
+                    emphasisElementId: "tutorial-canvas",
                     message: "まずはここをタップして画像を読み込んでみて！",
                   },
                 ]
           }
-          onEnd={() => setTutorial(false)}
+          onComplete={() => setTutorial(false)}
         />
       )}
     </>

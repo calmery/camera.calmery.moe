@@ -56,27 +56,27 @@ const Edit: NextPage = () => {
           scenarios={[
             {
               characterImageUrl: "https://static.calmery.moe/s/2/3.png",
-              focusElementId: "tutorial-canvas",
+              emphasisElementId: "tutorial-canvas",
               message:
                 "ここには読み込んだ画像、追加したスタンプが表示されるよ！",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/2/8.png",
-              focusElementId: "tutorial-canvas",
+              emphasisElementId: "tutorial-canvas",
               message: "画像を読み込んだら画面をタッチ！自由に動かしてみて！",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-              focusElementId: "tutorial-edit-canvas-stickers",
+              emphasisElementId: "tutorial-edit-canvas-stickers",
               message: "ここにあるスタンプをタップすると画面に追加されるよ！",
             },
             {
               characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-              focusElementId: "tutorial-edit-canvas-stickers",
+              emphasisElementId: "tutorial-edit-canvas-stickers",
               message: "スタンプは今後も追加していく予定！お楽しみに！",
             },
           ]}
-          onEnd={() => setTutorial(false)}
+          onComplete={() => setTutorial(false)}
         />
       )}
     </>
