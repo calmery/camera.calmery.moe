@@ -30,8 +30,12 @@ export const convertSvgToDataUrl = (
         return reject();
       }
 
-      context.drawImage(image, 0, 0, width, height);
-      resolve(canvas.toDataURL("image/jpeg", 1));
+      // Safari で `context.drawImage` するとたまに内部の image 要素が描写されないことがある
+      // 800ms 程度待ってみる
+      setTimeout(() => {
+        context.drawImage(image, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", 1));
+      }, 800);
     };
 
     image.src = url;
