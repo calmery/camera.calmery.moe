@@ -9,7 +9,7 @@ import { Typography, TypographyLineHeight } from "~/styles/typography";
 // Constants
 
 const EMPHASIS_ELEMENT_MARGIN = Spacing.m;
-const SPEECH_BUBBLE_HEIGHT = 138;
+const SPEECH_BUBBLE_HEIGHT = 128;
 const SPEECH_BUBBLE_MARGIN = Spacing.l;
 const SPEECH_BUBBLE_HEIGHT_WITH_MARGIN =
   SPEECH_BUBBLE_HEIGHT + SPEECH_BUBBLE_MARGIN * 2;
@@ -41,7 +41,8 @@ const CloseButton = styled.img`
 `;
 
 const SpeechBubbleContainer = styled.div`
-  width: 100%;
+  width: calc(100% - ${Spacing.l * 2}px);
+  margin: 0 ${Spacing.l}px;
   height: ${SPEECH_BUBBLE_HEIGHT}px;
   display: flex;
   justify-content: center;
