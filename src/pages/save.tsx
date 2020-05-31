@@ -116,34 +116,44 @@ const Save: NextPage = () => {
       <FirstLanding />
       {isTutorial && (
         <Tutorial
-          scenarios={[
-            {
-              characterImageUrl: "https://static.calmery.moe/s/1/12.png",
-              emphasisElementId: "tutorial-save-image",
-              message: "完成〜！",
-            },
-            {
-              characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-              emphasisElementId: "tutorial-save-image",
-              message: "画像を長押しすると保存できるよ！",
-            },
-            {
-              characterImageUrl: "https://static.calmery.moe/s/1/15.png",
-              emphasisElementId: "tutorial-save-image",
-              message: "とっても素敵！",
-            },
-            {
-              characterImageUrl: "https://static.calmery.moe/s/1/11.png",
-              emphasisElementId: "tutorial-save-image",
-              message:
-                "Twitter で「#かるめりちゃんカメラ」を付けてツイートしてみて！",
-            },
-            {
-              characterImageUrl: "https://static.calmery.moe/s/2/3.png",
-              emphasisElementId: "tutorial-save-image",
-              message: "使ってくれてありがとう！",
-            },
-          ]}
+          scenarios={
+            isImageExists
+              ? [
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/12.png",
+                    emphasisElementId: "tutorial-save-image",
+                    message: "完成〜！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+                    emphasisElementId: "tutorial-save-image",
+                    message: "画像を長押しすると保存できるよ！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/15.png",
+                    emphasisElementId: "tutorial-save-image",
+                    message: "とっても素敵！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/1/11.png",
+                    emphasisElementId: "tutorial-save-image",
+                    message:
+                      "Twitter で「#かるめりちゃんカメラ」を付けてツイートしてみて！",
+                  },
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+                    emphasisElementId: "tutorial-save-image",
+                    message: "使ってくれてありがとう！",
+                  },
+                ]
+              : [
+                  {
+                    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
+                    emphasisElementId: "tutorial-canvas",
+                    message: "まずはここをタップして画像を読み込んでみて！",
+                  },
+                ]
+          }
           onComplete={() => setTutorial(false)}
         />
       )}
