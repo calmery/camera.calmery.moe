@@ -113,11 +113,11 @@ export const FirstLanding: React.FC = () => {
         },
         {
           characterImageUrl: "https://static.calmery.moe/s/2/19.png",
-          message: "次は...",
+          message: "次は...えーっと...",
         },
         {
           characterImageUrl: "https://static.calmery.moe/s/2/5.png",
-          message: "あっ...！これで説明は終わりみたい！",
+          message: "うん...！これで説明は終わりみたい！",
         },
         {
           characterImageUrl: "https://static.calmery.moe/s/2/15.png",
