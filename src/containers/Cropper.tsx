@@ -202,7 +202,6 @@ export const Cropper: React.FC = () => {
         viewBox={`0 0 ${container.displayableWidth} ${container.displayableHeight}`}
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
-        overflow="visible"
         style={{
           position: "fixed",
           top: `${container.displayableTop}px`,
