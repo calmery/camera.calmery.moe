@@ -121,7 +121,11 @@ export const Popup: React.FC<PopupProps> = ({
 
   return (
     <Container>
-      <Background ref={backgroundRef} className="animate__fadeIn" />
+      <Background
+        ref={backgroundRef}
+        className="animate__fadeIn"
+        onClick={handleOnClickCancel}
+      />
       <PopupContainer>
         <PopupInner
           ref={ref}
