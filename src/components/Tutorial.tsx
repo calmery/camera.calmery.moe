@@ -30,6 +30,16 @@ const Container = styled.div`
   user-select: none;
 `;
 
+const CloseButton = styled.img`
+  width: 16px;
+  height: 16px;
+  top: ${Spacing.l}px;
+  left: ${Spacing.l}px;
+  filter: brightness(0) invert(1);
+  position: absolute;
+  cursor: pointer;
+`;
+
 const SpeechBubbleContainer = styled.div`
   width: 100%;
   height: ${SPEECH_BUBBLE_HEIGHT}px;
@@ -281,6 +291,7 @@ export const Tutorial: React.FC<TutorialProps> = ({
 
   return (
     <Container ref={displayableRef} onClick={handleOnClickSpeechBubble}>
+      <CloseButton src="/images/close.svg" onClick={onComplete} alt="閉じる" />
       <svg
         width={displayableRect.width}
         height={displayableRect.height}
