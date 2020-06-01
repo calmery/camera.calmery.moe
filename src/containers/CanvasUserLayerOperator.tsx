@@ -59,7 +59,9 @@ export const CanvasUserLayerOperator: React.FC = () => {
                 fill="#fff"
                 onClick={() => handleOnLoadImage(i)}
                 stroke={CanvasColors.border}
-                strokeDasharray="8 8"
+                strokeDasharray={`${4 * displayMagnification} ${
+                  2 * displayMagnification
+                }`}
                 strokeWidth={displayMagnification}
               />
             )}
