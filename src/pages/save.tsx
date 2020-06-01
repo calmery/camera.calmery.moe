@@ -29,12 +29,8 @@ const BottomBar = styled.div`
 const Save: NextPage = () => {
   const dispatch = useDispatch();
   const {
-    userFrames,
     userLayers,
     essentialLayers,
-    stickerLayers,
-    viewBoxWidth,
-    viewBoxHeight,
     styleTop,
     styleLeft,
     styleWidth,
@@ -58,30 +54,6 @@ const Save: NextPage = () => {
       return;
     }
 
-    // (async () => {
-    //   const dataUrl = await convertSvgToDataUrl(
-    //     ref.current!.innerHTML,
-    //     viewBoxWidth,
-    //     viewBoxHeight
-    //   );
-
-    //   setPreviewUrl(dataUrl);
-    // })();
-  }, [
-    imageRef,
-    isImageExists,
-    userFrames.length,
-    userLayers.length,
-    stickerLayers.length,
-  ]);
-
-  useEffect(() => {
-    const e = imageRef.current;
-
-    if (!e) {
-      return;
-    }
-
     e.style.position = "fixed";
     e.style.top = `${styleTop}px`;
     e.style.left = `${styleLeft}px`;
@@ -94,7 +66,7 @@ const Save: NextPage = () => {
       <Page>
         <FlexColumn>
           <ControlBar onClickHelpButton={() => setTutorial(true)} />
-          <Canvas preview={isImageExists} />
+          <Canvas onCreatePreviewUrl={setPreviewUrl} />
           {isImageExists && (
             <img
               ref={imageRef}

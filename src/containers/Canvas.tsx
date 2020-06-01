@@ -12,6 +12,7 @@ import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { CanvasColors } from "~/styles/colors";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
+import { convertSvgToDataUrl } from "~/utils/convert-svg-to-url";
 
 // Child Components
 
@@ -37,18 +38,18 @@ const Svg = styled.svg`
 
 interface CanvasProps {
   essentials?: boolean;
-  preview?: boolean;
   removable?: boolean;
   stickers?: boolean;
+  onCreatePreviewUrl?: (url: string) => void;
 }
 
 // Components
 
 export const Canvas: React.FC<CanvasProps> = ({
   essentials = true,
-  preview = false,
   removable = false,
   stickers = true,
+  onCreatePreviewUrl,
 }) => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
@@ -64,6 +65,8 @@ export const Canvas: React.FC<CanvasProps> = ({
   const canFireEvent =
     isStickerLayerDragging || isStickerLayerTransforming || isUserLayerDragging;
 
+  const preview = !!onCreatePreviewUrl;
+
   // References
 
   const displayableRef = useRef<HTMLDivElement>(null);
@@ -73,7 +76,7 @@ export const Canvas: React.FC<CanvasProps> = ({
 
   const handleOnTick = useCallback(
     (event: React.MouseEvent | TouchEvent) => {
-      if (preview || !canFireEvent) {
+      if (onCreatePreviewUrl || !canFireEvent) {
         return;
       }
 
@@ -121,6 +124,22 @@ export const Canvas: React.FC<CanvasProps> = ({
       s.removeEventListener("touchmove", handleOnTick);
     };
   }, [canFireEvent, svgRef, preview]);
+
+  useEffect(() => {
+    if (!preview) {
+      return;
+    }
+
+    (async () => {
+      const dataUrl = await convertSvgToDataUrl(
+        svgRef.current!.innerHTML,
+        viewBoxWidth,
+        viewBoxHeight
+      );
+
+      onCreatePreviewUrl!(dataUrl);
+    })();
+  }, [preview, svgRef]);
 
   // Render
 
