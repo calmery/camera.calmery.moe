@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ResizeObserver from "resize-observer-polyfill";
 import styled from "styled-components";
-import { CanvasStickerLayers } from "~/containers/_CanvasStickerLayers";
 import { CanvasEssentialLayers } from "~/containers/_CanvasEssentialLayers";
+import { CanvasStickerLayers } from "~/containers/_CanvasStickerLayers";
+import { CanvasStickerLayerOperator } from "~/containers/CanvasStickerLayerOperator";
 import { CanvasUserFrames } from "~/containers/CanvasUserFrames";
 import { CanvasUserLayers } from "~/containers/_CanvasUserLayers";
 import { CanvasUserLayerOperator } from "~/containers/CanvasUserLayerOperator";
@@ -155,6 +156,7 @@ export const Canvas: React.FC = () => {
           <CanvasUserLayerOperator />
           <CanvasStickerLayers />
           <CanvasEssentialLayers />
+          <CanvasStickerLayerOperator />
         </svg>
       </Svg>
     </>
