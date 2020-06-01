@@ -53,6 +53,7 @@ export const Canvas: React.FC = () => {
   // References
 
   const displayableRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
   // Events
 
@@ -81,19 +82,27 @@ export const Canvas: React.FC = () => {
   // Hooks
 
   useEffect(() => {
-    const e = displayableRef.current!;
+    const d = displayableRef.current!;
     const resizeObserver = new ResizeObserver(() => {
-      dispatch(actions.updateDisplayable(e.getBoundingClientRect()));
+      dispatch(actions.updateDisplayable(d.getBoundingClientRect()));
     });
 
-    e.addEventListener("touchmove", handleOnTick, { passive: false });
-    resizeObserver.observe(e);
+    resizeObserver.observe(d);
 
     return () => {
-      e.removeEventListener("touchmove", handleOnTick);
-      resizeObserver.unobserve(e);
+      resizeObserver.unobserve(d);
     };
   }, [displayableRef]);
+
+  useEffect(() => {
+    const s = svgRef.current!;
+
+    s.addEventListener("touchmove", handleOnTick, { passive: false });
+
+    return () => {
+      s.removeEventListener("touchmove", handleOnTick);
+    };
+  }, [canFireEvent, svgRef]);
 
   // Render
 
@@ -114,6 +123,7 @@ export const Canvas: React.FC = () => {
     <>
       <Displayable ref={displayableRef} />
       <Svg
+        ref={svgRef}
         onMouseLeave={handleOnComplete}
         onMouseMove={handleOnTick}
         onMouseUp={handleOnComplete}
