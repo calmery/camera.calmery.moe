@@ -2,20 +2,25 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { State } from "~/domains";
 
+// Constants
+
+const MINIMUM_ESSENTIAL_LAYER_WIDTH = 300;
+
+// Components
+
 export const CanvasEssentialLayers: React.FC = () => {
-  const canvas = useSelector(({ canvas }: State) => canvas);
-  const { essentialLayers, viewBoxWidth, viewBoxHeight } = canvas;
+  const { essentialLayers, viewBoxWidth, viewBoxHeight } = useSelector(
+    ({ canvas }: State) => canvas
+  );
 
   return (
     <>
-      {essentialLayers.map((essentialLayer, i: number) => {
-        const { width, height, dataUrl } = essentialLayer;
+      {essentialLayers.map(({ width, height, dataUrl }, i) => {
         let w = viewBoxWidth / 3;
         let h = height * (w / width);
 
-        // ToDo: サイズ考えた方が良さそう
-        if (w < 200) {
-          w = 200;
+        if (w < MINIMUM_ESSENTIAL_LAYER_WIDTH) {
+          w = MINIMUM_ESSENTIAL_LAYER_WIDTH;
           h = height * (w / width);
         }
 

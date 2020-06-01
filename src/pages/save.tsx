@@ -40,7 +40,6 @@ const Save: NextPage = () => {
     styleWidth,
     styleHeight,
   } = useSelector(({ canvas }: State) => canvas);
-  const ref: React.Ref<HTMLDivElement> = useRef(null);
   const imageRef: React.Ref<HTMLImageElement> = useRef(null);
   const [isTutorial, setTutorial] = useState(false);
   const isImageExists = userLayers.some((u) => u);
@@ -59,17 +58,16 @@ const Save: NextPage = () => {
       return;
     }
 
-    (async () => {
-      const dataUrl = await convertSvgToDataUrl(
-        ref.current!.innerHTML,
-        viewBoxWidth,
-        viewBoxHeight
-      );
+    // (async () => {
+    //   const dataUrl = await convertSvgToDataUrl(
+    //     ref.current!.innerHTML,
+    //     viewBoxWidth,
+    //     viewBoxHeight
+    //   );
 
-      setPreviewUrl(dataUrl);
-    })();
+    //   setPreviewUrl(dataUrl);
+    // })();
   }, [
-    ref,
     imageRef,
     isImageExists,
     userFrames.length,
@@ -96,7 +94,7 @@ const Save: NextPage = () => {
       <Page>
         <FlexColumn>
           <ControlBar onClickHelpButton={() => setTutorial(true)} />
-          <Canvas save={isImageExists} containerRef={ref} />
+          <Canvas preview={isImageExists} />
           {isImageExists && (
             <img
               ref={imageRef}

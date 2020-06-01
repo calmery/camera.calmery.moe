@@ -1,134 +1,104 @@
-import React, { useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { CanvasUserLayerComponent } from "~/components/CanvasUserLayer";
-import { CanvasEmptyUserLayer } from "~/containers/CanvasEmptyUserLayer";
+import React from "react";
+import { useSelector } from "react-redux";
 import { State } from "~/domains";
-import { actions } from "~/domains/canvas/actions";
-import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
-import { useRouter } from "next/router";
-import { Colors } from "~/styles/colors";
+import {
+  getCanvasUserFrameId,
+  getCanvasUserLayerFilterId,
+} from "~/utils/canvas";
 
-export const CanvasUserLayers: React.FC<{
-  save: boolean;
-  stickers: boolean;
-  stickerBorder: boolean;
-}> = ({ save, stickers, stickerBorder }) => {
-  const dispatch = useDispatch();
-  const { pathname } = useRouter();
-  const canvas = useSelector(({ canvas }: State) => canvas);
-  const users = canvas;
+// Components
 
-  const handleOnRemove = (index: number) => {
-    dispatch(actions.removeCanvasUserLayer(index));
-  };
-
-  const handleOnStart = useCallback(
-    (index: number, event: React.MouseEvent | React.TouchEvent) => {
-      !save &&
-        dispatch(
-          actions.startCanvasUserLayerDrag(
-            index,
-            convertEventToCursorPositions(event)
-          )
-        );
-    },
-    [dispatch]
+export const CanvasUserLayers = () => {
+  const { isCollaging, userFrames, userLayers } = useSelector(
+    ({ canvas }: State) => canvas
   );
-
-  let layerCount = 0;
-
-  users.userLayers.forEach((layer) => {
-    if (layer) {
-      layerCount += 1;
-    }
-  });
 
   return (
     <>
-      {users.userFrames.map((_, i: number) => {
-        const layer = users.userLayers[i];
-        const frame = users.userFrames[i];
+      {userFrames.map((userFrame, i) => {
+        const userLayer = userLayers[i];
 
-        if (layer) {
-          return (
-            <CanvasUserLayerComponent
-              stickers={stickers}
-              stickerBorder={stickerBorder}
-              layer={layer}
-              frame={frame}
-              id={i}
-              isCollaging={canvas.isCollaging}
-              key={i}
-              onStart={(event) => handleOnStart(i, event)}
-            />
-          );
-        }
-
-        // save モードでは CanvasemptyLayer は表示しない
-        if (save) {
+        if (!userLayer) {
           return null;
         }
 
         return (
-          <CanvasEmptyUserLayer
-            stickers={stickers}
-            stickerBorder={stickerBorder}
-            frame={frame}
-            index={i}
-            key={i}
-          />
+          <g mask={`url(#${getCanvasUserFrameId(i)})`} key={i}>
+            <g
+              transform={
+                isCollaging
+                  ? `translate(${
+                      userFrame.x +
+                      userLayer.x +
+                      ((userLayer.croppedWidth * userLayer.scale -
+                        userLayer.croppedWidth) /
+                        2) *
+                        -1
+                    }, ${
+                      userFrame.y +
+                      userLayer.y +
+                      ((userLayer.croppedHeight * userLayer.scale -
+                        userLayer.croppedHeight) /
+                        2) *
+                        -1
+                    }) scale(${userLayer.scale}) rotate(${userLayer.angle}, ${
+                      userLayer.croppedWidth / 2
+                    }, ${userLayer.croppedHeight / 2})`
+                  : undefined
+              }
+            >
+              <svg
+                width={userLayer.croppedWidth}
+                height={userLayer.croppedHeight}
+                viewBox={`${userLayer.croppedX} ${userLayer.croppedY} ${userLayer.croppedWidth} ${userLayer.croppedHeight}`}
+                xmlns="http://www.w3.org/2000/svg"
+                xmlnsXlink="http://www.w3.org/1999/xlink"
+              >
+                <svg
+                  width={userLayer.width * userLayer.croppedScale}
+                  height={userLayer.height * userLayer.croppedScale}
+                  x={userLayer.croppedImageX}
+                  y={userLayer.croppedImageY}
+                  viewBox={`0 0 ${userLayer.width} ${userLayer.height}`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                  overflow="visible"
+                >
+                  <defs>
+                    <filter
+                      id={getCanvasUserLayerFilterId(i)}
+                      colorInterpolationFilters="sRGB"
+                    >
+                      <feGaussianBlur stdDeviation={userLayer.blur} />
+                      <feColorMatrix
+                        type="hueRotate"
+                        values={`${userLayer.hue}`}
+                      />
+                      <feColorMatrix
+                        type="saturate"
+                        values={`${userLayer.saturate}`}
+                      />
+                      <feComponentTransfer>
+                        <feFuncA type="discrete" tableValues="1 1" />
+                      </feComponentTransfer>
+                    </filter>
+                  </defs>
+
+                  <image
+                    xlinkHref={userLayer.dataUrl}
+                    filter={`url(#${getCanvasUserLayerFilterId(i)})`}
+                    width="100%"
+                    height="100%"
+                    transform={`rotate(${userLayer.croppedAngle}, ${
+                      userLayer.width / 2
+                    }, ${userLayer.height / 2})`}
+                  />
+                </svg>
+              </svg>
+            </g>
+          </g>
         );
       })}
-      {!save &&
-        layerCount > 1 &&
-        pathname === "/collage" &&
-        users.userFrames.map((_, i) => {
-          const layer = users.userLayers[i];
-          const frame = users.userFrames[i];
-
-          if (!layer) {
-            return null;
-          }
-
-          return (
-            <>
-              <circle
-                key={i}
-                fill={
-                  layer.dominantColorLightness <= 0.5
-                    ? Colors.white
-                    : Colors.black
-                }
-                cx={frame.x + frame.width}
-                cy={frame.y}
-                r={12 * canvas.displayMagnification}
-                style={{
-                  cursor: "pointer",
-                }}
-                onClick={() => handleOnRemove(i)}
-              />
-              <image
-                xlinkHref="/images/close.svg"
-                width={12 * canvas.displayMagnification}
-                height={12 * canvas.displayMagnification}
-                x={
-                  frame.x +
-                  frame.width -
-                  (24 * canvas.displayMagnification -
-                    12 * canvas.displayMagnification) /
-                    2
-                }
-                y={
-                  frame.y -
-                  (24 * canvas.displayMagnification -
-                    12 * canvas.displayMagnification) /
-                    2
-                }
-                onClick={() => handleOnRemove(i)}
-              />
-            </>
-          );
-        })}
     </>
   );
 };

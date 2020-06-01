@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { NextPage } from "next";
 import { useDispatch, useSelector } from "react-redux";
 import { withRedux, State } from "~/domains";
-import { Canvas } from "~/containers/_Canvas";
+import { Canvas } from "~/containers/Canvas";
 import { actions } from "~/domains/ui/actions";
 import { actions as canvasActions } from "~/domains/canvas/actions";
 import { Page } from "~/components/Page";

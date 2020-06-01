@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import styled from "styled-components";
 import { Menu } from "~/components/Menu";
 import { Page } from "~/components/Page";
-import { Canvas } from "~/containers/_Canvas";
+import { Canvas } from "~/containers/Canvas";
 import { CanvasFrames } from "~/containers/CanvasFrames";
 import { Spacing } from "~/styles/spacing";
 import { withRedux, State } from "~/domains";
