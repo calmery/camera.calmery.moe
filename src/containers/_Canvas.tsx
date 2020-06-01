@@ -8,6 +8,12 @@ import { actions } from "~/domains/canvas/actions";
 import { CanvasColors } from "~/styles/colors";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
+// Child Components
+
+const CanvasBackground: React.FC = () => (
+  <rect fill={CanvasColors.background} width="100%" height="100%" />
+);
+
 // Styles
 
 const Displayable = styled.div`
@@ -128,8 +134,7 @@ export const Canvas: React.FC = () => {
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
         >
-          <rect fill={CanvasColors.background} width="100%" height="100%" />
-
+          <CanvasBackground />
           <CanvasUserFrames />
         </svg>
       </Svg>
