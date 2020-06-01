@@ -225,21 +225,22 @@ export const CanvasStickerLayerOperator: React.FC = () => {
                       </g>
                     </g>
                   </mask>
-                  <Border
-                    mask={`url(#${id})`}
-                    color={
-                      userLayer.dominantColorLightness > 0.5
-                        ? "#3c3c3c"
-                        : "#fff"
-                    }
-                    displayMagnification={displayMagnification}
-                    x={x}
-                    y={y}
-                    width={w}
-                    height={h}
-                    angle={angle}
-                    r={r}
-                  />
+                  <g mask={`url(#${id})`}>
+                    <Border
+                      color={
+                        userLayer.dominantColorLightness > 0.5
+                          ? "#3c3c3c"
+                          : "#fff"
+                      }
+                      displayMagnification={displayMagnification}
+                      x={x}
+                      y={y}
+                      width={w}
+                      height={h}
+                      angle={angle}
+                      r={r}
+                    />
+                  </g>
                 </>
               );
             })}
