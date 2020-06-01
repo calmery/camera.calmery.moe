@@ -11,6 +11,26 @@ import { getLightness } from "~/utils/get-lightness";
 
 // Container
 
+const updateDisplayable = ({
+  x,
+  y,
+  width,
+  height,
+}: {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}) => ({
+  type: types.CANVAS_CONTAINER_UPDATE_RECT,
+  payload: {
+    x,
+    y,
+    width,
+    height,
+  },
+});
+
 const updateCanvasContainerRect = ({
   x,
   y,
@@ -215,6 +235,11 @@ const startCanvasUserLayerFilter = (index: number) => ({
   payload: { index },
 });
 
+const tick = (cursorPositions: CursorPosition[]) => ({
+  type: types.CANVAS_TICK,
+  payload: { cursorPositions },
+});
+
 const tickCanvas = (cursorPositions: CursorPosition[]) => ({
   type: types.CANVAS_TICK,
   payload: { cursorPositions },
@@ -325,6 +350,7 @@ const addCanvasEssentialLayerWithUrl = (url: string) => {
 export const actions = {
   addCanvasEssentialLayer,
   updateCanvasContainerRect,
+  updateDisplayable,
   addCanvasStickerLayer,
   startCanvasStickerLayerTransform,
   startCanvasStickerLayerDrag,
@@ -337,6 +363,7 @@ export const actions = {
   updateCanvasUserLayerFilter,
   startCanvasUserLayerFilter,
   updateCanvasUserLayerCrop,
+  tick,
   tickCanvas,
   complete,
   enableCollage,

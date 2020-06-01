@@ -9,6 +9,10 @@ export const Colors = {
   border: "#F5F5F5",
 };
 
+export const CanvasColors = {
+  background: Colors.lightGray,
+};
+
 export const GradientColors = {
   page: `linear-gradient(135deg, ${Colors.white}, #FAFAFA)`,
   pinkToBlue: `linear-gradient(135deg, ${Colors.pink}, ${Colors.blue})`,

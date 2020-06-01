@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { ControlBar } from "~/components/ControlBar";
 import { Menu } from "~/components/Menu";
 import { Page } from "~/components/Page";
-import { Canvas } from "~/containers/Canvas";
+import { Canvas } from "~/containers/_Canvas";
 import { CanvasStickers } from "~/containers/CanvasStickers";
 import { Spacing } from "~/styles/spacing";
 import { withRedux, State } from "~/domains";
