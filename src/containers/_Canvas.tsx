@@ -4,6 +4,7 @@ import ResizeObserver from "resize-observer-polyfill";
 import styled from "styled-components";
 import { CanvasStickerLayers } from "~/containers/_CanvasStickerLayers";
 import { CanvasUserFrames } from "~/containers/CanvasUserFrames";
+import { CanvasUserLayers } from "~/containers/_CanvasUserLayers";
 import { CanvasUserLayerOperator } from "~/containers/CanvasUserLayerOperator";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
@@ -139,6 +140,7 @@ export const Canvas: React.FC = () => {
         >
           <CanvasBackground />
           <CanvasUserFrames />
+          <CanvasUserLayers />
           <CanvasUserLayerOperator />
           <CanvasStickerLayers />
         </svg>
