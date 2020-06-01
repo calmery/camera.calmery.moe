@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { getCanvasUserFrameId } from "~/utils/canvas";
+import { getColorByDominantColorLightness } from "~/utils/canvas";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
 // Styles
@@ -227,11 +228,9 @@ export const CanvasStickerLayerOperator: React.FC = () => {
                   </mask>
                   <g mask={`url(#${id})`}>
                     <Border
-                      color={
-                        userLayer.dominantColorLightness > 0.5
-                          ? "#3c3c3c"
-                          : "#fff"
-                      }
+                      color={getColorByDominantColorLightness(
+                        userLayer.dominantColorLightness
+                      )}
                       displayMagnification={displayMagnification}
                       x={x}
                       y={y}
