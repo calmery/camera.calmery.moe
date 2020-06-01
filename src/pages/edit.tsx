@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { NextPage } from "next";
 import styled from "styled-components";
 import { ControlBar } from "~/components/ControlBar";
@@ -7,10 +7,8 @@ import { Page } from "~/components/Page";
 import { Canvas } from "~/containers/Canvas";
 import { CanvasStickers } from "~/containers/CanvasStickers";
 import { Spacing } from "~/styles/spacing";
-import { withRedux, State } from "~/domains";
+import { withRedux } from "~/domains";
 import { Tutorial } from "~/components/Tutorial";
-import { useSelector, useDispatch } from "react-redux";
-import { thunkActions } from "~/domains/canvas/actions";
 import { FirstLanding } from "~/components/FirstLanding";
 
 const FlexColumn = styled.div`
@@ -26,15 +24,7 @@ const BottomBar = styled.div`
 `;
 
 const Edit: NextPage = () => {
-  const dispatch = useDispatch();
-  const { essentialLayers } = useSelector(({ canvas }: State) => canvas);
   const [isTutorial, setTutorial] = useState(false);
-
-  useEffect(() => {
-    if (essentialLayers.length === 0) {
-      dispatch(thunkActions.addCanvasEssentialLayerWithUrl("/images/logo.png"));
-    }
-  }, []);
 
   return (
     <>

@@ -26,16 +26,8 @@ const BottomBar = styled.div`
 
 const Collage: NextPage = () => {
   const dispatch = useDispatch();
-  const { essentialLayers, userLayers } = useSelector(
-    ({ canvas }: State) => canvas
-  );
+  const { userLayers } = useSelector(({ canvas }: State) => canvas);
   const [isTutorial, setTutorial] = useState(false);
-
-  useEffect(() => {
-    if (essentialLayers.length === 0) {
-      dispatch(thunkActions.addCanvasEssentialLayerWithUrl("/images/logo.png"));
-    }
-  }, []);
 
   let userLayerCount = 0;
 
@@ -47,7 +39,7 @@ const Collage: NextPage = () => {
         <FlexColumn>
           <ControlBar onClickHelpButton={() => setTutorial(true)} />
           <Canvas
-            essentials={false}
+            logo={false}
             stickers={false}
             removable={userLayerCount > 1}
           />

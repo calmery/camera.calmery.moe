@@ -301,54 +301,9 @@ const addCanvasUserLayerAndSetFrameFromFile = (file: File) => {
   };
 };
 
-const addCanvasEssentialLayer = (
-  dataUrl: string,
-  width: number,
-  height: number
-) => ({
-  type: types.CANVAS_ESSENTIAL_LAYER_ADD,
-  payload: { dataUrl, width, height },
-});
-
-const addCanvasEssentialLayerWithUrl = (url: string) => {
-  return (dispatch: Dispatch) => {
-    return new Promise((resolve, reject) => {
-      const image = new Image();
-
-      image.onerror = () => reject();
-      image.onload = () => {
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-
-        canvas.width = image.width;
-        canvas.height = image.height;
-
-        if (context === null) {
-          return reject();
-        }
-
-        context.drawImage(image, 0, 0, image.width, image.height);
-        dispatch(
-          addCanvasEssentialLayer(
-            canvas.toDataURL("image/png"),
-            image.width,
-            image.height
-          )
-        );
-
-        resolve();
-      };
-
-      image.crossOrigin = "anonymous";
-      image.src = url;
-    });
-  };
-};
-
 // Main
 
 export const actions = {
-  addCanvasEssentialLayer,
   updateCanvasContainerRect,
   updateDisplayable,
   addCanvasStickerLayer,
@@ -375,7 +330,6 @@ export const thunkActions = {
   addCanvasStickerLayerWithUrl,
   addCanvasUserLayerFromFile,
   addCanvasUserLayerAndSetFrameFromFile,
-  addCanvasEssentialLayerWithUrl,
 };
 
 export type Actions = ReturnType<typeof actions[keyof typeof actions]>;

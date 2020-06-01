@@ -6,9 +6,7 @@ import { Page } from "~/components/Page";
 import { Menu } from "~/components/Menu";
 import { Canvas } from "~/containers/Canvas";
 import { withRedux, State } from "~/domains";
-import { thunkActions } from "~/domains/canvas/actions";
 import { Spacing } from "~/styles/spacing";
-import { convertSvgToDataUrl } from "~/utils/convert-svg-to-url";
 import { Tutorial } from "~/components/Tutorial";
 import { ControlBar } from "~/components/ControlBar";
 import { FirstLanding } from "~/components/FirstLanding";
@@ -27,10 +25,8 @@ const BottomBar = styled.div`
 `;
 
 const Save: NextPage = () => {
-  const dispatch = useDispatch();
   const {
     userLayers,
-    essentialLayers,
     styleTop,
     styleLeft,
     styleWidth,
@@ -40,12 +36,6 @@ const Save: NextPage = () => {
   const [isTutorial, setTutorial] = useState(false);
   const isImageExists = userLayers.some((u) => u);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (essentialLayers.length === 0) {
-      dispatch(thunkActions.addCanvasEssentialLayerWithUrl("/images/logo.png"));
-    }
-  }, []);
 
   useEffect(() => {
     const e = imageRef.current;

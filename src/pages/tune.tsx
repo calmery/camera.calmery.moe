@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { NextPage } from "next";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +16,6 @@ import { Menu } from "~/components/Menu";
 import { Mixin } from "~/styles/mixin";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
 import { InputRange } from "~/components/InputRange";
-import { thunkActions } from "~/domains/canvas/actions";
 import { Tutorial } from "~/components/Tutorial";
 import { ControlBar } from "~/components/ControlBar";
 import { FirstLanding } from "~/components/FirstLanding";
@@ -139,13 +138,6 @@ const Tune: NextPage = () => {
   const canvas = useSelector(({ canvas }: State) => canvas);
   const ui = useSelector(({ ui }: State) => ui);
   const isImageExists = canvas.userLayers.some((l) => !!l);
-  const { essentialLayers } = useSelector(({ canvas }: State) => canvas);
-
-  useEffect(() => {
-    if (essentialLayers.length === 0) {
-      dispatch(thunkActions.addCanvasEssentialLayerWithUrl("/images/logo.png"));
-    }
-  }, []);
 
   let userLayer =
     canvas.userLayers[canvas.temporaries.selectedUserLayerFilterIndex];
@@ -162,7 +154,7 @@ const Tune: NextPage = () => {
           <ControlBar onClickHelpButton={() => setTutorial(true)}>
             <img src="/images/close.svg" alt="閉じる" />
           </ControlBar>
-          <Canvas essentials={false} stickers={false} />
+          <Canvas logo={false} stickers={false} />
           <BottomBar>
             <div style={{ marginTop: `${Spacing.l}px` }}></div>
             {isImageExists && (

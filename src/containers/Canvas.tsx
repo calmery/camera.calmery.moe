@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ResizeObserver from "resize-observer-polyfill";
 import styled from "styled-components";
-import { CanvasEssentialLayers } from "~/containers/CanvasEssentialLayers";
+import { CanvasLogo } from "./CanvasLogo";
 import { CanvasStickerLayers } from "~/containers/CanvasStickerLayers";
 import { CanvasStickerLayerOperator } from "~/containers/CanvasStickerLayerOperator";
 import { CanvasUserFrames } from "~/containers/CanvasUserFrames";
@@ -37,7 +37,7 @@ const Svg = styled.svg`
 // Types
 
 interface CanvasProps {
-  essentials?: boolean;
+  logo?: boolean;
   removable?: boolean;
   stickers?: boolean;
   onCreatePreviewUrl?: (url: string) => void;
@@ -46,7 +46,7 @@ interface CanvasProps {
 // Components
 
 export const Canvas: React.FC<CanvasProps> = ({
-  essentials = true,
+  logo = true,
   removable = false,
   stickers = true,
   onCreatePreviewUrl,
@@ -190,7 +190,7 @@ export const Canvas: React.FC<CanvasProps> = ({
           <CanvasUserLayers />
           {!preview && <CanvasUserLayerOperator removable={removable} />}
           {stickers && <CanvasStickerLayers />}
-          {essentials && <CanvasEssentialLayers />}
+          {logo && <CanvasLogo />}
           {!preview && stickers && <CanvasStickerLayerOperator />}
         </svg>
       </Svg>

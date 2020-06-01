@@ -38,7 +38,6 @@ export interface CanvasState {
   isStickerLayerTransforming: boolean;
   userFrames: CanvasUserLayerFrame[];
   userLayers: (CanvasUserLayer | null)[];
-  essentialLayers: CanvasLayer[];
   stickerLayers: CanvasLayer[];
   temporaries: {
     pointerOffsetX: number;
@@ -69,7 +68,6 @@ const initialState: CanvasState = {
   stickerLayers: [],
   isUserLayerDragging: false,
   isCollaging: false,
-  essentialLayers: [],
   userLayers: [],
   userFrames: [],
   temporaries: {
@@ -88,27 +86,6 @@ const initialState: CanvasState = {
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
-    case types.CANVAS_ESSENTIAL_LAYER_ADD: {
-      const { essentialLayers } = state;
-      const { dataUrl, width, height } = action.payload;
-
-      return {
-        ...state,
-        essentialLayers: [
-          ...essentialLayers,
-          {
-            dataUrl,
-            width,
-            height,
-            x: 0,
-            y: 0,
-            scale: 1,
-            angle: 0,
-          },
-        ],
-      };
-    }
-
     case types.CANVAS_CONTAINER_UPDATE_RECT: {
       const { x, y, width, height } = action.payload;
       const { userFrames } = state;
