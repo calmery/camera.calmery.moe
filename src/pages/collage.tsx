@@ -40,7 +40,7 @@ const Collage: NextPage = () => {
       <Page>
         <FlexColumn>
           <ControlBar onClickHelpButton={() => setTutorial(true)} />
-          <Canvas stickers={false} />
+          <Canvas />
           <BottomBar>
             <div id="tutorial-collage-canvas-frames">
               <CanvasFrames />
