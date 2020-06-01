@@ -139,8 +139,8 @@ export const Canvas: React.FC = () => {
         >
           <CanvasBackground />
           <CanvasUserFrames />
-          <CanvasStickerLayers />
           <CanvasUserLayerOperator />
+          <CanvasStickerLayers />
         </svg>
       </Svg>
     </>
