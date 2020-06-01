@@ -38,6 +38,7 @@ const Svg = styled.svg`
 interface CanvasProps {
   essentials?: boolean;
   preview?: boolean;
+  removable?: boolean;
   stickers?: boolean;
 }
 
@@ -46,6 +47,7 @@ interface CanvasProps {
 export const Canvas: React.FC<CanvasProps> = ({
   essentials = true,
   preview = false,
+  removable = false,
   stickers = true,
 }) => {
   const dispatch = useDispatch();
@@ -167,7 +169,7 @@ export const Canvas: React.FC<CanvasProps> = ({
           <CanvasBackground />
           <CanvasUserFrames />
           <CanvasUserLayers />
-          {!preview && <CanvasUserLayerOperator />}
+          {!preview && <CanvasUserLayerOperator removable={removable} />}
           {stickers && <CanvasStickerLayers />}
           {essentials && <CanvasEssentialLayers />}
           {!preview && stickers && <CanvasStickerLayerOperator />}

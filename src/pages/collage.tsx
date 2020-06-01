@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import styled from "styled-components";
 import { Menu } from "~/components/Menu";
 import { Page } from "~/components/Page";
-import { Canvas } from "~/containers/Canvas";
+import { Canvas } from "~/containers/_Canvas";
 import { CanvasFrames } from "~/containers/CanvasFrames";
 import { Spacing } from "~/styles/spacing";
 import { withRedux, State } from "~/domains";
@@ -26,7 +26,9 @@ const BottomBar = styled.div`
 
 const Collage: NextPage = () => {
   const dispatch = useDispatch();
-  const { essentialLayers } = useSelector(({ canvas }: State) => canvas);
+  const { essentialLayers, userLayers } = useSelector(
+    ({ canvas }: State) => canvas
+  );
   const [isTutorial, setTutorial] = useState(false);
 
   useEffect(() => {
@@ -35,12 +37,20 @@ const Collage: NextPage = () => {
     }
   }, []);
 
+  let userLayerCount = 0;
+
+  userLayers.forEach((u) => u && userLayerCount++);
+
   return (
     <>
       <Page>
         <FlexColumn>
           <ControlBar onClickHelpButton={() => setTutorial(true)} />
-          <Canvas />
+          <Canvas
+            essentials={false}
+            stickers={false}
+            removable={userLayerCount > 1}
+          />
           <BottomBar>
             <div id="tutorial-collage-canvas-frames">
               <CanvasFrames />

@@ -5,6 +5,7 @@ import { State } from "~/domains";
 import { actions, thunkActions } from "~/domains/canvas/actions";
 import { getImageFile } from "~/utils/get-image-file";
 import { CanvasColors } from "~/styles/colors";
+import { getColorByDominantColorLightness } from "~/utils/canvas";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
 // Styles
@@ -17,9 +18,25 @@ const PathWithMove = styled.path`
   cursor: move;
 `;
 
+const CircleWithPointer = styled.circle`
+  cursor: pointer;
+`;
+
+const ImageWithPointer = styled.image`
+  cursor: pointer;
+`;
+
+// Types
+
+interface CanvasUserLayerOperatorProps {
+  removable: boolean;
+}
+
 // Components
 
-export const CanvasUserLayerOperator: React.FC = () => {
+export const CanvasUserLayerOperator: React.FC<CanvasUserLayerOperatorProps> = ({
+  removable,
+}) => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
   const { displayMagnification, userFrames, userLayers } = canvas;
@@ -53,6 +70,10 @@ export const CanvasUserLayerOperator: React.FC = () => {
     [dispatch]
   );
 
+  const handleOnRemove = (i: number) => {
+    dispatch(actions.removeCanvasUserLayer(i));
+  };
+
   // Render
 
   return (
@@ -85,6 +106,38 @@ export const CanvasUserLayerOperator: React.FC = () => {
           </g>
         );
       })}
+      {removable &&
+        userFrames.map((userFrame, i) => {
+          const userLayer = userLayers[i];
+
+          if (!userLayer) {
+            return null;
+          }
+
+          const { dominantColorLightness } = userLayer;
+          const { x, y, width } = userFrame;
+          const r = 12 * displayMagnification;
+
+          return (
+            <g key={i}>
+              <CircleWithPointer
+                fill={getColorByDominantColorLightness(dominantColorLightness)}
+                cx={x + width}
+                cy={y}
+                r={r}
+                onClick={() => handleOnRemove(i)}
+              />
+              <ImageWithPointer
+                xlinkHref="/images/close.svg"
+                width={r}
+                height={r}
+                x={x + width - r / 2}
+                y={y - r / 2}
+                onClick={() => handleOnRemove(i)}
+              />
+            </g>
+          );
+        })}
     </>
   );
 };

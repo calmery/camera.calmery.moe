@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { NextPage } from "next";
 import { useDispatch, useSelector } from "react-redux";
 import { withRedux, State } from "~/domains";
-import { Canvas } from "~/containers/Canvas";
+import { Canvas } from "~/containers/_Canvas";
 import { actions } from "~/domains/ui/actions";
 import { actions as canvasActions } from "~/domains/canvas/actions";
 import { Page } from "~/components/Page";
@@ -162,7 +162,7 @@ const Tune: NextPage = () => {
           <ControlBar onClickHelpButton={() => setTutorial(true)}>
             <img src="/images/close.svg" alt="閉じる" />
           </ControlBar>
-          <Canvas stickers={false} />
+          <Canvas essentials={false} stickers={false} />
           <BottomBar>
             <div style={{ marginTop: `${Spacing.l}px` }}></div>
             {isImageExists && (
