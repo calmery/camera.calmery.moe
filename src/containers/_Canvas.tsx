@@ -35,9 +35,19 @@ const Svg = styled.svg`
 
 // Types
 
+interface CanvasProps {
+  essentials?: boolean;
+  preview?: boolean;
+  stickers?: boolean;
+}
+
 // Components
 
-export const Canvas: React.FC = () => {
+export const Canvas: React.FC<CanvasProps> = ({
+  essentials = true,
+  preview = false,
+  stickers = true,
+}) => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
 
@@ -61,7 +71,7 @@ export const Canvas: React.FC = () => {
 
   const handleOnTick = useCallback(
     (event: React.MouseEvent | TouchEvent) => {
-      if (!canFireEvent) {
+      if (preview || !canFireEvent) {
         return;
       }
 
@@ -70,16 +80,16 @@ export const Canvas: React.FC = () => {
 
       dispatch(actions.tick(convertEventToCursorPositions(event)));
     },
-    [canFireEvent, dispatch]
+    [canFireEvent, dispatch, preview]
   );
 
   const handleOnComplete = useCallback(() => {
-    if (!canFireEvent) {
+    if (preview || !canFireEvent) {
       return;
     }
 
     dispatch(actions.complete());
-  }, [canFireEvent, dispatch]);
+  }, [canFireEvent, dispatch, preview]);
 
   // Hooks
 
@@ -97,6 +107,10 @@ export const Canvas: React.FC = () => {
   }, [displayableRef]);
 
   useEffect(() => {
+    if (preview) {
+      return;
+    }
+
     const s = svgRef.current!;
 
     s.addEventListener("touchmove", handleOnTick, { passive: false });
@@ -104,7 +118,7 @@ export const Canvas: React.FC = () => {
     return () => {
       s.removeEventListener("touchmove", handleOnTick);
     };
-  }, [canFireEvent, svgRef]);
+  }, [canFireEvent, svgRef, preview]);
 
   // Render
 
@@ -153,10 +167,10 @@ export const Canvas: React.FC = () => {
           <CanvasBackground />
           <CanvasUserFrames />
           <CanvasUserLayers />
-          <CanvasUserLayerOperator />
-          <CanvasStickerLayers />
-          <CanvasEssentialLayers />
-          <CanvasStickerLayerOperator />
+          {!preview && <CanvasUserLayerOperator />}
+          {stickers && <CanvasStickerLayers />}
+          {essentials && <CanvasEssentialLayers />}
+          {!preview && stickers && <CanvasStickerLayerOperator />}
         </svg>
       </Svg>
     </>
