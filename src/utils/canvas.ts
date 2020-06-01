@@ -1,1 +1,1 @@
-export const getCanvasUserFrameId = (key: number) => `canvas-user-frame-${key}`;
+export const getCanvasUserFrameId = (i: number) => `canvas-user-frame-${i}`;

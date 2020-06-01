@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ResizeObserver from "resize-observer-polyfill";
 import styled from "styled-components";
 import { CanvasUserFrames } from "~/containers/CanvasUserFrames";
+import { CanvasUserLayerOperator } from "~/containers/CanvasUserLayerOperator";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { CanvasColors } from "~/styles/colors";
@@ -25,6 +26,7 @@ const Displayable = styled.div`
 
 const Svg = styled.svg`
   position: fixed;
+  user-select: none;
 `;
 
 // Types
@@ -136,6 +138,7 @@ export const Canvas: React.FC = () => {
         >
           <CanvasBackground />
           <CanvasUserFrames />
+          <CanvasUserLayerOperator />
         </svg>
       </Svg>
     </>

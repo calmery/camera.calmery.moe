@@ -9,12 +9,11 @@ export const CanvasUserFrames: React.FC = () => {
 
   return (
     <>
-      {userFrames.map((userFrame, key) => {
+      {userFrames.map((userFrame, i) => {
         const { x, y, path } = userFrame;
-        const id = getCanvasUserFrameId(key);
 
         return (
-          <mask id={id} key={id}>
+          <mask id={getCanvasUserFrameId(i)} key={i}>
             <g transform={`translate(${x}, ${y})`}>
               <path d={path} fill="#fff" />
             </g>

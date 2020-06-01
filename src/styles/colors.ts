@@ -11,6 +11,7 @@ export const Colors = {
 
 export const CanvasColors = {
   background: Colors.lightGray,
+  border: Colors.gray,
 };
 
 export const GradientColors = {
