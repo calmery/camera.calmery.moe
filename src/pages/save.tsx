@@ -11,6 +11,7 @@ import { Tutorial } from "~/components/Tutorial";
 import { ControlBar } from "~/components/ControlBar";
 import { FirstLanding } from "~/components/FirstLanding";
 import * as GA from "~/utils/google-analytics";
+import { SAVE_PAGE_SCENARIOS } from "~/constants/tutorials";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -82,44 +83,7 @@ const Save: NextPage = () => {
       <FirstLanding />
       {isTutorial && (
         <Tutorial
-          scenarios={
-            isImageExists
-              ? [
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/12.png",
-                    emphasisElementId: "tutorial-save-image",
-                    message: "完成〜！",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-                    emphasisElementId: "tutorial-save-image",
-                    message: "画像を長押しすると保存できるよ！",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/15.png",
-                    emphasisElementId: "tutorial-save-image",
-                    message: "とっても素敵！",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/11.png",
-                    emphasisElementId: "tutorial-save-image",
-                    message:
-                      "Twitter で「#かるめりちゃんカメラ」を付けてツイートしてみて！",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
-                    emphasisElementId: "tutorial-save-image",
-                    message: "使ってくれてありがとう！",
-                  },
-                ]
-              : [
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-                    emphasisElementId: "tutorial-canvas",
-                    message: "まずはここをタップして画像を読み込んでみて！",
-                  },
-                ]
-          }
+          scenarios={SAVE_PAGE_SCENARIOS}
           onComplete={() => setTutorial(false)}
         />
       )}

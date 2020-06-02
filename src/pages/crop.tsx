@@ -18,6 +18,10 @@ import { Mixin } from "~/styles/mixin";
 import { Tutorial } from "~/components/Tutorial";
 import { ControlBar } from "~/components/ControlBar";
 import { FirstLanding } from "~/components/FirstLanding";
+import {
+  CROP_PAGE_WITH_IMAGE_SCENARIOS,
+  CROP_PAGE_WITHOUT_IMAGE_SCENARIOS,
+} from "~/constants/tutorials";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -313,76 +317,8 @@ const Crop: NextPage = () => {
         <Tutorial
           scenarios={
             isImageExists
-              ? [
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-                    emphasisElementId: "tutorial-cropper",
-                    message: "ここにはクロップする画像が表示されているよ！",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/5.png",
-                    emphasisElementId: "tutorial-cropper",
-                    message: "画面をタップしてクロップ位置を調整したり...",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/5.png",
-                    emphasisElementId: "tutorial-cropper",
-                    message: "2 本指でタッチして画像の大きさを変えてみよう！",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/16.png",
-                    emphasisElementId: "tutorial-crop-angle",
-                    message: `回した角度はここで確認！もうちょっと回してみようかな？`,
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/10.png",
-                    emphasisElementId: "tutorial-crop-angle",
-                    message: "あれっ...もしかしてパソコン...？",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/10.png",
-                    emphasisElementId: "tutorial-crop-angle",
-                    message: "...",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/6.png",
-                    emphasisElementId: "tutorial-crop-angle",
-                    message: "......",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/2.png",
-                    emphasisElementId: "tutorial-crop-angle",
-                    message: "パソコンからだと回転できないみたい...ごめんね...",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/7.png",
-                    emphasisElementId: "tutorial-crop-angle",
-                    message: "気を取り直して...！",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
-                    emphasisElementId: "tutorial-crop-aspect-ratios",
-                    message:
-                      "ここで対比を選べるよ！\n比率を保ったまま操作したいときに使おう！",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/4.png",
-                    emphasisElementId: "tutorial-crop-target-images",
-                    message: "他の画像をクロップしたい？",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/4.png",
-                    emphasisElementId: "tutorial-crop-target-images",
-                    message: "ここでクロップしたい画像をタップしてみて！",
-                  },
-                ]
-              : [
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-                    emphasisElementId: "tutorial-canvas",
-                    message: "まずはここをタップして画像を読み込んでみて！",
-                  },
-                ]
+              ? CROP_PAGE_WITH_IMAGE_SCENARIOS
+              : CROP_PAGE_WITHOUT_IMAGE_SCENARIOS
           }
           onComplete={() => setTutorial(false)}
         />

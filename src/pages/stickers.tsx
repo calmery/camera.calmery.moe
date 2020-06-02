@@ -12,59 +12,8 @@ import { FirstLanding } from "~/components/FirstLanding";
 import { useDispatch } from "react-redux";
 import { Typography } from "~/styles/typography";
 import { thunkActions } from "~/domains/canvas/actions";
-
-const CANVAS_STICKERS = [
-  {
-    name: "かるめりちゃんスタンプ",
-    urls: [
-      "https://static.calmery.moe/s/1/1.png",
-      "https://static.calmery.moe/s/1/2.png",
-      "https://static.calmery.moe/s/1/3.png",
-      "https://static.calmery.moe/s/1/4.png",
-      "https://static.calmery.moe/s/1/5.png",
-      "https://static.calmery.moe/s/1/6.png",
-      "https://static.calmery.moe/s/1/7.png",
-      "https://static.calmery.moe/s/1/8.png",
-      "https://static.calmery.moe/s/1/9.png",
-      "https://static.calmery.moe/s/1/10.png",
-      "https://static.calmery.moe/s/1/11.png",
-      "https://static.calmery.moe/s/1/12.png",
-      "https://static.calmery.moe/s/1/13.png",
-      "https://static.calmery.moe/s/1/14.png",
-      "https://static.calmery.moe/s/1/15.png",
-      "https://static.calmery.moe/s/1/16.png",
-    ],
-  },
-  {
-    name: "かるめりちゃんスタンプ 2",
-    urls: [
-      "https://static.calmery.moe/s/2/1.png",
-      "https://static.calmery.moe/s/2/2.png",
-      "https://static.calmery.moe/s/2/3.png",
-      "https://static.calmery.moe/s/2/4.png",
-      "https://static.calmery.moe/s/2/5.png",
-      "https://static.calmery.moe/s/2/6.png",
-      "https://static.calmery.moe/s/2/7.png",
-      "https://static.calmery.moe/s/2/8.png",
-      "https://static.calmery.moe/s/2/9.png",
-      "https://static.calmery.moe/s/2/10.png",
-      "https://static.calmery.moe/s/2/11.png",
-      "https://static.calmery.moe/s/2/12.png",
-      "https://static.calmery.moe/s/2/13.png",
-      "https://static.calmery.moe/s/2/14.png",
-      "https://static.calmery.moe/s/2/15.png",
-      "https://static.calmery.moe/s/2/16.png",
-      "https://static.calmery.moe/s/2/17.png",
-      "https://static.calmery.moe/s/2/18.png",
-      "https://static.calmery.moe/s/2/19.png",
-      "https://static.calmery.moe/s/2/20.png",
-      "https://static.calmery.moe/s/2/21.png",
-      "https://static.calmery.moe/s/2/22.png",
-      "https://static.calmery.moe/s/2/23.png",
-      "https://static.calmery.moe/s/2/24.png",
-    ],
-  },
-];
+import { APPENDABLE_STICKERS } from "~/constants/stickers";
+import { STICKERS_PAGE_SCENARIOS } from "~/constants/tutorials";
 
 const Horizontal = styled.div`
   width: 100%;
@@ -162,7 +111,7 @@ const Stickers: NextPage = () => {
               <Container>
                 <Horizontal>
                   <HorizontalInner>
-                    {CANVAS_STICKERS.map(({ name, urls }, group) => (
+                    {APPENDABLE_STICKERS.map(({ name, urls }, group) => (
                       <StickerContainer key={group}>
                         <TitleContainer>
                           <img
@@ -201,29 +150,7 @@ const Stickers: NextPage = () => {
       <FirstLanding />
       {isTutorial && (
         <Tutorial
-          scenarios={[
-            {
-              characterImageUrl: "https://static.calmery.moe/s/2/3.png",
-              emphasisElementId: "tutorial-canvas",
-              message:
-                "ここには読み込んだ画像、追加したスタンプが表示されるよ！",
-            },
-            {
-              characterImageUrl: "https://static.calmery.moe/s/2/8.png",
-              emphasisElementId: "tutorial-canvas",
-              message: "画像を読み込んだら画面をタッチ！自由に動かしてみて！",
-            },
-            {
-              characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-              emphasisElementId: "tutorial-edit-canvas-stickers",
-              message: "ここにあるスタンプをタップすると画面に追加されるよ！",
-            },
-            {
-              characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-              emphasisElementId: "tutorial-edit-canvas-stickers",
-              message: "スタンプは今後も追加していく予定！お楽しみに！",
-            },
-          ]}
+          scenarios={STICKERS_PAGE_SCENARIOS}
           onComplete={() => setTutorial(false)}
         />
       )}

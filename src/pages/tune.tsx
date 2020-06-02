@@ -19,6 +19,10 @@ import { InputRange } from "~/components/InputRange";
 import { Tutorial } from "~/components/Tutorial";
 import { ControlBar } from "~/components/ControlBar";
 import { FirstLanding } from "~/components/FirstLanding";
+import {
+  TUNE_PAHE_WITH_IMAGE_SCENARIOS,
+  TUNE_PAHE_WITHOUT_IMAGE_SCENARIOS,
+} from "~/constants/tutorials";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -360,42 +364,8 @@ const Tune: NextPage = () => {
         <Tutorial
           scenarios={
             isImageExists
-              ? [
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-                    emphasisElementId: "tutorial-canvas",
-                    message: "ここにフィルターをかける画像が表示されているよ！",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
-                    emphasisElementId: "tutorial-filter-input",
-                    message: "ここがフィルターの値を変更するところ！",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/1/15.png",
-                    emphasisElementId: "tutorial-filters",
-                    message:
-                      "色んなフィルターを使って自分好みの画像にしちゃおう！",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-                    emphasisElementId: "tutorial-filter-targets",
-                    message: "他の画像にフィルターをかけたい？",
-                  },
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-                    emphasisElementId: "tutorial-filter-targets",
-                    message:
-                      "ここでフィルターをかけたい画像をタップしてみよう！",
-                  },
-                ]
-              : [
-                  {
-                    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-                    emphasisElementId: "tutorial-canvas",
-                    message: "まずはここをタップして画像を読み込んでみて！",
-                  },
-                ]
+              ? TUNE_PAHE_WITH_IMAGE_SCENARIOS
+              : TUNE_PAHE_WITHOUT_IMAGE_SCENARIOS
           }
           onComplete={() => setTutorial(false)}
         />

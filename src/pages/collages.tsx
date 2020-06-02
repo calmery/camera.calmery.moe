@@ -13,6 +13,7 @@ import { canvasUserLayerFrame } from "~/domains/canvas/frames";
 import { Spacing } from "~/styles/spacing";
 import { GradientColors } from "~/styles/colors";
 import { CanvasUserLayerFrameType } from "~/types/CanvasUserLayerFrameType";
+import { COLLAGES_PAGE_SCENARIOS } from "~/constants/tutorials";
 
 const Horizontal = styled.div`
   width: 100%;
@@ -179,30 +180,7 @@ const Collages: NextPage = () => {
       </Page>
       {isTutorial && (
         <Tutorial
-          scenarios={[
-            {
-              characterImageUrl: "https://static.calmery.moe/s/2/5.png",
-              emphasisElementId: "tutorial-collage-canvas-frames",
-              message:
-                "ここに色んなフレームが用意されているよ！タップして選んでみよう！",
-            },
-            {
-              characterImageUrl: "https://static.calmery.moe/s/1/10.png",
-              emphasisElementId: "tutorial-collage-canvas-frames",
-              message: "あれっ...もしかして...",
-            },
-            {
-              characterImageUrl: "https://static.calmery.moe/s/2/18.png",
-              emphasisElementId: "tutorial-collage-canvas-frames",
-              message: "使いたいフレームがない...！？",
-            },
-            {
-              characterImageUrl: "https://static.calmery.moe/s/1/7.png",
-              emphasisElementId: "tutorial-control-bar-beta",
-              message:
-                "ここからこんなフレームが欲しい！ってリクエストを送ってみて！",
-            },
-          ]}
+          scenarios={COLLAGES_PAGE_SCENARIOS}
           onComplete={() => setTutorial(false)}
         />
       )}
