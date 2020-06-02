@@ -115,7 +115,7 @@ const Frames: NextPage = () => {
                     >
                       <object
                         type="image/svg+xml"
-                        data={`/images/frames/disable.svg`}
+                        data={`/images/pages/frames/disable.svg`}
                       />
                     </CollageButton>
                     {canvasUserLayerFrame[CanvasUserFrameType.W3H4].frames.map(
@@ -139,7 +139,7 @@ const Frames: NextPage = () => {
                         >
                           <object
                             type="image/svg+xml"
-                            data={`/images/frames/3-4-${index}.svg`}
+                            data={`/images/pages/frames/3-4-${index}.svg`}
                           />
                         </CollageButton>
                       )
@@ -165,7 +165,7 @@ const Frames: NextPage = () => {
                         >
                           <object
                             type="image/svg+xml"
-                            data={`/images/frames/4-3-${index}.svg`}
+                            data={`/images/pages/frames/4-3-${index}.svg`}
                           />
                         </CollageButton>
                       )

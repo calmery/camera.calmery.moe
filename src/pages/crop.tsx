@@ -221,7 +221,10 @@ const Crop: NextPage = () => {
                             }
                           >
                             <AspectRatioIcon selected={cropper.freeAspect}>
-                              <img src="/images/crop/free.svg" alt="Free" />
+                              <img
+                                src="/images/pages/crop/free.svg"
+                                alt="Free"
+                              />
                             </AspectRatioIcon>
                             <AspectRatioTitle selected={cropper.freeAspect}>
                               Free
@@ -250,7 +253,7 @@ const Crop: NextPage = () => {
                                   }
                                 >
                                   <img
-                                    src={`/images/crop/${w}-${h}.svg`}
+                                    src={`/images/pages/crop/${w}-${h}.svg`}
                                     alt={`${w}:${h}`}
                                   />
                                 </AspectRatioIcon>

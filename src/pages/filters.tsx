@@ -268,7 +268,7 @@ const Filters: NextPage = () => {
                               }
                             >
                               <img
-                                src="/images/filters/blur.svg"
+                                src="/images/pages/filters/blur.svg"
                                 alt="ぼかし"
                               />
                             </FilterTypeIcon>
@@ -301,7 +301,10 @@ const Filters: NextPage = () => {
                                 CanvasUserFilterType.hue
                               }
                             >
-                              <img src="/images/filters/hue.svg" alt="色相" />
+                              <img
+                                src="/images/pages/filters/hue.svg"
+                                alt="色相"
+                              />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
@@ -334,7 +337,7 @@ const Filters: NextPage = () => {
                               }
                             >
                               <img
-                                src="/images/filters/saturate.svg"
+                                src="/images/pages/filters/saturate.svg"
                                 alt="彩度"
                               />
                             </FilterTypeIcon>
