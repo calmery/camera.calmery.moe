@@ -80,6 +80,12 @@ const Border: React.FC<BorderProps> = ({
       width={12 * displayMagnification}
     />
     <CircleWithResize cx={width} cy={height} r={r} fill={color} />
+    <ImageWithResize
+      x={width - (12 * displayMagnification) / 2}
+      y={height - (12 * displayMagnification) / 2}
+      xlinkHref="/images/resize.svg"
+      width={12 * displayMagnification}
+    />
   </g>
 );
 
