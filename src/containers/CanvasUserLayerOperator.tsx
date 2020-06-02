@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { State } from "~/domains";
 import { actions, thunkActions } from "~/domains/canvas/actions";
+import { actions as uiActions } from "~/domains/ui/actions";
 import { getImageFile } from "~/utils/get-image-file";
 import { CanvasColors } from "~/styles/colors";
 import { getColorByDominantColorLightness } from "~/utils/canvas";
@@ -57,14 +58,15 @@ export const CanvasUserLayerOperator: React.FC<CanvasUserLayerOperatorProps> = (
 
   const handleOnLoadImage = useCallback(
     async (i: number) => {
+      const image = await getImageFile();
+      dispatch(uiActions.startLoading());
       try {
-        const image = await getImageFile();
-        // ToDo: Loading
         await dispatch(thunkActions.addCanvasUserLayerFromFile(image, i));
-      } catch (_) {
-        // ToDo: Sentry
+      } catch (error) {
+        dispatch(uiActions.imageLoadError(true));
+        throw error;
       } finally {
-        // ToDo: Loading
+        dispatch(uiActions.finishLoading());
       }
     },
     [dispatch]

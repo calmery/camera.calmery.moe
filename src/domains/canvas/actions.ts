@@ -267,7 +267,7 @@ const addCanvasUserLayerFromFile = (file: File, index: number) => {
         file,
         async (canvas) => {
           if (canvas instanceof Event && canvas.type === "error") {
-            return reject();
+            return reject(canvas);
           }
 
           const image = await convertUrlToImage(

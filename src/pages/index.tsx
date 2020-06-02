@@ -19,7 +19,6 @@ import { thunkActions } from "~/domains/canvas/actions";
 import { getImageFile } from "~/utils/get-image-file";
 import { actions as uiActions } from "~/domains/ui/actions";
 import { Popup } from "~/components/Popup";
-import { Loading } from "~/components/Loading";
 
 const Columns = styled.div`
   height: 100%;
@@ -182,7 +181,6 @@ const FooterMenu = styled.div`
 
 const Index: NextPage = () => {
   const dispatch = useDispatch();
-  const isLoading = useSelector(({ ui }: State) => !!ui.loading);
   const [isTermsAgreed, setTermsAgreed] = useState(false);
   const [isShowTermsPopup, setShowTermsPopup] = useState(false);
   const [isInformationVisible, setInformationVisible] = useState(false);
@@ -300,8 +298,6 @@ const Index: NextPage = () => {
           </Footer>
         </Columns>
       </Page>
-
-      {isLoading && <Loading />}
 
       <Modal
         visible={isInformationVisible}

@@ -85,8 +85,8 @@ class App extends NextApp {
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
         />
-        <Common />
         <Component {...pageProps} />
+        <Common />
       </>
     );
   };
