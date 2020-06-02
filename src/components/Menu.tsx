@@ -84,11 +84,11 @@ export const Menu = () => {
             data="/images/menu/stickers.svg"
           />
         </IconContainer>
-        <IconContainer onClick={() => handleOnClickRouterPush("/tune")}>
+        <IconContainer onClick={() => handleOnClickRouterPush("/filters")}>
           <Icon
-            selected={pathname === "/tune"}
+            selected={pathname === "/filters"}
             type="image/svg+xml"
-            data="/images/menu/tune.svg"
+            data="/images/menu/filters.svg"
           />
         </IconContainer>
         <IconContainer onClick={() => handleOnClickRouterPush("/crop")}>

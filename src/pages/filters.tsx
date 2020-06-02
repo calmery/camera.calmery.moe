@@ -135,7 +135,7 @@ const FilterContainer = styled.div`
   margin-bottom: ${Spacing.m}px;
 `;
 
-const Tune: NextPage = () => {
+const Filters: NextPage = () => {
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const [isTutorial, setTutorial] = useState(false);
   const dispatch = useDispatch();
@@ -267,7 +267,10 @@ const Tune: NextPage = () => {
                                 CanvasUserFilterType.blur
                               }
                             >
-                              <img src="/images/tune/blur.svg" alt="ぼかし" />
+                              <img
+                                src="/images/filters/blur.svg"
+                                alt="ぼかし"
+                              />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
@@ -298,7 +301,7 @@ const Tune: NextPage = () => {
                                 CanvasUserFilterType.hue
                               }
                             >
-                              <img src="/images/tune/hue.svg" alt="色相" />
+                              <img src="/images/filters/hue.svg" alt="色相" />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
@@ -330,7 +333,10 @@ const Tune: NextPage = () => {
                                 CanvasUserFilterType.saturate
                               }
                             >
-                              <img src="/images/tune/saturate.svg" alt="彩度" />
+                              <img
+                                src="/images/filters/saturate.svg"
+                                alt="彩度"
+                              />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
@@ -387,4 +393,4 @@ const Tune: NextPage = () => {
   );
 };
 
-export default withRedux(Tune);
+export default withRedux(Filters);
