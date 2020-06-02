@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Modal } from "~/containers/Modal";
+import { Modal } from "~/components/Modal";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 import { Colors } from "~/styles/colors";

@@ -15,7 +15,7 @@ import { Media } from "~/styles/media";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 import { Mixin } from "~/styles/mixin";
-import { Modal } from "~/containers/Modal";
+import { Modal } from "~/components/Modal";
 import { Image } from "~/components/Image";
 import { Checkbox } from "~/components/Checkbox";
 import { Button } from "~/components/Button";
