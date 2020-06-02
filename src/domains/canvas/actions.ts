@@ -4,10 +4,67 @@ import { CanvasUserFrameType } from "~/types/CanvasUserFrameType";
 import * as types from "./types";
 import { convertUrlToImage } from "./utils";
 import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
-import { checkAndResizeImage } from "~/utils/check-and-resize-image";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
-import { getDominangColor } from "~/utils/get-dominant-color";
-import { getLightness } from "~/utils/get-lightness";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const ColorThief = require("~/externals/color-thief");
+const colorThief = new ColorThief();
+
+const getDominangColor = (dataUrl: string): Promise<number[]> => {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+
+    image.onerror = () => reject();
+    image.onload = () => {
+      resolve(colorThief.getColor(image));
+    };
+
+    image.src = dataUrl;
+  });
+};
+
+const getLightness = ([red, green, blue]: number[]) => {
+  const r = red / 255;
+  const g = green / 255;
+  const b = blue / 255;
+  return (Math.max(r, g, b) + Math.min(r, g, b)) / 2;
+};
+
+const MAX_WIDTH = 1200;
+const MAX_HEIGHT = 1200;
+
+const checkAndResizeImage = (image: HTMLImageElement) => {
+  const { width, height } = image;
+
+  const canvas = document.createElement("canvas");
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const context = canvas.getContext("2d")!;
+
+  let renderWidth = 0;
+  let renderHeight = 0;
+
+  const horizontalRatio = width / MAX_WIDTH;
+  const verticalRatio = height / MAX_HEIGHT;
+
+  // width を基準に縮小する
+  if (horizontalRatio > verticalRatio) {
+    renderWidth = MAX_WIDTH;
+    renderHeight = height * (MAX_WIDTH / width);
+  } else {
+    renderWidth = width * (MAX_HEIGHT / height);
+    renderHeight = MAX_HEIGHT;
+  }
+
+  canvas.width = renderWidth;
+  canvas.height = renderHeight;
+  context.drawImage(image, 0, 0, renderWidth, renderHeight);
+
+  return {
+    width: renderWidth,
+    height: renderHeight,
+    dataUrl: canvas.toDataURL("image/png"),
+  };
+};
 
 // Container
 

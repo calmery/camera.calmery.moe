@@ -11,8 +11,8 @@ import { CanvasUserLayerOperator } from "~/containers/CanvasUserLayerOperator";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { CanvasColors } from "~/styles/colors";
+import { convertSvgToDataUrl } from "~/utils/canvas";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
-import { convertSvgToDataUrl } from "~/utils/convert-svg-to-url";
 
 // Child Components
 

@@ -20,6 +20,8 @@ import {
   CROP_PAGE_WITH_IMAGE_SCENARIOS,
   CROP_PAGE_WITHOUT_IMAGE_SCENARIOS,
 } from "~/constants/tutorials";
+import * as GA from "~/utils/google-analytics";
+import { useRouter } from "next/router";
 
 const Horizontal = styled.div`
   width: 100%;
@@ -182,6 +184,7 @@ const aspectRatios = [
 ];
 
 const Crop: NextPage = () => {
+  const { pathname } = useRouter();
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
   const { image, cropper } = useSelector(({ cropper }: State) => cropper);
@@ -210,7 +213,12 @@ const Crop: NextPage = () => {
     <>
       <Page>
         <FlexColumn>
-          <ControlBar onClickHelpButton={() => setTutorial(true)} />
+          <ControlBar
+            onClickHelpButton={() => {
+              GA.playTutorial(pathname);
+              setTutorial(true);
+            }}
+          />
           {isImageExists && <Cropper />}
           {!isImageExists && <Canvas logo={false} stickers={false} />}
           <BottomBar>
@@ -327,7 +335,14 @@ const Crop: NextPage = () => {
               ? CROP_PAGE_WITH_IMAGE_SCENARIOS
               : CROP_PAGE_WITHOUT_IMAGE_SCENARIOS
           }
-          onComplete={() => setTutorial(false)}
+          onComplete={() => {
+            setTutorial(false);
+            GA.completeTutorial(pathname);
+          }}
+          onStop={() => {
+            setTutorial(false);
+            GA.stopTutorial(pathname);
+          }}
         />
       )}
     </>

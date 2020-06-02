@@ -12,6 +12,7 @@ import { ControlBar } from "~/components/ControlBar";
 import { FirstLanding } from "~/components/FirstLanding";
 import * as GA from "~/utils/google-analytics";
 import { SAVE_PAGE_SCENARIOS } from "~/constants/tutorials";
+import { useRouter } from "next/router";
 
 const FlexColumn = styled.div`
   display: flex;
@@ -36,6 +37,7 @@ const Save: NextPage = () => {
   const imageRef: React.Ref<HTMLImageElement> = useRef(null);
   const [isTutorial, setTutorial] = useState(false);
   const isImageExists = userLayers.some((u) => u);
+  const { pathname } = useRouter();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -56,7 +58,12 @@ const Save: NextPage = () => {
     <>
       <Page>
         <FlexColumn>
-          <ControlBar onClickHelpButton={() => setTutorial(true)} />
+          <ControlBar
+            onClickHelpButton={() => {
+              GA.playTutorial(pathname);
+              setTutorial(true);
+            }}
+          />
           <Canvas onCreatePreviewUrl={setPreviewUrl} />
           {isImageExists && (
             <img
@@ -84,7 +91,14 @@ const Save: NextPage = () => {
       {isTutorial && (
         <Tutorial
           scenarios={SAVE_PAGE_SCENARIOS}
-          onComplete={() => setTutorial(false)}
+          onComplete={() => {
+            setTutorial(false);
+            GA.completeTutorial(pathname);
+          }}
+          onStop={() => {
+            setTutorial(false);
+            GA.stopTutorial(pathname);
+          }}
         />
       )}
     </>

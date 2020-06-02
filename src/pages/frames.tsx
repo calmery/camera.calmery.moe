@@ -14,6 +14,8 @@ import { Spacing } from "~/styles/spacing";
 import { GradientColors } from "~/styles/colors";
 import { CanvasUserFrameType } from "~/types/CanvasUserFrameType";
 import { COLLAGES_PAGE_SCENARIOS } from "~/constants/tutorials";
+import * as GA from "~/utils/google-analytics";
+import { useRouter } from "next/router";
 
 const Horizontal = styled.div`
   width: 100%;
@@ -84,6 +86,7 @@ const Frames: NextPage = () => {
   const [isTutorial, setTutorial] = useState(false);
   const dispatch = useDispatch();
   const { selectedUserLayerFrame } = useSelector(({ ui }: State) => ui);
+  const { pathname } = useRouter();
   const handleOnClickEnableCollage = (
     frame: CanvasUserFrameType,
     index: number
@@ -98,7 +101,12 @@ const Frames: NextPage = () => {
     <>
       <Page>
         <FlexColumn>
-          <ControlBar onClickHelpButton={() => setTutorial(true)} />
+          <ControlBar
+            onClickHelpButton={() => {
+              GA.playTutorial(pathname);
+              setTutorial(true);
+            }}
+          />
           <Canvas
             logo={false}
             stickers={false}
@@ -181,7 +189,14 @@ const Frames: NextPage = () => {
       {isTutorial && (
         <Tutorial
           scenarios={COLLAGES_PAGE_SCENARIOS}
-          onComplete={() => setTutorial(false)}
+          onComplete={() => {
+            setTutorial(false);
+            GA.completeTutorial(pathname);
+          }}
+          onStop={() => {
+            setTutorial(false);
+            GA.stopTutorial(pathname);
+          }}
         />
       )}
     </>

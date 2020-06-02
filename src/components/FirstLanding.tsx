@@ -1,26 +1,48 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { Tutorial } from "./Tutorial";
 import { FIRST_LANDING_SCENARIOS } from "~/constants/tutorials";
+import * as GA from "~/utils/google-analytics";
 
 export const FirstLanding: React.FC = () => {
-  const [firstLanding, setFirstLanding] = useState(true);
+  const [firstLanding, setFirstLanding] = useState(false);
+
+  // Hooks
 
   useEffect(() => {
     if (!localStorage.getItem("first-landing")) {
-      setFirstLanding(false);
+      setFirstLanding(true);
+      GA.playFirstTutorial();
     }
   }, []);
 
-  const handleOnClose = useCallback(() => {
+  // Events
+
+  const save = () => {
     localStorage.setItem("first-landing", new Date().toISOString());
-    setFirstLanding(true);
+    setFirstLanding(false);
+  };
+
+  const handleOnComplete = useCallback(() => {
+    GA.completeFirstTutorial();
+    save();
   }, []);
 
-  if (firstLanding) {
+  const handleOnStop = useCallback(() => {
+    GA.stopFirstTutorial();
+    save();
+  }, []);
+
+  // Render
+
+  if (!firstLanding) {
     return null;
   }
 
   return (
-    <Tutorial scenarios={FIRST_LANDING_SCENARIOS} onComplete={handleOnClose} />
+    <Tutorial
+      scenarios={FIRST_LANDING_SCENARIOS}
+      onComplete={handleOnComplete}
+      onStop={handleOnStop}
+    />
   );
 };

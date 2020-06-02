@@ -14,6 +14,8 @@ import { Typography } from "~/styles/typography";
 import { thunkActions } from "~/domains/canvas/actions";
 import { APPENDABLE_STICKERS } from "~/constants/stickers";
 import { STICKERS_PAGE_SCENARIOS } from "~/constants/tutorials";
+import * as GA from "~/utils/google-analytics";
+import { useRouter } from "next/router";
 
 const Horizontal = styled.div`
   width: 100%;
@@ -93,6 +95,7 @@ const BottomBar = styled.div`
 
 const Stickers: NextPage = () => {
   const dispatch = useDispatch();
+  const { pathname } = useRouter();
   const handleOnClickStickerImage = useCallback(
     (group: number, id: number, url: string) =>
       dispatch(thunkActions.addCanvasStickerLayerWithUrl(group, id, url)),
@@ -104,7 +107,12 @@ const Stickers: NextPage = () => {
     <>
       <Page>
         <FlexColumn>
-          <ControlBar onClickHelpButton={() => setTutorial(true)} />
+          <ControlBar
+            onClickHelpButton={() => {
+              GA.playTutorial(pathname);
+              setTutorial(true);
+            }}
+          />
           <Canvas />
           <BottomBar>
             <div id="tutorial-edit-canvas-stickers">
@@ -151,7 +159,14 @@ const Stickers: NextPage = () => {
       {isTutorial && (
         <Tutorial
           scenarios={STICKERS_PAGE_SCENARIOS}
-          onComplete={() => setTutorial(false)}
+          onComplete={() => {
+            setTutorial(false);
+            GA.completeTutorial(pathname);
+          }}
+          onStop={() => {
+            setTutorial(false);
+            GA.stopTutorial(pathname);
+          }}
         />
       )}
     </>

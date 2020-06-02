@@ -6,36 +6,53 @@ ReactGA.initialize("UA-163144493-2", {
   testMode: process.env.NODE_ENV === "test",
 });
 
-export const showFirstTutorial = () => {
+export const playFirstTutorial = () => {
   ReactGA.send({
     hitType: "event",
     eventCategory: "FIRST_TUTORIAL",
-    eventAction: "OPEN",
+    eventAction: "PLAY",
   });
 };
 
-export const hideFirstTutorial = () => {
+export const stopFirstTutorial = () => {
   ReactGA.send({
     hitType: "event",
     eventCategory: "FIRST_TUTORIAL",
-    eventAction: "CLOSE",
+    eventAction: "STOP",
   });
 };
 
-export const showTutorial = (url: string) => {
+export const completeFirstTutorial = () => {
+  ReactGA.send({
+    hitType: "event",
+    eventCategory: "FIRST_TUTORIAL",
+    eventAction: "COMPLETE",
+  });
+};
+
+export const playTutorial = (url: string) => {
   ReactGA.send({
     hitType: "event",
     eventCategory: "TUTORIAL",
-    eventAction: "OPEN",
+    eventAction: "PLAY",
     eventLabel: url,
   });
 };
 
-export const hideTutorial = (url: string) => {
+export const stopTutorial = (url: string) => {
   ReactGA.send({
     hitType: "event",
     eventCategory: "TUTORIAL",
-    eventAction: "CLOSE",
+    eventAction: "STOP",
+    eventLabel: url,
+  });
+};
+
+export const completeTutorial = (url: string) => {
+  ReactGA.send({
+    hitType: "event",
+    eventCategory: "TUTORIAL",
+    eventAction: "COMPLETE",
     eventLabel: url,
   });
 };

@@ -148,6 +148,7 @@ interface TutorialProps {
     message: string;
   }[];
   onComplete: () => void;
+  onStop: () => void;
 }
 
 // Components
@@ -155,6 +156,7 @@ interface TutorialProps {
 export const Tutorial: React.FC<TutorialProps> = ({
   scenarios,
   onComplete,
+  onStop,
 }) => {
   const displayableRef = useRef<HTMLDivElement>(null);
 
@@ -296,7 +298,7 @@ export const Tutorial: React.FC<TutorialProps> = ({
 
   return (
     <Container ref={displayableRef} onClick={handleOnClickSpeechBubble}>
-      <CloseButton src="/images/close.svg" onClick={onComplete} alt="閉じる" />
+      <CloseButton src="/images/close.svg" onClick={onStop} alt="閉じる" />
       <svg
         width={displayableRect.width}
         height={displayableRect.height}

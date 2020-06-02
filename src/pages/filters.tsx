@@ -21,6 +21,8 @@ import {
   TUNE_PAHE_WITH_IMAGE_SCENARIOS,
   TUNE_PAHE_WITHOUT_IMAGE_SCENARIOS,
 } from "~/constants/tutorials";
+import * as GA from "~/utils/google-analytics";
+import { useRouter } from "next/router";
 
 const Horizontal = styled.div`
   width: 100%;
@@ -151,6 +153,7 @@ const FilterContainer = styled.div`
 
 const Filters: NextPage = () => {
   const [isTutorial, setTutorial] = useState(false);
+  const { pathname } = useRouter();
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
   const ui = useSelector(({ ui }: State) => ui);
@@ -169,9 +172,12 @@ const Filters: NextPage = () => {
     <>
       <Page>
         <FlexColumn>
-          <ControlBar onClickHelpButton={() => setTutorial(true)}>
-            <img src="/images/close.svg" alt="閉じる" />
-          </ControlBar>
+          <ControlBar
+            onClickHelpButton={() => {
+              GA.playTutorial(pathname);
+              setTutorial(true);
+            }}
+          />
           <Canvas logo={false} stickers={false} />
           <BottomBar>
             <div style={{ marginTop: `${Spacing.l}px` }}></div>
@@ -382,7 +388,14 @@ const Filters: NextPage = () => {
               ? TUNE_PAHE_WITH_IMAGE_SCENARIOS
               : TUNE_PAHE_WITHOUT_IMAGE_SCENARIOS
           }
-          onComplete={() => setTutorial(false)}
+          onComplete={() => {
+            setTutorial(false);
+            GA.completeTutorial(pathname);
+          }}
+          onStop={() => {
+            setTutorial(false);
+            GA.stopTutorial(pathname);
+          }}
         />
       )}
     </>
