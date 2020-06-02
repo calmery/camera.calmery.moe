@@ -2,6 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import styled, { css } from "styled-components";
 import { Colors, GradientColors } from "~/styles/colors";
+import { Constants } from "~/styles/constants";
 import { Spacing } from "~/styles/spacing";
 
 // Styles
@@ -65,7 +66,7 @@ const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
   ${({ disabled }) =>
     disabled &&
     css`
-      opacity: 0.48;
+      opacity: ${Constants.opacity};
     `};
 `;
 

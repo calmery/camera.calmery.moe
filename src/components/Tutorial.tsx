@@ -3,6 +3,7 @@ import ResizeObserver from "resize-observer-polyfill";
 import styled from "styled-components";
 import { Image } from "~/components/Image";
 import { Colors, GradientColors } from "~/styles/colors";
+import { Constants } from "~/styles/constants";
 import { Mixin } from "~/styles/mixin";
 import { Spacing } from "~/styles/spacing";
 import { Typography, TypographyLineHeight } from "~/styles/typography";
@@ -319,7 +320,7 @@ export const Tutorial: React.FC<TutorialProps> = ({
         </defs>
         <rect
           fill="#000"
-          fillOpacity="0.48"
+          fillOpacity={Constants.opacity}
           width="100%"
           height="100%"
           mask="url(#tutorial-emphasis)"

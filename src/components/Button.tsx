@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import styled, { css } from "styled-components";
 import { Colors, GradientColors } from "~/styles/colors";
+import { Constants } from "~/styles/constants";
 import { Mixin } from "~/styles/mixin";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
@@ -14,7 +15,7 @@ const Container = styled.div<Pick<ButtonProps, "disabled" | "round">>`
   padding: 2px;
   text-align: center;
   width: 100%;
-  opacity: 0.48;
+  opacity: ${Constants.opacity};
   cursor: not-allowed;
 
   ${({ disabled }) =>

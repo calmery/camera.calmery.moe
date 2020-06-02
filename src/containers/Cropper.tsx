@@ -6,6 +6,7 @@ import { State } from "~/domains";
 import { actions } from "~/domains/cropper/actions";
 import { actions as canvasActions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
+import { Constants } from "~/styles/constants";
 
 const CanvasContainer = styled.div`
   box-sizing: border-box;
@@ -285,7 +286,12 @@ export const Cropper: React.FC = () => {
               })`}
             >
               <image xlinkHref={image.url} width="100%" height="100%" />
-              <rect width="100%" height="100%" fill="#000" fillOpacity="0.48" />
+              <rect
+                width="100%"
+                height="100%"
+                fill="#000"
+                fillOpacity={Constants.opacity}
+              />
             </g>
           </svg>
 
