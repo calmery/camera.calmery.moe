@@ -79,8 +79,9 @@ export const CanvasUserLayerOperator: React.FC<CanvasUserLayerOperatorProps> = (
   return (
     <>
       {userFrames.map((userFrame, i) => {
-        const { x, y, path } = userFrame;
+        const { x, y, width, height, path } = userFrame;
         const userLayer = userLayers[i];
+        const addImageIconSize = 64 * displayMagnification;
 
         return (
           <g key={i} transform={`translate(${x}, ${y})`}>
@@ -92,16 +93,24 @@ export const CanvasUserLayerOperator: React.FC<CanvasUserLayerOperatorProps> = (
                 onMouseDown={(e) => handleOnStartDrag(i, e)}
               />
             ) : (
-              <PathWithPointer
-                d={path}
-                fill="#fff"
-                onClick={() => handleOnLoadImage(i)}
-                stroke={CanvasColors.border}
-                strokeDasharray={`${4 * displayMagnification} ${
-                  2 * displayMagnification
-                }`}
-                strokeWidth={displayMagnification}
-              />
+              <>
+                <PathWithPointer
+                  d={path}
+                  fill="#fff"
+                  onClick={() => handleOnLoadImage(i)}
+                  stroke={CanvasColors.border}
+                  strokeDasharray={`${4 * displayMagnification} ${
+                    2 * displayMagnification
+                  }`}
+                  strokeWidth={displayMagnification}
+                />
+                <ImageWithPointer
+                  x={width / 2 - addImageIconSize / 2}
+                  y={height / 2 - addImageIconSize / 2}
+                  width={addImageIconSize}
+                  xlinkHref="/images/image.svg"
+                />
+              </>
             )}
           </g>
         );
