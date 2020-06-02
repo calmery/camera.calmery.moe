@@ -1,8 +1,10 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import styled, { css } from "styled-components";
 import { Colors, GradientColors } from "~/styles/colors";
 import { Spacing } from "~/styles/spacing";
+
+// Styles
 
 const Container = styled.div`
   box-sizing: border-box;
@@ -67,38 +69,36 @@ const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
     `};
 `;
 
+// Components
+
 export const Menu = () => {
   const { pathname, push } = useRouter();
-  const handleOnClickRouterPush = useCallback(
-    (pathname: string) => push(pathname),
-    []
-  );
 
   return (
     <Container id="tutorial-menu">
       <PrimaryButtons>
-        <IconContainer onClick={() => handleOnClickRouterPush("/stickers")}>
+        <IconContainer onClick={() => push("/stickers")}>
           <Icon
             selected={pathname === "/stickers"}
             type="image/svg+xml"
             data="/images/components/menu/stickers.svg"
           />
         </IconContainer>
-        <IconContainer onClick={() => handleOnClickRouterPush("/filters")}>
+        <IconContainer onClick={() => push("/filters")}>
           <Icon
             selected={pathname === "/filters"}
             type="image/svg+xml"
             data="/images/components/menu/filters.svg"
           />
         </IconContainer>
-        <IconContainer onClick={() => handleOnClickRouterPush("/crop")}>
+        <IconContainer onClick={() => push("/crop")}>
           <Icon
             selected={pathname === "/crop"}
             type="image/svg+xml"
             data="/images/components/menu/crop.svg"
           />
         </IconContainer>
-        <IconContainer onClick={() => handleOnClickRouterPush("/frames")}>
+        <IconContainer onClick={() => push("/frames")}>
           <Icon
             selected={pathname === "/frames"}
             type="image/svg+xml"
@@ -106,10 +106,9 @@ export const Menu = () => {
           />
         </IconContainer>
       </PrimaryButtons>
-
       <Divider />
       <SecondaryButtons>
-        <IconContainer onClick={() => handleOnClickRouterPush("/save")}>
+        <IconContainer onClick={() => push("/save")}>
           <Icon
             selected={pathname === "/save"}
             type="image/svg+xml"

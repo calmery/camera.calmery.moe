@@ -10,8 +10,6 @@ import { Page } from "~/components/Page";
 import { Spacing } from "~/styles/spacing";
 import { Colors, GradientColors } from "~/styles/colors";
 import { Typography } from "~/styles/typography";
-import { HorizontalScrollView } from "~/components/HorizontalScrollView";
-import { HorizontalScrollViewItem } from "~/components/HorizontalScrollViewItem";
 import { Menu } from "~/components/Menu";
 import { Mixin } from "~/styles/mixin";
 import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
@@ -23,6 +21,22 @@ import {
   TUNE_PAHE_WITH_IMAGE_SCENARIOS,
   TUNE_PAHE_WITHOUT_IMAGE_SCENARIOS,
 } from "~/constants/tutorials";
+
+const Horizontal = styled.div`
+  width: 100%;
+  overflow-x: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const HorizontalInner = styled.div`
+  width: fit-content;
+  display: flex;
+`;
 
 const FlexColumn = styled.div`
   display: flex;
@@ -136,7 +150,6 @@ const FilterContainer = styled.div`
 `;
 
 const Filters: NextPage = () => {
-  const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const [isTutorial, setTutorial] = useState(false);
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
@@ -241,119 +254,99 @@ const Filters: NextPage = () => {
             {isImageExists && (
               <>
                 <FilterTypeContainer>
-                  <HorizontalScrollView
-                    id="tutorial-filters"
-                    rootElement={(element) => setRootElement(element)}
-                  >
-                    {rootElement && (
-                      <>
-                        <HorizontalScrollViewItem rootElement={rootElement}>
-                          <FilterTypeFree
-                            selected={
-                              ui.selectedFilterType ===
+                  <Horizontal>
+                    <HorizontalInner>
+                      <FilterTypeFree
+                        selected={
+                          ui.selectedFilterType === CanvasUserFilterType.blur
+                        }
+                        onClick={() =>
+                          dispatch(
+                            actions.changeUiFilterType(
                               CanvasUserFilterType.blur
-                            }
-                            onClick={() =>
-                              dispatch(
-                                actions.changeUiFilterType(
-                                  CanvasUserFilterType.blur
-                                )
-                              )
-                            }
-                          >
-                            <FilterTypeIcon
-                              selected={
-                                ui.selectedFilterType ===
-                                CanvasUserFilterType.blur
-                              }
-                            >
-                              <img
-                                src="/images/pages/filters/blur.svg"
-                                alt="ぼかし"
-                              />
-                            </FilterTypeIcon>
-                            <FilterTypeTitle
-                              selected={
-                                ui.selectedFilterType ===
-                                CanvasUserFilterType.blur
-                              }
-                            >
-                              ぼかし
-                            </FilterTypeTitle>
-                          </FilterTypeFree>
-                        </HorizontalScrollViewItem>
-                        <HorizontalScrollViewItem rootElement={rootElement}>
-                          <FilterType
-                            selected={
-                              ui.selectedFilterType === CanvasUserFilterType.hue
-                            }
-                            onClick={() =>
-                              dispatch(
-                                actions.changeUiFilterType(
-                                  CanvasUserFilterType.hue
-                                )
-                              )
-                            }
-                          >
-                            <FilterTypeIcon
-                              selected={
-                                ui.selectedFilterType ===
-                                CanvasUserFilterType.hue
-                              }
-                            >
-                              <img
-                                src="/images/pages/filters/hue.svg"
-                                alt="色相"
-                              />
-                            </FilterTypeIcon>
-                            <FilterTypeTitle
-                              selected={
-                                ui.selectedFilterType ===
-                                CanvasUserFilterType.hue
-                              }
-                            >
-                              色相
-                            </FilterTypeTitle>
-                          </FilterType>
-                        </HorizontalScrollViewItem>
-                        <HorizontalScrollViewItem rootElement={rootElement}>
-                          <FilterType
-                            selected={
-                              ui.selectedFilterType ===
+                            )
+                          )
+                        }
+                      >
+                        <FilterTypeIcon
+                          selected={
+                            ui.selectedFilterType === CanvasUserFilterType.blur
+                          }
+                        >
+                          <img
+                            src="/images/pages/filters/blur.svg"
+                            alt="ぼかし"
+                          />
+                        </FilterTypeIcon>
+                        <FilterTypeTitle
+                          selected={
+                            ui.selectedFilterType === CanvasUserFilterType.blur
+                          }
+                        >
+                          ぼかし
+                        </FilterTypeTitle>
+                      </FilterTypeFree>
+                      <FilterType
+                        selected={
+                          ui.selectedFilterType === CanvasUserFilterType.hue
+                        }
+                        onClick={() =>
+                          dispatch(
+                            actions.changeUiFilterType(CanvasUserFilterType.hue)
+                          )
+                        }
+                      >
+                        <FilterTypeIcon
+                          selected={
+                            ui.selectedFilterType === CanvasUserFilterType.hue
+                          }
+                        >
+                          <img src="/images/pages/filters/hue.svg" alt="色相" />
+                        </FilterTypeIcon>
+                        <FilterTypeTitle
+                          selected={
+                            ui.selectedFilterType === CanvasUserFilterType.hue
+                          }
+                        >
+                          色相
+                        </FilterTypeTitle>
+                      </FilterType>
+
+                      <FilterType
+                        selected={
+                          ui.selectedFilterType ===
+                          CanvasUserFilterType.saturate
+                        }
+                        onClick={() =>
+                          dispatch(
+                            actions.changeUiFilterType(
                               CanvasUserFilterType.saturate
-                            }
-                            onClick={() =>
-                              dispatch(
-                                actions.changeUiFilterType(
-                                  CanvasUserFilterType.saturate
-                                )
-                              )
-                            }
-                          >
-                            <FilterTypeIcon
-                              selected={
-                                ui.selectedFilterType ===
-                                CanvasUserFilterType.saturate
-                              }
-                            >
-                              <img
-                                src="/images/pages/filters/saturate.svg"
-                                alt="彩度"
-                              />
-                            </FilterTypeIcon>
-                            <FilterTypeTitle
-                              selected={
-                                ui.selectedFilterType ===
-                                CanvasUserFilterType.saturate
-                              }
-                            >
-                              彩度
-                            </FilterTypeTitle>
-                          </FilterType>
-                        </HorizontalScrollViewItem>
-                      </>
-                    )}
-                  </HorizontalScrollView>
+                            )
+                          )
+                        }
+                      >
+                        <FilterTypeIcon
+                          selected={
+                            ui.selectedFilterType ===
+                            CanvasUserFilterType.saturate
+                          }
+                        >
+                          <img
+                            src="/images/pages/filters/saturate.svg"
+                            alt="彩度"
+                          />
+                        </FilterTypeIcon>
+                        <FilterTypeTitle
+                          selected={
+                            ui.selectedFilterType ===
+                            CanvasUserFilterType.saturate
+                          }
+                        >
+                          彩度
+                        </FilterTypeTitle>
+                      </FilterType>
+                    </HorizontalInner>
+                  </Horizontal>
                   <TuneTargetImages id="tutorial-filter-targets">
                     {canvas.userLayers.map((userLayer, index) => {
                       if (!userLayer) {

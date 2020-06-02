@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { Tutorial } from "./Tutorial";
 import { FIRST_LANDING_SCENARIOS } from "~/constants/tutorials";
 

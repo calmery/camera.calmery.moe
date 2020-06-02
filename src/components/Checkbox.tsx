@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { v4 } from "uuid";
 import { IconButton } from "./IconButton";
 
 const Input = styled.input`
@@ -17,7 +16,7 @@ export const Checkbox: React.FC<{
   defaultChecked?: boolean;
   onChange: (checked: boolean) => void;
 }> = (props) => {
-  const [id] = useState(v4());
+  const [id] = useState(Math.random().toString(32).substring(2));
   const [checked, setChecked] = useState(props.defaultChecked || false);
 
   return (
