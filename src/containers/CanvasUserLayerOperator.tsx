@@ -108,7 +108,7 @@ export const CanvasUserLayerOperator: React.FC<CanvasUserLayerOperatorProps> = (
                   x={width / 2 - addImageIconSize / 2}
                   y={height / 2 - addImageIconSize / 2}
                   width={addImageIconSize}
-                  xlinkHref="/images/image.svg"
+                  xlinkHref="/images/containers/image.svg"
                 />
               </>
             )}

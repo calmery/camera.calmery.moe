@@ -197,7 +197,7 @@ const Crop: NextPage = () => {
         <FlexColumn>
           <ControlBar onClickHelpButton={() => setTutorial(true)} />
           {isImageExists && <Cropper />}
-          {!isImageExists && <Canvas />}
+          {!isImageExists && <Canvas logo={false} stickers={false} />}
           <BottomBar>
             <div style={{ marginTop: `${Spacing.l}px` }}></div>
             {isImageExists && (

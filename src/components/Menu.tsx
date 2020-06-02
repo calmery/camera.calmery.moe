@@ -81,28 +81,28 @@ export const Menu = () => {
           <Icon
             selected={pathname === "/stickers"}
             type="image/svg+xml"
-            data="/images/menu/stickers.svg"
+            data="/images/components/menu/stickers.svg"
           />
         </IconContainer>
         <IconContainer onClick={() => handleOnClickRouterPush("/filters")}>
           <Icon
             selected={pathname === "/filters"}
             type="image/svg+xml"
-            data="/images/menu/filters.svg"
+            data="/images/components/menu/filters.svg"
           />
         </IconContainer>
         <IconContainer onClick={() => handleOnClickRouterPush("/crop")}>
           <Icon
             selected={pathname === "/crop"}
             type="image/svg+xml"
-            data="/images/menu/crop.svg"
+            data="/images/components/menu/crop.svg"
           />
         </IconContainer>
         <IconContainer onClick={() => handleOnClickRouterPush("/frames")}>
           <Icon
             selected={pathname === "/frames"}
             type="image/svg+xml"
-            data="/images/menu/frames.svg"
+            data="/images/components/menu/frames.svg"
           />
         </IconContainer>
       </PrimaryButtons>
@@ -113,7 +113,7 @@ export const Menu = () => {
           <Icon
             selected={pathname === "/save"}
             type="image/svg+xml"
-            data="/images/menu/save.svg"
+            data="/images/components/menu/save.svg"
           />
         </IconContainer>
       </SecondaryButtons>

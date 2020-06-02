@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ResizeObserver from "resize-observer-polyfill";
 import styled from "styled-components";
+import { Image } from "~/components/Image";
 import { Colors, GradientColors } from "~/styles/colors";
 import { Mixin } from "~/styles/mixin";
 import { Spacing } from "~/styles/spacing";
@@ -344,13 +345,20 @@ export const Tutorial: React.FC<TutorialProps> = ({
           <SpeechBubbleMessage>
             {scenario.message.slice(0, characterCount)}
           </SpeechBubbleMessage>
-          <SpeechBubblePetalImage src="/images/petal.svg" alt="花弁" />
+          <SpeechBubblePetalImage
+            src="/images/components/tutorial/petal.svg"
+            alt="花弁"
+          />
         </SpeechBubble>
       </SpeechBubbleContainer>
       <ProgressBarContainer>
         <ProgressBar scenarioProgress={scenarioProgress} />
         <ProgressBarImage scenarioProgress={scenarioProgress}>
-          <img src={`/images/tutorial/${progressBarImage}.png`} alt="走る" />
+          <Image
+            webp
+            src={`/images/components/tutorial/${progressBarImage}.png`}
+            alt="走る"
+          />
         </ProgressBarImage>
       </ProgressBarContainer>
     </Container>

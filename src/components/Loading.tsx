@@ -32,7 +32,11 @@ export const Loading: React.FC = () => {
 
   return (
     <Container>
-      <Image webp src={`/images/loading/${imageIndex}.png`} alt="読み込み中" />
+      <Image
+        webp
+        src={`/images/components/loading/${imageIndex}.png`}
+        alt="読み込み中"
+      />
     </Container>
   );
 };

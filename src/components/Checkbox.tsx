@@ -31,7 +31,7 @@ export const Checkbox: React.FC<{
         }}
       />
       <Label htmlFor={id}>
-        <IconButton src="/images/checkbox.svg" clicked={checked} />
+        <IconButton src="/images/components/checkbox.svg" clicked={checked} />
       </Label>
     </>
   );

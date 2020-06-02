@@ -94,12 +94,12 @@ export const ControlBar: React.FC<{
             GA.clickBetaButton();
             setOpenBetaMenu(true);
           }}
-          src="/images/beta.svg"
+          src="/images/components/beta.svg"
           alt="Beta"
         />
         <img
           id="tutorial-control-bar-usage"
-          src="/images/help.svg"
+          src="/images/components/help.svg"
           onClick={onClickHelpButton}
           alt="ヘルプ"
         />

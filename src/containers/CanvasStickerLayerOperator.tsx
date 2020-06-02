@@ -83,7 +83,7 @@ const Border: React.FC<BorderProps> = ({
     <ImageWithResize
       x={width - (12 * displayMagnification) / 2}
       y={height - (12 * displayMagnification) / 2}
-      xlinkHref="/images/resize.svg"
+      xlinkHref="/images/containers/resize.svg"
       width={12 * displayMagnification}
     />
   </g>

@@ -249,7 +249,7 @@ export const Cropper: React.FC = () => {
               onTouchStart={handleOnStartCropperTransform}
             ></circle>
             <image
-              xlinkHref="/images/scale.svg"
+              xlinkHref="/images/containers/resize.svg"
               width={12 * displayMagnification}
               height={12 * displayMagnification}
               x={
@@ -359,7 +359,7 @@ export const Cropper: React.FC = () => {
               onTouchStart={handleOnStartCropperTransform}
             ></circle>
             <image
-              xlinkHref="/images/scale.svg"
+              xlinkHref="/images/containers/resize.svg"
               width={12 * displayMagnification}
               height={12 * displayMagnification}
               x={
