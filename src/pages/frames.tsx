@@ -79,7 +79,7 @@ const BottomBar = styled.div`
   padding-top: ${Spacing.l}px;
 `;
 
-const Collages: NextPage = () => {
+const Frames: NextPage = () => {
   const { userLayers } = useSelector(({ canvas }: State) => canvas);
   const [isTutorial, setTutorial] = useState(false);
   const dispatch = useDispatch();
@@ -115,7 +115,7 @@ const Collages: NextPage = () => {
                     >
                       <object
                         type="image/svg+xml"
-                        data={`/images/collages/disable.svg`}
+                        data={`/images/frames/disable.svg`}
                       />
                     </CollageButton>
                     {canvasUserLayerFrame[CanvasUserFrameType.W3H4].frames.map(
@@ -139,7 +139,7 @@ const Collages: NextPage = () => {
                         >
                           <object
                             type="image/svg+xml"
-                            data={`/images/collages/3-4-${index}.svg`}
+                            data={`/images/frames/3-4-${index}.svg`}
                           />
                         </CollageButton>
                       )
@@ -165,7 +165,7 @@ const Collages: NextPage = () => {
                         >
                           <object
                             type="image/svg+xml"
-                            data={`/images/collages/4-3-${index}.svg`}
+                            data={`/images/frames/4-3-${index}.svg`}
                           />
                         </CollageButton>
                       )
@@ -188,4 +188,4 @@ const Collages: NextPage = () => {
   );
 };
 
-export default withRedux(Collages);
+export default withRedux(Frames);

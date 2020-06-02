@@ -98,11 +98,11 @@ export const Menu = () => {
             data="/images/menu/crop.svg"
           />
         </IconContainer>
-        <IconContainer onClick={() => handleOnClickRouterPush("/collages")}>
+        <IconContainer onClick={() => handleOnClickRouterPush("/frames")}>
           <Icon
-            selected={pathname === "/collages"}
+            selected={pathname === "/frames"}
             type="image/svg+xml"
-            data="/images/menu/collages.svg"
+            data="/images/menu/frames.svg"
           />
         </IconContainer>
       </PrimaryButtons>
