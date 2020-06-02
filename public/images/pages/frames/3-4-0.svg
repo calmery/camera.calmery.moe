@@ -1,8 +1,1 @@
-<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="2" y="0" width="18" height="22">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M4.75001 10V2H17.25V10H4.75001ZM2.75001 12V21C2.75001 21.5523 3.19772 22 3.75001 22H18.25C18.8023 22 19.25 21.5523 19.25 21V1C19.25 0.447715 18.8023 0 18.25 0H3.75001C3.19772 0 2.75001 0.447716 2.75001 1V10H2.75V12H2.75001ZM4.75001 12H17.25V20H4.75001V12Z" fill="black"/>
-</mask>
-<g mask="url(#mask0)">
-<rect x="-9.25" width="40" height="32" fill="#B4B4B4"/>
-</g>
-</svg>
+<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><mask id="a" mask-type="alpha" maskUnits="userSpaceOnUse" x="2" y="0" width="18" height="22"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.75001 10V2H17.25V10H4.75001ZM2.75001 12V21C2.75001 21.5523 3.19772 22 3.75001 22H18.25C18.8023 22 19.25 21.5523 19.25 21V1C19.25 0.447715 18.8023 0 18.25 0H3.75001C3.19772 0 2.75001 0.447716 2.75001 1V10H2.75V12H2.75001ZM4.75001 12H17.25V20H4.75001V12Z" fill="black"/></mask><g mask="url(#a)"><rect x="-9.25" width="40" height="32" fill="#B4B4B4"/></g></svg>

@@ -115,7 +115,7 @@ const Stickers: NextPage = () => {
                       <StickerContainer key={group}>
                         <TitleContainer>
                           <img
-                            src="/images/pages/crop/line-store.svg"
+                            src="/images/pages/stickers/line-store.svg"
                             alt="LINE STORE"
                           />
                           <Title>{name}</Title>
