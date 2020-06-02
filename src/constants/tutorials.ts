@@ -110,7 +110,7 @@ export const FIRST_LANDING_SCENARIOS = [
 
 // Stickers
 
-export const STICKERS_PAGE_SCENARIOS = [
+export const STICKERS_PAGE_WITH_IMAGE_SCENARIOS = [
   {
     characterImageUrl: "https://static.calmery.moe/s/2/3.png",
     emphasisElementId: "tutorial-canvas",
@@ -130,6 +130,14 @@ export const STICKERS_PAGE_SCENARIOS = [
     characterImageUrl: "https://static.calmery.moe/s/2/11.png",
     emphasisElementId: "tutorial-edit-canvas-stickers",
     message: "スタンプは今後も追加していく予定！お楽しみに！",
+  },
+];
+
+export const STICKERS_PAGE_WITHOUT_IMAGE_SCENARIOS = [
+  {
+    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
+    emphasisElementId: "tutorial-canvas",
+    message: "まずはここをタップして画像を読み込んでみて！",
   },
 ];
 

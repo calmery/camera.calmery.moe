@@ -6,14 +6,17 @@ import { Menu } from "~/components/Menu";
 import { Page } from "~/components/Page";
 import { Canvas } from "~/containers/Canvas";
 import { Spacing } from "~/styles/spacing";
-import { withRedux } from "~/domains";
+import { withRedux, State } from "~/domains";
 import { Tutorial } from "~/components/Tutorial";
 import { FirstLanding } from "~/components/FirstLanding";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Typography } from "~/styles/typography";
 import { thunkActions } from "~/domains/canvas/actions";
 import { APPENDABLE_STICKERS } from "~/constants/stickers";
-import { STICKERS_PAGE_SCENARIOS } from "~/constants/tutorials";
+import {
+  STICKERS_PAGE_WITH_IMAGE_SCENARIOS,
+  STICKERS_PAGE_WITHOUT_IMAGE_SCENARIOS,
+} from "~/constants/tutorials";
 import * as GA from "~/utils/google-analytics";
 import { useRouter } from "next/router";
 
@@ -102,6 +105,8 @@ const Stickers: NextPage = () => {
     [dispatch]
   );
   const [isTutorial, setTutorial] = useState(false);
+  const { userLayers } = useSelector(({ canvas }: State) => canvas);
+  const isImageExists = userLayers.some((u) => !!u);
 
   return (
     <>
@@ -113,44 +118,46 @@ const Stickers: NextPage = () => {
               setTutorial(true);
             }}
           />
-          <Canvas />
+          <Canvas logo={isImageExists} />
           <BottomBar>
-            <div id="tutorial-edit-canvas-stickers">
-              <Container>
-                <Horizontal>
-                  <HorizontalInner>
-                    {APPENDABLE_STICKERS.map(({ name, urls }, group) => (
-                      <StickerContainer key={group}>
-                        <TitleContainer>
-                          <img
-                            src="/images/pages/stickers/line-store.svg"
-                            alt="LINE STORE"
-                          />
-                          <Title>{name}</Title>
-                        </TitleContainer>
-                        <StickerList>
-                          {urls.map((url, id) => (
-                            <Sticker
-                              alt="スタンプ"
-                              src={url}
-                              key={id}
-                              onClick={() =>
-                                // URL と合わせる
-                                handleOnClickStickerImage(
-                                  group + 1,
-                                  id + 1,
-                                  url
-                                )
-                              }
+            {isImageExists && (
+              <div id="tutorial-edit-canvas-stickers">
+                <Container>
+                  <Horizontal>
+                    <HorizontalInner>
+                      {APPENDABLE_STICKERS.map(({ name, urls }, group) => (
+                        <StickerContainer key={group}>
+                          <TitleContainer>
+                            <img
+                              src="/images/pages/stickers/line-store.svg"
+                              alt="LINE STORE"
                             />
-                          ))}
-                        </StickerList>
-                      </StickerContainer>
-                    ))}
-                  </HorizontalInner>
-                </Horizontal>
-              </Container>
-            </div>
+                            <Title>{name}</Title>
+                          </TitleContainer>
+                          <StickerList>
+                            {urls.map((url, id) => (
+                              <Sticker
+                                alt="スタンプ"
+                                src={url}
+                                key={id}
+                                onClick={() =>
+                                  // URL と合わせる
+                                  handleOnClickStickerImage(
+                                    group + 1,
+                                    id + 1,
+                                    url
+                                  )
+                                }
+                              />
+                            ))}
+                          </StickerList>
+                        </StickerContainer>
+                      ))}
+                    </HorizontalInner>
+                  </Horizontal>
+                </Container>
+              </div>
+            )}
             <Menu />
           </BottomBar>
         </FlexColumn>
@@ -158,7 +165,11 @@ const Stickers: NextPage = () => {
       <FirstLanding />
       {isTutorial && (
         <Tutorial
-          scenarios={STICKERS_PAGE_SCENARIOS}
+          scenarios={
+            isImageExists
+              ? STICKERS_PAGE_WITH_IMAGE_SCENARIOS
+              : STICKERS_PAGE_WITHOUT_IMAGE_SCENARIOS
+          }
           onComplete={() => {
             setTutorial(false);
             GA.completeTutorial(pathname);

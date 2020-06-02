@@ -188,6 +188,7 @@ export const Canvas: React.FC<CanvasProps> = ({
           viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
+          id="tutorial-canvas"
         >
           <CanvasBackground />
           <CanvasUserFrames />
