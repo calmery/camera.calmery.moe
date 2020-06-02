@@ -1,24 +1,24 @@
-import React, { useState, useCallback, useEffect } from "react";
 import { NextPage } from "next";
-import Router from "next/router";
+import { useRouter } from "next/router";
+import React, { useEffect, useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
+import { Button } from "~/components/Button";
+import { Checkbox } from "~/components/Checkbox";
 import { IconButton } from "~/components/IconButton";
+import { Image } from "~/components/Image";
+import { Modal } from "~/components/Modal";
 import { Page } from "~/components/Page";
+import { Popup } from "~/components/Popup";
 import { Colors } from "~/styles/colors";
 import { Media } from "~/styles/media";
+import { Mixin } from "~/styles/mixin";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
-import { Mixin } from "~/styles/mixin";
-import { Modal } from "~/components/Modal";
-import { Image } from "~/components/Image";
-import { Checkbox } from "~/components/Checkbox";
-import { Button } from "~/components/Button";
-import { useDispatch, useSelector } from "react-redux";
-import { withRedux, State } from "~/domains";
+import { withRedux } from "~/domains";
 import { thunkActions } from "~/domains/canvas/actions";
-import { getImageFile } from "~/utils/get-image-file";
 import { actions as uiActions } from "~/domains/ui/actions";
-import { Popup } from "~/components/Popup";
+import { getImageFile } from "~/utils/get-image-file";
 
 const Columns = styled.div`
   height: 100%;
@@ -123,7 +123,10 @@ const ModalText = styled.div`
     color: ${Colors.black};
     font-family: Roboto, sans-serif;
     font-weight: bold;
-    text-decoration: none;
+  }
+
+  img {
+    border-radius: 4px;
   }
 `;
 
@@ -181,50 +184,52 @@ const FooterMenu = styled.div`
 
 const Index: NextPage = () => {
   const dispatch = useDispatch();
+  const { push } = useRouter();
+
+  // States
+
   const [isTermsAgreed, setTermsAgreed] = useState(false);
   const [isShowTermsPopup, setShowTermsPopup] = useState(false);
   const [isInformationVisible, setInformationVisible] = useState(false);
   const [isSettingVisible, setSettingVisible] = useState(false);
 
+  // Hooks
+
   useEffect(() => {
-    const maybeIsTermsAgreed = localStorage.getItem("terms-of-service");
-
-    if (!maybeIsTermsAgreed) {
-      return;
+    if (localStorage.getItem("terms-of-service")) {
+      setTermsAgreed(true);
     }
-
-    setTermsAgreed(true);
   }, []);
 
-  const pickupImage = useCallback(async () => {
+  // Helper Functions
+
+  const loadImage = useCallback(async () => {
+    const image = await getImageFile();
+    dispatch(uiActions.startLoading());
+
     try {
-      const i = await getImageFile();
-
-      dispatch(uiActions.startLoading());
-
-      await dispatch(thunkActions.addCanvasUserLayerFromFile(i, 0));
-
-      Router.push("/stickers");
-    } catch (_) {
+      await dispatch(thunkActions.addCanvasUserLayerFromFile(image, 0));
+      push("/stickers");
+    } catch (error) {
       dispatch(uiActions.imageLoadError(true));
+      throw error;
     } finally {
       dispatch(uiActions.finishLoading());
     }
-  }, [dispatch]);
+  }, [dispatch, push]);
+
+  // Events
 
   const handleOnClickTermsAgreeButton = useCallback(() => {
     localStorage.setItem("terms-of-service", new Date().toISOString());
-    setTermsAgreed(true);
     setShowTermsPopup(false);
-
-    pickupImage();
+    setTermsAgreed(true);
+    loadImage();
   }, [dispatch]);
 
   const handleOnClickTermsCancelButton = useCallback(() => {
     setShowTermsPopup(false);
   }, []);
-
-  // Events
 
   const handleOnClickStartButton = useCallback(() => {
     if (!isTermsAgreed) {
@@ -232,17 +237,27 @@ const Index: NextPage = () => {
       return;
     }
 
-    pickupImage();
+    loadImage();
   }, [isTermsAgreed]);
 
-  const handleOnClickInformationVisible = useCallback(
-    () => setInformationVisible(!isInformationVisible),
-    [isInformationVisible]
+  const handleOnOpenInformationButton = useCallback(
+    () => setInformationVisible(true),
+    []
   );
 
-  const handleOnClickSettingVisible = useCallback(
-    () => setSettingVisible(!isSettingVisible),
-    [isSettingVisible]
+  const handleOnCloseInformationButton = useCallback(
+    () => setInformationVisible(false),
+    []
+  );
+
+  const handleOnOpenSettingButton = useCallback(
+    () => setSettingVisible(true),
+    []
+  );
+
+  const handleOnCloseSettingButton = useCallback(
+    () => setSettingVisible(false),
+    []
   );
 
   // Render
@@ -260,12 +275,12 @@ const Index: NextPage = () => {
             <HeaderIconButtons>
               <IconButton
                 clicked={isInformationVisible}
-                onClick={handleOnClickInformationVisible}
+                onClick={handleOnOpenInformationButton}
                 src="/images/pages/index/information.svg"
               />
               <IconButton
                 clicked={isSettingVisible}
-                onClick={handleOnClickSettingVisible}
+                onClick={handleOnOpenSettingButton}
                 src="/images/pages/index/setting.svg"
               />
             </HeaderIconButtons>
@@ -281,6 +296,7 @@ const Index: NextPage = () => {
             </Button>
             <Button disabled>前回の続きから始める！</Button>
           </Buttons>
+
           <Footer>
             <FooterMenu>
               <a href="https://calmery.moe">Calmery.moe</a>
@@ -298,16 +314,78 @@ const Index: NextPage = () => {
           </Footer>
         </Columns>
       </Page>
-
       <Modal
         visible={isInformationVisible}
-        onClickCloseButton={handleOnClickInformationVisible}
+        onClickCloseButton={handleOnCloseInformationButton}
       >
+        <ModalText>
+          <img
+            src="https://pbs.twimg.com/profile_banners/3086780643/1583232158/1500x500"
+            width="100%"
+          />
+        </ModalText>
+        <ModalTitle>かるめりちゃんカメラって？</ModalTitle>
+        <ModalText>
+          かるめりちゃんカメラは{" "}
+          <a
+            href="https://twitter.com/calmeryme"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Calmery
+          </a>{" "}
+          のうちの子である「白咲 愛々璃（しろさき
+          あめり）」、通称かるめりちゃんのイラストを使用して写真や画像を加工できるサービスです！
+        </ModalText>
+        <ModalText>
+          <a
+            href="https://calmery.moe"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            https://calmery.moe
+          </a>
+          <br />
+          <a
+            href="https://github.com/calmery-chan/camera.calmery.moe"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            https://github.com/calmery-chan/camera.calmery.moe
+          </a>
+        </ModalText>
+        <ModalTitle>Special Thanks !</ModalTitle>
+        <ModalText>
+          このかるめりちゃんカメラで使用しているかわいいスタンプのイラストは{" "}
+          <a
+            href="https://twitter.com/metanen0x0"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            めたねのおくすり
+          </a>{" "}
+          さんに、素敵なロゴは{" "}
+          <a
+            href="https://twitter.com/sorano_design"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            takumi
+          </a>{" "}
+          さんに作成していただきました。また、
+          <a
+            href="https://twitter.com/gikobull"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            gikobull
+          </a>{" "}
+          にはデザイン周りで相談に乗ってもらいました。ありがとうございました！
+        </ModalText>
         <ModalTitle>お問い合わせ</ModalTitle>
         <ModalText>
           ご感想や不具合の報告は次の <ModalTextRoboto>Google</ModalTextRoboto>{" "}
           フォームまでお願いします。
-          <br />
           <a
             href="https://forms.gle/37ucm5pkdZV7L4HAA"
             target="_blank"
@@ -317,51 +395,42 @@ const Index: NextPage = () => {
           </a>
         </ModalText>
       </Modal>
-
       <Modal
         visible={isSettingVisible}
-        onClickCloseButton={handleOnClickSettingVisible}
+        onClickCloseButton={handleOnCloseSettingButton}
       >
-        <ModalText>ごめんなさい！現在、設定は利用できません。</ModalText>
+        <ModalText>ごめんなさい！現在、設定は変更できません。</ModalText>
         <ModalConfig disabled>
           <div>
-            <Checkbox
-              onChange={() => {
-                console.log("Dummy");
-              }}
-            />
+            <Checkbox onChange={() => void 0} />
           </div>
           <div>
-            <ModalConfigTitle>画像を元のサイズで読み込む</ModalConfigTitle>
+            <ModalConfigTitle>画像を縮小せずに読み込む</ModalConfigTitle>
             <ModalConfigDescription>
-              画像を読み込むときに画像を縮小せずに読み込みます。画像を読み込んだときにページが落ちる、再読み込みするといった症状が起こる場合はオフにしてください。
+              画像を読み込む際に画像を縮小せずに読み込みます。この設定をオンにした際にブラウザがクラッシュする、再読み込みするといった症状が起こる場合はオフにしてください。
             </ModalConfigDescription>
           </div>
         </ModalConfig>
         <ModalConfig disabled>
           <div>
-            <Checkbox
-              onChange={() => {
-                console.log("Dummy");
-              }}
-            />
+            <Checkbox onChange={() => void 0} />
           </div>
           <div>
-            <ModalConfigTitle>開発中の機能をオンにする</ModalConfigTitle>
+            <ModalConfigTitle>開発中の機能を使用する</ModalConfigTitle>
             <ModalConfigDescription>
-              開発中の機能を使用します。使用中にアプリが落ちる、再読み込みするといった問題が起こる可能性があることに注意してください。
+              開発中の機能を使用します。この設定をオンにした際にブラウザがクラッシュする、再読み込みするといった症状が起こる場合はオフにしてください。
             </ModalConfigDescription>
           </div>
         </ModalConfig>
       </Modal>
-
+      s
       {isShowTermsPopup && (
         <Popup
           characterImageUrl="https://static.calmery.moe/s/2/17.png"
           onEnter={handleOnClickTermsAgreeButton}
           onCancel={handleOnClickTermsCancelButton}
-          cancalText="同意しない"
           enterText="同意する"
+          cancalText="同意しない"
         >
           <a href="/terms" target="_blank" rel="noopener noreferrer">
             利用規約

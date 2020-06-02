@@ -1,56 +1,36 @@
-import React, { useState } from "react";
-import styled, { css } from "styled-components";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
+import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withRedux, State } from "~/domains";
-import { Canvas } from "~/containers/Canvas";
-import { Cropper } from "~/containers/Cropper";
-import { actions } from "~/domains/cropper/actions";
-import { actions as canvasActions } from "~/domains/canvas/actions";
-import { Page } from "~/components/Page";
-import { Spacing } from "~/styles/spacing";
-import { Colors, GradientColors } from "~/styles/colors";
-import { Typography } from "~/styles/typography";
-import { Menu } from "~/components/Menu";
-import { Mixin } from "~/styles/mixin";
-import { Tutorial } from "~/components/Tutorial";
+import styled, { css } from "styled-components";
 import { ControlBar } from "~/components/ControlBar";
 import { FirstLanding } from "~/components/FirstLanding";
+import { Page } from "~/components/Page";
+import { PageColumn } from "~/components/PageColumn";
+import { Horizontal } from "~/components/Horizontal";
+import { HorizontalInner } from "~/components/HorizontalInner";
+import { Menu } from "~/components/Menu";
+import { Tutorial } from "~/components/Tutorial";
+import { ASPECT_RATIOS } from "~/constants/cropper";
 import {
   CROP_PAGE_WITH_IMAGE_SCENARIOS,
-  CROP_PAGE_WITHOUT_IMAGE_SCENARIOS,
+  PAGE_WITHOUT_IMAGE_SCENARIOS,
 } from "~/constants/tutorials";
+import { Canvas } from "~/containers/Canvas";
+import { Cropper } from "~/containers/Cropper";
+import { State, withRedux } from "~/domains";
+import { actions } from "~/domains/cropper/actions";
+import { actions as canvasActions } from "~/domains/canvas/actions";
+import { Colors, GradientColors } from "~/styles/colors";
+import { Constants } from "~/styles/constants";
+import { Mixin } from "~/styles/mixin";
+import { Spacing } from "~/styles/spacing";
+import { Typography } from "~/styles/typography";
 import * as GA from "~/utils/google-analytics";
-import { useRouter } from "next/router";
 
-const Horizontal = styled.div`
-  width: 100%;
-  overflow-x: scroll;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+// Styles
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const HorizontalInner = styled.div`
-  width: fit-content;
-  display: flex;
-`;
-
-const FlexColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
-
-const BottomBar = styled.div`
-  width: 100%;
-  flex-shrink: 0;
-`;
-
-const Rotate = styled.div`
+const Angle = styled.div`
   ${Typography.S};
 
   text-align: center;
@@ -132,7 +112,7 @@ const CropTargetImages = styled.div`
   display: flex;
 `;
 
-const CropTargetImage = styled.div`
+const CropTargetImage = styled.div<{ selected?: boolean }>`
   ${Mixin.clickable};
 
   width: 36px;
@@ -142,6 +122,7 @@ const CropTargetImage = styled.div`
   justify-content: center;
   margin-right: ${Spacing.m}px;
   cursor: pointer;
+  opacity: ${({ selected }) => (selected ? 1 : Constants.opacity)};
 
   &:first-child {
     margin-left: ${Spacing.l}px;
@@ -156,89 +137,98 @@ const CropTargetImage = styled.div`
   }
 `;
 
-const aspectRatios = [
-  {
-    w: 1,
-    h: 1,
-  },
-  {
-    w: 3,
-    h: 4,
-  },
-  {
-    w: 4,
-    h: 3,
-  },
-  {
-    w: 9,
-    h: 16,
-  },
-  {
-    w: 16,
-    h: 9,
-  },
-  {
-    w: 3,
-    h: 1,
-  },
-];
+// Components
 
 const Crop: NextPage = () => {
   const { pathname } = useRouter();
   const dispatch = useDispatch();
-  const canvas = useSelector(({ canvas }: State) => canvas);
+  const { temporaries, userLayers } = useSelector(
+    ({ canvas }: State) => canvas
+  );
   const { image, cropper } = useSelector(({ cropper }: State) => cropper);
-  const changeCropperCropperAspectRatio = (
-    index: number,
-    w: number,
-    h: number
-  ) => dispatch(actions.changeCropperCropperAspectRatio(index, w, h));
-  const changeCropperCropperFreeAspectRatio = () =>
-    dispatch(actions.changeCropperCropperFreeAspectRatio());
+
+  // States
+
   const [isTutorial, setTutorial] = useState(false);
 
-  const isImageExists = canvas.userLayers.some((l) => !!l);
+  // Events
 
-  // Debug
+  const handleOnClickHelpButton = useCallback(() => {
+    GA.playTutorial(pathname);
+    setTutorial(true);
+  }, []);
 
-  let rotate = image.rotate.current;
+  const handleOnCompleteTutorial = useCallback(() => {
+    setTutorial(false);
+    GA.completeTutorial(pathname);
+  }, []);
 
-  if (rotate < 0) {
-    rotate = 360 - (Math.abs(rotate) % 360);
+  const handleOnStopTutorial = useCallback(() => {
+    setTutorial(false);
+    GA.stopTutorial(pathname);
+  }, []);
+
+  const handleOnChangeFixedAspectRatio = useCallback(
+    (i: number, w: number, h: number) => {
+      dispatch(actions.changeCropperCropperAspectRatio(i, w, h));
+    },
+    [dispatch]
+  );
+
+  const handleOnChangeFreeAspectRatio = useCallback(() => {
+    dispatch(actions.changeCropperCropperFreeAspectRatio());
+  }, [dispatch]);
+
+  const handleOnChangeCropTargetImage = useCallback(
+    (i: number) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const userLayer = userLayers[i]!;
+
+      const { dataUrl, width, height, cropper } = userLayer;
+
+      dispatch(canvasActions.startCanvasUserLayerCrop(i));
+      dispatch(
+        actions.initializeCropperImage({
+          url: dataUrl,
+          width,
+          height,
+          ...cropper,
+        })
+      );
+    },
+    [dispatch, userLayers]
+  );
+
+  // Render
+
+  const isImageExists = userLayers.some((u) => u);
+  let angle = image.rotate.current;
+
+  if (angle < 0) {
+    angle = 360 - (Math.abs(angle) % 360);
   } else {
-    rotate = rotate % 360;
+    angle = angle % 360;
   }
 
   return (
     <>
       <Page>
-        <FlexColumn>
-          <ControlBar
-            onClickHelpButton={() => {
-              GA.playTutorial(pathname);
-              setTutorial(true);
-            }}
-          />
-          {isImageExists && <Cropper />}
+        <PageColumn>
+          <ControlBar onClickHelpButton={handleOnClickHelpButton} />
           {!isImageExists && <Canvas logo={false} stickers={false} />}
-          <BottomBar>
-            <div style={{ marginTop: `${Spacing.l}px` }}></div>
+          {isImageExists && <Cropper />}
+          <Menu>
             {isImageExists && (
               <>
-                <Rotate>
-                  <div id="tutorial-crop-angle">{Math.floor(rotate)}°</div>
-                </Rotate>
+                <Angle>
+                  <div id="tutorial-crop-angle">{Math.floor(angle)}°</div>
+                </Angle>
                 <AspectRatioContainer>
                   <Horizontal>
                     <HorizontalInner id="tutorial-crop-aspect-ratios">
                       <AspectRatioFree
                         selected={cropper.freeAspect}
-                        onClick={
-                          // ToDo: FreeAspect を true にする処理が必要になる
-                          () => {
-                            changeCropperCropperFreeAspectRatio();
-                          }
-                        }
+                        onClick={handleOnChangeFreeAspectRatio}
                       >
                         <AspectRatioIcon selected={cropper.freeAspect}>
                           <img src="/images/pages/crop/free.svg" alt="Free" />
@@ -247,7 +237,7 @@ const Crop: NextPage = () => {
                           Free
                         </AspectRatioTitle>
                       </AspectRatioFree>
-                      {aspectRatios.map(({ w, h }, index) => {
+                      {ASPECT_RATIOS.map(({ w, h }, index) => {
                         return (
                           <>
                             <AspectRatio
@@ -256,7 +246,7 @@ const Crop: NextPage = () => {
                                 cropper.selectedIndex === index
                               }
                               onClick={() =>
-                                changeCropperCropperAspectRatio(index, w, h)
+                                handleOnChangeFixedAspectRatio(index, w, h)
                               }
                             >
                               <AspectRatioIcon
@@ -285,35 +275,16 @@ const Crop: NextPage = () => {
                     </HorizontalInner>
                   </Horizontal>
                   <CropTargetImages id="tutorial-crop-target-images">
-                    {canvas.userLayers.map((userLayer, index) => {
+                    {userLayers.map((userLayer, i) => {
                       if (!userLayer) {
                         return null;
                       }
 
                       return (
                         <CropTargetImage
-                          key={index}
-                          onClick={() => {
-                            const {
-                              dataUrl,
-                              width,
-                              height,
-                              cropper,
-                            } = userLayer;
-
-                            dispatch(
-                              canvasActions.startCanvasUserLayerCrop(index)
-                            );
-
-                            dispatch(
-                              actions.initializeCropperImage({
-                                url: dataUrl,
-                                width,
-                                height,
-                                ...cropper,
-                              })
-                            );
-                          }}
+                          key={i}
+                          onClick={() => handleOnChangeCropTargetImage(i)}
+                          selected={temporaries.selectedUserLayerIndex === i}
                         >
                           <img src={userLayer.dataUrl} alt="編集画像" />
                         </CropTargetImage>
@@ -323,26 +294,21 @@ const Crop: NextPage = () => {
                 </AspectRatioContainer>
               </>
             )}
-            <Menu />
-          </BottomBar>
-        </FlexColumn>
+          </Menu>
+        </PageColumn>
       </Page>
+
       <FirstLanding />
+
       {isTutorial && (
         <Tutorial
           scenarios={
             isImageExists
               ? CROP_PAGE_WITH_IMAGE_SCENARIOS
-              : CROP_PAGE_WITHOUT_IMAGE_SCENARIOS
+              : PAGE_WITHOUT_IMAGE_SCENARIOS
           }
-          onComplete={() => {
-            setTutorial(false);
-            GA.completeTutorial(pathname);
-          }}
-          onStop={() => {
-            setTutorial(false);
-            GA.stopTutorial(pathname);
-          }}
+          onComplete={handleOnCompleteTutorial}
+          onStop={handleOnStopTutorial}
         />
       )}
     </>

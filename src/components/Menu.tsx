@@ -8,6 +8,12 @@ import { Spacing } from "~/styles/spacing";
 // Styles
 
 const Container = styled.div`
+  width: 100%;
+  flex-shrink: 0;
+  margin-top: ${Spacing.l}px;
+`;
+
+const MenuContainer = styled.div`
   box-sizing: border-box;
   background: ${Colors.white};
   border-top: 1px solid ${Colors.border};
@@ -72,51 +78,56 @@ const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
 
 // Components
 
-export const Menu = () => {
+export const Menu: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) => {
   const { pathname, push } = useRouter();
 
   return (
-    <Container id="tutorial-menu">
-      <PrimaryButtons>
-        <IconContainer onClick={() => push("/stickers")}>
-          <Icon
-            selected={pathname === "/stickers"}
-            type="image/svg+xml"
-            data="/images/components/menu/stickers.svg"
-          />
-        </IconContainer>
-        <IconContainer onClick={() => push("/filters")}>
-          <Icon
-            selected={pathname === "/filters"}
-            type="image/svg+xml"
-            data="/images/components/menu/filters.svg"
-          />
-        </IconContainer>
-        <IconContainer onClick={() => push("/crop")}>
-          <Icon
-            selected={pathname === "/crop"}
-            type="image/svg+xml"
-            data="/images/components/menu/crop.svg"
-          />
-        </IconContainer>
-        <IconContainer onClick={() => push("/frames")}>
-          <Icon
-            selected={pathname === "/frames"}
-            type="image/svg+xml"
-            data="/images/components/menu/frames.svg"
-          />
-        </IconContainer>
-      </PrimaryButtons>
-      <Divider />
-      <SecondaryButtons>
-        <IconContainer onClick={() => push("/save")}>
-          <Icon
-            selected={pathname === "/save"}
-            type="image/svg+xml"
-            data="/images/components/menu/save.svg"
-          />
-        </IconContainer>
-      </SecondaryButtons>
+    <Container>
+      {children}
+      <MenuContainer id="tutorial-menu">
+        <PrimaryButtons>
+          <IconContainer onClick={() => push("/stickers")}>
+            <Icon
+              selected={pathname === "/stickers"}
+              type="image/svg+xml"
+              data="/images/components/menu/stickers.svg"
+            />
+          </IconContainer>
+          <IconContainer onClick={() => push("/filters")}>
+            <Icon
+              selected={pathname === "/filters"}
+              type="image/svg+xml"
+              data="/images/components/menu/filters.svg"
+            />
+          </IconContainer>
+          <IconContainer onClick={() => push("/crop")}>
+            <Icon
+              selected={pathname === "/crop"}
+              type="image/svg+xml"
+              data="/images/components/menu/crop.svg"
+            />
+          </IconContainer>
+          <IconContainer onClick={() => push("/frames")}>
+            <Icon
+              selected={pathname === "/frames"}
+              type="image/svg+xml"
+              data="/images/components/menu/frames.svg"
+            />
+          </IconContainer>
+        </PrimaryButtons>
+        <Divider />
+        <SecondaryButtons>
+          <IconContainer onClick={() => push("/save")}>
+            <Icon
+              selected={pathname === "/save"}
+              type="image/svg+xml"
+              data="/images/components/menu/save.svg"
+            />
+          </IconContainer>
+        </SecondaryButtons>
+      </MenuContainer>
     </Container>
   );
 };

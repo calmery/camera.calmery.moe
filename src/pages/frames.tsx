@@ -1,44 +1,34 @@
 import { NextPage } from "next";
-import React, { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 import { ControlBar } from "~/components/ControlBar";
+import { FirstLanding } from "~/components/FirstLanding";
+import { Horizontal } from "~/components/Horizontal";
+import { HorizontalInner } from "~/components/HorizontalInner";
 import { Menu } from "~/components/Menu";
 import { Page } from "~/components/Page";
+import { PageColumn } from "~/components/PageColumn";
 import { Tutorial } from "~/components/Tutorial";
+import { COLLAGES_PAGE_SCENARIOS } from "~/constants/tutorials";
 import { Canvas } from "~/containers/Canvas";
 import { withRedux, State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { canvasUserLayerFrame } from "~/domains/canvas/frames";
-import { Spacing } from "~/styles/spacing";
 import { GradientColors } from "~/styles/colors";
+import { Spacing } from "~/styles/spacing";
 import { CanvasUserFrameType } from "~/types/CanvasUserFrameType";
-import { COLLAGES_PAGE_SCENARIOS } from "~/constants/tutorials";
 import * as GA from "~/utils/google-analytics";
-import { useRouter } from "next/router";
 
-const Horizontal = styled.div`
-  width: 100%;
-  overflow-x: scroll;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+// Styles
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const HorizontalInner = styled.div`
-  width: fit-content;
-  display: flex;
+const FramesContainer = styled.div`
+  margin-bottom: ${Spacing.l}px;
   padding: 0 ${Spacing.l}px;
 `;
 
-const Container = styled.div`
-  margin-bottom: ${Spacing.l}px;
-`;
-
-const CollageButton = styled.div<{ selected?: boolean }>`
+const FrameButton = styled.div<{ selected?: boolean }>`
   width: 36px;
   height: 36px;
   display: flex;
@@ -69,55 +59,59 @@ const CollageButton = styled.div<{ selected?: boolean }>`
     `}
 `;
 
-const FlexColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
-
-const BottomBar = styled.div`
-  width: 100%;
-  flex-shrink: 0;
-  padding-top: ${Spacing.l}px;
-`;
+// Components
 
 const Frames: NextPage = () => {
-  const { userLayers } = useSelector(({ canvas }: State) => canvas);
-  const [isTutorial, setTutorial] = useState(false);
   const dispatch = useDispatch();
-  const { selectedUserLayerFrame } = useSelector(({ ui }: State) => ui);
   const { pathname } = useRouter();
-  const handleOnClickEnableCollage = (
-    frame: CanvasUserFrameType,
-    index: number
-  ) => dispatch(actions.enableCollage(frame, index));
-  const handleOnClickDisableCollage = () => dispatch(actions.disableCollage());
+  const { selectedUserLayerFrame } = useSelector(({ ui }: State) => ui);
 
-  let userLayerCount = 0;
+  // States
 
-  userLayers.forEach((u) => u && userLayerCount++);
+  const [isTutorial, setTutorial] = useState(false);
+
+  // Events
+
+  const handleOnClickHelpButton = useCallback(() => {
+    GA.playTutorial(pathname);
+    setTutorial(true);
+  }, []);
+
+  const handleOnCompleteTutorial = useCallback(() => {
+    setTutorial(false);
+    GA.completeTutorial(pathname);
+  }, []);
+
+  const handleOnStopTutorial = useCallback(() => {
+    setTutorial(false);
+    GA.stopTutorial(pathname);
+  }, []);
+
+  const handleOnClickEnableCollage = useCallback(
+    (frame: CanvasUserFrameType, i: number) => {
+      dispatch(actions.enableCollage(frame, i));
+    },
+    [dispatch]
+  );
+
+  const handleOnClickDisableCollage = useCallback(() => {
+    dispatch(actions.disableCollage());
+  }, [dispatch]);
+
+  // Render
 
   return (
     <>
       <Page>
-        <FlexColumn>
-          <ControlBar
-            onClickHelpButton={() => {
-              GA.playTutorial(pathname);
-              setTutorial(true);
-            }}
-          />
-          <Canvas
-            logo={false}
-            stickers={false}
-            removable={userLayerCount > 1}
-          />
-          <BottomBar>
-            <div id="tutorial-collage-canvas-frames">
-              <Container>
+        <PageColumn>
+          <ControlBar onClickHelpButton={handleOnClickHelpButton} />
+          <Canvas logo={false} removable stickers={false} />
+          <Menu>
+            <div id="tutorial-frames-canvas-frames">
+              <FramesContainer>
                 <Horizontal>
                   <HorizontalInner>
-                    <CollageButton
+                    <FrameButton
                       selected={!selectedUserLayerFrame}
                       onClick={handleOnClickDisableCollage}
                     >
@@ -125,14 +119,14 @@ const Frames: NextPage = () => {
                         type="image/svg+xml"
                         data={`/images/pages/frames/disable.svg`}
                       />
-                    </CollageButton>
+                    </FrameButton>
                     {canvasUserLayerFrame[CanvasUserFrameType.W3H4].frames.map(
-                      (_, index) => (
-                        <CollageButton
+                      (_, i) => (
+                        <FrameButton
                           onClick={() =>
                             handleOnClickEnableCollage(
                               CanvasUserFrameType.W3H4,
-                              index
+                              i
                             )
                           }
                           selected={
@@ -140,25 +134,25 @@ const Frames: NextPage = () => {
                               selectedUserLayerFrame &&
                               selectedUserLayerFrame.frame ===
                                 CanvasUserFrameType.W3H4 &&
-                              selectedUserLayerFrame.index === index
+                              selectedUserLayerFrame.index === i
                             )
                           }
-                          key={index}
+                          key={i}
                         >
                           <object
                             type="image/svg+xml"
-                            data={`/images/pages/frames/3-4-${index}.svg`}
+                            data={`/images/pages/frames/3-4-${i}.svg`}
                           />
-                        </CollageButton>
+                        </FrameButton>
                       )
                     )}
                     {canvasUserLayerFrame[CanvasUserFrameType.W4H3].frames.map(
-                      (_, index) => (
-                        <CollageButton
+                      (_, i) => (
+                        <FrameButton
                           onClick={() =>
                             handleOnClickEnableCollage(
                               CanvasUserFrameType.W4H3,
-                              index
+                              i
                             )
                           }
                           selected={
@@ -166,37 +160,33 @@ const Frames: NextPage = () => {
                               selectedUserLayerFrame &&
                               selectedUserLayerFrame.frame ===
                                 CanvasUserFrameType.W4H3 &&
-                              selectedUserLayerFrame.index === index
+                              selectedUserLayerFrame.index === i
                             )
                           }
-                          key={index}
+                          key={i}
                         >
                           <object
                             type="image/svg+xml"
-                            data={`/images/pages/frames/4-3-${index}.svg`}
+                            data={`/images/pages/frames/4-3-${i}.svg`}
                           />
-                        </CollageButton>
+                        </FrameButton>
                       )
                     )}
                   </HorizontalInner>
                 </Horizontal>
-              </Container>
+              </FramesContainer>
             </div>
-            <Menu />
-          </BottomBar>
-        </FlexColumn>
+          </Menu>
+        </PageColumn>
       </Page>
+
+      <FirstLanding />
+
       {isTutorial && (
         <Tutorial
           scenarios={COLLAGES_PAGE_SCENARIOS}
-          onComplete={() => {
-            setTutorial(false);
-            GA.completeTutorial(pathname);
-          }}
-          onStop={() => {
-            setTutorial(false);
-            GA.stopTutorial(pathname);
-          }}
+          onComplete={handleOnCompleteTutorial}
+          onStop={handleOnStopTutorial}
         />
       )}
     </>

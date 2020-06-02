@@ -1,42 +1,31 @@
-import React, { useCallback, useState } from "react";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
+import React, { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { ControlBar } from "~/components/ControlBar";
+import { FirstLanding } from "~/components/FirstLanding";
+import { Horizontal } from "~/components/Horizontal";
+import { HorizontalInner } from "~/components/HorizontalInner";
 import { Menu } from "~/components/Menu";
 import { Page } from "~/components/Page";
-import { Canvas } from "~/containers/Canvas";
-import { Spacing } from "~/styles/spacing";
-import { withRedux, State } from "~/domains";
+import { PageColumn } from "~/components/PageColumn";
 import { Tutorial } from "~/components/Tutorial";
-import { FirstLanding } from "~/components/FirstLanding";
-import { useDispatch, useSelector } from "react-redux";
-import { Typography } from "~/styles/typography";
-import { thunkActions } from "~/domains/canvas/actions";
 import { APPENDABLE_STICKERS } from "~/constants/stickers";
 import {
   STICKERS_PAGE_WITH_IMAGE_SCENARIOS,
-  STICKERS_PAGE_WITHOUT_IMAGE_SCENARIOS,
+  PAGE_WITHOUT_IMAGE_SCENARIOS,
 } from "~/constants/tutorials";
+import { Canvas } from "~/containers/Canvas";
+import { withRedux, State } from "~/domains";
+import { thunkActions } from "~/domains/canvas/actions";
+import { Spacing } from "~/styles/spacing";
+import { Typography } from "~/styles/typography";
 import * as GA from "~/utils/google-analytics";
-import { useRouter } from "next/router";
 
-const Horizontal = styled.div`
-  width: 100%;
-  overflow-x: scroll;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+// Styles
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const HorizontalInner = styled.div`
-  width: fit-content;
-  display: flex;
-`;
-
-const Container = styled.div`
+const StickersContainer = styled.div`
   margin-bottom: ${Spacing.l}px;
 `;
 
@@ -84,45 +73,54 @@ const Sticker = styled.img`
   cursor: pointer;
 `;
 
-const FlexColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
-
-const BottomBar = styled.div`
-  width: 100%;
-  flex-shrink: 0;
-  padding-top: ${Spacing.l}px;
-`;
+// Components
 
 const Stickers: NextPage = () => {
   const dispatch = useDispatch();
   const { pathname } = useRouter();
+  const { userLayers } = useSelector(({ canvas }: State) => canvas);
+
+  // States
+
+  const [isTutorial, setTutorial] = useState(false);
+
+  // Events
+
   const handleOnClickStickerImage = useCallback(
     (group: number, id: number, url: string) =>
       dispatch(thunkActions.addCanvasStickerLayerWithUrl(group, id, url)),
     [dispatch]
   );
-  const [isTutorial, setTutorial] = useState(false);
-  const { userLayers } = useSelector(({ canvas }: State) => canvas);
-  const isImageExists = userLayers.some((u) => !!u);
+
+  const handleOnClickHelpButton = useCallback(() => {
+    GA.playTutorial(pathname);
+    setTutorial(true);
+  }, []);
+
+  const handleOnCompleteTutorial = useCallback(() => {
+    setTutorial(false);
+    GA.completeTutorial(pathname);
+  }, []);
+
+  const handleOnStopTutorial = useCallback(() => {
+    setTutorial(false);
+    GA.stopTutorial(pathname);
+  }, []);
+
+  // Render
+
+  const isImageExists = userLayers.some((u) => u);
 
   return (
     <>
       <Page>
-        <FlexColumn>
-          <ControlBar
-            onClickHelpButton={() => {
-              GA.playTutorial(pathname);
-              setTutorial(true);
-            }}
-          />
+        <PageColumn>
+          <ControlBar onClickHelpButton={handleOnClickHelpButton} />
           <Canvas logo={isImageExists} />
-          <BottomBar>
+          <Menu>
             {isImageExists && (
-              <div id="tutorial-edit-canvas-stickers">
-                <Container>
+              <div id="tutorial-stickers-images">
+                <StickersContainer>
                   <Horizontal>
                     <HorizontalInner>
                       {APPENDABLE_STICKERS.map(({ name, urls }, group) => (
@@ -155,29 +153,24 @@ const Stickers: NextPage = () => {
                       ))}
                     </HorizontalInner>
                   </Horizontal>
-                </Container>
+                </StickersContainer>
               </div>
             )}
-            <Menu />
-          </BottomBar>
-        </FlexColumn>
+          </Menu>
+        </PageColumn>
       </Page>
+
       <FirstLanding />
+
       {isTutorial && (
         <Tutorial
           scenarios={
             isImageExists
               ? STICKERS_PAGE_WITH_IMAGE_SCENARIOS
-              : STICKERS_PAGE_WITHOUT_IMAGE_SCENARIOS
+              : PAGE_WITHOUT_IMAGE_SCENARIOS
           }
-          onComplete={() => {
-            setTutorial(false);
-            GA.completeTutorial(pathname);
-          }}
-          onStop={() => {
-            setTutorial(false);
-            GA.stopTutorial(pathname);
-          }}
+          onComplete={handleOnCompleteTutorial}
+          onStop={handleOnStopTutorial}
         />
       )}
     </>

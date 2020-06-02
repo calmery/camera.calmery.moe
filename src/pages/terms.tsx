@@ -1,10 +1,10 @@
-import React, { useCallback } from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { Button } from "~/components/Button";
-import { Spacing } from "~/styles/spacing";
 import { Colors, GradientColors } from "~/styles/colors";
+import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 
 const Border = styled.div`

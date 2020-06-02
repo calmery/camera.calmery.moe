@@ -1,4 +1,4 @@
-// First
+// First Landing
 
 export const FIRST_LANDING_SCENARIOS = [
   {
@@ -123,21 +123,13 @@ export const STICKERS_PAGE_WITH_IMAGE_SCENARIOS = [
   },
   {
     characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-    emphasisElementId: "tutorial-edit-canvas-stickers",
+    emphasisElementId: "tutorial-stickers-images",
     message: "ここにあるスタンプをタップすると画面に追加されるよ！",
   },
   {
     characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-    emphasisElementId: "tutorial-edit-canvas-stickers",
+    emphasisElementId: "tutorial-stickers-images",
     message: "スタンプは今後も追加していく予定！お楽しみに！",
-  },
-];
-
-export const STICKERS_PAGE_WITHOUT_IMAGE_SCENARIOS = [
-  {
-    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-    emphasisElementId: "tutorial-canvas",
-    message: "まずはここをタップして画像を読み込んでみて！",
   },
 ];
 
@@ -151,7 +143,7 @@ export const TUNE_PAHE_WITH_IMAGE_SCENARIOS = [
   },
   {
     characterImageUrl: "https://static.calmery.moe/s/2/3.png",
-    emphasisElementId: "tutorial-filter-input",
+    emphasisElementId: "tutorial-filters-inputs",
     message: "ここがフィルターの値を変更するところ！",
   },
   {
@@ -161,21 +153,13 @@ export const TUNE_PAHE_WITH_IMAGE_SCENARIOS = [
   },
   {
     characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-    emphasisElementId: "tutorial-filter-targets",
+    emphasisElementId: "tutorial-filters-images",
     message: "他の画像にフィルターをかけたい？",
   },
   {
     characterImageUrl: "https://static.calmery.moe/s/2/11.png",
-    emphasisElementId: "tutorial-filter-targets",
+    emphasisElementId: "tutorial-filters-images",
     message: "ここでフィルターをかけたい画像をタップしてみよう！",
-  },
-];
-
-export const TUNE_PAHE_WITHOUT_IMAGE_SCENARIOS = [
-  {
-    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-    emphasisElementId: "tutorial-canvas",
-    message: "まずはここをタップして画像を読み込んでみて！",
   },
 ];
 
@@ -220,30 +204,22 @@ export const CROP_PAGE_WITH_IMAGE_SCENARIOS = [
   },
 ];
 
-export const CROP_PAGE_WITHOUT_IMAGE_SCENARIOS = [
-  {
-    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
-    emphasisElementId: "tutorial-canvas",
-    message: "まずはここをタップして画像を読み込んでみて！",
-  },
-];
-
 // Collages
 
 export const COLLAGES_PAGE_SCENARIOS = [
   {
     characterImageUrl: "https://static.calmery.moe/s/2/5.png",
-    emphasisElementId: "tutorial-collage-canvas-frames",
+    emphasisElementId: "tutorial-frames-canvas-frames",
     message: "ここに色んなフレームが用意されているよ！タップして選んでみよう！",
   },
   {
     characterImageUrl: "https://static.calmery.moe/s/1/10.png",
-    emphasisElementId: "tutorial-collage-canvas-frames",
+    emphasisElementId: "tutorial-frames-canvas-frames",
     message: "あれっ...もしかして...",
   },
   {
     characterImageUrl: "https://static.calmery.moe/s/2/18.png",
-    emphasisElementId: "tutorial-collage-canvas-frames",
+    emphasisElementId: "tutorial-frames-canvas-frames",
     message: "使いたいフレームがない...！？",
   },
   {
@@ -255,7 +231,7 @@ export const COLLAGES_PAGE_SCENARIOS = [
 
 // Save
 
-export const SAVE_PAGE_SCENARIOS = [
+export const SAVE_PAGE_WITH_IMAGE_SCENARIOS = [
   {
     characterImageUrl: "https://static.calmery.moe/s/1/12.png",
     emphasisElementId: "tutorial-save-image",
@@ -275,5 +251,15 @@ export const SAVE_PAGE_SCENARIOS = [
     characterImageUrl: "https://static.calmery.moe/s/2/3.png",
     emphasisElementId: "tutorial-save-image",
     message: "使ってくれてありがとう！",
+  },
+];
+
+// Common
+
+export const PAGE_WITHOUT_IMAGE_SCENARIOS = [
+  {
+    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
+    emphasisElementId: "tutorial-canvas",
+    message: "まずはここをタップして画像を読み込んでみて！",
   },
 ];

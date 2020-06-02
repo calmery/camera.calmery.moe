@@ -1,54 +1,38 @@
-import React, { useState } from "react";
-import styled, { css } from "styled-components";
 import { NextPage } from "next";
+import React, { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withRedux, State } from "~/domains";
-import { Canvas } from "~/containers/Canvas";
-import { actions } from "~/domains/ui/actions";
-import { actions as canvasActions } from "~/domains/canvas/actions";
-import { Page } from "~/components/Page";
-import { Spacing } from "~/styles/spacing";
-import { Colors, GradientColors } from "~/styles/colors";
-import { Typography } from "~/styles/typography";
-import { Menu } from "~/components/Menu";
-import { Mixin } from "~/styles/mixin";
-import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
-import { InputRange } from "~/components/InputRange";
-import { Tutorial } from "~/components/Tutorial";
+import styled, { css } from "styled-components";
+import { useRouter } from "next/router";
 import { ControlBar } from "~/components/ControlBar";
 import { FirstLanding } from "~/components/FirstLanding";
+import { Horizontal } from "~/components/Horizontal";
+import { InputRange } from "~/components/InputRange";
+import { HorizontalInner } from "~/components/HorizontalInner";
+import { Menu } from "~/components/Menu";
+import { Page } from "~/components/Page";
+import { PageColumn } from "~/components/PageColumn";
+import { Tutorial } from "~/components/Tutorial";
 import {
   TUNE_PAHE_WITH_IMAGE_SCENARIOS,
-  TUNE_PAHE_WITHOUT_IMAGE_SCENARIOS,
+  PAGE_WITHOUT_IMAGE_SCENARIOS,
 } from "~/constants/tutorials";
+import { Canvas } from "~/containers/Canvas";
+import { withRedux, State } from "~/domains";
+import { actions } from "~/domains/canvas/actions";
+import { actions as uiActions } from "~/domains/ui/actions";
+import { Colors, GradientColors } from "~/styles/colors";
+import { Constants } from "~/styles/constants";
+import { Mixin } from "~/styles/mixin";
+import { Spacing } from "~/styles/spacing";
+import { Typography } from "~/styles/typography";
+import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
 import * as GA from "~/utils/google-analytics";
-import { useRouter } from "next/router";
 
-const Horizontal = styled.div`
-  width: 100%;
-  overflow-x: scroll;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+// Styles
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const HorizontalInner = styled.div`
-  width: fit-content;
-  display: flex;
-`;
-
-const FlexColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
-
-const BottomBar = styled.div`
-  width: 100%;
-  flex-shrink: 0;
+const FiltersContainer = styled.div`
+  margin: 0 ${Spacing.l}px;
+  margin-bottom: ${Spacing.m}px;
 `;
 
 const FilterTypeContainer = styled.div`
@@ -116,13 +100,13 @@ const FilterTypeTitle = styled.div<{ selected?: boolean }>`
     `}
 `;
 
-const TuneTargetImages = styled.div`
+const FilterTargetImages = styled.div`
   align-items: center;
   height: 54px;
   display: flex;
 `;
 
-const TuneTargetImage = styled.div`
+const FilterTargetImage = styled.div<{ selected?: boolean }>`
   ${Mixin.clickable};
 
   width: 36px;
@@ -132,6 +116,7 @@ const TuneTargetImage = styled.div`
   justify-content: center;
   margin-right: ${Spacing.m}px;
   cursor: pointer;
+  opacity: ${({ selected }) => (selected ? 1 : Constants.opacity)};
 
   &:first-child {
     margin-left: ${Spacing.l}px;
@@ -146,43 +131,107 @@ const TuneTargetImage = styled.div`
   }
 `;
 
-const FilterContainer = styled.div`
-  margin: 0 ${Spacing.l}px;
-  margin-bottom: ${Spacing.m}px;
-`;
+// Components
 
 const Filters: NextPage = () => {
-  const [isTutorial, setTutorial] = useState(false);
-  const { pathname } = useRouter();
   const dispatch = useDispatch();
-  const canvas = useSelector(({ canvas }: State) => canvas);
+  const { pathname } = useRouter();
+  const { temporaries, userLayers } = useSelector(
+    ({ canvas }: State) => canvas
+  );
   const ui = useSelector(({ ui }: State) => ui);
-  const isImageExists = canvas.userLayers.some((l) => !!l);
 
-  let userLayer =
-    canvas.userLayers[canvas.temporaries.selectedUserLayerFilterIndex];
+  // States
+
+  const [isTutorial, setTutorial] = useState(false);
+
+  // Events
+
+  const handleOnClickHelpButton = useCallback(() => {
+    GA.playTutorial(pathname);
+    setTutorial(true);
+  }, []);
+
+  const handleOnCompleteTutorial = useCallback(() => {
+    setTutorial(false);
+    GA.completeTutorial(pathname);
+  }, []);
+
+  const handleOnStopTutorial = useCallback(() => {
+    setTutorial(false);
+    GA.stopTutorial(pathname);
+  }, []);
+
+  const handleOnChangeBlurValue = useCallback(
+    (value) => {
+      dispatch(
+        actions.updateCanvasUserLayerFilter(CanvasUserFilterType.blur, value)
+      );
+    },
+    [dispatch]
+  );
+
+  const handleOnChangeHueValue = useCallback(
+    (value) => {
+      dispatch(
+        actions.updateCanvasUserLayerFilter(CanvasUserFilterType.hue, value)
+      );
+    },
+    [dispatch]
+  );
+
+  const handleOnChangeSaturateValue = useCallback(
+    (value) => {
+      dispatch(
+        actions.updateCanvasUserLayerFilter(
+          CanvasUserFilterType.saturate,
+          value
+        )
+      );
+    },
+    [dispatch]
+  );
+
+  const handleOnChangeBlurFilterType = useCallback(() => {
+    dispatch(uiActions.changeUiFilterType(CanvasUserFilterType.blur));
+  }, [dispatch]);
+
+  const handleOnChangeHueFilterType = useCallback(() => {
+    dispatch(uiActions.changeUiFilterType(CanvasUserFilterType.hue));
+  }, [dispatch]);
+
+  const handleOnChangeSaturateFilterType = useCallback(() => {
+    dispatch(uiActions.changeUiFilterType(CanvasUserFilterType.saturate));
+  }, [dispatch]);
+
+  const handleOnChangeTargetImage = useCallback(
+    (i) => {
+      dispatch(actions.startCanvasUserLayerFilter(i));
+    },
+    [dispatch]
+  );
+
+  // Render
+
+  const isImageExists = userLayers.some((u) => u);
+
+  let userLayer = userLayers[temporaries.selectedUserLayerFilterIndex];
 
   if (!userLayer) {
-    const i = canvas.userLayers.findIndex((l) => !!l);
+    const i = userLayers.findIndex((l) => !!l);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    userLayer = canvas.userLayers[i]!;
+    userLayer = userLayers[i]!;
   }
 
   return (
     <>
       <Page>
-        <FlexColumn>
-          <ControlBar
-            onClickHelpButton={() => {
-              GA.playTutorial(pathname);
-              setTutorial(true);
-            }}
-          />
+        <PageColumn>
+          <ControlBar onClickHelpButton={handleOnClickHelpButton} />
           <Canvas logo={false} stickers={false} />
-          <BottomBar>
-            <div style={{ marginTop: `${Spacing.l}px` }}></div>
+          <Menu>
             {isImageExists && (
-              <FilterContainer id="tutorial-filter-input">
+              <FiltersContainer id="tutorial-filters-inputs">
                 <div
                   style={{
                     display:
@@ -197,14 +246,7 @@ const Filters: NextPage = () => {
                     step={1}
                     baseValue={0}
                     defaultValue={userLayer.blur}
-                    onChange={(value: number) => {
-                      dispatch(
-                        canvasActions.updateCanvasUserLayerFilter(
-                          CanvasUserFilterType.blur,
-                          value
-                        )
-                      );
-                    }}
+                    onChange={handleOnChangeBlurValue}
                   />
                 </div>
                 <div
@@ -221,14 +263,7 @@ const Filters: NextPage = () => {
                     step={1}
                     baseValue={0}
                     defaultValue={userLayer.hue}
-                    onChange={(value: number) => {
-                      dispatch(
-                        canvasActions.updateCanvasUserLayerFilter(
-                          CanvasUserFilterType.hue,
-                          value
-                        )
-                      );
-                    }}
+                    onChange={handleOnChangeHueValue}
                   />
                 </div>
                 <div
@@ -245,17 +280,10 @@ const Filters: NextPage = () => {
                     step={0.1}
                     baseValue={1}
                     defaultValue={userLayer.saturate}
-                    onChange={(value: number) => {
-                      dispatch(
-                        canvasActions.updateCanvasUserLayerFilter(
-                          CanvasUserFilterType.saturate,
-                          value
-                        )
-                      );
-                    }}
+                    onChange={handleOnChangeSaturateValue}
                   />
                 </div>
-              </FilterContainer>
+              </FiltersContainer>
             )}
             {isImageExists && (
               <>
@@ -266,13 +294,7 @@ const Filters: NextPage = () => {
                         selected={
                           ui.selectedFilterType === CanvasUserFilterType.blur
                         }
-                        onClick={() =>
-                          dispatch(
-                            actions.changeUiFilterType(
-                              CanvasUserFilterType.blur
-                            )
-                          )
-                        }
+                        onClick={handleOnChangeBlurFilterType}
                       >
                         <FilterTypeIcon
                           selected={
@@ -296,11 +318,7 @@ const Filters: NextPage = () => {
                         selected={
                           ui.selectedFilterType === CanvasUserFilterType.hue
                         }
-                        onClick={() =>
-                          dispatch(
-                            actions.changeUiFilterType(CanvasUserFilterType.hue)
-                          )
-                        }
+                        onClick={handleOnChangeHueFilterType}
                       >
                         <FilterTypeIcon
                           selected={
@@ -317,19 +335,12 @@ const Filters: NextPage = () => {
                           色相
                         </FilterTypeTitle>
                       </FilterType>
-
                       <FilterType
                         selected={
                           ui.selectedFilterType ===
                           CanvasUserFilterType.saturate
                         }
-                        onClick={() =>
-                          dispatch(
-                            actions.changeUiFilterType(
-                              CanvasUserFilterType.saturate
-                            )
-                          )
-                        }
+                        onClick={handleOnChangeSaturateFilterType}
                       >
                         <FilterTypeIcon
                           selected={
@@ -353,49 +364,43 @@ const Filters: NextPage = () => {
                       </FilterType>
                     </HorizontalInner>
                   </Horizontal>
-                  <TuneTargetImages id="tutorial-filter-targets">
-                    {canvas.userLayers.map((userLayer, index) => {
+                  <FilterTargetImages id="tutorial-filters-images">
+                    {userLayers.map((userLayer, i) => {
                       if (!userLayer) {
                         return null;
                       }
 
                       return (
-                        <TuneTargetImage
-                          key={index}
-                          onClick={() => {
-                            dispatch(
-                              canvasActions.startCanvasUserLayerFilter(index)
-                            );
-                          }}
+                        <FilterTargetImage
+                          key={i}
+                          onClick={() => handleOnChangeTargetImage(i)}
+                          selected={
+                            temporaries.selectedUserLayerFilterIndex === i
+                          }
                         >
                           <img src={userLayer.dataUrl} alt="編集画像" />
-                        </TuneTargetImage>
+                        </FilterTargetImage>
                       );
                     })}
-                  </TuneTargetImages>
+                  </FilterTargetImages>
                 </FilterTypeContainer>
               </>
             )}
-            <Menu />
-          </BottomBar>
-        </FlexColumn>
+          </Menu>
+        </PageColumn>
       </Page>
+
       <FirstLanding />
+
       {isTutorial && (
         <Tutorial
           scenarios={
             isImageExists
               ? TUNE_PAHE_WITH_IMAGE_SCENARIOS
-              : TUNE_PAHE_WITHOUT_IMAGE_SCENARIOS
+              : PAGE_WITHOUT_IMAGE_SCENARIOS
           }
-          onComplete={() => {
-            setTutorial(false);
-            GA.completeTutorial(pathname);
-          }}
-          onStop={() => {
-            setTutorial(false);
-            GA.stopTutorial(pathname);
-          }}
+          onComplete={handleOnCompleteTutorial}
+          onStop={handleOnStopTutorial}
         />
       )}
     </>

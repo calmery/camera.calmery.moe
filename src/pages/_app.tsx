@@ -1,12 +1,12 @@
-import React from "react";
 import NextApp from "next/app";
-import { createGlobalStyle } from "styled-components";
-import "~/utils/sentry";
 import Head from "next/head";
+import React from "react";
+import { createGlobalStyle } from "styled-components";
 import { Common } from "~/containers/Common";
 import * as GA from "~/utils/google-analytics";
+import "~/utils/sentry";
 
-export const GlobalStyle = createGlobalStyle`
+const GlobalStyle = createGlobalStyle`
   html, body, #__next {
     height: 100%;
   }
@@ -51,7 +51,7 @@ class App extends NextApp {
           <meta property="og:type" content="website" />
           <meta
             property="og:description"
-            content="うちの子、かるめりちゃんと一緒にお出かけしよう！"
+            content="かるめりちゃんと一緒に写真を撮ろう！"
           />
           <meta
             property="og:url"
@@ -64,7 +64,7 @@ class App extends NextApp {
           <meta name="twitter:title" content="かるめりちゃんカメラ" />
           <meta
             name="twitter:description"
-            content="うちの子、かるめりちゃんと一緒にお出かけしよう！"
+            content="かるめりちゃんと一緒に写真を撮ろう！"
           />
           <meta name="twitter:site" content="@calmeryme" />
           <meta name="twitter:creator" content="@calmeryme" />
