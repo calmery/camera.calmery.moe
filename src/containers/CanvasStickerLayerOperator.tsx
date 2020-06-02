@@ -21,6 +21,14 @@ const CircleWithResize = styled.circle`
   cursor: se-resize;
 `;
 
+const ImageWithPointer = styled.image`
+  cursor: pointer;
+`;
+
+const ImageWithResize = styled.image`
+  cursor: se-resize;
+`;
+
 // Child Components
 
 interface BorderProps {
@@ -65,6 +73,12 @@ const Border: React.FC<BorderProps> = ({
       fillOpacity="0"
     />
     <CircleWithPointer cx={width} cy="0" r={r} fill={color} />
+    <ImageWithPointer
+      x={width - (12 * displayMagnification) / 2}
+      y={((12 * displayMagnification) / 2) * -1}
+      xlinkHref="/images/close.svg"
+      width={12 * displayMagnification}
+    />
     <CircleWithResize cx={width} cy={height} r={r} fill={color} />
   </g>
 );
