@@ -212,7 +212,7 @@ const Index: NextPage = () => {
 
       await dispatch(thunkActions.addCanvasUserLayerFromFile(i, 0));
 
-      Router.push("/edit");
+      Router.push("/stickers");
     } catch (_) {
       dispatch(uiActions.imageLoadError(true));
     } finally {

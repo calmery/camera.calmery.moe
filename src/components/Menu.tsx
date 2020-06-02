@@ -80,9 +80,9 @@ export const Menu = () => {
   return (
     <Container id="tutorial-menu">
       <PrimaryButtons>
-        <IconContainer onClick={() => handleOnClickRouterPush("/edit")}>
+        <IconContainer onClick={() => handleOnClickRouterPush("/stickers")}>
           <Icon
-            selected={pathname === "/edit"}
+            selected={pathname === "/stickers"}
             type="image/svg+xml"
             data="/images/menu/stickers.svg"
           />
