@@ -8,21 +8,21 @@ import {
 } from "./types";
 import { CANVAS_ENABLE_COLLAGE, CANVAS_DISABLE_COLLAGE } from "../canvas/types";
 import { CanvasUserFrameType } from "~/types/CanvasUserFrameType";
-import { FeColorMatrix } from "~/types/FeColorMatrix";
+import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
 
 export interface UiState {
   selectedUserLayerFrame: {
     frame: CanvasUserFrameType;
     index: number;
   } | null;
-  selectedFilterType: FeColorMatrix;
+  selectedFilterType: CanvasUserFilterType;
   isImageLoadError: boolean;
   loading: number;
 }
 
 const initialState: UiState = {
   selectedUserLayerFrame: null,
-  selectedFilterType: FeColorMatrix.saturate,
+  selectedFilterType: CanvasUserFilterType.saturate,
   isImageLoadError: false,
   loading: 0,
 };

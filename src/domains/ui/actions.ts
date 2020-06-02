@@ -4,9 +4,9 @@ import {
   UI_START_LOADING,
   UI_FINISH_LOADING,
 } from "./types";
-import { FeColorMatrix } from "~/types/FeColorMatrix";
+import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
 
-export const changeUiFilterType = (filterType: FeColorMatrix) => ({
+export const changeUiFilterType = (filterType: CanvasUserFilterType) => ({
   type: UI_CHANGE_FILTER_TYPE,
   payload: { filterType },
 });

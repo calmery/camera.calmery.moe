@@ -14,7 +14,7 @@ import { HorizontalScrollView } from "~/components/HorizontalScrollView";
 import { HorizontalScrollViewItem } from "~/components/HorizontalScrollViewItem";
 import { Menu } from "~/components/Menu";
 import { Mixin } from "~/styles/mixin";
-import { FeColorMatrix } from "~/types/FeColorMatrix";
+import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
 import { InputRange } from "~/components/InputRange";
 import { Tutorial } from "~/components/Tutorial";
 import { ControlBar } from "~/components/ControlBar";
@@ -167,7 +167,7 @@ const Tune: NextPage = () => {
                 <div
                   style={{
                     display:
-                      FeColorMatrix.blur === ui.selectedFilterType
+                      CanvasUserFilterType.blur === ui.selectedFilterType
                         ? "block"
                         : "none",
                   }}
@@ -181,7 +181,7 @@ const Tune: NextPage = () => {
                     onChange={(value: number) => {
                       dispatch(
                         canvasActions.updateCanvasUserLayerFilter(
-                          FeColorMatrix.blur,
+                          CanvasUserFilterType.blur,
                           value
                         )
                       );
@@ -191,7 +191,7 @@ const Tune: NextPage = () => {
                 <div
                   style={{
                     display:
-                      FeColorMatrix.hue === ui.selectedFilterType
+                      CanvasUserFilterType.hue === ui.selectedFilterType
                         ? "block"
                         : "none",
                   }}
@@ -205,7 +205,7 @@ const Tune: NextPage = () => {
                     onChange={(value: number) => {
                       dispatch(
                         canvasActions.updateCanvasUserLayerFilter(
-                          FeColorMatrix.hue,
+                          CanvasUserFilterType.hue,
                           value
                         )
                       );
@@ -215,7 +215,7 @@ const Tune: NextPage = () => {
                 <div
                   style={{
                     display:
-                      FeColorMatrix.saturate === ui.selectedFilterType
+                      CanvasUserFilterType.saturate === ui.selectedFilterType
                         ? "block"
                         : "none",
                   }}
@@ -229,7 +229,7 @@ const Tune: NextPage = () => {
                     onChange={(value: number) => {
                       dispatch(
                         canvasActions.updateCanvasUserLayerFilter(
-                          FeColorMatrix.saturate,
+                          CanvasUserFilterType.saturate,
                           value
                         )
                       );
@@ -250,24 +250,29 @@ const Tune: NextPage = () => {
                         <HorizontalScrollViewItem rootElement={rootElement}>
                           <FilterTypeFree
                             selected={
-                              ui.selectedFilterType === FeColorMatrix.blur
+                              ui.selectedFilterType ===
+                              CanvasUserFilterType.blur
                             }
                             onClick={() =>
                               dispatch(
-                                actions.changeUiFilterType(FeColorMatrix.blur)
+                                actions.changeUiFilterType(
+                                  CanvasUserFilterType.blur
+                                )
                               )
                             }
                           >
                             <FilterTypeIcon
                               selected={
-                                ui.selectedFilterType === FeColorMatrix.blur
+                                ui.selectedFilterType ===
+                                CanvasUserFilterType.blur
                               }
                             >
                               <img src="/images/tune/blur.svg" alt="ぼかし" />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
-                                ui.selectedFilterType === FeColorMatrix.blur
+                                ui.selectedFilterType ===
+                                CanvasUserFilterType.blur
                               }
                             >
                               ぼかし
@@ -277,24 +282,28 @@ const Tune: NextPage = () => {
                         <HorizontalScrollViewItem rootElement={rootElement}>
                           <FilterType
                             selected={
-                              ui.selectedFilterType === FeColorMatrix.hue
+                              ui.selectedFilterType === CanvasUserFilterType.hue
                             }
                             onClick={() =>
                               dispatch(
-                                actions.changeUiFilterType(FeColorMatrix.hue)
+                                actions.changeUiFilterType(
+                                  CanvasUserFilterType.hue
+                                )
                               )
                             }
                           >
                             <FilterTypeIcon
                               selected={
-                                ui.selectedFilterType === FeColorMatrix.hue
+                                ui.selectedFilterType ===
+                                CanvasUserFilterType.hue
                               }
                             >
                               <img src="/images/tune/hue.svg" alt="色相" />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
-                                ui.selectedFilterType === FeColorMatrix.hue
+                                ui.selectedFilterType ===
+                                CanvasUserFilterType.hue
                               }
                             >
                               色相
@@ -304,26 +313,29 @@ const Tune: NextPage = () => {
                         <HorizontalScrollViewItem rootElement={rootElement}>
                           <FilterType
                             selected={
-                              ui.selectedFilterType === FeColorMatrix.saturate
+                              ui.selectedFilterType ===
+                              CanvasUserFilterType.saturate
                             }
                             onClick={() =>
                               dispatch(
                                 actions.changeUiFilterType(
-                                  FeColorMatrix.saturate
+                                  CanvasUserFilterType.saturate
                                 )
                               )
                             }
                           >
                             <FilterTypeIcon
                               selected={
-                                ui.selectedFilterType === FeColorMatrix.saturate
+                                ui.selectedFilterType ===
+                                CanvasUserFilterType.saturate
                               }
                             >
                               <img src="/images/tune/saturate.svg" alt="彩度" />
                             </FilterTypeIcon>
                             <FilterTypeTitle
                               selected={
-                                ui.selectedFilterType === FeColorMatrix.saturate
+                                ui.selectedFilterType ===
+                                CanvasUserFilterType.saturate
                               }
                             >
                               彩度

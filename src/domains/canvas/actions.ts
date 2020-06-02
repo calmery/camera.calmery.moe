@@ -3,7 +3,7 @@ import { Dispatch } from "redux";
 import { CanvasUserFrameType } from "~/types/CanvasUserFrameType";
 import * as types from "./types";
 import { convertUrlToImage } from "./utils";
-import { FeColorMatrix } from "~/types/FeColorMatrix";
+import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
 import { checkAndResizeImage } from "~/utils/check-and-resize-image";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 import { getDominangColor } from "~/utils/get-dominant-color";
@@ -164,7 +164,10 @@ const startCanvasUserLayerDrag = (
   },
 });
 
-const updateCanvasUserLayerFilter = (type: FeColorMatrix, value: number) => ({
+const updateCanvasUserLayerFilter = (
+  type: CanvasUserFilterType,
+  value: number
+) => ({
   type: types.CANVAS_USER_LAYER_UPDATE_FILTER,
   payload: {
     type,
