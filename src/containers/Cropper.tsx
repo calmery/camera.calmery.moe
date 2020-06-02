@@ -86,7 +86,9 @@ export const Cropper: React.FC = () => {
   // Hooks
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const e = containerRef.current!;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const d = displayableRef.current!;
 
     e.addEventListener("touchstart", handleOnStartImageTransform, false);
@@ -111,6 +113,7 @@ export const Cropper: React.FC = () => {
 
     if (!userLayer) {
       const i = userLayers.findIndex((l) => l);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       userLayer = userLayers[i]!;
 
       // selectedUserLayerIndex で指定された画像がない場合、userLayers の画像存在確認、先頭の画像を使用する

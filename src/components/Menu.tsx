@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 import styled, { css } from "styled-components";
 import { Colors, GradientColors } from "~/styles/colors";
 import { Spacing } from "~/styles/spacing";
-import { useSelector } from "react-redux";
-import { State } from "~/domains";
 
 const Container = styled.div`
   box-sizing: border-box;
@@ -71,7 +69,6 @@ const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
 
 export const Menu = () => {
   const { pathname, push } = useRouter();
-  const collage = useSelector(({ canvas }: State) => canvas.isCollaging);
   const handleOnClickRouterPush = useCallback(
     (pathname: string) => push(pathname),
     []

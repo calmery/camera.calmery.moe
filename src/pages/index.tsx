@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
-  useReducer,
-} from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { NextPage } from "next";
 import Router from "next/router";
 import styled, { css } from "styled-components";

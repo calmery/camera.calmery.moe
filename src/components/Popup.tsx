@@ -95,10 +95,12 @@ export const Popup: React.FC<PopupProps> = ({
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   const handleOnClickCancel = useCallback(() => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const e = ref.current!;
     e.classList.add("animate__bounceOut");
 
     setTimeout(() => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const b = backgroundRef.current!;
       b.classList.add("animate__fadeOut");
     }, 200);
@@ -109,8 +111,10 @@ export const Popup: React.FC<PopupProps> = ({
   }, [ref, onCancel]);
 
   const handleOnClickEnter = useCallback(() => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const e = ref.current!;
     e.classList.add("animate__bounceOut");
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const b = backgroundRef.current!;
     b.classList.add("animate__fadeOut");
 

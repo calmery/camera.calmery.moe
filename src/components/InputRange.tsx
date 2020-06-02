@@ -73,7 +73,7 @@ export const InputRange: React.FC<InputRangeProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  /* --- States --- */
+  // States
 
   const [containerRect, setContainerRect] = useState({
     x: 0,
@@ -90,7 +90,7 @@ export const InputRange: React.FC<InputRangeProps> = ({
 
   const [isMoving, setIsMoving] = useState(false);
 
-  /* --- Validations and updates --- */
+  // Validations and updates
 
   [min, max] = min > max ? [max, min] : [min, max];
 
@@ -99,9 +99,10 @@ export const InputRange: React.FC<InputRangeProps> = ({
   defaultValue = defaultValue < min ? min : defaultValue;
   defaultValue = defaultValue > max ? max : defaultValue;
 
-  /* --- Hooks --- */
+  // Hooks
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const e = containerRef.current!;
     const resizeObserver = new ResizeObserver(() => {
       setContainerRect(e.getBoundingClientRect());
@@ -197,7 +198,7 @@ export const InputRange: React.FC<InputRangeProps> = ({
     setIsMoving(false);
   }, []);
 
-  // Elements
+  // Render
 
   const baseX = baseStepCount * stepWidth;
   const currentX = currentStepCount * stepWidth;

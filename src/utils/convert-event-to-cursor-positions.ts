@@ -8,6 +8,7 @@ export const convertEventToCursorPositions = (
 ): CursorPosition[] => {
   const positions = [];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((event as any).touches) {
     const { touches } = event as TouchEvent | React.TouchEvent;
 

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { NextPage } from "next";
 import styled from "styled-components";
 import { Page } from "~/components/Page";

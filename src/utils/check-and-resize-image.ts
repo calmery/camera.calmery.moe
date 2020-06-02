@@ -5,6 +5,7 @@ export const checkAndResizeImage = (image: HTMLImageElement) => {
   const { width, height } = image;
 
   const canvas = document.createElement("canvas");
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const context = canvas.getContext("2d")!;
 
   let renderWidth = 0;

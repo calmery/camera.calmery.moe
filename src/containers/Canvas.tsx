@@ -99,6 +99,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   // Hooks
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const d = displayableRef.current!;
     const resizeObserver = new ResizeObserver(() => {
       dispatch(actions.updateDisplayable(d.getBoundingClientRect()));
@@ -116,6 +117,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const s = svgRef.current!;
 
     s.addEventListener("touchmove", handleOnTick, { passive: false });
@@ -132,11 +134,13 @@ export const Canvas: React.FC<CanvasProps> = ({
 
     (async () => {
       const dataUrl = await convertSvgToDataUrl(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         svgRef.current!.innerHTML,
         viewBoxWidth,
         viewBoxHeight
       );
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       onCreatePreviewUrl!(dataUrl);
     })();
   }, [preview, svgRef]);

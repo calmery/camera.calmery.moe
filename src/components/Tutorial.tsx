@@ -175,6 +175,7 @@ export const Tutorial: React.FC<TutorialProps> = ({
   const [characterTimer, setCharacterTimer] = useState<number | null>(null);
   const [progressBarImage, setProgressBarImage] = useState(0);
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const scenario = scenarios[scenarioIndex]!;
 
   // Hooks
@@ -227,6 +228,7 @@ export const Tutorial: React.FC<TutorialProps> = ({
   }, [displayableRect, scenario]);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const e = displayableRef.current!;
     const resizeObserver = new ResizeObserver(() => {
       setDisplayableRect(e.getBoundingClientRect());

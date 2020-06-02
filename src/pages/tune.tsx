@@ -148,6 +148,7 @@ const Tune: NextPage = () => {
 
   if (!userLayer) {
     const i = canvas.userLayers.findIndex((l) => !!l);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     userLayer = canvas.userLayers[i]!;
   }
 

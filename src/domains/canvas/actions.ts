@@ -215,6 +215,7 @@ const addCanvasUserLayerFromFile = (file: File, index: number) => {
           );
 
           const result = checkAndResizeImage(image);
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const { width, height, dataUrl } = result!;
           const colors = await getDominangColor(dataUrl);
           const lightness = getLightness(colors);
@@ -287,6 +288,7 @@ const addCanvasUserLayerAndSetFrameFromFile = (file: File) => {
           );
           // ToDo: null のときはサイズエラーになっている
           const result = checkAndResizeImage(image);
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const { width, height, dataUrl } = result!;
           const colors = await getDominangColor(dataUrl);
           const lightness = getLightness(colors);

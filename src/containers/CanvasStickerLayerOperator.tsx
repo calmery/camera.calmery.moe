@@ -188,9 +188,9 @@ export const CanvasStickerLayerOperator: React.FC = () => {
               const id = `canvas-sticker-layer-operator-${i}`;
 
               return (
-                <>
+                <g key={i}>
                   <mask id={id}>
-                    <g mask={`url(#${getCanvasUserFrameId(i)})`} key={i}>
+                    <g mask={`url(#${getCanvasUserFrameId(i)})`}>
                       <g
                         transform={
                           isCollaging
@@ -260,7 +260,7 @@ export const CanvasStickerLayerOperator: React.FC = () => {
                       r={r}
                     />
                   </g>
-                </>
+                </g>
               );
             })}
             <g
