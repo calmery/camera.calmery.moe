@@ -156,62 +156,6 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
-    case types.CANVAS_INITIALIZE: {
-      const { userFrames, userLayers } = state;
-      const { dataUrl, width, height, lightness } = action.payload;
-
-      userLayers[0] = {
-        dataUrl,
-        width,
-        height,
-        x: 0,
-        y: 0,
-        blur: 0,
-        hue: 0,
-        saturate: 1,
-        angle: 0,
-        scale: 1,
-        croppedWidth: width,
-        croppedHeight: height,
-        croppedX: 0,
-        croppedY: 0,
-        croppedAngle: 0,
-        croppedScale: 1,
-        croppedImageX: 0,
-        croppedImageY: 0,
-        dominantColorLightness: lightness,
-        cropper: {
-          cropperWidth: width,
-          cropperHeight: height,
-          cropperX: 0,
-          cropperY: 0,
-          imageX: 0,
-          imageY: 0,
-          imageAngle: 0,
-          imageScale: 1,
-          cropperScale: 1,
-          cropperScaleX: 1,
-          cropperScaleY: 1,
-        },
-      };
-
-      userFrames[0] = {
-        width,
-        height,
-        x: 0,
-        y: 0,
-        path: `M0 0H${width}V${height}H0V0Z`,
-      };
-
-      return {
-        ...state,
-        viewBoxWidth: width,
-        viewBoxHeight: height,
-        userFrames,
-        userLayers,
-      };
-    }
-
     case types.CANVAS_DISABLE_COLLAGE: {
       const {
         userLayers,

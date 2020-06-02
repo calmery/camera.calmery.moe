@@ -68,26 +68,6 @@ const checkAndResizeImage = (image: HTMLImageElement) => {
 
 // Container
 
-const updateDisplayable = ({
-  x,
-  y,
-  width,
-  height,
-}: {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}) => ({
-  type: types.CANVAS_CONTAINER_UPDATE_RECT,
-  payload: {
-    x,
-    y,
-    width,
-    height,
-  },
-});
-
 const updateCanvasContainerRect = ({
   x,
   y,
@@ -296,32 +276,12 @@ const startCanvasUserLayerFilter = (index: number) => ({
   payload: { index },
 });
 
-const tick = (cursorPositions: CursorPosition[]) => ({
-  type: types.CANVAS_TICK,
-  payload: { cursorPositions },
-});
-
 const tickCanvas = (cursorPositions: CursorPosition[]) => ({
   type: types.CANVAS_TICK,
   payload: { cursorPositions },
 });
 
 // Common
-
-const initializeCanvas = (
-  dataUrl: string,
-  width: number,
-  height: number,
-  lightness: number
-) => ({
-  type: types.CANVAS_INITIALIZE,
-  payload: {
-    dataUrl,
-    width,
-    height,
-    lightness,
-  },
-});
 
 const complete = () => ({
   type: types.CANVAS_COMPLETE,
@@ -336,38 +296,10 @@ const disableCollage = () => ({
   type: types.CANVAS_DISABLE_COLLAGE,
 });
 
-// TODO: `blueimpLoadImage` のエラー処理をちゃんとする
-const addCanvasUserLayerAndSetFrameFromFile = (file: File) => {
-  return (dispatch: Dispatch) => {
-    return new Promise((resolve) => {
-      blueimpLoadImage(
-        file,
-        async (canvas) => {
-          const image = await convertUrlToImage(
-            (canvas as HTMLCanvasElement).toDataURL()
-          );
-          // ToDo: null のときはサイズエラーになっている
-          const result = checkAndResizeImage(image);
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const { width, height, dataUrl } = result!;
-          const colors = await getDominangColor(dataUrl);
-          const lightness = getLightness(colors);
-
-          dispatch(initializeCanvas(dataUrl, width, height, lightness));
-
-          resolve();
-        },
-        { canvas: true, orientation: true }
-      );
-    });
-  };
-};
-
 // Main
 
 export const actions = {
   updateCanvasContainerRect,
-  updateDisplayable,
   addCanvasStickerLayer,
   startCanvasStickerLayerTransform,
   startCanvasStickerLayerDrag,
@@ -380,18 +312,15 @@ export const actions = {
   updateCanvasUserLayerFilter,
   startCanvasUserLayerFilter,
   updateCanvasUserLayerCrop,
-  tick,
   tickCanvas,
   complete,
   enableCollage,
-  initializeCanvas,
   disableCollage,
 };
 
 export const thunkActions = {
   addCanvasStickerLayerWithUrl,
   addCanvasUserLayerFromFile,
-  addCanvasUserLayerAndSetFrameFromFile,
 };
 
 export type Actions = ReturnType<typeof actions[keyof typeof actions]>;

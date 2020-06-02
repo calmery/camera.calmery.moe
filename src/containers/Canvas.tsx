@@ -83,7 +83,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       event.preventDefault();
       event.stopPropagation();
 
-      dispatch(actions.tick(convertEventToCursorPositions(event)));
+      dispatch(actions.tickCanvas(convertEventToCursorPositions(event)));
     },
     [canFireEvent, dispatch, preview]
   );
@@ -102,7 +102,7 @@ export const Canvas: React.FC<CanvasProps> = ({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const d = displayableRef.current!;
     const resizeObserver = new ResizeObserver(() => {
-      dispatch(actions.updateDisplayable(d.getBoundingClientRect()));
+      dispatch(actions.updateCanvasContainerRect(d.getBoundingClientRect()));
     });
 
     resizeObserver.observe(d);

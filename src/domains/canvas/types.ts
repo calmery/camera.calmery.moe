@@ -1,4 +1,3 @@
-export const CANVAS_INITIALIZE = "CANVAS/INITIALIZE" as const;
 export const CANVAS_TICK = "CANVAS/TICK" as const;
 export const CANVAS_COMPLETE = "CANVAS/COMPLETE" as const;
 export const CANVAS_ENABLE_COLLAGE = "CANVAS/ENABLE_COLLAGE" as const;
