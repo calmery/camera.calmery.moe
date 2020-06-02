@@ -109,7 +109,7 @@ export const Canvas: React.FC<CanvasProps> = ({
     return () => {
       resizeObserver.unobserve(d);
     };
-  }, [displayableRef]);
+  }, [dispatch, displayableRef]);
 
   useEffect(() => {
     if (preview) {
