@@ -17,6 +17,30 @@ import * as GA from "~/utils/google-analytics";
 
 const CANVAS_STICKER_LAYER_MIN_WIDTH = 200;
 const CANVAS_STICKER_LAYER_MIN_HEIGHT = 200;
+const MAX_WIDTH = 1200;
+const MAX_HEIGHT = 1200;
+
+const checkAndResize = (width: number, height: number) => {
+  let renderWidth = 0;
+  let renderHeight = 0;
+
+  const horizontalRatio = width / MAX_WIDTH;
+  const verticalRatio = height / MAX_HEIGHT;
+
+  // width を基準に縮小する
+  if (horizontalRatio > verticalRatio) {
+    renderWidth = MAX_WIDTH;
+    renderHeight = height * (MAX_WIDTH / width);
+  } else {
+    renderWidth = width * (MAX_HEIGHT / height);
+    renderHeight = MAX_HEIGHT;
+  }
+
+  return {
+    width: renderWidth,
+    height: renderHeight,
+  };
+};
 
 // Types
 
@@ -91,17 +115,22 @@ export default (state = initialState, action: Actions): CanvasState => {
       const { userFrames } = state;
       let { viewBoxWidth, viewBoxHeight } = state;
 
+      const { width: resizedWidth, height: resizedHeight } = checkAndResize(
+        width,
+        height
+      );
+
       if (userFrames.length === 0) {
         userFrames[0] = {
-          width,
-          height,
+          width: resizedWidth,
+          height: resizedHeight,
           x: 0,
           y: 0,
-          path: `M0 0H${width}V${height}H0V0Z`,
+          path: `M0 0H${resizedWidth}V${resizedHeight}H0V0Z`,
         };
 
-        viewBoxWidth = width;
-        viewBoxHeight = height;
+        viewBoxWidth = resizedWidth;
+        viewBoxHeight = resizedHeight;
       }
 
       const styles = calculateCanvasPositionAndSize(
