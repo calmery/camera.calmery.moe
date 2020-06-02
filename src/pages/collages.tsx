@@ -12,7 +12,7 @@ import { actions } from "~/domains/canvas/actions";
 import { canvasUserLayerFrame } from "~/domains/canvas/frames";
 import { Spacing } from "~/styles/spacing";
 import { GradientColors } from "~/styles/colors";
-import { CanvasUserLayerFrameType } from "~/types/CanvasUserLayerFrameType";
+import { CanvasUserFrameType } from "~/types/CanvasUserFrameType";
 import { COLLAGES_PAGE_SCENARIOS } from "~/constants/tutorials";
 
 const Horizontal = styled.div`
@@ -85,7 +85,7 @@ const Collages: NextPage = () => {
   const dispatch = useDispatch();
   const { selectedUserLayerFrame } = useSelector(({ ui }: State) => ui);
   const handleOnClickEnableCollage = (
-    frame: CanvasUserLayerFrameType,
+    frame: CanvasUserFrameType,
     index: number
   ) => dispatch(actions.enableCollage(frame, index));
   const handleOnClickDisableCollage = () => dispatch(actions.disableCollage());
@@ -118,58 +118,58 @@ const Collages: NextPage = () => {
                         data={`/images/collages/disable.svg`}
                       />
                     </CollageButton>
-                    {canvasUserLayerFrame[
-                      CanvasUserLayerFrameType.W3H4
-                    ].frames.map((_, index) => (
-                      <CollageButton
-                        onClick={() =>
-                          handleOnClickEnableCollage(
-                            CanvasUserLayerFrameType.W3H4,
-                            index
-                          )
-                        }
-                        selected={
-                          !!(
-                            selectedUserLayerFrame &&
-                            selectedUserLayerFrame.frame ===
-                              CanvasUserLayerFrameType.W3H4 &&
-                            selectedUserLayerFrame.index === index
-                          )
-                        }
-                        key={index}
-                      >
-                        <object
-                          type="image/svg+xml"
-                          data={`/images/collages/3-4-${index}.svg`}
-                        />
-                      </CollageButton>
-                    ))}
-                    {canvasUserLayerFrame[
-                      CanvasUserLayerFrameType.W4H3
-                    ].frames.map((_, index) => (
-                      <CollageButton
-                        onClick={() =>
-                          handleOnClickEnableCollage(
-                            CanvasUserLayerFrameType.W4H3,
-                            index
-                          )
-                        }
-                        selected={
-                          !!(
-                            selectedUserLayerFrame &&
-                            selectedUserLayerFrame.frame ===
-                              CanvasUserLayerFrameType.W4H3 &&
-                            selectedUserLayerFrame.index === index
-                          )
-                        }
-                        key={index}
-                      >
-                        <object
-                          type="image/svg+xml"
-                          data={`/images/collages/4-3-${index}.svg`}
-                        />
-                      </CollageButton>
-                    ))}
+                    {canvasUserLayerFrame[CanvasUserFrameType.W3H4].frames.map(
+                      (_, index) => (
+                        <CollageButton
+                          onClick={() =>
+                            handleOnClickEnableCollage(
+                              CanvasUserFrameType.W3H4,
+                              index
+                            )
+                          }
+                          selected={
+                            !!(
+                              selectedUserLayerFrame &&
+                              selectedUserLayerFrame.frame ===
+                                CanvasUserFrameType.W3H4 &&
+                              selectedUserLayerFrame.index === index
+                            )
+                          }
+                          key={index}
+                        >
+                          <object
+                            type="image/svg+xml"
+                            data={`/images/collages/3-4-${index}.svg`}
+                          />
+                        </CollageButton>
+                      )
+                    )}
+                    {canvasUserLayerFrame[CanvasUserFrameType.W4H3].frames.map(
+                      (_, index) => (
+                        <CollageButton
+                          onClick={() =>
+                            handleOnClickEnableCollage(
+                              CanvasUserFrameType.W4H3,
+                              index
+                            )
+                          }
+                          selected={
+                            !!(
+                              selectedUserLayerFrame &&
+                              selectedUserLayerFrame.frame ===
+                                CanvasUserFrameType.W4H3 &&
+                              selectedUserLayerFrame.index === index
+                            )
+                          }
+                          key={index}
+                        >
+                          <object
+                            type="image/svg+xml"
+                            data={`/images/collages/4-3-${index}.svg`}
+                          />
+                        </CollageButton>
+                      )
+                    )}
                   </HorizontalInner>
                 </Horizontal>
               </Container>

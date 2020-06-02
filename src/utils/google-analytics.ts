@@ -1,5 +1,5 @@
 import ReactGA from "react-ga";
-import { CanvasUserLayerFrameType } from "~/types/CanvasUserLayerFrameType";
+import { CanvasUserFrameType } from "~/types/CanvasUserFrameType";
 
 ReactGA.initialize("UA-163144493-2", {
   debug: process.env.NODE_ENV !== "production",
@@ -74,10 +74,7 @@ export const removeCanvasStickerLayer = (group: number, id: number) => {
   });
 };
 
-export const enableCollage = (
-  frame: CanvasUserLayerFrameType,
-  index: number
-) => {
+export const enableCollage = (frame: CanvasUserFrameType, index: number) => {
   ReactGA.send({
     hitType: "event",
     eventCategory: "CANVAS_USER_FRAME",

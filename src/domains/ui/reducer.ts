@@ -7,12 +7,12 @@ import {
   UI_FINISH_LOADING,
 } from "./types";
 import { CANVAS_ENABLE_COLLAGE, CANVAS_DISABLE_COLLAGE } from "../canvas/types";
-import { CanvasUserLayerFrameType } from "~/types/CanvasUserLayerFrameType";
+import { CanvasUserFrameType } from "~/types/CanvasUserFrameType";
 import { FeColorMatrix } from "~/types/FeColorMatrix";
 
 export interface UiState {
   selectedUserLayerFrame: {
-    frame: CanvasUserLayerFrameType;
+    frame: CanvasUserFrameType;
     index: number;
   } | null;
   selectedFilterType: FeColorMatrix;

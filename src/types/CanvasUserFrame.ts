@@ -1,4 +1,4 @@
-export interface CanvasUserLayerFrame {
+export interface CanvasUserFrame {
   x: number;
   y: number;
   width: number;

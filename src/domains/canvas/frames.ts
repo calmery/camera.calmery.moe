@@ -1,14 +1,14 @@
-import { CanvasUserLayerFrame } from "~/types/CanvasUserLayerFrame";
-import { CanvasUserLayerFrameType } from "~/types/CanvasUserLayerFrameType";
+import { CanvasUserFrame } from "~/types/CanvasUserFrame";
+import { CanvasUserFrameType } from "~/types/CanvasUserFrameType";
 
 export const canvasUserLayerFrame: {
-  [_ in CanvasUserLayerFrameType]: {
+  [_ in CanvasUserFrameType]: {
     width: number;
     height: number;
-    frames: CanvasUserLayerFrame[][];
+    frames: CanvasUserFrame[][];
   };
 } = {
-  [CanvasUserLayerFrameType.W3H4]: {
+  [CanvasUserFrameType.W3H4]: {
     width: 900,
     height: 1200,
     frames: [
@@ -92,7 +92,7 @@ export const canvasUserLayerFrame: {
       ],
     ],
   },
-  [CanvasUserLayerFrameType.W4H3]: {
+  [CanvasUserFrameType.W4H3]: {
     width: 1200,
     height: 900,
     frames: [

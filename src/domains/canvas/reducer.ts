@@ -7,7 +7,7 @@ import {
   calculateCanvasPositionAndSize,
 } from "./utils";
 import { CanvasLayer } from "~/types/CanvasLayer";
-import { CanvasUserLayerFrame } from "~/types/CanvasUserLayerFrame";
+import { CanvasUserFrame } from "~/types/CanvasUserFrame";
 import { CanvasUserLayer } from "~/types/CanvasUserLayer";
 import { angleBetweenTwoPoints } from "~/utils/angle-between-two-points";
 import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
@@ -36,7 +36,7 @@ export interface CanvasState {
   isUserLayerDragging: boolean;
   isStickerLayerDragging: boolean;
   isStickerLayerTransforming: boolean;
-  userFrames: CanvasUserLayerFrame[];
+  userFrames: CanvasUserFrame[];
   userLayers: (CanvasUserLayer | null)[];
   stickerLayers: CanvasLayer[];
   temporaries: {
