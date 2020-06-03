@@ -6,7 +6,7 @@ import { State } from "~/domains";
 import { actions } from "~/domains/cropper/actions";
 import { actions as canvasActions } from "~/domains/canvas/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
-import { Constants } from "~/styles/constants";
+import { CropperImage } from "~/containers/CropperImage";
 
 const CanvasContainer = styled.div`
   box-sizing: border-box;
@@ -270,30 +270,7 @@ export const Cropper: React.FC = () => {
 
           {/* 切り取る対象となる画像 */}
 
-          <svg
-            width={image.width * image.scale.current}
-            height={image.height * image.scale.current}
-            x={image.position.x}
-            y={image.position.y}
-            viewBox={`0 0 ${image.width} ${image.height}`}
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            overflow="visible"
-          >
-            <g
-              transform={`rotate(${image.rotate.current}, ${image.width / 2}, ${
-                image.height / 2
-              })`}
-            >
-              <image xlinkHref={image.url} width="100%" height="100%" />
-              <rect
-                width="100%"
-                height="100%"
-                fill="#000"
-                fillOpacity={Constants.opacity}
-              />
-            </g>
-          </svg>
+          <CropperImage />
 
           {/* 切り取った画像 */}
 
