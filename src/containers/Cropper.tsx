@@ -30,6 +30,11 @@ export const Cropper: React.FC = () => {
     cropper,
   }));
   const { temporaries } = canvas;
+  const {
+    isCropperDragging,
+    isCropperTransforming,
+    isImageTransforming,
+  } = cropper;
 
   // Refs
 
@@ -64,15 +69,26 @@ export const Cropper: React.FC = () => {
       event.preventDefault();
       event.stopPropagation();
 
+      if (
+        !isCropperDragging &&
+        !isCropperTransforming &&
+        !isImageTransforming
+      ) {
+        return;
+      }
+
       dispatch(actions.tickCropper(convertEventToCursorPositions(event)));
     },
-    [dispatch]
+    [dispatch, isCropperDragging, isCropperTransforming, isImageTransforming]
   );
 
-  const handleOnComplete = useCallback(
-    () => dispatch(actions.completeCropper()),
-    [dispatch]
-  );
+  const handleOnComplete = useCallback(() => {
+    if (!isCropperDragging && !isCropperTransforming && !isImageTransforming) {
+      return;
+    }
+
+    dispatch(actions.completeCropper());
+  }, [dispatch, isCropperDragging, isCropperTransforming, isImageTransforming]);
 
   // Variables
 
@@ -168,16 +184,7 @@ export const Cropper: React.FC = () => {
         }
       )
     );
-  }, [
-    x,
-    y,
-    width,
-    height,
-    imageAngle,
-    imageScale,
-    cropper.imageX,
-    cropper.imageY,
-  ]);
+  }, [isCropperDragging, isCropperTransforming, isImageTransforming]);
 
   // Render
 
