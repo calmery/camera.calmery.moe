@@ -39,7 +39,7 @@ export const Cropper: React.FC = () => {
 
   // Events
 
-  const handleOnStartImageTransform = useCallback(
+  const handleOnStartTransform = useCallback(
     (event: React.TouchEvent | React.MouseEvent) => {
       const positions = convertEventToCursorPositions(event);
 
@@ -201,8 +201,8 @@ export const Cropper: React.FC = () => {
         onMouseMove={handleOnTick}
         onMouseUp={handleOnComplete}
         onMouseLeave={handleOnComplete}
-        onTouchStart={handleOnStartImageTransform}
-        onMouseDown={handleOnStartImageTransform}
+        onTouchStart={handleOnStartTransform}
+        onMouseDown={handleOnStartTransform}
         onTouchEnd={handleOnComplete}
         viewBox={`0 0 ${displayableWidth} ${displayableHeight}`}
         xmlns="http://www.w3.org/2000/svg"
