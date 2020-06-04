@@ -1,9 +1,14 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
 import { State } from "~/domains";
 import { actions } from "~/domains/cropper/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 import { getColorByDominantColorLightness } from "~/utils/canvas";
+
+const CircleWithPointer = styled.circle`
+  cursor: pointer;
+`;
 
 export const CropperOperator: React.FC = () => {
   const dispatch = useDispatch();
@@ -93,7 +98,7 @@ export const CropperOperator: React.FC = () => {
           y={y}
         ></rect>
 
-        <circle fill={dark} cx={cx} cy={cy} r={r}></circle>
+        <circle fill={dark} cx={cx} cy={cy} r={r} />
       </g>
 
       <g clipPath="url(#cropper-operator-clip-path)">
@@ -108,7 +113,7 @@ export const CropperOperator: React.FC = () => {
           y={y}
         ></rect>
 
-        <circle fill={light} cx={cx} cy={cy} r={r}></circle>
+        <circle fill={light} cx={cx} cy={cy} r={r} />
       </g>
 
       <image
@@ -119,14 +124,14 @@ export const CropperOperator: React.FC = () => {
         y={y + height - r / 2}
       />
 
-      <circle
+      <CircleWithPointer
         ref={circleRef}
         fillOpacity="0"
         cx={cx}
         cy={cy}
         r={r}
         onMouseDown={handleOnStartCropperTransform}
-      ></circle>
+      />
     </>
   );
 };
