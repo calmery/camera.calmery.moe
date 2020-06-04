@@ -131,7 +131,7 @@ export const Cropper: React.FC = () => {
     return () => {
       e.removeEventListener("touchmove", handleOnTick);
     };
-  }, [svgRef]);
+  }, [svgRef, handleOnTick]);
 
   useEffect(() => {
     const { userLayers } = canvas;
