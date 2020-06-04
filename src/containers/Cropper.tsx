@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ResizeObserver from "resize-observer-polyfill";
 import styled from "styled-components";
 import { CropperImage } from "~/containers/CropperImage";
+import { CropperOperator } from "~/containers/CropperOperator";
 import { State } from "~/domains";
 import { actions as canvasActions } from "~/domains/canvas/actions";
 import { actions } from "~/domains/cropper/actions";
@@ -14,7 +15,6 @@ const Displayable = styled.div`
   box-sizing: border-box;
   flex-grow: 1;
   height: fit-content;
-  margin: 0 24px;
 `;
 
 const Svg = styled.svg`
@@ -40,29 +40,21 @@ export const Cropper: React.FC = () => {
   // Events
 
   const handleOnStartImageTransform = useCallback(
-    (event: React.TouchEvent) => {
-      dispatch(
-        actions.startCropperImageTransform(convertEventToCursorPositions(event))
-      );
-    },
-    [dispatch]
-  );
+    (event: React.TouchEvent | React.MouseEvent) => {
+      const positions = convertEventToCursorPositions(event);
 
-  const handleOnStartCropperMove = useCallback(
-    (event: React.MouseEvent | React.TouchEvent) => {
+      if (positions.length > 1) {
+        dispatch(
+          actions.startCropperImageTransform(
+            convertEventToCursorPositions(event)
+          )
+        );
+
+        return;
+      }
+
       dispatch(
         actions.startCropperCropperDrag(convertEventToCursorPositions(event))
-      );
-    },
-    [dispatch]
-  );
-
-  const handleOnStartCropperTransform = useCallback(
-    (event: React.MouseEvent | React.TouchEvent) => {
-      dispatch(
-        actions.startCropperCropperTransform(
-          convertEventToCursorPositions(event)
-        )
       );
     },
     [dispatch]
@@ -84,8 +76,6 @@ export const Cropper: React.FC = () => {
   );
 
   // Variables
-
-  const displayMagnification = container.displayMagnification;
 
   let sx = cropper.scaleX.current;
   let sy = cropper.scaleY.current;
@@ -212,6 +202,7 @@ export const Cropper: React.FC = () => {
         onMouseUp={handleOnComplete}
         onMouseLeave={handleOnComplete}
         onTouchStart={handleOnStartImageTransform}
+        onMouseDown={handleOnStartImageTransform}
         onTouchEnd={handleOnComplete}
         viewBox={`0 0 ${displayableWidth} ${displayableHeight}`}
         xmlns="http://www.w3.org/2000/svg"
@@ -234,140 +225,8 @@ export const Cropper: React.FC = () => {
           xmlnsXlink="http://www.w3.org/1999/xlink"
           overflow="visible"
         >
-          {/* 画像範囲外のでは枠線が黒のクロップ領域を表示する */}
-
-          <g>
-            <rect
-              fillOpacity="0"
-              stroke="#3c3c3c"
-              strokeWidth="2"
-              strokeDasharray="8 8"
-              width={cropper.width * sx}
-              height={cropper.height * sy}
-              x={cropper.position.x}
-              y={cropper.position.y}
-              onMouseDown={handleOnStartCropperMove}
-              onTouchStart={handleOnStartCropperMove}
-            ></rect>
-
-            <circle
-              fill="#3c3c3c"
-              cx={cropper.position.x + cropper.width * sx}
-              cy={cropper.position.y + cropper.height * sy}
-              r={12 * displayMagnification}
-              onMouseDown={handleOnStartCropperTransform}
-              onTouchStart={handleOnStartCropperTransform}
-            ></circle>
-            <image
-              xlinkHref="/images/containers/resize.svg"
-              width={12 * displayMagnification}
-              height={12 * displayMagnification}
-              x={
-                cropper.position.x +
-                cropper.width * sx -
-                (24 * displayMagnification - 12 * displayMagnification) / 2
-              }
-              y={
-                cropper.position.y +
-                cropper.height * sy -
-                (24 * displayMagnification - 12 * displayMagnification) / 2
-              }
-              onMouseDown={handleOnStartCropperTransform}
-              onTouchStart={handleOnStartCropperTransform}
-            />
-          </g>
-
-          {/* 切り取る対象となる画像 */}
-
           <CropperImage />
-
-          {/* 切り取った画像 */}
-
-          <clipPath id="cropper-clip-path">
-            <rect
-              x={cropper.position.x}
-              y={cropper.position.y}
-              width={cropper.width * sx}
-              height={cropper.height * sy}
-            />
-          </clipPath>
-
-          <g clipPath="url(#cropper-clip-path)">
-            <svg
-              width={image.width * image.scale.current}
-              height={image.height * image.scale.current}
-              x={image.position.x}
-              y={image.position.y}
-              viewBox={`0 0 ${image.width} ${image.height}`}
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              overflow="visible"
-            >
-              <g
-                transform={`rotate(${image.rotate.current}, ${
-                  image.width / 2
-                }, ${image.height / 2})`}
-              >
-                <rect fill="#fff" width={image.width} height={image.height} />
-                <image xlinkHref={image.url} width="100%" height="100%" />
-              </g>
-            </svg>
-          </g>
-
-          {/* 画像の表示領域のみを切り取る */}
-
-          <clipPath id="image-clip-path">
-            <rect
-              width={image.width * image.scale.current}
-              height={image.height * image.scale.current}
-              x={image.position.x}
-              y={image.position.y}
-              transform={`rotate(${image.rotate.current}, ${image.width / 2}, ${
-                image.height / 2
-              })`}
-            />
-          </clipPath>
-
-          <g clipPath="url(#image-clip-path)">
-            <rect
-              fillOpacity="0"
-              stroke="#FFF"
-              strokeWidth="2"
-              strokeDasharray="8 8"
-              width={cropper.width * sx}
-              height={cropper.height * sy}
-              x={cropper.position.x}
-              y={cropper.position.y}
-              onMouseDown={handleOnStartCropperMove}
-              onTouchStart={handleOnStartCropperMove}
-            ></rect>
-
-            <circle
-              fill="#FFF"
-              cx={cropper.position.x + cropper.width * sx}
-              cy={cropper.position.y + cropper.height * sy}
-              r={12 * displayMagnification}
-              onMouseDown={handleOnStartCropperTransform}
-              onTouchStart={handleOnStartCropperTransform}
-            ></circle>
-            <image
-              xlinkHref="/images/containers/resize.svg"
-              width={12 * displayMagnification}
-              height={12 * displayMagnification}
-              x={
-                cropper.position.x +
-                cropper.width * sx -
-                (24 * displayMagnification - 12 * displayMagnification) / 2
-              }
-              y={
-                cropper.position.y +
-                cropper.height * sy -
-                (24 * displayMagnification - 12 * displayMagnification) / 2
-              }
-              onMouseDown={handleOnStartCropperTransform}
-              onTouchStart={handleOnStartCropperTransform}
-            />
-          </g>
+          <CropperOperator />
         </svg>
       </Svg>
     </>
