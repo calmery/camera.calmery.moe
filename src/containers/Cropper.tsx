@@ -1,60 +1,52 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ResizeObserver from "resize-observer-polyfill";
 import styled from "styled-components";
-import { State } from "~/domains";
-import { actions } from "~/domains/cropper/actions";
-import { actions as canvasActions } from "~/domains/canvas/actions";
-import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 import { CropperImage } from "~/containers/CropperImage";
+import { State } from "~/domains";
+import { actions as canvasActions } from "~/domains/canvas/actions";
+import { actions } from "~/domains/cropper/actions";
+import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
 
-const CanvasContainer = styled.div`
+// Styles
+
+const Displayable = styled.div`
   box-sizing: border-box;
   flex-grow: 1;
   height: fit-content;
+  margin: 0 24px;
 `;
+
+const Svg = styled.svg`
+  position: fixed;
+`;
+
+// Components
 
 export const Cropper: React.FC = () => {
   const dispatch = useDispatch();
-  const { container, cropper, image } = useSelector(
-    ({ cropper }: State) => cropper
-  );
-  const {
-    temporaries: { selectedUserLayerIndex },
-  } = useSelector(({ canvas }: State) => canvas);
-  const canvas = useSelector(({ canvas }: State) => canvas);
-  const containerRef = useRef<SVGSVGElement>(null);
+  const { canvas, cropper: c } = useSelector(({ canvas, cropper }: State) => ({
+    canvas,
+    cropper,
+  }));
+  const { container, cropper, image } = c;
+  const { temporaries } = canvas;
+
+  // Refs
+
   const displayableRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
   // Events
 
-  const handleOnMoveCursor = useCallback(
-    (event: MouseEvent | TouchEvent) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      dispatch(actions.tickCropper(convertEventToCursorPositions(event)));
-    },
-    [dispatch]
-  );
-
-  const handleOnComplete = useCallback(
-    () => dispatch(actions.completeCropper()),
-    [dispatch]
-  );
-
-  // Image Events
-
   const handleOnStartImageTransform = useCallback(
-    (event: TouchEvent) => {
+    (event: React.TouchEvent) => {
       dispatch(
         actions.startCropperImageTransform(convertEventToCursorPositions(event))
       );
     },
     [dispatch]
   );
-
-  // Cropper Events
 
   const handleOnStartCropperMove = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
@@ -76,32 +68,43 @@ export const Cropper: React.FC = () => {
     [dispatch]
   );
 
-  const handleOnTouchStartDocument = useCallback((event: TouchEvent) => {
-    // Safari、2 本指でピンチインしたときに Safari のタブ一覧に遷移してしまうことがある
-    // そのため 2 本指でのタッチを一時的に無効化する
-    if (event.touches.length > 1) {
+  const handleOnTick = useCallback(
+    (event: React.MouseEvent | TouchEvent) => {
       event.preventDefault();
-    }
-  }, []);
+      event.stopPropagation();
+
+      dispatch(actions.tickCropper(convertEventToCursorPositions(event)));
+    },
+    [dispatch]
+  );
+
+  const handleOnComplete = useCallback(
+    () => dispatch(actions.completeCropper()),
+    [dispatch]
+  );
+
+  // Variables
+
+  const displayMagnification = container.displayMagnification;
+
+  let sx = cropper.scaleX.current;
+  let sy = cropper.scaleY.current;
+
+  if (!cropper.freeAspect) {
+    sx = cropper.scale.current;
+    sy = cropper.scale.current;
+  }
+
+  const { x, y } = cropper.position;
+  const width = cropper.width * sx;
+  const height = cropper.height * sy;
+  const { rotate, scale } = image;
 
   // Hooks
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const e = containerRef.current!;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const d = displayableRef.current!;
-
-    e.addEventListener("touchstart", handleOnStartImageTransform, false);
-    e.addEventListener("mousemove", handleOnMoveCursor, false);
-    e.addEventListener("touchmove", handleOnMoveCursor, { passive: false });
-    e.addEventListener("mouseup", handleOnComplete, false);
-    e.addEventListener("mouseleave", handleOnComplete, false);
-    e.addEventListener("touchend", handleOnComplete, false);
-    addEventListener("touchstart", handleOnTouchStartDocument, {
-      passive: false,
-    });
-
     const resizeObserver = new ResizeObserver(() => {
       dispatch(actions.updateCropperContainerRect(d.getBoundingClientRect()));
     });
@@ -109,8 +112,25 @@ export const Cropper: React.FC = () => {
     resizeObserver.observe(d);
     dispatch(actions.updateCropperContainerRect(d.getBoundingClientRect()));
 
+    return () => {
+      resizeObserver.unobserve(d);
+    };
+  }, [displayableRef]);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const e = svgRef.current!;
+
+    e.addEventListener("touchmove", handleOnTick, { passive: false });
+
+    return () => {
+      e.removeEventListener("touchmove", handleOnTick);
+    };
+  }, [svgRef]);
+
+  useEffect(() => {
     const { userLayers } = canvas;
-    let userLayer = userLayers[selectedUserLayerIndex];
+    let userLayer = userLayers[temporaries.selectedUserLayerIndex];
 
     if (!userLayer) {
       const i = userLayers.findIndex((l) => l);
@@ -131,35 +151,7 @@ export const Cropper: React.FC = () => {
         ...cropper,
       })
     );
-
-    return () => {
-      e.removeEventListener("touchstart", handleOnStartImageTransform);
-      e.removeEventListener("mousemove", handleOnMoveCursor);
-      e.removeEventListener("touchmove", handleOnMoveCursor);
-      e.removeEventListener("mouseup", handleOnComplete);
-      e.removeEventListener("mouseleave", handleOnComplete);
-      e.removeEventListener("touchend", handleOnComplete);
-      removeEventListener("touchstart", handleOnTouchStartDocument);
-      resizeObserver.unobserve(d);
-    };
-  }, [containerRef, displayableRef]);
-
-  const displayMagnification = container.displayMagnification;
-
-  let sx = cropper.scaleX.current;
-  let sy = cropper.scaleY.current;
-
-  if (!cropper.freeAspect) {
-    sx = cropper.scale.current;
-    sy = cropper.scale.current;
-  }
-
-  const x = cropper.position.x;
-  const y = cropper.position.y;
-  const width = cropper.width * sx;
-  const height = cropper.height * sy;
-  const rotate = image.rotate;
-  const scale = image.scale;
+  }, []);
 
   useEffect(() => {
     dispatch(
@@ -198,27 +190,44 @@ export const Cropper: React.FC = () => {
     image.position.y,
   ]);
 
+  // Render
+
+  const {
+    displayableWidth,
+    displayableHeight,
+    displayableTop,
+    displayableLeft,
+    styleWidth,
+    styleHeight,
+    styleTop,
+    styleLeft,
+  } = container;
+
   return (
     <>
-      <CanvasContainer ref={displayableRef} />
-      <svg
-        ref={containerRef}
-        viewBox={`0 0 ${container.displayableWidth} ${container.displayableHeight}`}
+      <Displayable ref={displayableRef} />
+      <Svg
+        ref={svgRef}
+        onMouseMove={handleOnTick}
+        onMouseUp={handleOnComplete}
+        onMouseLeave={handleOnComplete}
+        onTouchStart={handleOnStartImageTransform}
+        onTouchEnd={handleOnComplete}
+        viewBox={`0 0 ${displayableWidth} ${displayableHeight}`}
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
         style={{
-          position: "fixed",
-          top: `${container.displayableTop}px`,
-          left: `${container.displayableLeft}px`,
-          width: `${container.displayableWidth}px`,
-          height: `${container.displayableHeight}px`,
+          top: `${displayableTop}px`,
+          left: `${displayableLeft}px`,
+          width: `${displayableWidth}px`,
+          height: `${displayableHeight}px`,
         }}
       >
         <svg
-          width={container.styleWidth}
-          height={container.styleHeight}
-          x={container.styleLeft}
-          y={container.styleTop}
+          width={styleWidth}
+          height={styleHeight}
+          x={styleLeft}
+          y={styleTop}
           id="tutorial-cropper"
           viewBox={`0 0 ${image.width} ${image.height}`}
           xmlns="http://www.w3.org/2000/svg"
@@ -360,7 +369,7 @@ export const Cropper: React.FC = () => {
             />
           </g>
         </svg>
-      </svg>
+      </Svg>
     </>
   );
 };
