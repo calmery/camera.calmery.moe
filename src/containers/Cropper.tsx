@@ -29,7 +29,9 @@ export const Cropper: React.FC = () => {
     canvas,
     cropper,
   }));
-  const { container, cropper, image } = c;
+  const cropper = c;
+  const image = c;
+  const container = c;
   const { temporaries } = canvas;
 
   // Refs
@@ -88,7 +90,7 @@ export const Cropper: React.FC = () => {
   const { x, y } = cropper.position;
   const width = cropper.width * sx;
   const height = cropper.height * sy;
-  const { rotate, scale } = image;
+  const { imageRotate, imageScale } = image;
 
   // Hooks
 
@@ -150,19 +152,19 @@ export const Cropper: React.FC = () => {
         y,
         width,
         height,
-        rotate.current,
-        scale.current,
-        image.position.x,
-        image.position.y,
+        imageRotate.current,
+        imageScale.current,
+        image.imagePosition.x,
+        image.imagePosition.y,
         {
           cropperWidth: cropper.width,
           cropperHeight: cropper.height,
           cropperX: cropper.position.x,
           cropperY: cropper.position.y,
-          imageX: image.position.x,
-          imageY: image.position.y,
-          imageAngle: image.rotate.current,
-          imageScale: image.scale.current,
+          imageX: image.imagePosition.x,
+          imageY: image.imagePosition.y,
+          imageAngle: image.imageRotate.current,
+          imageScale: image.imageScale.current,
           cropperScale: cropper.scale.current,
           cropperScaleX: cropper.scaleX.current,
           cropperScaleY: cropper.scaleY.current,
@@ -174,10 +176,10 @@ export const Cropper: React.FC = () => {
     y,
     width,
     height,
-    rotate.current,
-    scale.current,
-    image.position.x,
-    image.position.y,
+    imageRotate.current,
+    imageScale.current,
+    image.imagePosition.x,
+    image.imagePosition.y,
   ]);
 
   // Render
@@ -220,7 +222,7 @@ export const Cropper: React.FC = () => {
           x={styleLeft}
           y={styleTop}
           id="tutorial-cropper"
-          viewBox={`0 0 ${image.width} ${image.height}`}
+          viewBox={`0 0 ${image.imageWidth} ${image.imageHeight}`}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           overflow="visible"

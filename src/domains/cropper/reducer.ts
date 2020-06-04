@@ -6,25 +6,7 @@ import { distanceBetweenTwoPoints } from "~/utils/distance-between-two-points";
 const CROPPER_DEFAULT_WIDTH = 320;
 const CROPPER_DEFAULT_HEIGHT = 180;
 
-// Container
-
-const containerInitialState: CropperContainerState = {
-  styleLeft: 0,
-  styleTop: 0,
-  styleWidth: 0,
-  styleHeight: 0,
-  displayableTop: 0,
-  displayableLeft: 0,
-  displayableWidth: 0,
-  displayableHeight: 0,
-  displayMagnification: 0,
-};
-
-const containerReducer = (
-  parentState: CropperState,
-  state = containerInitialState,
-  action: Actions
-) => {
+const reducer = (state: CropperState, action: Actions) => {
   switch (action.type) {
     case types.CROPPER_IMAGE_INITIALIZE: {
       const {
@@ -34,6 +16,24 @@ const containerReducer = (
         displayableHeight,
       } = state;
       const { width: imageWidth, height: imageHeight } = action.payload;
+      const {
+        cropperWidth,
+        cropperHeight,
+        cropperX,
+        cropperY,
+        cropperScale,
+        cropperScaleX,
+        cropperScaleY,
+      } = action.payload;
+      const {
+        url,
+        width,
+        height,
+        imageScale,
+        imageAngle,
+        imageX,
+        imageY,
+      } = action.payload;
 
       let svgWidth = displayableWidth;
       let svgHeight = imageHeight * (displayableWidth / imageWidth);
@@ -54,14 +54,53 @@ const containerReducer = (
         styleWidth: svgWidth,
         styleHeight: svgHeight,
         displayMagnification: imageWidth / svgWidth,
+        isCropperMoving: false,
+        isCropperTransforming: false,
+        freeAspect: true,
+        width: cropperWidth || CROPPER_DEFAULT_WIDTH,
+        height: cropperHeight || CROPPER_DEFAULT_HEIGHT,
+        position: {
+          ...state.position,
+          x: cropperX,
+          y: cropperY,
+        },
+        scale: {
+          ...state.scale,
+          current: cropperScale,
+        },
+        scaleX: {
+          ...state.scaleX,
+          current: cropperScaleX,
+        },
+        scaleY: {
+          ...state.scaleY,
+          current: cropperScaleY,
+        },
+        selectedIndex: -1,
+        imageUrl: url,
+        imageWidth: width,
+        imageHeight: height,
+        isImageTransforming: false,
+        imagePosition: {
+          x: imageX,
+          y: imageY,
+        },
+        imageScale: {
+          ...state.imageScale,
+          current: imageScale,
+        },
+        imageRotate: {
+          ...state.imageScale,
+          current: imageAngle,
+        },
       };
     }
 
     case types.CROPPER_CONTAINER_UPDATE_RECT: {
-      const { image } = parentState;
+      const image = state;
       let { width } = action.payload;
       const { x, y, height } = action.payload;
-      const { width: imageWidth, height: imageHeight } = image;
+      const { imageWidth, imageHeight } = image;
 
       width = width - 24 * 2;
 
@@ -91,88 +130,10 @@ const containerReducer = (
       };
     }
 
-    default:
-      return state;
-  }
-};
-
-// Cropper
-
-const cropperInitialState: CropperCropperState = {
-  isCropperMoving: false,
-  isCropperTransforming: false,
-  freeAspect: true,
-  width: CROPPER_DEFAULT_WIDTH,
-  height: CROPPER_DEFAULT_HEIGHT,
-  position: {
-    x: 0,
-    y: 0,
-    valueAtTransformStartX: 0,
-    valueAtTransformStartY: 0,
-  },
-  scale: {
-    current: 1,
-    previous: 1,
-    valueAtTransformStart: 0,
-  },
-  scaleX: {
-    current: 1,
-    previous: 1,
-    valueAtTransformStart: 0,
-  },
-  scaleY: {
-    current: 1,
-    previous: 1,
-    valueAtTransformStart: 0,
-  },
-  selectedIndex: -1,
-};
-
-const cropperReducer = (
-  parentState: CropperState,
-  state = cropperInitialState,
-  action: Actions
-) => {
-  switch (action.type) {
-    case types.CROPPER_IMAGE_INITIALIZE: {
-      const {
-        cropperWidth,
-        cropperHeight,
-        cropperX,
-        cropperY,
-        cropperScale,
-        cropperScaleX,
-        cropperScaleY,
-      } = action.payload;
-
-      return {
-        ...cropperInitialState,
-        // ToDo: 初期値を別に定義して Canvas 側でも使いたい
-        width: cropperWidth || CROPPER_DEFAULT_WIDTH,
-        height: cropperHeight || CROPPER_DEFAULT_HEIGHT,
-        position: {
-          ...state.position,
-          x: cropperX,
-          y: cropperY,
-        },
-        scale: {
-          ...state.scale,
-          current: cropperScale,
-        },
-        scaleX: {
-          ...state.scaleX,
-          current: cropperScaleX,
-        },
-        scaleY: {
-          ...state.scaleY,
-          current: cropperScaleY,
-        },
-      };
-    }
-
     case types.CROPPER_CROPPER_START_DRAG: {
+      const image = state;
       const { position } = state;
-      const { container, image } = parentState;
+      const container = state;
       const { cursorPositions } = action.payload;
 
       if (image.isImageTransforming) {
@@ -200,7 +161,8 @@ const cropperReducer = (
     }
 
     case types.CROPPER_CROPPER_START_TRANSFORM: {
-      const { container, image } = parentState;
+      const image = state;
+      const container = state;
       const { cursorPositions } = action.payload;
       const { position } = state;
 
@@ -297,9 +259,10 @@ const cropperReducer = (
     }
 
     case types.CROPPER_TICK: {
-      const { container } = parentState;
+      const container = state;
       const { cursorPositions } = action.payload;
       const { isCropperTransforming, isCropperMoving } = state;
+      const { imageRotate, isImageTransforming } = state;
 
       if (isCropperMoving) {
         const { position } = state;
@@ -399,78 +362,47 @@ const cropperReducer = (
         return state;
       }
 
-      return state;
-    }
+      if (!isImageTransforming && cursorPositions.length < 2) {
+        return state;
+      }
 
-    case types.CROPPER_COMPLETE:
+      const x1 = cursorPositions[0].x;
+      const y1 = cursorPositions[0].y;
+      const x2 = cursorPositions[1].x;
+      const y2 = cursorPositions[1].y;
+
+      const nextAngle =
+        imageRotate.previous +
+        angleBetweenTwoPoints(x1, y1, x2, y2) -
+        imageRotate.valueAtTransformStart;
+      const currentLength = distanceBetweenTwoPoints(x1, y1, x2, y2);
+      const nextScale =
+        (currentLength / state.imageScale.valueAtTransformStart) *
+        state.imageScale.previous;
+      const nextX =
+        state.imagePosition.x +
+        (state.imageWidth * state.imageScale.current -
+          state.imageWidth * nextScale) /
+          2;
+      const nextY =
+        state.imagePosition.y +
+        (state.imageHeight * state.imageScale.current -
+          state.imageHeight * nextScale) /
+          2;
+
       return {
         ...state,
-        isCropperMoving: false,
-        isCropperTransforming: false,
-      };
-
-    default:
-      return state;
-  }
-};
-
-// Images
-
-const imageInitialState: CropperImageState = {
-  url: "",
-  width: 0,
-  height: 0,
-  isImageTransforming: false,
-  position: {
-    x: 0,
-    y: 0,
-  },
-  rotate: {
-    current: 0,
-    previous: 0,
-    valueAtTransformStart: 0,
-  },
-  scale: {
-    current: 1,
-    previous: 1,
-    valueAtTransformStart: 0,
-  },
-};
-
-const imageReducer = (
-  _: CropperState,
-  state = imageInitialState,
-  action: Actions
-) => {
-  switch (action.type) {
-    case types.CROPPER_IMAGE_INITIALIZE: {
-      const {
-        url,
-        width,
-        height,
-        imageScale,
-        imageAngle,
-        imageX,
-        imageY,
-      } = action.payload;
-
-      return {
-        ...imageInitialState,
-        url,
-        width,
-        height,
-        isImageTransforming: false,
-        position: {
-          x: imageX,
-          y: imageY,
+        imagePosition: {
+          x: nextX,
+          y: nextY,
         },
-        scale: {
-          ...imageInitialState.scale,
-          current: imageScale,
+        imageScale: {
+          ...state.imageScale,
+          current: nextScale,
         },
-        rotate: {
-          ...imageInitialState.scale,
-          current: imageAngle,
+        imageRotate: {
+          ...state.imageRotate,
+          current: nextAngle,
         },
       };
     }
@@ -485,9 +417,9 @@ const imageReducer = (
       return {
         ...state,
         isImageTransforming: true,
-        scale: {
-          ...state.scale,
-          previous: state.scale.current,
+        imageScale: {
+          ...state.imageScale,
+          previous: state.imageScale.current,
           valueAtTransformStart: distanceBetweenTwoPoints(
             positions[0].x,
             positions[0].y,
@@ -495,9 +427,9 @@ const imageReducer = (
             positions[1].y
           ),
         },
-        rotate: {
-          ...state.rotate,
-          previous: state.rotate.current,
+        imageRotate: {
+          ...state.imageRotate,
+          previous: state.imageRotate.current,
           valueAtTransformStart: angleBetweenTwoPoints(
             positions[0].x,
             positions[0].y,
@@ -508,54 +440,11 @@ const imageReducer = (
       };
     }
 
-    case types.CROPPER_TICK: {
-      const { cursorPositions } = action.payload;
-      const { rotate, isImageTransforming } = state;
-
-      if (!isImageTransforming && cursorPositions.length < 2) {
-        return state;
-      }
-
-      const x1 = cursorPositions[0].x;
-      const y1 = cursorPositions[0].y;
-      const x2 = cursorPositions[1].x;
-      const y2 = cursorPositions[1].y;
-
-      const nextAngle =
-        rotate.previous +
-        angleBetweenTwoPoints(x1, y1, x2, y2) -
-        rotate.valueAtTransformStart;
-      const currentLength = distanceBetweenTwoPoints(x1, y1, x2, y2);
-      const nextScale =
-        (currentLength / state.scale.valueAtTransformStart) *
-        state.scale.previous;
-      const nextX =
-        state.position.x +
-        (state.width * state.scale.current - state.width * nextScale) / 2;
-      const nextY =
-        state.position.y +
-        (state.height * state.scale.current - state.height * nextScale) / 2;
-
-      return {
-        ...state,
-        position: {
-          x: nextX,
-          y: nextY,
-        },
-        scale: {
-          ...state.scale,
-          current: nextScale,
-        },
-        rotate: {
-          ...state.rotate,
-          current: nextAngle,
-        },
-      };
-    }
-
     case types.CROPPER_COMPLETE:
       return {
         ...state,
+        isCropperMoving: false,
+        isCropperTransforming: false,
         isImageTransforming: false,
       };
 
@@ -566,7 +455,7 @@ const imageReducer = (
 
 // Types
 
-export interface CropperContainerState {
+export interface CropperState {
   styleLeft: number;
   styleTop: number;
   styleWidth: number;
@@ -576,9 +465,6 @@ export interface CropperContainerState {
   displayableWidth: number;
   displayableHeight: number;
   displayMagnification: number;
-}
-
-export interface CropperCropperState {
   freeAspect: boolean;
   isCropperMoving: boolean;
   isCropperTransforming: boolean;
@@ -606,46 +492,84 @@ export interface CropperCropperState {
     valueAtTransformStart: number;
   };
   selectedIndex: number;
-}
-
-export interface CropperImageState {
-  url: string;
-  width: number;
-  height: number;
+  imageUrl: string;
+  imageWidth: number;
+  imageHeight: number;
   isImageTransforming: boolean;
-  position: {
+  imagePosition: {
     x: number;
     y: number;
   };
-  rotate: {
+  imageRotate: {
     current: number;
     previous: number;
     valueAtTransformStart: number;
   };
-  scale: {
+  imageScale: {
     current: number;
     previous: number;
     valueAtTransformStart: number;
   };
-}
-
-export interface CropperState {
-  container: CropperContainerState;
-  cropper: CropperCropperState;
-  image: CropperImageState;
 }
 
 // Main
 
 export default (
   state = {
-    container: containerInitialState,
-    cropper: cropperInitialState,
-    image: imageInitialState,
+    styleLeft: 0,
+    styleTop: 0,
+    styleWidth: 0,
+    styleHeight: 0,
+    displayableTop: 0,
+    displayableLeft: 0,
+    displayableWidth: 0,
+    displayableHeight: 0,
+    displayMagnification: 0,
+    isCropperMoving: false,
+    isCropperTransforming: false,
+    freeAspect: true,
+    width: CROPPER_DEFAULT_WIDTH,
+    height: CROPPER_DEFAULT_HEIGHT,
+    position: {
+      x: 0,
+      y: 0,
+      valueAtTransformStartX: 0,
+      valueAtTransformStartY: 0,
+    },
+    scale: {
+      current: 1,
+      previous: 1,
+      valueAtTransformStart: 0,
+    },
+    scaleX: {
+      current: 1,
+      previous: 1,
+      valueAtTransformStart: 0,
+    },
+    scaleY: {
+      current: 1,
+      previous: 1,
+      valueAtTransformStart: 0,
+    },
+    selectedIndex: -1,
+    imageUrl: "",
+    imageWidth: 0,
+    imageHeight: 0,
+    isImageTransforming: false,
+    imagePosition: {
+      x: 0,
+      y: 0,
+    },
+    imageRotate: {
+      current: 0,
+      previous: 0,
+      valueAtTransformStart: 0,
+    },
+    imageScale: {
+      current: 1,
+      previous: 1,
+      valueAtTransformStart: 0,
+    },
   },
   action: Actions
-): CropperState => ({
-  container: containerReducer(state, state.container, action),
-  cropper: cropperReducer(state, state.cropper, action),
-  image: imageReducer(state, state.image, action),
-});
+): CropperState => reducer(state, action);

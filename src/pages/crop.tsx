@@ -145,7 +145,9 @@ const Crop: NextPage = () => {
   const { temporaries, userLayers } = useSelector(
     ({ canvas }: State) => canvas
   );
-  const { image, cropper } = useSelector(({ cropper }: State) => cropper);
+  const c = useSelector(({ cropper }: State) => cropper);
+  const image = c;
+  const cropper = c;
 
   // States
 
@@ -202,7 +204,7 @@ const Crop: NextPage = () => {
   // Render
 
   const isImageExists = userLayers.some((u) => u);
-  let angle = image.rotate.current;
+  let angle = image.imageRotate.current;
 
   if (angle < 0) {
     angle = 360 - (Math.abs(angle) % 360);

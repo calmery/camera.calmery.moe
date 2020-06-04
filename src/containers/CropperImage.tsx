@@ -2,28 +2,28 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { State } from "~/domains";
 import { Constants } from "~/styles/constants";
-import { CropperImageState } from "~/domains/cropper/reducer";
+import { CropperState } from "~/domains/cropper/reducer";
 
 const Image: React.FC<{
-  image: CropperImageState;
+  image: CropperState;
   fill?: boolean;
 }> = ({ image, fill = false }) => (
   <svg
-    width={image.width * image.scale.current}
-    height={image.height * image.scale.current}
-    x={image.position.x}
-    y={image.position.y}
-    viewBox={`0 0 ${image.width} ${image.height}`}
+    width={image.imageWidth * image.imageScale.current}
+    height={image.imageHeight * image.imageScale.current}
+    x={image.imagePosition.x}
+    y={image.imagePosition.y}
+    viewBox={`0 0 ${image.imageWidth} ${image.imageHeight}`}
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
     overflow="visible"
   >
     <g
-      transform={`rotate(${image.rotate.current}, ${image.width / 2}, ${
-        image.height / 2
-      })`}
+      transform={`rotate(${image.imageRotate.current}, ${
+        image.imageWidth / 2
+      }, ${image.imageHeight / 2})`}
     >
-      <image xlinkHref={image.url} width="100%" height="100%" />
+      <image xlinkHref={image.imageUrl} width="100%" height="100%" />
       {fill && (
         <rect
           width="100%"
@@ -37,7 +37,9 @@ const Image: React.FC<{
 );
 
 export const CropperImage: React.FC = () => {
-  const { cropper, image } = useSelector(({ cropper }: State) => cropper);
+  const c = useSelector(({ cropper }: State) => cropper);
+  const image = c;
+  const cropper = c;
 
   let sx = cropper.scaleX.current;
   let sy = cropper.scaleY.current;
