@@ -65,8 +65,8 @@ const Icon = styled.object<{ selected?: boolean; disabled?: boolean }>`
   ${({ selected }) =>
     !selected &&
     css`
-      // rgba(180, 180, 180, 1);
-      filter: brightness(0) opacity(29.5%);
+      filter: brightness(0);
+      opacity: 0.295; // rgba(180, 180, 180, 1);
     `};
 
   ${({ disabled }) =>
