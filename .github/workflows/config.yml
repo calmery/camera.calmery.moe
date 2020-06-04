@@ -6,8 +6,8 @@ jobs:
   build:
     strategy:
       matrix:
-        node-version: [12.16.1]
-        npm-version: [6.14.4]
+        node-version: [12.18.0]
+        npm-version: [6.14.5]
         os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
@@ -24,8 +24,8 @@ jobs:
   lint:
     strategy:
       matrix:
-        node-version: [12.16.1]
-        npm-version: [6.14.4]
+        node-version: [12.18.0]
+        npm-version: [6.14.5]
         os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
@@ -42,8 +42,8 @@ jobs:
   test:
     strategy:
       matrix:
-        node-version: [12.16.1]
-        npm-version: [6.14.4]
+        node-version: [12.18.0]
+        npm-version: [6.14.5]
         os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
