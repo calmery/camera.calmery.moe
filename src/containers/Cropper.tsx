@@ -79,18 +79,18 @@ export const Cropper: React.FC = () => {
 
   // Variables
 
-  let sx = cropper.scaleX.current;
-  let sy = cropper.scaleY.current;
+  let sx = cropper.cropperScaleX;
+  let sy = cropper.cropperScaleY;
 
   if (!cropper.freeAspect) {
-    sx = cropper.scale.current;
-    sy = cropper.scale.current;
+    sx = cropper.cropperScale;
+    sy = cropper.cropperScale;
   }
 
-  const { x, y } = cropper.position;
-  const width = cropper.width * sx;
-  const height = cropper.height * sy;
-  const { imageRotate, imageScale } = image;
+  const { cropperX: x, cropperY: y } = cropper;
+  const width = cropper.cropperWidth * sx;
+  const height = cropper.cropperHeight * sy;
+  const { imageAngle, imageScale } = image;
 
   // Hooks
 
@@ -152,35 +152,26 @@ export const Cropper: React.FC = () => {
         y,
         width,
         height,
-        imageRotate.current,
-        imageScale.current,
-        image.imagePosition.x,
-        image.imagePosition.y,
+        imageAngle,
+        imageScale,
+        image.imageX,
+        image.imageY,
         {
-          cropperWidth: cropper.width,
-          cropperHeight: cropper.height,
-          cropperX: cropper.position.x,
-          cropperY: cropper.position.y,
-          imageX: image.imagePosition.x,
-          imageY: image.imagePosition.y,
-          imageAngle: image.imageRotate.current,
-          imageScale: image.imageScale.current,
-          cropperScale: cropper.scale.current,
-          cropperScaleX: cropper.scaleX.current,
-          cropperScaleY: cropper.scaleY.current,
+          cropperWidth: cropper.cropperWidth,
+          cropperHeight: cropper.cropperHeight,
+          cropperX: cropper.cropperX,
+          cropperY: cropper.cropperY,
+          imageX: image.imageX,
+          imageY: image.imageY,
+          imageAngle: imageAngle,
+          imageScale: imageScale,
+          cropperScale: cropper.cropperScale,
+          cropperScaleX: cropper.cropperScaleX,
+          cropperScaleY: cropper.cropperScaleY,
         }
       )
     );
-  }, [
-    x,
-    y,
-    width,
-    height,
-    imageRotate.current,
-    imageScale.current,
-    image.imagePosition.x,
-    image.imagePosition.y,
-  ]);
+  }, [x, y, width, height, imageAngle, imageScale, image.imageX, image.imageY]);
 
   // Render
 

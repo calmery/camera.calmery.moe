@@ -204,7 +204,7 @@ const Crop: NextPage = () => {
   // Render
 
   const isImageExists = userLayers.some((u) => u);
-  let angle = image.imageRotate.current;
+  let angle = image.imageAngle;
 
   if (angle < 0) {
     angle = 360 - (Math.abs(angle) % 360);
@@ -245,7 +245,7 @@ const Crop: NextPage = () => {
                             <AspectRatio
                               selected={
                                 !cropper.freeAspect &&
-                                cropper.selectedIndex === index
+                                cropper.temporaries.selectedIndex === index
                               }
                               onClick={() =>
                                 handleOnChangeFixedAspectRatio(index, w, h)
@@ -254,7 +254,7 @@ const Crop: NextPage = () => {
                               <AspectRatioIcon
                                 selected={
                                   !cropper.freeAspect &&
-                                  cropper.selectedIndex === index
+                                  cropper.temporaries.selectedIndex === index
                                 }
                               >
                                 <img
@@ -265,7 +265,7 @@ const Crop: NextPage = () => {
                               <AspectRatioTitle
                                 selected={
                                   !cropper.freeAspect &&
-                                  cropper.selectedIndex === index
+                                  cropper.temporaries.selectedIndex === index
                                 }
                               >
                                 {w}:{h}

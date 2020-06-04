@@ -49,18 +49,18 @@ export const CropperOperator: React.FC = () => {
 
   // Render
 
-  let sx = cropper.scaleX.current;
-  let sy = cropper.scaleY.current;
+  let sx = cropper.cropperScaleX;
+  let sy = cropper.cropperScaleY;
 
   if (!cropper.freeAspect) {
-    sx = cropper.scale.current;
-    sy = cropper.scale.current;
+    sx = cropper.cropperScale;
+    sy = cropper.cropperScale;
   }
 
-  const x = cropper.position.x;
-  const y = cropper.position.y;
-  const width = cropper.width * sx;
-  const height = cropper.height * sy;
+  const x = cropper.cropperX;
+  const y = cropper.cropperY;
+  const width = cropper.cropperWidth * sx;
+  const height = cropper.cropperHeight * sy;
 
   const cx = x + width;
   const cy = y + height;
@@ -73,13 +73,13 @@ export const CropperOperator: React.FC = () => {
     <>
       <clipPath id="cropper-operator-clip-path">
         <rect
-          width={image.imageWidth * image.imageScale.current}
-          height={image.imageHeight * image.imageScale.current}
-          x={image.imagePosition.x}
-          y={image.imagePosition.y}
-          transform={`rotate(${image.imageRotate.current}, ${
-            image.imageWidth / 2
-          }, ${image.imageHeight / 2})`}
+          width={image.imageWidth * image.imageScale}
+          height={image.imageHeight * image.imageScale}
+          x={image.imageX}
+          y={image.imageY}
+          transform={`rotate(${image.imageAngle}, ${image.imageWidth / 2}, ${
+            image.imageHeight / 2
+          })`}
         />
       </clipPath>
 

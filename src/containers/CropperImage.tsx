@@ -9,19 +9,19 @@ const Image: React.FC<{
   fill?: boolean;
 }> = ({ image, fill = false }) => (
   <svg
-    width={image.imageWidth * image.imageScale.current}
-    height={image.imageHeight * image.imageScale.current}
-    x={image.imagePosition.x}
-    y={image.imagePosition.y}
+    width={image.imageWidth * image.imageScale}
+    height={image.imageHeight * image.imageScale}
+    x={image.imageX}
+    y={image.imageY}
     viewBox={`0 0 ${image.imageWidth} ${image.imageHeight}`}
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
     overflow="visible"
   >
     <g
-      transform={`rotate(${image.imageRotate.current}, ${
-        image.imageWidth / 2
-      }, ${image.imageHeight / 2})`}
+      transform={`rotate(${image.imageAngle}, ${image.imageWidth / 2}, ${
+        image.imageHeight / 2
+      })`}
     >
       <image xlinkHref={image.imageUrl} width="100%" height="100%" />
       {fill && (
@@ -41,22 +41,22 @@ export const CropperImage: React.FC = () => {
   const image = c;
   const cropper = c;
 
-  let sx = cropper.scaleX.current;
-  let sy = cropper.scaleY.current;
+  let sx = cropper.cropperScaleX;
+  let sy = cropper.cropperScaleY;
 
   if (!cropper.freeAspect) {
-    sx = cropper.scale.current;
-    sy = cropper.scale.current;
+    sx = cropper.cropperScale;
+    sy = cropper.cropperScale;
   }
 
   return (
     <>
       <clipPath id="cropper-image-clip-path">
         <rect
-          x={cropper.position.x}
-          y={cropper.position.y}
-          width={cropper.width * sx}
-          height={cropper.height * sy}
+          x={cropper.cropperX}
+          y={cropper.cropperY}
+          width={cropper.cropperWidth * sx}
+          height={cropper.cropperHeight * sy}
         />
       </clipPath>
 
