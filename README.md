@@ -4,6 +4,8 @@
 
 # camera.calmery.moe: Calmery-chan camera :camera:
 
+![Calmery-Chan](https://user-images.githubusercontent.com/12670155/83776573-4da95d00-a6c3-11ea-98c0-7c2633e72c24.jpg)
+
 ![Uchinoko Kawaii](https://img.shields.io/badge/%E3%81%86%E3%81%A1%E3%81%AE%E5%AD%90-%E3%81%8B%E3%82%8F%E3%81%84%E3%81%84-FF91BE)
 [![GitHub Actions](https://github.com/calmery-chan/camera.calmery.moe/workflows/GitHub%20Actions/badge.svg)](https://github.com/calmery-chan/calmery.moe/actions)
 [![WakaTime](https://wakatime.com/badge/github/calmery-chan/camera.calmery.moe.svg)](https://wakatime.com/badge/github/calmery-chan/camera.calmery.moe)
