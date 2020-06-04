@@ -7,10 +7,8 @@ import { getColorByDominantColorLightness } from "~/utils/canvas";
 
 export const CropperOperator: React.FC = () => {
   const dispatch = useDispatch();
-  const c = useSelector(({ cropper }: State) => cropper);
-  const { displayMagnification } = c;
-  const image = c;
-  const cropper = c;
+  const cropper = useSelector(({ cropper }: State) => cropper);
+  const { displayMagnification } = cropper;
 
   // Refs
 
@@ -73,13 +71,13 @@ export const CropperOperator: React.FC = () => {
     <>
       <clipPath id="cropper-operator-clip-path">
         <rect
-          width={image.imageWidth * image.imageScale}
-          height={image.imageHeight * image.imageScale}
-          x={image.imageX}
-          y={image.imageY}
-          transform={`rotate(${image.imageAngle}, ${image.imageWidth / 2}, ${
-            image.imageHeight / 2
-          })`}
+          width={cropper.imageWidth * cropper.imageScale}
+          height={cropper.imageHeight * cropper.imageScale}
+          x={cropper.imageX}
+          y={cropper.imageY}
+          transform={`rotate(${cropper.imageAngle}, ${
+            cropper.imageWidth / 2
+          }, ${cropper.imageHeight / 2})`}
         />
       </clipPath>
 

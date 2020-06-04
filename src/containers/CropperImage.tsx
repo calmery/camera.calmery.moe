@@ -5,25 +5,25 @@ import { Constants } from "~/styles/constants";
 import { CropperState } from "~/domains/cropper/reducer";
 
 const Image: React.FC<{
-  image: CropperState;
+  cropper: CropperState;
   fill?: boolean;
-}> = ({ image, fill = false }) => (
+}> = ({ cropper, fill = false }) => (
   <svg
-    width={image.imageWidth * image.imageScale}
-    height={image.imageHeight * image.imageScale}
-    x={image.imageX}
-    y={image.imageY}
-    viewBox={`0 0 ${image.imageWidth} ${image.imageHeight}`}
+    width={cropper.imageWidth * cropper.imageScale}
+    height={cropper.imageHeight * cropper.imageScale}
+    x={cropper.imageX}
+    y={cropper.imageY}
+    viewBox={`0 0 ${cropper.imageWidth} ${cropper.imageHeight}`}
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
     overflow="visible"
   >
     <g
-      transform={`rotate(${image.imageAngle}, ${image.imageWidth / 2}, ${
-        image.imageHeight / 2
+      transform={`rotate(${cropper.imageAngle}, ${cropper.imageWidth / 2}, ${
+        cropper.imageHeight / 2
       })`}
     >
-      <image xlinkHref={image.imageUrl} width="100%" height="100%" />
+      <image xlinkHref={cropper.imageUrl} width="100%" height="100%" />
       {fill && (
         <rect
           width="100%"
@@ -37,9 +37,7 @@ const Image: React.FC<{
 );
 
 export const CropperImage: React.FC = () => {
-  const c = useSelector(({ cropper }: State) => cropper);
-  const image = c;
-  const cropper = c;
+  const cropper = useSelector(({ cropper }: State) => cropper);
 
   let sx = cropper.cropperScaleX;
   let sy = cropper.cropperScaleY;
@@ -60,10 +58,10 @@ export const CropperImage: React.FC = () => {
         />
       </clipPath>
 
-      <Image image={image} fill />
+      <Image cropper={cropper} fill />
 
       <g clipPath="url(#cropper-image-clip-path)">
-        <Image image={image} />
+        <Image cropper={cropper} />
       </g>
     </>
   );

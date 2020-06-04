@@ -25,13 +25,10 @@ const Svg = styled.svg`
 
 export const Cropper: React.FC = () => {
   const dispatch = useDispatch();
-  const { canvas, cropper: c } = useSelector(({ canvas, cropper }: State) => ({
+  const { canvas, cropper } = useSelector(({ canvas, cropper }: State) => ({
     canvas,
     cropper,
   }));
-  const cropper = c;
-  const image = c;
-  const container = c;
   const { temporaries } = canvas;
 
   // Refs
@@ -90,7 +87,7 @@ export const Cropper: React.FC = () => {
   const { cropperX: x, cropperY: y } = cropper;
   const width = cropper.cropperWidth * sx;
   const height = cropper.cropperHeight * sy;
-  const { imageAngle, imageScale } = image;
+  const { imageAngle, imageScale } = cropper;
 
   // Hooks
 
@@ -154,15 +151,15 @@ export const Cropper: React.FC = () => {
         height,
         imageAngle,
         imageScale,
-        image.imageX,
-        image.imageY,
+        cropper.imageX,
+        cropper.imageY,
         {
           cropperWidth: cropper.cropperWidth,
           cropperHeight: cropper.cropperHeight,
           cropperX: cropper.cropperX,
           cropperY: cropper.cropperY,
-          imageX: image.imageX,
-          imageY: image.imageY,
+          imageX: cropper.imageX,
+          imageY: cropper.imageY,
           imageAngle: imageAngle,
           imageScale: imageScale,
           cropperScale: cropper.cropperScale,
@@ -171,7 +168,16 @@ export const Cropper: React.FC = () => {
         }
       )
     );
-  }, [x, y, width, height, imageAngle, imageScale, image.imageX, image.imageY]);
+  }, [
+    x,
+    y,
+    width,
+    height,
+    imageAngle,
+    imageScale,
+    cropper.imageX,
+    cropper.imageY,
+  ]);
 
   // Render
 
@@ -184,7 +190,7 @@ export const Cropper: React.FC = () => {
     styleHeight,
     styleTop,
     styleLeft,
-  } = container;
+  } = cropper;
 
   return (
     <>
@@ -213,7 +219,7 @@ export const Cropper: React.FC = () => {
           x={styleLeft}
           y={styleTop}
           id="tutorial-cropper"
-          viewBox={`0 0 ${image.imageWidth} ${image.imageHeight}`}
+          viewBox={`0 0 ${cropper.imageWidth} ${cropper.imageHeight}`}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           overflow="visible"
