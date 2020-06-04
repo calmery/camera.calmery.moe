@@ -139,7 +139,7 @@ export const TUNE_PAHE_WITH_IMAGE_SCENARIOS = [
   {
     characterImageUrl: "https://static.calmery.moe/s/2/17.png",
     emphasisElementId: "tutorial-canvas",
-    message: "ここにフィルターをかける画像が表示されているよ！",
+    message: "ここにはフィルターをかける画像が表示されているよ！",
   },
   {
     characterImageUrl: "https://static.calmery.moe/s/2/3.png",
@@ -159,7 +159,7 @@ export const TUNE_PAHE_WITH_IMAGE_SCENARIOS = [
   {
     characterImageUrl: "https://static.calmery.moe/s/2/11.png",
     emphasisElementId: "tutorial-filters-images",
-    message: "ここでフィルターをかけたい画像をタップしてみよう！",
+    message: "ここでフィルターをかけたい画像をタップしてみて！",
   },
 ];
 
@@ -179,7 +179,7 @@ export const CROP_PAGE_WITH_IMAGE_SCENARIOS = [
   {
     characterImageUrl: "https://static.calmery.moe/s/1/5.png",
     emphasisElementId: "tutorial-cropper",
-    message: "ピンチイン、ピンチアウトして画像の大きさを変えてみよう！",
+    message: "ピンチイン、ピンチアウトして画像の大きさを変えられるの！",
   },
   {
     characterImageUrl: "https://static.calmery.moe/s/1/16.png",
@@ -190,7 +190,7 @@ export const CROP_PAGE_WITH_IMAGE_SCENARIOS = [
     characterImageUrl: "https://static.calmery.moe/s/2/3.png",
     emphasisElementId: "tutorial-crop-aspect-ratios",
     message:
-      "ここでアスペクト比を選べるよ！\n比率を保ったまま操作したいときに使おう！",
+      "ここではアスペクト比を選べるよ！\n比率を保ったまま操作したいときに使ってね！",
   },
   {
     characterImageUrl: "https://static.calmery.moe/s/2/4.png",
@@ -210,7 +210,7 @@ export const COLLAGES_PAGE_SCENARIOS = [
   {
     characterImageUrl: "https://static.calmery.moe/s/2/5.png",
     emphasisElementId: "tutorial-frames-canvas-frames",
-    message: "ここに色んなフレームが用意されているよ！タップして選んでみよう！",
+    message: "ここに色んなフレームが用意されているよ！",
   },
   {
     characterImageUrl: "https://static.calmery.moe/s/1/10.png",
