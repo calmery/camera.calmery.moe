@@ -24,3 +24,8 @@ export const ASPECT_RATIOS = [
     h: 1,
   },
 ];
+
+export const CROPPER_DEFAULT_WIDTH = 320;
+export const CROPPER_DEFAULT_HEIGHT = 180;
+export const CROPPER_VERTICAL_MARGIN = 12;
+export const CROPPER_HORIZONTAL_MARGIN = 24;

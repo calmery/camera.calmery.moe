@@ -95,11 +95,11 @@ export const Cropper: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const d = displayableRef.current!;
     const resizeObserver = new ResizeObserver(() => {
-      dispatch(actions.updateCropperContainerRect(d.getBoundingClientRect()));
+      dispatch(actions.updateDisplayableRect(d.getBoundingClientRect()));
     });
 
     resizeObserver.observe(d);
-    dispatch(actions.updateCropperContainerRect(d.getBoundingClientRect()));
+    dispatch(actions.updateDisplayableRect(d.getBoundingClientRect()));
 
     return () => {
       resizeObserver.unobserve(d);

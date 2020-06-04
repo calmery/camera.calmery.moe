@@ -3,7 +3,7 @@ export const CROPPER_COMPLETE = "CROPPER/COMPLETE" as const;
 
 // Container
 
-export const CROPPER_CONTAINER_UPDATE_RECT = "CROPPER/CONTAINER/UPDATE_RECT" as const;
+export const CROPPER_UPDATE_DISPLAYABLE_RECT = "CROPPER/CONTAINER/UPDATE_RECT" as const;
 
 // Cropper
 

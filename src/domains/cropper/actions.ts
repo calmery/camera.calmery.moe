@@ -1,9 +1,7 @@
 import * as types from "./types";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 
-// Container
-
-const updateCropperContainerRect = ({
+const updateDisplayableRect = ({
   x,
   y,
   width,
@@ -14,7 +12,7 @@ const updateCropperContainerRect = ({
   width: number;
   height: number;
 }) => ({
-  type: types.CROPPER_CONTAINER_UPDATE_RECT,
+  type: types.CROPPER_UPDATE_DISPLAYABLE_RECT,
   payload: {
     x,
     y,
@@ -22,8 +20,6 @@ const updateCropperContainerRect = ({
     height,
   },
 });
-
-// Cropper
 
 const startCropperCropperDrag = (cursorPositions: CursorPosition[]) => ({
   type: types.CROPPER_CROPPER_START_DRAG,
@@ -87,7 +83,7 @@ const completeCropper = () => ({
 });
 
 export const actions = {
-  updateCropperContainerRect,
+  updateDisplayableRect,
   startCropperCropperDrag,
   startCropperCropperTransform,
   changeCropperCropperAspectRatio,
