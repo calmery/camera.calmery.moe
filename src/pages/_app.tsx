@@ -53,11 +53,11 @@ class App extends NextApp {
             property="og:description"
             content="かるめりちゃんと一緒に写真を撮ろう！"
           />
+          <meta property="og:url" content="https://camera.calmery.moe" />
           <meta
-            property="og:url"
-            content="https://calmery.moe/images/ogp.jpg"
+            property="og:image"
+            content="https://camera.calmery.moe/images/ogp.jpg"
           />
-          <meta property="og:image" content="images/ogp.jpg" />
           <meta property="og:image:width" content="640" />
           <meta property="og:image:height" content="320" />
           <meta property="og:locale" content="ja_JP" />
@@ -68,10 +68,10 @@ class App extends NextApp {
           />
           <meta name="twitter:site" content="@calmeryme" />
           <meta name="twitter:creator" content="@calmeryme" />
-          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:card" content="summary" />
           <meta
             name="twitter:image"
-            content="https://calmery.moe/images/ogp.jpg"
+            content="https://camera.calmery.moe/images/ogp.jpg"
           />
           <link rel="apple-touch-icon" href="/images/icons/192x192.jpg" />
           <link rel="manifest" href="/manifest.json" />
