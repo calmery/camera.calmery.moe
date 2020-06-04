@@ -9,8 +9,7 @@ const CROPPER_DEFAULT_HEIGHT = 180;
 const reducer = (state: CropperState, action: Actions): CropperState => {
   switch (action.type) {
     case types.CROPPER_IMAGE_INITIALIZE: {
-      let { displayableWidth } = state;
-      const { displayableHeight } = state;
+      let { displayableWidth, displayableHeight } = state;
       const { width: imageWidth, height: imageHeight } = action.payload;
       const {
         cropperWidth,
@@ -32,17 +31,18 @@ const reducer = (state: CropperState, action: Actions): CropperState => {
       } = action.payload;
 
       displayableWidth = displayableWidth - 24 * 2;
+      displayableHeight = displayableHeight - 12 * 2;
 
       let svgWidth = displayableWidth;
       let svgHeight = imageHeight * (displayableWidth / imageWidth);
       let svgX = 24;
-      let svgY = (displayableHeight - svgHeight) / 2;
+      let svgY = 12 + (displayableHeight - svgHeight) / 2;
 
       if (svgHeight > displayableHeight) {
         svgHeight = displayableHeight;
         svgWidth = imageWidth * (displayableHeight / imageHeight);
         svgX = 24 + (displayableWidth - svgWidth) / 2;
-        svgY = 0;
+        svgY = 12;
       }
 
       return {
@@ -79,22 +79,23 @@ const reducer = (state: CropperState, action: Actions): CropperState => {
 
     case types.CROPPER_CONTAINER_UPDATE_RECT: {
       const image = state;
-      let { width } = action.payload;
-      const { x, y, height } = action.payload;
+      let { width, height } = action.payload;
+      const { x, y } = action.payload;
       const { imageWidth, imageHeight } = image;
 
       width = width - 24 * 2;
+      height = height - 12 * 2;
 
       let svgWidth = width;
       let svgHeight = imageHeight * (width / imageWidth);
       let svgX = 24;
-      let svgY = (height - svgHeight) / 2;
+      let svgY = 12 + (height - svgHeight) / 2;
 
       if (svgHeight > height) {
         svgHeight = height;
         svgWidth = imageWidth * (height / imageHeight);
         svgX = 24 + (width - svgWidth) / 2;
-        svgY = 0;
+        svgY = 12;
       }
 
       return {
@@ -107,7 +108,7 @@ const reducer = (state: CropperState, action: Actions): CropperState => {
         displayableTop: y,
         displayableLeft: x,
         displayableWidth: width + 24 * 2,
-        displayableHeight: height,
+        displayableHeight: height + 12 * 2,
       };
     }
 
