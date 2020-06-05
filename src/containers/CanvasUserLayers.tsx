@@ -4,6 +4,7 @@ import { State } from "~/domains";
 import {
   getCanvasUserFrameId,
   getCanvasUserLayerFilterId,
+  getCanvasUserLayerFilterPresetId,
 } from "~/utils/canvas";
 
 // Components
@@ -82,17 +83,54 @@ export const CanvasUserLayers = () => {
                         <feFuncA type="discrete" tableValues="1 1" />
                       </feComponentTransfer>
                     </filter>
+                    <filter
+                      id={getCanvasUserLayerFilterPresetId(i)}
+                      colorInterpolationFilters="sRGB"
+                    >
+                      <feColorMatrix
+                        in="SourceGraphic"
+                        type="matrix"
+                        values="0.8 0 0 0 0
+                                0 0.8 0 0 0
+                                0 0 0.8 0 0
+                                0 0 0 1 0"
+                      />
+                      <feComponentTransfer>
+                        <feFuncR
+                          type="linear"
+                          slope="1"
+                          intercept={0.2 * 0.47058823529411764}
+                        />
+                        <feFuncR
+                          type="linear"
+                          slope="1"
+                          intercept={0.2 * 0.47058823529411764}
+                        />
+                        <feFuncG
+                          type="linear"
+                          slope="1"
+                          intercept={0.2 * 0.27450980392156865}
+                        />
+                        <feFuncB
+                          type="linear"
+                          slope="1"
+                          intercept={0.2 * 0.050980392156862744}
+                        />
+                      </feComponentTransfer>
+                    </filter>
                   </defs>
 
-                  <image
-                    xlinkHref={userLayer.dataUrl}
-                    filter={`url(#${getCanvasUserLayerFilterId(i)})`}
-                    width="100%"
-                    height="100%"
-                    transform={`rotate(${userLayer.croppedAngle}, ${
-                      userLayer.width / 2
-                    }, ${userLayer.height / 2})`}
-                  />
+                  <g filter={`url(#${getCanvasUserLayerFilterId(i)})`}>
+                    <image
+                      xlinkHref={userLayer.dataUrl}
+                      filter={`url(#${getCanvasUserLayerFilterPresetId(i)})`}
+                      width="100%"
+                      height="100%"
+                      transform={`rotate(${userLayer.croppedAngle}, ${
+                        userLayer.width / 2
+                      }, ${userLayer.height / 2})`}
+                    />
+                  </g>
                 </svg>
               </svg>
             </g>
