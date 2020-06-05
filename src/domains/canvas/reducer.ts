@@ -790,60 +790,99 @@ export default (state = initialState, action: Actions): CanvasState => {
         return state;
       }
 
-      if (isCollaging && (isControlKey || isShiftKey)) {
-        const [{ x: x1, y: y1 }] = cursorPositions;
-        const x2 = userLayer.x + userLayer.width / 2;
-        const y2 = userLayer.y + userLayer.height / 2;
+      const [{ x: x1, y: y1 }] = cursorPositions;
+      const baseX = userLayer.x;
+      const baseY = userLayer.y;
+      const baseWidth = userLayer.width * userLayer.scale;
+      const baseHeight = userLayer.height * userLayer.scale;
 
-        return {
-          ...state,
-          isUserLayerDragging: true,
-          temporaries: {
-            ...state.temporaries,
-            previousScale: userLayer.scale,
-            previousAngle: userLayer.angle,
-            angleBetweenFingers: angleBetweenTwoPoints(x1, y1, x2, y2),
-            distanceBetweenFingers: distanceBetweenTwoPoints(x1, y1, x2, y2),
-            selectedUserLayerIndex: index,
-          },
-        };
+      const imageStartX =
+        (x1 - styleLeft) * displayMagnification -
+        userFrame.x +
+        (baseWidth - userLayer.width) / 2 -
+        baseX;
+      const imageStartY =
+        (y1 - styleTop) * displayMagnification -
+        userFrame.y +
+        (baseHeight - userLayer.height) / 2 -
+        baseY;
+
+      let blurX = imageStartX / baseWidth;
+      let blurY = imageStartY / baseHeight;
+
+      if (baseWidth > baseHeight) {
+        blurY = blurY * (baseHeight / baseWidth);
       }
 
-      if (cursorPositions.length > 1) {
-        const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = cursorPositions;
-
-        return {
-          ...state,
-          isUserLayerDragging: true,
-          temporaries: {
-            ...state.temporaries,
-            previousScale: userLayer.scale,
-            previousAngle: userLayer.angle,
-            angleBetweenFingers: angleBetweenTwoPoints(x1, y1, x2, y2),
-            distanceBetweenFingers: distanceBetweenTwoPoints(x1, y1, x2, y2),
-            selectedUserLayerIndex: index,
-          },
-        };
+      if (baseHeight > baseWidth) {
+        blurX = blurX * (baseWidth / baseHeight);
       }
 
-      const { x, y } = calculateCanvasUserLayerRelativeCoordinates(
-        displayMagnification,
-        clipPathX,
-        clipPathY,
-        cursorPositions[0].x,
-        cursorPositions[0].y
-      );
+      userLayers[index] = {
+        ...userLayer,
+        blurX,
+        blurY,
+      };
 
       return {
         ...state,
-        isUserLayerDragging: true,
-        temporaries: {
-          ...state.temporaries,
-          pointerOffsetX: x - userLayer.x,
-          pointerOffsetY: y - userLayer.y,
-          selectedUserLayerIndex: index,
-        },
+        userLayers,
       };
+
+      // if (isCollaging && (isControlKey || isShiftKey)) {
+      //   const [{ x: x1, y: y1 }] = cursorPositions;
+      //   const x2 = userLayer.x + userLayer.width / 2;
+      //   const y2 = userLayer.y + userLayer.height / 2;
+
+      //   return {
+      //     ...state,
+      //     isUserLayerDragging: true,
+      //     temporaries: {
+      //       ...state.temporaries,
+      //       previousScale: userLayer.scale,
+      //       previousAngle: userLayer.angle,
+      //       angleBetweenFingers: angleBetweenTwoPoints(x1, y1, x2, y2),
+      //       distanceBetweenFingers: distanceBetweenTwoPoints(x1, y1, x2, y2),
+      //       selectedUserLayerIndex: index,
+      //     },
+      //   };
+      // }
+
+      // if (cursorPositions.length > 1) {
+      //   const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = cursorPositions;
+
+      //   return {
+      //     ...state,
+      //     isUserLayerDragging: true,
+      //     temporaries: {
+      //       ...state.temporaries,
+      //       previousScale: userLayer.scale,
+      //       previousAngle: userLayer.angle,
+      //       angleBetweenFingers: angleBetweenTwoPoints(x1, y1, x2, y2),
+      //       distanceBetweenFingers: distanceBetweenTwoPoints(x1, y1, x2, y2),
+      //       selectedUserLayerIndex: index,
+      //     },
+      //   };
+      // }
+
+      // const { x, y } = calculateCanvasUserLayerRelativeCoordinates(
+      //   displayMagnification,
+      //   clipPathX,
+      //   clipPathY,
+      //   cursorPositions[0].x,
+      //   cursorPositions[0].y
+      // );
+
+      // return {
+      //   ...state,
+      //   isUserLayerDragging: true,
+      //   temporaries: {
+      //     ...state.temporaries,
+      //     pointerOffsetX: x - userLayer.x,
+      //     pointerOffsetY: y - userLayer.y,
+      //     selectedUserLayerIndex: index,
+      //   },
+      // };
     }
 
     case types.CANVAS_USER_LAYER_UPDATE_FILTER: {
