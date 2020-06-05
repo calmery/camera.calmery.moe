@@ -111,15 +111,23 @@ export const Canvas: React.FC<CanvasProps> = ({
     [dispatch]
   );
 
+  const handleOnKeyup = useCallback(
+    (event: KeyboardEvent) => {
+      handleOnUpdateKey(event);
+      dispatch(actions.complete());
+    },
+    [dispatch, handleOnUpdateKey]
+  );
+
   // Hooks
 
   useEffect(() => {
     addEventListener("keydown", handleOnUpdateKey);
-    addEventListener("keyup", handleOnUpdateKey);
+    addEventListener("keyup", handleOnKeyup);
 
     return () => {
       removeEventListener("keydown", handleOnUpdateKey);
-      removeEventListener("keyup", handleOnUpdateKey);
+      removeEventListener("keyup", handleOnKeyup);
     };
   }, [handleOnUpdateKey]);
 

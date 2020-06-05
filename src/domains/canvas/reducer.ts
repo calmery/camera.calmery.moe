@@ -324,6 +324,8 @@ export default (state = initialState, action: Actions): CanvasState => {
         userLayers,
         isUserLayerDragging,
         isCollaging,
+        isControlKey,
+        isShiftKey,
         styleTop,
         styleLeft,
         temporaries: { pointerOffsetX, pointerOffsetY, selectedUserLayerIndex },
@@ -338,6 +340,50 @@ export default (state = initialState, action: Actions): CanvasState => {
 
         if (!user || !isCollaging) {
           return state;
+        }
+
+        if (isCollaging && isShiftKey) {
+          const { temporaries } = state;
+          const [{ x: x1, y: y1 }] = cursorPositions;
+          const x2 = user.x + user.width / 2;
+          const y2 = user.y + user.height / 2;
+
+          const nextAngle =
+            temporaries.previousAngle +
+            angleBetweenTwoPoints(x1, y1, x2, y2) -
+            temporaries.angleBetweenFingers;
+
+          userLayers[selectedUserLayerIndex] = {
+            ...user,
+            angle: nextAngle,
+          };
+
+          return {
+            ...state,
+            userLayers,
+          };
+        }
+
+        if (isCollaging && isControlKey) {
+          const { temporaries } = state;
+          const [{ x: x1, y: y1 }] = cursorPositions;
+          const x2 = user.x + user.width / 2;
+          const y2 = user.y + user.height / 2;
+
+          const currentLength = distanceBetweenTwoPoints(x1, y1, x2, y2);
+          const nextScale =
+            (currentLength / temporaries.distanceBetweenFingers) *
+            temporaries.previousScale;
+
+          userLayers[selectedUserLayerIndex] = {
+            ...user,
+            scale: nextScale,
+          };
+
+          return {
+            ...state,
+            userLayers,
+          };
         }
 
         if (cursorPositions.length > 1) {
@@ -724,6 +770,9 @@ export default (state = initialState, action: Actions): CanvasState => {
         styleLeft,
         displayMagnification,
         userFrames,
+        isCollaging,
+        isShiftKey,
+        isControlKey,
       } = state;
       const { index, cursorPositions } = action.payload;
       const userFrame = userFrames[index];
@@ -734,6 +783,24 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       if (userLayer === null) {
         return state;
+      }
+
+      if (isCollaging && (isControlKey || isShiftKey)) {
+        const [{ x: x1, y: y1 }] = cursorPositions;
+        const x2 = userLayer.x + userLayer.width / 2;
+        const y2 = userLayer.y + userLayer.height / 2;
+
+        return {
+          ...state,
+          isUserLayerDragging: true,
+          temporaries: {
+            ...state.temporaries,
+            previousScale: userLayer.scale,
+            previousAngle: userLayer.angle,
+            angleBetweenFingers: angleBetweenTwoPoints(x1, y1, x2, y2),
+            distanceBetweenFingers: distanceBetweenTwoPoints(x1, y1, x2, y2),
+          },
+        };
       }
 
       if (cursorPositions.length > 1) {
