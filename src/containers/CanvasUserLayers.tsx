@@ -37,6 +37,7 @@ const CanvasUserLayerPresetFilter: React.FC<CanvasUserLayerPresetFilterProps> = 
   return (
     <>
       <feColorMatrix
+        key={presetFilter}
         in="SourceGraphic"
         type="matrix"
         values={[
