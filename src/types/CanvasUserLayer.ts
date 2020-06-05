@@ -1,8 +1,10 @@
 import { CanvasLayer } from "./CanvasLayer";
+import { EffectFilter } from "./EffectFilter";
 import { PresetFilter } from "./PresetFilter";
 
 export interface CanvasUserLayer extends CanvasLayer {
   dominantColorLightness: number;
+  effectFilter: EffectFilter | null;
   presetFilter: PresetFilter | null;
   croppedX: number;
   croppedY: number;

@@ -29,6 +29,7 @@ import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
 import * as GA from "~/utils/google-analytics";
 import { PRESET_FILTERS } from "~/constants/filters";
 import { PresetFilter } from "~/types/PresetFilter";
+import { EffectFilter } from "~/types/EffectFilter";
 
 // Styles
 
@@ -459,6 +460,50 @@ const Filters: NextPage = () => {
                               <PresetFilterTypeTitle
                                 selected={
                                   userLayer!.presetFilter === presetFilter
+                                }
+                              >
+                                {name[0].toUpperCase() + name.slice(1)}
+                              </PresetFilterTypeTitle>
+                            </PresetFilterType>
+                          );
+                        }
+                      )}
+                      <Divider />
+                      <PresetFilterType
+                        selected={!userLayer!.effectFilter}
+                        onClick={() => {
+                          dispatch(
+                            actions.changeCanvasUserLayerEffectFilter(null)
+                          );
+                        }}
+                      >
+                        <PresetFilterTypeIcon background="#FFF" />
+                        <PresetFilterTypeTitle
+                          selected={!userLayer!.effectFilter}
+                        >
+                          ORIGINAL
+                        </PresetFilterTypeTitle>
+                      </PresetFilterType>
+                      {Object.entries(EffectFilter).map(
+                        ([name, effectFilter], i) => {
+                          return (
+                            <PresetFilterType
+                              key={i}
+                              selected={
+                                userLayer!.effectFilter === effectFilter
+                              }
+                              onClick={() => {
+                                dispatch(
+                                  actions.changeCanvasUserLayerEffectFilter(
+                                    effectFilter
+                                  )
+                                );
+                              }}
+                            >
+                              <PresetFilterTypeIcon background={"red"} />
+                              <PresetFilterTypeTitle
+                                selected={
+                                  userLayer!.effectFilter === effectFilter
                                 }
                               >
                                 {name[0].toUpperCase() + name.slice(1)}

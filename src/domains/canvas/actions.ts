@@ -6,6 +6,7 @@ import { convertUrlToImage } from "./utils";
 import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 import { PresetFilter } from "~/types/PresetFilter";
+import { EffectFilter } from "~/types/EffectFilter";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ColorThief = require("~/externals/color-thief");
@@ -309,6 +310,13 @@ const changeCanvasUserLayerPresetFilter = (
   payload: { presetFilter },
 });
 
+const changeCanvasUserLayerEffectFilter = (
+  effectFilter: EffectFilter | null
+) => ({
+  type: types.CANVAS_USER_LAYER_CHANGE_EFFECT_FILTER,
+  payload: { effectFilter },
+});
+
 // Main
 
 export const actions = {
@@ -323,6 +331,7 @@ export const actions = {
   startCanvasUserLayerCrop,
   startCanvasUserLayerDrag,
   updateCanvasUserLayerFilter,
+  changeCanvasUserLayerEffectFilter,
   changeCanvasUserLayerPresetFilter,
   startCanvasUserLayerFilter,
   updateCanvasUserLayerCrop,

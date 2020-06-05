@@ -4,12 +4,50 @@ import { State } from "~/domains";
 import {
   getCanvasUserFrameId,
   getCanvasUserLayerFilterId,
+  getCanvasUserLayerFilterEffectId,
   getCanvasUserLayerFilterPresetId,
 } from "~/utils/canvas";
 import { PRESET_FILTERS } from "~/constants/filters";
 import { PresetFilter } from "~/types/PresetFilter";
+import { EffectFilter } from "~/types/EffectFilter";
 
 // Components
+
+const CanvasUserLayerEffectGlitch: React.FC = () => (
+  <>
+    <feColorMatrix
+      in="SourceGraphic"
+      result="red"
+      type="matrix"
+      values="1 0 0 0 0
+              0 0 0 0 0
+              0 0 0 0 0
+              0 0 0 1 0"
+    />
+    <feColorMatrix
+      in="SourceGraphic"
+      result="green"
+      type="matrix"
+      values="0 0 0 0 0
+              0 1 0 0 0
+              0 0 0 0 0
+              0 0 0 1 0"
+    />
+    <feColorMatrix
+      in="SourceGraphic"
+      result="blue"
+      type="matrix"
+      values="0 0 0 0 0
+              0 0 0 0 0
+              0 0 1 0 0
+              0 0 0 1 0"
+    />
+    <feOffset in="red" result="red-shifted" dx="-0.005" dy="0" />
+    <feOffset in="blue" result="blue-shifted" dx="0.005" dy="0" />
+    <feBlend mode="screen" in="red-shifted" in2="green" result="red-green" />
+    <feBlend mode="screen" in="red-green" in2="blue-shifted" result="blended" />
+  </>
+);
 
 interface CanvasUserLayerPresetFilterProps {
   presetFilter: PresetFilter | null;
@@ -138,18 +176,43 @@ export const CanvasUserLayers = () => {
                         presetFilter={userLayer.presetFilter}
                       />
                     </filter>
+
+                    <filter
+                      id={getCanvasUserLayerFilterEffectId(i)}
+                      primitiveUnits="objectBoundingBox"
+                      x="-10%"
+                      y="0%"
+                      width="120%"
+                      height="100%"
+                    >
+                      {userLayer.effectFilter === EffectFilter.GLITCH && (
+                        <CanvasUserLayerEffectGlitch />
+                      )}
+                      {!userLayer.effectFilter && (
+                        <feColorMatrix
+                          in="SourceGraphic"
+                          type="matrix"
+                          values="1 0 0 0 0
+                                0 1 0 0 0
+                                0 0 1 0 0
+                                0 0 0 1 0"
+                        />
+                      )}
+                    </filter>
                   </defs>
 
-                  <g filter={`url(#${getCanvasUserLayerFilterId(i)})`}>
-                    <image
-                      xlinkHref={userLayer.dataUrl}
-                      filter={`url(#${getCanvasUserLayerFilterPresetId(i)})`}
-                      width="100%"
-                      height="100%"
-                      transform={`rotate(${userLayer.croppedAngle}, ${
-                        userLayer.width / 2
-                      }, ${userLayer.height / 2})`}
-                    />
+                  <g filter={`url(#${getCanvasUserLayerFilterEffectId(i)})`}>
+                    <g filter={`url(#${getCanvasUserLayerFilterId(i)})`}>
+                      <image
+                        xlinkHref={userLayer.dataUrl}
+                        filter={`url(#${getCanvasUserLayerFilterPresetId(i)})`}
+                        width="100%"
+                        height="100%"
+                        transform={`rotate(${userLayer.croppedAngle}, ${
+                          userLayer.width / 2
+                        }, ${userLayer.height / 2})`}
+                      />
+                    </g>
                   </g>
                 </svg>
               </svg>

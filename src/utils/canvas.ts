@@ -8,6 +8,9 @@ export const getCanvasUserLayerFilterId = (i: number) =>
 export const getCanvasUserLayerFilterPresetId = (i: number) =>
   `canvas-user-layer-filter-preset-${i}`;
 
+export const getCanvasUserLayerFilterEffectId = (i: number) =>
+  `canvas-user-layer-filter-effect-${i}`;
+
 export const getColorByDominantColorLightness = (
   dominantColorLightness: number
 ) => {
