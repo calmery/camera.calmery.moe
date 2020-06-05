@@ -679,6 +679,7 @@ export default (state = initialState, action: Actions): CanvasState => {
         saturate: 1,
         angle: 0,
         scale: 1,
+        presetFilter: null,
         croppedWidth: width,
         croppedHeight: height,
         croppedX: 0,
