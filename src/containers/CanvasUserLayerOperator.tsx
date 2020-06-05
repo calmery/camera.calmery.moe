@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { CloseIcon } from "~/components/CloseIcon";
 import { State } from "~/domains";
 import { actions, thunkActions } from "~/domains/canvas/actions";
@@ -16,8 +16,34 @@ const PathWithPointer = styled.path`
   cursor: pointer;
 `;
 
-const PathWithMove = styled.path`
-  cursor: move;
+const PathWithMove = styled.path<{
+  isCollaging: boolean;
+  isShiftKey: boolean;
+  isControlKey: boolean;
+}>`
+  ${({ isCollaging, isShiftKey, isControlKey }) => {
+    if (!isCollaging) {
+      return css`
+        cursor: auto;
+      `;
+    }
+
+    if (isShiftKey) {
+      return css`
+        cursor: url("/images/containers/rotate.svg"), auto;
+      `;
+    }
+
+    if (isControlKey) {
+      return css`
+        cursor: se-resize;
+      `;
+    }
+
+    return css`
+      cursor: move;
+    `;
+  }};
 `;
 
 const CircleWithPointer = styled.circle`
@@ -41,7 +67,14 @@ export const CanvasUserLayerOperator: React.FC<CanvasUserLayerOperatorProps> = (
 }) => {
   const dispatch = useDispatch();
   const canvas = useSelector(({ canvas }: State) => canvas);
-  const { displayMagnification, userFrames, userLayers } = canvas;
+  const {
+    displayMagnification,
+    userFrames,
+    userLayers,
+    isCollaging,
+    isShiftKey,
+    isControlKey,
+  } = canvas;
 
   // Events
 
@@ -90,6 +123,9 @@ export const CanvasUserLayerOperator: React.FC<CanvasUserLayerOperatorProps> = (
           <g key={i} transform={`translate(${x}, ${y})`}>
             {userLayer ? (
               <PathWithMove
+                isCollaging={isCollaging}
+                isShiftKey={isShiftKey}
+                isControlKey={isControlKey}
                 d={path}
                 fillOpacity="0"
                 onTouchStart={(e) => handleOnStartDrag(i, e)}
