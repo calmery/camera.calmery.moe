@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { CloseIcon } from "~/components/CloseIcon";
 import { State } from "~/domains";
 import { actions, thunkActions } from "~/domains/canvas/actions";
 import { actions as uiActions } from "~/domains/ui/actions";
@@ -20,10 +21,6 @@ const PathWithMove = styled.path`
 `;
 
 const CircleWithPointer = styled.circle`
-  cursor: pointer;
-`;
-
-const ImageWithPointer = styled.image`
   cursor: pointer;
 `;
 
@@ -145,19 +142,18 @@ export const CanvasUserLayerOperator: React.FC<CanvasUserLayerOperatorProps> = (
 
           return (
             <g key={i}>
-              <CircleWithPointer
+              <circle
                 fill={getColorByDominantColorLightness(dominantColorLightness)}
                 cx={x + width}
                 cy={y}
                 r={r}
-                onClick={() => handleOnRemove(i)}
               />
-              <ImageWithPointer
-                xlinkHref="/images/close.svg"
-                width={r}
-                height={r}
-                x={x + width - r / 2}
-                y={y - r / 2}
+              <CloseIcon x={x + width - r / 2} y={y - r / 2} r={r} />
+              <CircleWithPointer
+                fillOpacity="0"
+                cx={x + width}
+                cy={y}
+                r={r}
                 onClick={() => handleOnRemove(i)}
               />
             </g>

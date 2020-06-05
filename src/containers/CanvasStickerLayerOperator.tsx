@@ -1,6 +1,8 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { CloseIcon } from "~/components/CloseIcon";
+import { ResizeIcon } from "~/components/ResizeIcon";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
 import { getCanvasUserFrameId } from "~/utils/canvas";
@@ -18,14 +20,6 @@ const CircleWithPointer = styled.circle`
 `;
 
 const CircleWithResize = styled.circle`
-  cursor: se-resize;
-`;
-
-const ImageWithPointer = styled.image`
-  cursor: pointer;
-`;
-
-const ImageWithResize = styled.image`
   cursor: se-resize;
 `;
 
@@ -73,18 +67,16 @@ const Border: React.FC<BorderProps> = ({
       fillOpacity="0"
     />
     <CircleWithPointer cx={width} cy="0" r={r} fill={color} />
-    <ImageWithPointer
+    <CloseIcon
       x={width - (12 * displayMagnification) / 2}
       y={((12 * displayMagnification) / 2) * -1}
-      xlinkHref="/images/close.svg"
-      width={12 * displayMagnification}
+      r={12 * displayMagnification}
     />
     <CircleWithResize cx={width} cy={height} r={r} fill={color} />
-    <ImageWithResize
+    <ResizeIcon
       x={width - (12 * displayMagnification) / 2}
       y={height - (12 * displayMagnification) / 2}
-      xlinkHref="/images/containers/resize.svg"
-      width={12 * displayMagnification}
+      r={12 * displayMagnification}
     />
   </g>
 );

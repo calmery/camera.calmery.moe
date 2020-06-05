@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { ResizeIcon } from "~/components/ResizeIcon";
 import { State } from "~/domains";
 import { actions } from "~/domains/cropper/actions";
 import { convertEventToCursorPositions } from "~/utils/convert-event-to-cursor-positions";
@@ -116,13 +117,7 @@ export const CropperOperator: React.FC = () => {
         <circle fill={light} cx={cx} cy={cy} r={r} />
       </g>
 
-      <image
-        xlinkHref="/images/containers/resize.svg"
-        width={r}
-        height={r}
-        x={x + width - r / 2}
-        y={y + height - r / 2}
-      />
+      <ResizeIcon x={x + width - r / 2} y={y + height - r / 2} r={r} />
 
       <CircleWithPointer
         ref={circleRef}
