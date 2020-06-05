@@ -175,20 +175,23 @@ export const CanvasUserLayerOperator: React.FC<CanvasUserLayerOperatorProps> = (
           const { dominantColorLightness } = userLayer;
           const { x, y, width } = userFrame;
           const r = 12 * displayMagnification;
+          const rMargin = 8 * displayMagnification;
+          const cx = x + width - r - rMargin;
+          const cy = y + r + rMargin;
 
           return (
             <g key={i}>
               <circle
                 fill={getColorByDominantColorLightness(dominantColorLightness)}
-                cx={x + width}
-                cy={y}
+                cx={cx}
+                cy={cy}
                 r={r}
               />
-              <CloseIcon x={x + width - r / 2} y={y - r / 2} r={r} />
+              <CloseIcon x={cx - r / 2} y={cy - r / 2} r={r} />
               <CircleWithPointer
                 fillOpacity="0"
-                cx={x + width}
-                cy={y}
+                cx={cx}
+                cy={cy}
                 r={r}
                 onClick={() => handleOnRemove(i)}
               />
