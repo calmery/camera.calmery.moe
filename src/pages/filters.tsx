@@ -346,7 +346,7 @@ const Filters: NextPage = () => {
               <>
                 <FilterTypeContainer>
                   <Horizontal>
-                    <HorizontalInner>
+                    <HorizontalInner id="tutorial-filters">
                       <FilterTypeFree
                         selected={
                           ui.selectedFilterType === CanvasUserFilterType.blur
