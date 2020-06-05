@@ -13,7 +13,7 @@ import { EffectFilter } from "~/types/EffectFilter";
 
 // Components
 
-const CanvasUserLayerEffectGlitch: React.FC = () => (
+const CanvasUserLayerEffectRed: React.FC = () => (
   <>
     <feColorMatrix
       in="SourceGraphic"
@@ -24,6 +24,11 @@ const CanvasUserLayerEffectGlitch: React.FC = () => (
               0 0 0 0 0
               0 0 0 1 0"
     />
+  </>
+);
+
+const CanvasUserLayerEffectGreen: React.FC = () => (
+  <>
     <feColorMatrix
       in="SourceGraphic"
       result="green"
@@ -33,6 +38,11 @@ const CanvasUserLayerEffectGlitch: React.FC = () => (
               0 0 0 0 0
               0 0 0 1 0"
     />
+  </>
+);
+
+const CanvasUserLayerEffectBlue: React.FC = () => (
+  <>
     <feColorMatrix
       in="SourceGraphic"
       result="blue"
@@ -42,6 +52,14 @@ const CanvasUserLayerEffectGlitch: React.FC = () => (
               0 0 1 0 0
               0 0 0 1 0"
     />
+  </>
+);
+
+const CanvasUserLayerEffectGlitch: React.FC = () => (
+  <>
+    <CanvasUserLayerEffectRed />
+    <CanvasUserLayerEffectGreen />
+    <CanvasUserLayerEffectBlue />
     <feOffset in="red" result="red-shifted" dx="-0.005" dy="0" />
     <feOffset in="blue" result="blue-shifted" dx="0.005" dy="0" />
     <feBlend mode="screen" in="red-shifted" in2="green" result="red-green" />
@@ -188,6 +206,15 @@ export const CanvasUserLayers = () => {
                       {userLayer.effectFilter === EffectFilter.GLITCH && (
                         <CanvasUserLayerEffectGlitch />
                       )}
+                      {userLayer.effectFilter === EffectFilter.RED && (
+                        <CanvasUserLayerEffectRed />
+                      )}
+                      {userLayer.effectFilter === EffectFilter.GREEN && (
+                        <CanvasUserLayerEffectGreen />
+                      )}
+                      {userLayer.effectFilter === EffectFilter.BLUE && (
+                        <CanvasUserLayerEffectBlue />
+                      )}
                       {!userLayer.effectFilter && (
                         <feColorMatrix
                           in="SourceGraphic"
@@ -201,8 +228,8 @@ export const CanvasUserLayers = () => {
                     </filter>
                   </defs>
 
-                  <g filter={`url(#${getCanvasUserLayerFilterEffectId(i)})`}>
-                    <g filter={`url(#${getCanvasUserLayerFilterId(i)})`}>
+                  <g filter={`url(#${getCanvasUserLayerFilterId(i)})`}>
+                    <g filter={`url(#${getCanvasUserLayerFilterEffectId(i)})`}>
                       <image
                         xlinkHref={userLayer.dataUrl}
                         filter={`url(#${getCanvasUserLayerFilterPresetId(i)})`}
