@@ -107,6 +107,7 @@ const CanvasUserLayerPresetFilter: React.FC<CanvasUserLayerPresetFilterProps> = 
         <feFuncR type="linear" slope="1" intercept={a * (r / 255)} />
         <feFuncG type="linear" slope="1" intercept={a * (g / 255)} />
         <feFuncB type="linear" slope="1" intercept={a * (b / 255)} />
+        <feFuncA type="discrete" tableValues="1 1" />
       </feComponentTransfer>
     </>
   );
@@ -173,7 +174,6 @@ export const CanvasUserLayers = () => {
                       id={getCanvasUserLayerFilterId(i)}
                       colorInterpolationFilters="sRGB"
                     >
-                      <feGaussianBlur stdDeviation={userLayer.blur} />
                       <feColorMatrix
                         type="hueRotate"
                         values={`${userLayer.hue}`}
@@ -182,9 +182,6 @@ export const CanvasUserLayers = () => {
                         type="saturate"
                         values={`${userLayer.saturate}`}
                       />
-                      <feComponentTransfer>
-                        <feFuncA type="discrete" tableValues="1 1" />
-                      </feComponentTransfer>
                     </filter>
                     <filter
                       id={getCanvasUserLayerFilterPresetId(i)}
@@ -194,7 +191,6 @@ export const CanvasUserLayers = () => {
                         presetFilter={userLayer.presetFilter}
                       />
                     </filter>
-
                     <filter
                       id={getCanvasUserLayerFilterEffectId(i)}
                       primitiveUnits="objectBoundingBox"
@@ -226,6 +222,26 @@ export const CanvasUserLayers = () => {
                         />
                       )}
                     </filter>
+
+                    <radialGradient id="radialGradient" cx="0.5" cy="0.5">
+                      <stop offset="0" stopColor="black" />
+                      <stop offset="50%" id="stop" stopColor="#fff" />
+                    </radialGradient>
+
+                    <filter id="r">
+                      <feGaussianBlur id="b" stdDeviation={userLayer.blur} />
+                      <feComponentTransfer>
+                        <feFuncA type="discrete" tableValues="1 1" />
+                      </feComponentTransfer>
+                    </filter>
+
+                    <mask id="fade">
+                      <rect
+                        width="100%"
+                        height="100%"
+                        fill="url(#radialGradient)"
+                      />
+                    </mask>
                   </defs>
 
                   <g filter={`url(#${getCanvasUserLayerFilterId(i)})`}>
@@ -239,6 +255,26 @@ export const CanvasUserLayers = () => {
                           userLayer.width / 2
                         }, ${userLayer.height / 2})`}
                       />
+                    </g>
+                  </g>
+
+                  <g mask="url(#fade)" filter="url(#r)">
+                    <g filter={`url(#${getCanvasUserLayerFilterId(i)})`}>
+                      <g
+                        filter={`url(#${getCanvasUserLayerFilterEffectId(i)})`}
+                      >
+                        <image
+                          xlinkHref={userLayer.dataUrl}
+                          filter={`url(#${getCanvasUserLayerFilterPresetId(
+                            i
+                          )})`}
+                          width="100%"
+                          height="100%"
+                          transform={`rotate(${userLayer.croppedAngle}, ${
+                            userLayer.width / 2
+                          }, ${userLayer.height / 2})`}
+                        />
+                      </g>
                     </g>
                   </g>
                 </svg>

@@ -11,6 +11,9 @@ export const getCanvasUserLayerFilterPresetId = (i: number) =>
 export const getCanvasUserLayerFilterEffectId = (i: number) =>
   `canvas-user-layer-filter-effect-${i}`;
 
+export const getCanvasUserLayerFilterBlurId = (i: number) =>
+  `canvas-user-layer-filter-blur-${i}`;
+
 export const getColorByDominantColorLightness = (
   dominantColorLightness: number
 ) => {
