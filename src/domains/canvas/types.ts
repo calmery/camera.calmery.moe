@@ -2,6 +2,7 @@ export const CANVAS_TICK = "CANVAS/TICK" as const;
 export const CANVAS_COMPLETE = "CANVAS/COMPLETE" as const;
 export const CANVAS_ENABLE_COLLAGE = "CANVAS/ENABLE_COLLAGE" as const;
 export const CANVAS_DISABLE_COLLAGE = "CANVAS/DISABLE_COLLAGE" as const;
+export const CANVAS_UPDATE_KEY = "CANVAS/KEY_UPDATE" as const;
 
 // Containers
 

@@ -296,6 +296,11 @@ const disableCollage = () => ({
   type: types.CANVAS_DISABLE_COLLAGE,
 });
 
+const updateKey = (isControlKey: boolean, isShiftKey: boolean) => ({
+  type: types.CANVAS_UPDATE_KEY,
+  payload: { isControlKey, isShiftKey },
+});
+
 // Main
 
 export const actions = {
@@ -316,6 +321,7 @@ export const actions = {
   complete,
   enableCollage,
   disableCollage,
+  updateKey,
 };
 
 export const thunkActions = {

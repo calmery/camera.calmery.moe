@@ -60,6 +60,8 @@ export interface CanvasState {
   isUserLayerDragging: boolean;
   isStickerLayerDragging: boolean;
   isStickerLayerTransforming: boolean;
+  isShiftKey: boolean;
+  isControlKey: boolean;
   userFrames: CanvasUserFrame[];
   userLayers: (CanvasUserLayer | null)[];
   stickerLayers: CanvasLayer[];
@@ -92,6 +94,8 @@ const initialState: CanvasState = {
   stickerLayers: [],
   isUserLayerDragging: false,
   isCollaging: false,
+  isShiftKey: false,
+  isControlKey: false,
   userLayers: [],
   userFrames: [],
   temporaries: {
@@ -262,6 +266,12 @@ export default (state = initialState, action: Actions): CanvasState => {
         isCollaging: true,
       };
     }
+
+    case types.CANVAS_UPDATE_KEY:
+      return {
+        ...state,
+        ...action.payload,
+      };
 
     // Stickers
 

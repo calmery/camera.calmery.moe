@@ -96,7 +96,32 @@ export const Canvas: React.FC<CanvasProps> = ({
     dispatch(actions.complete());
   }, [canFireEvent, dispatch, preview]);
 
+  const handleOnContextMenu = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    return false;
+  }, []);
+
+  const handleOnUpdateKey = useCallback(
+    (event: KeyboardEvent) => {
+      const { ctrlKey, shiftKey } = event;
+      dispatch(actions.updateKey(ctrlKey, shiftKey));
+    },
+    [dispatch]
+  );
+
   // Hooks
+
+  useEffect(() => {
+    addEventListener("keydown", handleOnUpdateKey);
+    addEventListener("keyup", handleOnUpdateKey);
+
+    return () => {
+      removeEventListener("keydown", handleOnUpdateKey);
+      removeEventListener("keyup", handleOnUpdateKey);
+    };
+  }, [handleOnUpdateKey]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -169,6 +194,7 @@ export const Canvas: React.FC<CanvasProps> = ({
         onMouseMove={handleOnTick}
         onMouseUp={handleOnComplete}
         onTouchEnd={handleOnComplete}
+        onContextMenu={handleOnContextMenu}
         style={{
           top: `${displayableTop}px`,
           left: `${displayableLeft}px`,
