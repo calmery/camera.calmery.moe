@@ -799,6 +799,7 @@ export default (state = initialState, action: Actions): CanvasState => {
             previousAngle: userLayer.angle,
             angleBetweenFingers: angleBetweenTwoPoints(x1, y1, x2, y2),
             distanceBetweenFingers: distanceBetweenTwoPoints(x1, y1, x2, y2),
+            selectedUserLayerIndex: index,
           },
         };
       }
@@ -815,6 +816,7 @@ export default (state = initialState, action: Actions): CanvasState => {
             previousAngle: userLayer.angle,
             angleBetweenFingers: angleBetweenTwoPoints(x1, y1, x2, y2),
             distanceBetweenFingers: distanceBetweenTwoPoints(x1, y1, x2, y2),
+            selectedUserLayerIndex: index,
           },
         };
       }
