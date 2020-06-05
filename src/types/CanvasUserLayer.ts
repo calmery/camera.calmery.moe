@@ -6,6 +6,8 @@ export interface CanvasUserLayer extends CanvasLayer {
   dominantColorLightness: number;
   effectFilter: EffectFilter | null;
   presetFilter: PresetFilter | null;
+  blurX: number;
+  blurY: number;
   croppedX: number;
   croppedY: number;
   croppedWidth: number;

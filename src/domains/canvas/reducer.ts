@@ -681,6 +681,9 @@ export default (state = initialState, action: Actions): CanvasState => {
         scale: 1,
         effectFilter: null,
         presetFilter: null,
+        // `radialGradient` の `cx`、`cy` に入る、0.5 が中央になる
+        blurX: width < height ? 0.5 * (width / height) : 0.5,
+        blurY: height < width ? 0.5 * (height / width) : 0.5,
         croppedWidth: width,
         croppedHeight: height,
         croppedX: 0,

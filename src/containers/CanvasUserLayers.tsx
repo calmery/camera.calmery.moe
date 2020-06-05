@@ -223,7 +223,11 @@ export const CanvasUserLayers = () => {
                       )}
                     </filter>
 
-                    <radialGradient id="radialGradient" cx="0.5" cy="0.5">
+                    <radialGradient
+                      id="radialGradient"
+                      cx={userLayer.blurX}
+                      cy={userLayer.blurY}
+                    >
                       <stop offset="0" stopColor="black" />
                       <stop offset="50%" id="stop" stopColor="#fff" />
                     </radialGradient>
@@ -236,9 +240,20 @@ export const CanvasUserLayers = () => {
                     </filter>
 
                     <mask id="fade">
+                      {/* 縦横のサイズの大きい方に合わせる*/}
                       <rect
-                        width="100%"
-                        height="100%"
+                        width={
+                          userLayer.width * userLayer.croppedScale <
+                          userLayer.height * userLayer.croppedScale
+                            ? userLayer.height * userLayer.croppedScale
+                            : userLayer.width * userLayer.croppedScale
+                        }
+                        height={
+                          userLayer.width * userLayer.croppedScale <
+                          userLayer.height * userLayer.croppedScale
+                            ? userLayer.height * userLayer.croppedScale
+                            : userLayer.width * userLayer.croppedScale
+                        }
                         fill="url(#radialGradient)"
                       />
                     </mask>
