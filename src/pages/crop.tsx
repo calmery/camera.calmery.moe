@@ -125,7 +125,7 @@ const CropTargetImage = styled.div<{ selected?: boolean }>`
   opacity: ${({ selected }) => (selected ? 1 : Constants.opacity)};
 
   &:first-child {
-    margin-left: ${Spacing.l}px;
+    margin-left: ${Spacing.m}px;
   }
 
   img {
@@ -135,6 +135,14 @@ const CropTargetImage = styled.div<{ selected?: boolean }>`
     box-sizing: border-box;
     border: 1px solid ${Colors.lightGray};
   }
+`;
+
+const TargetImageDivider = styled.div`
+  width: 2px;
+  height: 54px;
+  background: ${GradientColors.pinkToBlue};
+  border-radius: 1px;
+  flex-shrink: 0;
 `;
 
 // Components
@@ -274,6 +282,7 @@ const Crop: NextPage = () => {
                       })}
                     </HorizontalInner>
                   </Horizontal>
+                  <TargetImageDivider />
                   <CropTargetImages id="tutorial-crop-target-images">
                     {userLayers.map((userLayer, i) => {
                       if (!userLayer) {

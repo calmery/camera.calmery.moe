@@ -6,8 +6,8 @@ import { useRouter } from "next/router";
 import { ControlBar } from "~/components/ControlBar";
 import { FirstLanding } from "~/components/FirstLanding";
 import { Horizontal } from "~/components/Horizontal";
-import { InputRange } from "~/components/InputRange";
 import { HorizontalInner } from "~/components/HorizontalInner";
+import { InputRange } from "~/components/InputRange";
 import { Menu } from "~/components/Menu";
 import { Page } from "~/components/Page";
 import { PageColumn } from "~/components/PageColumn";
@@ -121,7 +121,7 @@ const FilterTargetImage = styled.div<{ selected?: boolean }>`
   opacity: ${({ selected }) => (selected ? 1 : Constants.opacity)};
 
   &:first-child {
-    margin-left: ${Spacing.l}px;
+    margin-left: ${Spacing.m}px;
   }
 
   img {
@@ -131,6 +131,61 @@ const FilterTargetImage = styled.div<{ selected?: boolean }>`
     box-sizing: border-box;
     border: 1px solid ${Colors.lightGray};
   }
+`;
+
+const TargetImageDivider = styled.div`
+  width: 2px;
+  height: 54px;
+  background: ${GradientColors.pinkToBlue};
+  border-radius: 1px;
+  flex-shrink: 0;
+`;
+
+const Divider = styled.div`
+  width: 2px;
+  height: ${54 - Spacing.s * 2}px;
+  background: ${GradientColors.pinkToBlue};
+  border-radius: 1px;
+  margin: ${Spacing.s}px 0;
+  margin-right: ${Spacing.m}px;
+  flex-shrink: 0;
+`;
+
+const PresetFilterType = styled.div<{ selected?: boolean }>`
+  margin-right: ${Spacing.m}px;
+  cursor: pointer;
+  opacity: ${Constants.opacity};
+
+  ${({ selected }) =>
+    selected &&
+    css`
+      ${Mixin.clickable};
+      opacity: 1;
+    `}
+`;
+
+const PresetFilterTypeIcon = styled.div<{ background: string }>`
+  margin: 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ background }) => background};
+`;
+
+const PresetFilterTypeTitle = styled.div<{ selected?: boolean }>`
+  ${Typography.XS};
+
+  font-weight: bold;
+  color: ${Colors.gray};
+  max-width: 36px;
+  text-align: center;
+  margin-top: ${Spacing.xs}px;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 // Components
@@ -364,21 +419,30 @@ const Filters: NextPage = () => {
                           彩度
                         </FilterTypeTitle>
                       </FilterType>
-                      <div></div>
-                      <div
+                      <Divider />
+                      <PresetFilterType
+                        selected={!userLayer!.presetFilter}
                         onClick={() => {
                           dispatch(
                             actions.changeCanvasUserLayerPresetFilter(null)
                           );
                         }}
                       >
-                        Original
-                      </div>
+                        <PresetFilterTypeIcon background="#FFF" />
+                        <PresetFilterTypeTitle
+                          selected={!userLayer!.presetFilter}
+                        >
+                          ORIGINAL
+                        </PresetFilterTypeTitle>
+                      </PresetFilterType>
                       {Object.entries(PresetFilter).map(
                         ([name, presetFilter], i) => {
                           return (
-                            <div
+                            <PresetFilterType
                               key={i}
+                              selected={
+                                userLayer!.presetFilter === presetFilter
+                              }
                               onClick={() => {
                                 dispatch(
                                   actions.changeCanvasUserLayerPresetFilter(
@@ -387,13 +451,25 @@ const Filters: NextPage = () => {
                                 );
                               }}
                             >
-                              {name[0].toUpperCase() + name.slice(1)}
-                            </div>
+                              <PresetFilterTypeIcon
+                                background={
+                                  PRESET_FILTERS[presetFilter].background
+                                }
+                              />
+                              <PresetFilterTypeTitle
+                                selected={
+                                  userLayer!.presetFilter === presetFilter
+                                }
+                              >
+                                {name[0].toUpperCase() + name.slice(1)}
+                              </PresetFilterTypeTitle>
+                            </PresetFilterType>
                           );
                         }
                       )}
                     </HorizontalInner>
                   </Horizontal>
+                  <TargetImageDivider />
                   <FilterTargetImages id="tutorial-filters-images">
                     {userLayers.map((userLayer, i) => {
                       if (!userLayer) {
