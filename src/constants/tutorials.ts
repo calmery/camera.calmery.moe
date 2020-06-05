@@ -1,3 +1,8 @@
+import { UAParser } from "ua-parser-js";
+
+const usParser = new UAParser();
+const isMobile = usParser.getDevice().type === "mobile";
+
 // First Landing
 
 export const FIRST_LANDING_SCENARIOS = [
@@ -176,11 +181,28 @@ export const CROP_PAGE_WITH_IMAGE_SCENARIOS = [
     emphasisElementId: "tutorial-cropper",
     message: "画面をドラッグしてクロップ位置を調整したり...",
   },
-  {
-    characterImageUrl: "https://static.calmery.moe/s/1/5.png",
-    emphasisElementId: "tutorial-cropper",
-    message: "ピンチイン、ピンチアウトして画像の大きさを変えられるの！",
-  },
+  ...(isMobile
+    ? [
+        {
+          characterImageUrl: "https://static.calmery.moe/s/1/5.png",
+          emphasisElementId: "tutorial-cropper",
+          message: "ピンチイン、ピンチアウトして画像の大きさを変えられるの！",
+        },
+      ]
+    : [
+        {
+          characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+          emphasisElementId: "tutorial-cropper",
+          message:
+            "Shift キーを押しながら画像をドラッグすると画像を回転できるの！",
+        },
+        {
+          characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+          emphasisElementId: "tutorial-cropper",
+          message:
+            "Control (Ctrl) キーを押しながら画像をドラッグすると大きさが変えられるよ！",
+        },
+      ]),
   {
     characterImageUrl: "https://static.calmery.moe/s/1/16.png",
     emphasisElementId: "tutorial-crop-angle",
@@ -197,11 +219,21 @@ export const CROP_PAGE_WITH_IMAGE_SCENARIOS = [
     emphasisElementId: "tutorial-crop-target-images",
     message: "他の画像をクロップしたい？",
   },
-  {
-    characterImageUrl: "https://static.calmery.moe/s/2/4.png",
-    emphasisElementId: "tutorial-crop-target-images",
-    message: "ここでクロップしたい画像をタップしてみて！",
-  },
+  ...(isMobile
+    ? [
+        {
+          characterImageUrl: "https://static.calmery.moe/s/2/4.png",
+          emphasisElementId: "tutorial-crop-target-images",
+          message: "ここでクロップしたい画像をタップしてみて！",
+        },
+      ]
+    : [
+        {
+          characterImageUrl: "https://static.calmery.moe/s/2/4.png",
+          emphasisElementId: "tutorial-crop-target-images",
+          message: "ここでクロップしたい画像をクリックしてみて！",
+        },
+      ]),
 ];
 
 // Collages
@@ -212,6 +244,28 @@ export const COLLAGES_PAGE_SCENARIOS = [
     emphasisElementId: "tutorial-frames-canvas-frames",
     message: "ここに色んなフレームが用意されているよ！",
   },
+  ...(isMobile
+    ? []
+    : [
+        {
+          characterImageUrl: "https://static.calmery.moe/s/2/13.png",
+          emphasisElementId: "tutorial-canvas",
+          message:
+            "画像を回転させたいときは Shift キーを押しながら画像をドラッグ！",
+        },
+        {
+          characterImageUrl: "https://static.calmery.moe/s/2/13.png",
+          emphasisElementId: "tutorial-canvas",
+          message:
+            "大きさを変えたいときは Control (Ctrl) キーを押しながら画像をドラッグしてね！",
+        },
+        {
+          characterImageUrl: "https://static.calmery.moe/s/2/5.png",
+          emphasisElementId: "tutorial-frames-canvas-frames",
+          message:
+            "まずはフレームを選んで、それから画像を回転させたり大きさを変えてみてね！",
+        },
+      ]),
   {
     characterImageUrl: "https://static.calmery.moe/s/1/10.png",
     emphasisElementId: "tutorial-frames-canvas-frames",

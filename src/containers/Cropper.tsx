@@ -275,13 +275,13 @@ export const Cropper: React.FC = () => {
           width: `${displayableWidth}px`,
           height: `${displayableHeight}px`,
         }}
+        id="tutorial-cropper"
       >
         <svg
           width={styleWidth}
           height={styleHeight}
           x={styleLeft}
           y={styleTop}
-          id="tutorial-cropper"
           viewBox={`0 0 ${cropper.imageWidth} ${cropper.imageHeight}`}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
