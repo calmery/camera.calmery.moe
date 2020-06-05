@@ -22,6 +22,8 @@ export interface CropperState {
   isCropperDragging: boolean;
   isCropperTransforming: boolean;
   isImageTransforming: boolean;
+  isControlKey: boolean;
+  isShiftKey: boolean;
   cropperX: number;
   cropperY: number;
   cropperWidth: number;
@@ -66,6 +68,8 @@ const initialState: CropperState = {
   isCropperDragging: false,
   isCropperTransforming: false,
   isImageTransforming: false,
+  isControlKey: false,
+  isShiftKey: false,
   freeAspect: true,
   cropperWidth: CROPPER_DEFAULT_WIDTH,
   cropperHeight: CROPPER_DEFAULT_HEIGHT,
@@ -305,33 +309,69 @@ const reducer = (state = initialState, action: Actions): CropperState => {
     // Image
 
     case types.CROPPER_IMAGE_START_TRANSFORM: {
+      const {
+        isControlKey,
+        isShiftKey,
+        imageX,
+        imageY,
+        imageWidth,
+        imageHeight,
+        imageScale,
+      } = state;
       const positions = action.payload;
 
-      if (positions.length < 2) {
-        return state;
+      if (positions.length >= 2) {
+        return {
+          ...state,
+          isImageTransforming: true,
+          temporaries: {
+            ...state.temporaries,
+            previousImageScale: state.imageScale,
+            previousImageAngle: state.imageAngle,
+            angleBetweenFingers: angleBetweenTwoPoints(
+              positions[0].x,
+              positions[0].y,
+              positions[1].x,
+              positions[1].y
+            ),
+            distanceBetweenFingers: distanceBetweenTwoPoints(
+              positions[0].x,
+              positions[0].y,
+              positions[1].x,
+              positions[1].y
+            ),
+          },
+        };
       }
 
-      return {
-        ...state,
-        isImageTransforming: true,
-        temporaries: {
-          ...state.temporaries,
-          previousImageScale: state.imageScale,
-          previousImageAngle: state.imageAngle,
-          angleBetweenFingers: angleBetweenTwoPoints(
-            positions[0].x,
-            positions[0].y,
-            positions[1].x,
-            positions[1].y
-          ),
-          distanceBetweenFingers: distanceBetweenTwoPoints(
-            positions[0].x,
-            positions[0].y,
-            positions[1].x,
-            positions[1].y
-          ),
-        },
-      };
+      if (isControlKey || isShiftKey) {
+        const x = imageX + (imageWidth * imageScale) / 2;
+        const y = imageY + (imageHeight * imageScale) / 2;
+
+        return {
+          ...state,
+          isImageTransforming: true,
+          temporaries: {
+            ...state.temporaries,
+            previousImageScale: state.imageScale,
+            previousImageAngle: state.imageAngle,
+            angleBetweenFingers: angleBetweenTwoPoints(
+              positions[0].x,
+              positions[0].y,
+              x,
+              y
+            ),
+            distanceBetweenFingers: distanceBetweenTwoPoints(
+              positions[0].x,
+              positions[0].y,
+              x,
+              y
+            ),
+          },
+        };
+      }
+
+      return state;
     }
 
     // Common
@@ -345,14 +385,12 @@ const reducer = (state = initialState, action: Actions): CropperState => {
         isCropperTransforming,
         isCropperDragging,
         temporaries,
+        isShiftKey,
+        isControlKey,
       } = state;
       const { cursorPositions } = action.payload;
 
-      if (isImageTransforming) {
-        if (cursorPositions.length < 2) {
-          return state;
-        }
-
+      if (isImageTransforming && cursorPositions.length >= 2) {
         const { imageX, imageY, imageWidth, imageHeight, imageScale } = state;
         const {
           previousImageAngle,
@@ -384,6 +422,51 @@ const reducer = (state = initialState, action: Actions): CropperState => {
           imageY: nextY,
           imageScale: nextScale,
           imageAngle: nextAngle,
+        };
+      }
+
+      if (isImageTransforming && isShiftKey) {
+        const { previousImageAngle, angleBetweenFingers } = temporaries;
+
+        const { imageX, imageY, imageWidth, imageHeight, imageScale } = state;
+        const x1 = cursorPositions[0].x;
+        const y1 = cursorPositions[0].y;
+        const x2 = imageX + (imageWidth * imageScale) / 2;
+        const y2 = imageY + (imageHeight * imageScale) / 2;
+
+        const nextAngle =
+          previousImageAngle +
+          angleBetweenTwoPoints(x1, y1, x2, y2) -
+          angleBetweenFingers;
+
+        return {
+          ...state,
+          imageAngle: nextAngle,
+        };
+      }
+
+      if (isImageTransforming && isControlKey) {
+        const { imageX, imageY, imageWidth, imageHeight, imageScale } = state;
+        const { previousImageScale, distanceBetweenFingers } = temporaries;
+
+        const x1 = cursorPositions[0].x;
+        const y1 = cursorPositions[0].y;
+        const x2 = imageX + (imageWidth * imageScale) / 2;
+        const y2 = imageY + (imageHeight * imageScale) / 2;
+
+        const currentLength = distanceBetweenTwoPoints(x1, y1, x2, y2);
+        const nextScale =
+          (currentLength / distanceBetweenFingers) * previousImageScale;
+        const nextX =
+          imageX + (imageWidth * imageScale - imageWidth * nextScale) / 2;
+        const nextY =
+          imageY + (imageHeight * imageScale - imageHeight * nextScale) / 2;
+
+        return {
+          ...state,
+          imageX: nextX,
+          imageY: nextY,
+          imageScale: nextScale,
         };
       }
 
@@ -485,6 +568,12 @@ const reducer = (state = initialState, action: Actions): CropperState => {
         isCropperDragging: false,
         isCropperTransforming: false,
         isImageTransforming: false,
+      };
+
+    case types.CROPPER_UPDATE_KEY:
+      return {
+        ...state,
+        ...action.payload,
       };
 
     default:

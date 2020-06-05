@@ -82,6 +82,11 @@ const completeCropper = () => ({
   type: types.CROPPER_COMPLETE,
 });
 
+const updateKey = (isControlKey: boolean, isShiftKey: boolean) => ({
+  type: types.CROPPER_UPDATE_KEY,
+  payload: { isControlKey, isShiftKey },
+});
+
 export const actions = {
   updateDisplayableRect,
   startCropperCropperDrag,
@@ -92,6 +97,7 @@ export const actions = {
   startCropperImageTransform,
   tickCropper,
   completeCropper,
+  updateKey,
 };
 
 export type Actions = ReturnType<typeof actions[keyof typeof actions]>;

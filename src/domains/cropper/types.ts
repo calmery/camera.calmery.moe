@@ -1,5 +1,6 @@
 export const CROPPER_TICK = "CROPPER/TICK" as const;
 export const CROPPER_COMPLETE = "CROPPER/COMPLETE" as const;
+export const CROPPER_UPDATE_KEY = "CROPPER/UPDATE_KEY" as const;
 
 // Container
 

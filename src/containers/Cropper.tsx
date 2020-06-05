@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ResizeObserver from "resize-observer-polyfill";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { CropperImage } from "~/containers/CropperImage";
 import { CropperOperator } from "~/containers/CropperOperator";
 import { State } from "~/domains";
@@ -17,8 +17,26 @@ const Displayable = styled.div`
   height: fit-content;
 `;
 
-const Svg = styled.svg`
+const Svg = styled.svg<{ isShiftKey: boolean; isControlKey: boolean }>`
   position: fixed;
+
+  ${({ isShiftKey, isControlKey }) => {
+    if (isShiftKey) {
+      return css`
+        cursor: url("/images/containers/rotate.svg"), auto;
+      `;
+    }
+
+    if (isControlKey) {
+      return css`
+        cursor: se-resize;
+      `;
+    }
+
+    return css`
+      cursor: move;
+    `;
+  }};
 `;
 
 // Components
@@ -34,6 +52,8 @@ export const Cropper: React.FC = () => {
     isCropperDragging,
     isCropperTransforming,
     isImageTransforming,
+    isShiftKey,
+    isControlKey,
   } = cropper;
 
   // Refs
@@ -47,7 +67,7 @@ export const Cropper: React.FC = () => {
     (event: React.TouchEvent | React.MouseEvent) => {
       const positions = convertEventToCursorPositions(event);
 
-      if (positions.length > 1) {
+      if (positions.length > 1 || isShiftKey || isControlKey) {
         dispatch(
           actions.startCropperImageTransform(
             convertEventToCursorPositions(event)
@@ -61,7 +81,7 @@ export const Cropper: React.FC = () => {
         actions.startCropperCropperDrag(convertEventToCursorPositions(event))
       );
     },
-    [dispatch]
+    [dispatch, isControlKey, isShiftKey]
   );
 
   const handleOnTick = useCallback(
@@ -90,6 +110,29 @@ export const Cropper: React.FC = () => {
     dispatch(actions.completeCropper());
   }, [dispatch, isCropperDragging, isCropperTransforming, isImageTransforming]);
 
+  const handleOnContextMenu = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    return false;
+  }, []);
+
+  const handleOnUpdateKey = useCallback(
+    (event: KeyboardEvent) => {
+      const { ctrlKey, shiftKey } = event;
+      dispatch(actions.updateKey(ctrlKey, shiftKey));
+    },
+    [dispatch]
+  );
+
+  const handleOnKeyup = useCallback(
+    (event: KeyboardEvent) => {
+      handleOnUpdateKey(event);
+      dispatch(actions.completeCropper());
+    },
+    [dispatch, handleOnUpdateKey]
+  );
+
   // Variables
 
   let sx = cropper.cropperScaleX;
@@ -106,6 +149,16 @@ export const Cropper: React.FC = () => {
   const { imageAngle, imageScale } = cropper;
 
   // Hooks
+
+  useEffect(() => {
+    addEventListener("keydown", handleOnUpdateKey);
+    addEventListener("keyup", handleOnKeyup);
+
+    return () => {
+      removeEventListener("keydown", handleOnUpdateKey);
+      removeEventListener("keyup", handleOnKeyup);
+    };
+  }, [handleOnUpdateKey]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -210,6 +263,9 @@ export const Cropper: React.FC = () => {
         onTouchStart={handleOnStartTransform}
         onMouseDown={handleOnStartTransform}
         onTouchEnd={handleOnComplete}
+        onContextMenu={handleOnContextMenu}
+        isShiftKey={isShiftKey}
+        isControlKey={isControlKey}
         viewBox={`0 0 ${displayableWidth} ${displayableHeight}`}
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"

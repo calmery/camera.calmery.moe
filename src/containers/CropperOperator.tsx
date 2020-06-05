@@ -112,7 +112,7 @@ export const CropperOperator: React.FC = () => {
           height={height}
           x={x}
           y={y}
-        ></rect>
+        />
 
         <circle fill={light} cx={cx} cy={cy} r={r} />
       </g>
