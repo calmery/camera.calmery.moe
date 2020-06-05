@@ -1,4 +1,5 @@
 import { PresetFilter } from "~/types/PresetFilter";
+import { EffectFilter } from "~/types/EffectFilter";
 
 // https://silvia-odwyer.github.io/photon/
 // silvia-odwyer/photon: Rust/WebAssembly image processing library (https://github.com/silvia-odwyer/photon)
@@ -84,5 +85,25 @@ export const PRESET_FILTERS: {
     b: 90,
     a: 0.2,
     background: "rgba(206,212,222,1)",
+  },
+};
+
+export const EFFECT_FILTERS: {
+  [key in EffectFilter]: {
+    background: string;
+  };
+} = {
+  [EffectFilter.GLITCH]: {
+    background:
+      "linear-gradient(90deg, #F44 33%, #4F4 33%, #4F4 66%, #44F 66%, #44F 100%)",
+  },
+  [EffectFilter.RED]: {
+    background: "#F44",
+  },
+  [EffectFilter.GREEN]: {
+    background: "#4F4",
+  },
+  [EffectFilter.BLUE]: {
+    background: "#44F",
   },
 };

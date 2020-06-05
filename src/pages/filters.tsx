@@ -27,7 +27,7 @@ import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
 import * as GA from "~/utils/google-analytics";
-import { PRESET_FILTERS } from "~/constants/filters";
+import { PRESET_FILTERS, EFFECT_FILTERS } from "~/constants/filters";
 import { PresetFilter } from "~/types/PresetFilter";
 import { EffectFilter } from "~/types/EffectFilter";
 
@@ -500,7 +500,11 @@ const Filters: NextPage = () => {
                                 );
                               }}
                             >
-                              <PresetFilterTypeIcon background={"red"} />
+                              <PresetFilterTypeIcon
+                                background={
+                                  EFFECT_FILTERS[effectFilter].background
+                                }
+                              />
                               <PresetFilterTypeTitle
                                 selected={
                                   userLayer!.effectFilter === effectFilter
