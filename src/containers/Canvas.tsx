@@ -57,13 +57,16 @@ export const Canvas: React.FC<CanvasProps> = ({
   // Variables
 
   const {
+    isCollaging,
     isStickerLayerDragging,
     isStickerLayerTransforming,
     isUserLayerDragging,
   } = canvas;
 
   const canFireEvent =
-    isStickerLayerDragging || isStickerLayerTransforming || isUserLayerDragging;
+    isStickerLayerDragging ||
+    isStickerLayerTransforming ||
+    (isCollaging && isUserLayerDragging);
 
   const preview = !!onCreatePreviewUrl;
 
@@ -89,7 +92,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   );
 
   const handleOnComplete = useCallback(() => {
-    if (preview || !canFireEvent) {
+    if (preview) {
       return;
     }
 
