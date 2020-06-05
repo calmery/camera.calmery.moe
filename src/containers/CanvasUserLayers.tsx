@@ -34,15 +34,6 @@ const CanvasUserLayerPresetFilter: React.FC<CanvasUserLayerPresetFilterProps> = 
   const { r, g, b, a } = PRESET_FILTERS[presetFilter];
   const factor = 1 - a;
 
-  console.log(
-    [
-      [factor, 0, 0, 0, 0],
-      [0, factor, 0, 0, 0],
-      [0, 0, factor, 0, 0],
-      [0, 0, 0, 1, 0],
-    ].join(" ")
-  );
-
   return (
     <>
       <feColorMatrix
