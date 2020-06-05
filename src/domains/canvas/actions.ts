@@ -5,6 +5,7 @@ import * as types from "./types";
 import { convertUrlToImage } from "./utils";
 import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
+import { PresetFilter } from "~/types/PresetFilter";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ColorThief = require("~/externals/color-thief");
@@ -301,6 +302,13 @@ const updateKey = (isControlKey: boolean, isShiftKey: boolean) => ({
   payload: { isControlKey, isShiftKey },
 });
 
+const changeCanvasUserLayerPresetFilter = (
+  presetFilter: PresetFilter | null
+) => ({
+  type: types.CANVAS_USER_LAYER_CHANGE_PRESET_FILTER,
+  payload: { presetFilter },
+});
+
 // Main
 
 export const actions = {
@@ -315,6 +323,7 @@ export const actions = {
   startCanvasUserLayerCrop,
   startCanvasUserLayerDrag,
   updateCanvasUserLayerFilter,
+  changeCanvasUserLayerPresetFilter,
   startCanvasUserLayerFilter,
   updateCanvasUserLayerCrop,
   tickCanvas,

@@ -27,6 +27,8 @@ import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
 import * as GA from "~/utils/google-analytics";
+import { PRESET_FILTERS } from "~/constants/filters";
+import { PresetFilter } from "~/types/PresetFilter";
 
 // Styles
 
@@ -362,6 +364,34 @@ const Filters: NextPage = () => {
                           彩度
                         </FilterTypeTitle>
                       </FilterType>
+                      <div></div>
+                      <div
+                        onClick={() => {
+                          dispatch(
+                            actions.changeCanvasUserLayerPresetFilter(null)
+                          );
+                        }}
+                      >
+                        Original
+                      </div>
+                      {Object.entries(PresetFilter).map(
+                        ([name, presetFilter], i) => {
+                          return (
+                            <div
+                              key={i}
+                              onClick={() => {
+                                dispatch(
+                                  actions.changeCanvasUserLayerPresetFilter(
+                                    presetFilter
+                                  )
+                                );
+                              }}
+                            >
+                              {name[0].toUpperCase() + name.slice(1)}
+                            </div>
+                          );
+                        }
+                      )}
                     </HorizontalInner>
                   </Horizontal>
                   <FilterTargetImages id="tutorial-filters-images">

@@ -860,6 +860,24 @@ export default (state = initialState, action: Actions): CanvasState => {
       };
     }
 
+    case types.CANVAS_USER_LAYER_CHANGE_PRESET_FILTER: {
+      const { userLayers, temporaries } = state;
+      const { selectedUserLayerFilterIndex } = temporaries;
+      const userLayer = userLayers[selectedUserLayerFilterIndex];
+
+      if (userLayer) {
+        userLayers[selectedUserLayerFilterIndex] = {
+          ...userLayer,
+          ...action.payload,
+        };
+      }
+
+      return {
+        ...state,
+        userLayers,
+      };
+    }
+
     case types.CANVAS_USER_LAYER_UPDATE_CROP: {
       const {
         userLayers,

@@ -6,8 +6,63 @@ import {
   getCanvasUserLayerFilterId,
   getCanvasUserLayerFilterPresetId,
 } from "~/utils/canvas";
+import { PRESET_FILTERS } from "~/constants/filters";
+import { PresetFilter } from "~/types/PresetFilter";
 
 // Components
+
+interface CanvasUserLayerPresetFilterProps {
+  presetFilter: PresetFilter | null;
+}
+
+const CanvasUserLayerPresetFilter: React.FC<CanvasUserLayerPresetFilterProps> = ({
+  presetFilter,
+}) => {
+  if (!presetFilter) {
+    return (
+      <feColorMatrix
+        in="SourceGraphic"
+        type="matrix"
+        values="1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 1 0"
+      />
+    );
+  }
+
+  const { r, g, b, a } = PRESET_FILTERS[presetFilter];
+  const factor = 1 - a;
+
+  console.log(
+    [
+      [factor, 0, 0, 0, 0],
+      [0, factor, 0, 0, 0],
+      [0, 0, factor, 0, 0],
+      [0, 0, 0, 1, 0],
+    ].join(" ")
+  );
+
+  return (
+    <>
+      <feColorMatrix
+        in="SourceGraphic"
+        type="matrix"
+        values={[
+          [factor, 0, 0, 0, 0],
+          [0, factor, 0, 0, 0],
+          [0, 0, factor, 0, 0],
+          [0, 0, 0, 1, 0],
+        ].join(" ")}
+      />
+      <feComponentTransfer>
+        <feFuncR type="linear" slope="1" intercept={a * (r / 255)} />
+        <feFuncG type="linear" slope="1" intercept={a * (g / 255)} />
+        <feFuncB type="linear" slope="1" intercept={a * (b / 255)} />
+      </feComponentTransfer>
+    </>
+  );
+};
 
 export const CanvasUserLayers = () => {
   const { isCollaging, userFrames, userLayers } = useSelector(
@@ -87,36 +142,9 @@ export const CanvasUserLayers = () => {
                       id={getCanvasUserLayerFilterPresetId(i)}
                       colorInterpolationFilters="sRGB"
                     >
-                      <feColorMatrix
-                        in="SourceGraphic"
-                        type="matrix"
-                        values="0.8 0 0 0 0
-                                0 0.8 0 0 0
-                                0 0 0.8 0 0
-                                0 0 0 1 0"
+                      <CanvasUserLayerPresetFilter
+                        presetFilter={userLayer.presetFilter}
                       />
-                      <feComponentTransfer>
-                        <feFuncR
-                          type="linear"
-                          slope="1"
-                          intercept={0.2 * 0.47058823529411764}
-                        />
-                        <feFuncR
-                          type="linear"
-                          slope="1"
-                          intercept={0.2 * 0.47058823529411764}
-                        />
-                        <feFuncG
-                          type="linear"
-                          slope="1"
-                          intercept={0.2 * 0.27450980392156865}
-                        />
-                        <feFuncB
-                          type="linear"
-                          slope="1"
-                          intercept={0.2 * 0.050980392156862744}
-                        />
-                      </feComponentTransfer>
                     </filter>
                   </defs>
 
