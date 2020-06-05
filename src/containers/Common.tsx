@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { State, withRedux } from "~/domains";
 import { actions as uiActions } from "~/domains/ui/actions";
+import { DeviceOrientation } from "~/components/DeviceOrientation";
 import { Loading } from "~/components/Loading";
 import { Popup } from "~/components/Popup";
 
@@ -27,6 +28,7 @@ export const Common = withRedux(() => {
         </Popup>
       )}
       {loading > 0 && <Loading />}
+      <DeviceOrientation />
     </>
   );
 });
