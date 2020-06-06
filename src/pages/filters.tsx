@@ -333,7 +333,7 @@ const Filters: NextPage = () => {
                   }}
                 >
                   <InputRange
-                    min={-1}
+                    min={0}
                     max={2}
                     step={0.1}
                     baseValue={1}
