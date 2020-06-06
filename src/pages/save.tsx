@@ -70,26 +70,25 @@ const Save: NextPage = () => {
             logo={isImageExists}
             onCreatePreviewUrl={isImageExists ? setPreviewUrl : undefined}
           />
+          {isImageExists && (
+            <Image
+              style={{
+                top: styleTop,
+                left: styleLeft,
+                width: styleWidth,
+                height: styleHeight,
+                opacity: previewUrl ? 1 : 0,
+              }}
+              onContextMenu={handleOnSave}
+              onTouchStart={handleOnSave}
+              id="tutorial-save-image"
+              alt="出力画像"
+              src={previewUrl || ""}
+            />
+          )}
           <Menu />
         </PageColumn>
       </Page>
-
-      {isImageExists && (
-        <Image
-          style={{
-            top: styleTop,
-            left: styleLeft,
-            width: styleWidth,
-            height: styleHeight,
-            opacity: previewUrl ? 1 : 0,
-          }}
-          onContextMenu={handleOnSave}
-          onTouchStart={handleOnSave}
-          id="tutorial-save-image"
-          alt="出力画像"
-          src={previewUrl || ""}
-        />
-      )}
 
       <FirstLanding />
 
