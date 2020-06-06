@@ -43,12 +43,17 @@ const StickerContainer = styled.div`
 
 const TitleContainer = styled.div`
   display: flex;
-  margin-bottom: ${Spacing.m}px;
   align-items: center;
+  margin-bottom: ${Spacing.m}px;
   position: sticky;
   width: fit-content;
   top: 0;
   left: ${Spacing.l}px;
+
+  a {
+    display: flex;
+    align-items: center;
+  }
 
   img {
     margin-right: ${Spacing.s}px;
@@ -123,13 +128,19 @@ const Stickers: NextPage = () => {
                 <StickersContainer>
                   <Horizontal>
                     <HorizontalInner>
-                      {APPENDABLE_STICKERS.map(({ name, urls }, group) => (
+                      {APPENDABLE_STICKERS.map(({ name, urls, url }, group) => (
                         <StickerContainer key={group}>
                           <TitleContainer>
-                            <img
-                              src="/images/pages/stickers/line-store.svg"
-                              alt="LINE STORE"
-                            />
+                            <a
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                src="/images/pages/stickers/line-store.svg"
+                                alt="LINE STORE"
+                              />
+                            </a>
                             <Title>{name}</Title>
                           </TitleContainer>
                           <StickerList>
