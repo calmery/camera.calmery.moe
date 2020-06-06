@@ -47,7 +47,7 @@ export const convertSvgToDataUrl = (
       // 800ms 程度待ってみる
       setTimeout(() => {
         context.drawImage(image, 0, 0, width, height);
-        resolve(canvas.toDataURL("image/jpeg", 1));
+        resolve(canvas.toDataURL("image/png"));
       }, 800);
     };
 
