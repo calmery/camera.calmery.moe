@@ -75,6 +75,8 @@ export const Canvas: React.FC<CanvasProps> = ({
   const displayableRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
+  const { viewBoxWidth, viewBoxHeight } = canvas;
+
   // Events
 
   const handleOnTick = useCallback(
@@ -169,9 +171,22 @@ export const Canvas: React.FC<CanvasProps> = ({
     }
 
     (async () => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const html = svgRef.current!.innerHTML;
+      const div = document.createElement("div");
+      div.innerHTML = html;
+      const svg = div.querySelector("svg")!;
+
+      // `x`, `y` を削除、Safari では `drawImage` したときに `width`、`height` に従って `image` タグの画像が描写されてしまう
+      // そのためスマートフォンなどで解像度が極端に悪くなってしまう問題があった
+      // `width` と `height` 自体を削除していたがそれだと Firefox で虚無が出力されてしまう...
+      svg.setAttribute("width", `${viewBoxWidth}`);
+      svg.setAttribute("height", `${viewBoxHeight}`);
+      svg.removeAttribute("x");
+      svg.removeAttribute("y");
+
       const dataUrl = await convertSvgToDataUrl(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        svgRef.current!.innerHTML,
+        div.innerHTML,
         viewBoxWidth,
         viewBoxHeight
       );
@@ -179,7 +194,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       onCreatePreviewUrl!(dataUrl);
     })();
-  }, [preview, svgRef]);
+  }, [preview, svgRef, viewBoxWidth, viewBoxHeight]);
 
   // Render
 
@@ -188,8 +203,10 @@ export const Canvas: React.FC<CanvasProps> = ({
     displayableLeft,
     displayableWidth,
     displayableHeight,
-    viewBoxWidth,
-    viewBoxHeight,
+    styleTop,
+    styleLeft,
+    styleWidth,
+    styleHeight,
   } = canvas;
 
   return (
@@ -214,6 +231,10 @@ export const Canvas: React.FC<CanvasProps> = ({
         id="tutorial-canvas"
       >
         <svg
+          x={styleLeft - displayableLeft}
+          y={styleTop - displayableTop}
+          width={styleWidth}
+          height={styleHeight}
           overflow={preview ? "hidden" : "visible"}
           viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
           xmlns="http://www.w3.org/2000/svg"
