@@ -188,10 +188,6 @@ export const Canvas: React.FC<CanvasProps> = ({
     displayableLeft,
     displayableWidth,
     displayableHeight,
-    styleTop,
-    styleLeft,
-    styleWidth,
-    styleHeight,
     viewBoxWidth,
     viewBoxHeight,
   } = canvas;
@@ -218,10 +214,6 @@ export const Canvas: React.FC<CanvasProps> = ({
         id="tutorial-canvas"
       >
         <svg
-          x={styleLeft - displayableLeft}
-          y={styleTop - displayableTop}
-          width={styleWidth}
-          height={styleHeight}
           overflow={preview ? "hidden" : "visible"}
           viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
           xmlns="http://www.w3.org/2000/svg"
