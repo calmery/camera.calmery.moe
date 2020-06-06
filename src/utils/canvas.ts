@@ -31,14 +31,11 @@ export const convertSvgToDataUrl = (
     const url = URL.createObjectURL(svg);
     const image = new Image();
 
-    const w = Math.floor(width * 1.5);
-    const h = Math.floor(height * 1.5);
-
     image.onerror = () => reject();
     image.onload = () => {
       const canvas = document.createElement("canvas");
-      canvas.width = w;
-      canvas.height = h;
+      canvas.width = width;
+      canvas.height = height;
 
       const context = canvas.getContext("2d");
 
@@ -49,7 +46,7 @@ export const convertSvgToDataUrl = (
       // Safari で `context.drawImage` するとたまに内部の image 要素が描写されないことがある
       // 800ms 程度待ってみる
       setTimeout(() => {
-        context.drawImage(image, 0, 0, w, h);
+        context.drawImage(image, 0, 0, width, height);
         resolve(canvas.toDataURL("image/png"));
       }, 800);
     };
