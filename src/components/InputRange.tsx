@@ -177,7 +177,7 @@ export const InputRange: React.FC<InputRangeProps> = ({
 
   // Events
 
-  const handleOnBegin = useCallback(
+  const handleOnStart = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
       setIsMoving(true);
       updateCurrentStepCount(event);
@@ -207,8 +207,8 @@ export const InputRange: React.FC<InputRangeProps> = ({
   return (
     <Container
       ref={containerRef}
-      onMouseDown={handleOnBegin}
-      onTouchStart={handleOnBegin}
+      onMouseDown={handleOnStart}
+      onTouchStart={handleOnStart}
       onMouseMove={handleOnUpdate}
       onTouchMove={handleOnUpdate}
       onMouseLeave={handleOnEnd}
