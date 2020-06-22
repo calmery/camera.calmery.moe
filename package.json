@@ -14,7 +14,7 @@
     "ua-parser-js": "0.7.21"
   },
   "devDependencies": {
-    "@babel/core": "7.10.2",
+    "@babel/core": "7.10.3",
     "@storybook/addon-knobs": "5.3.19",
     "@storybook/react": "5.3.19",
     "@types/blueimp-load-image": "2.23.7",
