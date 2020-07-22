@@ -13,8 +13,6 @@ const Container = styled.div`
   height: 16px;
   padding: ${Spacing.l}px;
   flex-shrink: 0;
-  display: flex;
-  justify-content: space-between;
 
   img {
     cursor: pointer;
@@ -23,7 +21,22 @@ const Container = styled.div`
   }
 `;
 
-const Group = styled.div`
+const ContainerInner = styled.div`
+  position: relative;
+  text-align: center;
+`;
+
+const LeftGroup = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+
+const RightGroup = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+
   img {
     margin-left: ${Spacing.l}px;
   }
@@ -91,34 +104,38 @@ export const ControlBar: React.FC<{
   return (
     <>
       <Container>
-        <img
-          src="/images/close.svg"
-          onClick={() => setOpenPopup(true)}
-          alt="閉じる"
-        />
-        <img
-          id="tutorial-control-bar-beta"
-          onClick={() => {
-            GA.clickBetaButton();
-            setOpenBetaMenu(true);
-          }}
-          src="/images/components/beta.svg"
-          alt="Beta"
-        />
-        <Group>
+        <ContainerInner>
+          <LeftGroup>
+            <img
+              src="/images/close.svg"
+              onClick={() => setOpenPopup(true)}
+              alt="閉じる"
+            />
+          </LeftGroup>
           <img
-            id="tutorial-control-bar-usage"
-            src="/images/components/help.svg"
-            onClick={onClickHelpButton}
-            alt="ヘルプ"
+            id="tutorial-control-bar-beta"
+            onClick={() => {
+              GA.clickBetaButton();
+              setOpenBetaMenu(true);
+            }}
+            src="/images/components/beta.svg"
+            alt="Beta"
           />
-          <img
-            id="tutorial-control-bar-usage"
-            src="/images/components/setting.svg"
-            onClick={() => setOpenSetting(true)}
-            alt="設定"
-          />
-        </Group>
+          <RightGroup>
+            <img
+              id="tutorial-control-bar-usage"
+              src="/images/components/help.svg"
+              onClick={onClickHelpButton}
+              alt="ヘルプ"
+            />
+            <img
+              id="tutorial-control-bar-usage"
+              src="/images/components/setting.svg"
+              onClick={() => setOpenSetting(true)}
+              alt="設定"
+            />
+          </RightGroup>
+        </ContainerInner>
       </Container>
       <Modal
         visible={isOpenBetaMenu}
