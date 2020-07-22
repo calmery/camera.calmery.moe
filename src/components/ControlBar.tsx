@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { Modal } from "~/components/Modal";
+import { State } from "~/domains";
+import { actions } from "~/domains/canvas/actions";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 import { Colors } from "~/styles/colors";
@@ -8,8 +11,6 @@ import { Button } from "./Button";
 import { Popup } from "./Popup";
 import { useRouter } from "next/router";
 import * as GA from "~/utils/google-analytics";
-import { actions } from "~/domains/canvas/actions";
-import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   height: 16px;
@@ -72,12 +73,18 @@ const ModalTextRoboto = styled.span`
 `;
 
 const ModalConfig = styled.div`
+  width: 100%;
   display: flex;
   margin-bottom: ${Spacing.l}px;
 
   > *:first-child {
     margin-right: ${Spacing.m}px;
   }
+`;
+
+const ModalConfigSingleColumn = styled.div`
+  width: 100%;
+  margin: 0 !important;
 `;
 
 const ModalConfigTitle = styled.div`
@@ -95,10 +102,44 @@ const ModalConfigDescription = styled.div`
   font-family: "Sawarabi Gothic", sans-serif;
 `;
 
+const SelectContainer = styled.div`
+  ${Typography.S};
+
+  width: 100%;
+  height: 34px;
+  position: relative;
+  margin-top: ${Spacing.m}px;
+  font-family: "Sawarabi Gothic", sans-serif;
+`;
+
+const SelectInner = styled.div`
+  width: 100%;
+  box-sizing: border-box;
+  padding: ${Spacing.s}px ${Spacing.m}px;
+  position: absolute;
+  border: 1px solid ${Colors.gray};
+  border-radius: 50vh;
+  display: flex;
+
+  img {
+    vertical-align: bottom;
+    margin-left: auto;
+  }
+`;
+
+const SelectHidden = styled.select`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  opacity: 0;
+  font-size: 16px; // iOS で 16px 未満のフォントサイズのとき画面が拡大される
+`;
+
 export const ControlBar: React.FC<{
   onClickHelpButton?: () => void;
 }> = ({ onClickHelpButton }) => {
   const dispatch = useDispatch();
+  const { logoPosition } = useSelector(({ canvas }: State) => canvas);
   const [isOpenBetaMenu, setOpenBetaMenu] = useState(false);
   const [isOpenPopup, setOpenPopup] = useState(false);
   const [isOpenSetting, setOpenSetting] = useState(false);
@@ -185,20 +226,34 @@ export const ControlBar: React.FC<{
         visible={isOpenSetting}
         onClickCloseButton={() => setOpenSetting(false)}
       >
-        <select
-          onChange={(event) => {
-            dispatch(
-              actions.changeCanvasLogoPosition(
-                event.target.value as "left" | "right"
-              )
-            );
-          }}
-        >
-          <option value="left">左</option>
-          <option value="right" selected>
-            右
-          </option>
-        </select>
+        <ModalConfig>
+          <ModalConfigSingleColumn>
+            <ModalConfigTitle>ロゴの位置を変更する</ModalConfigTitle>
+            <ModalConfigDescription>
+              画像上に表示されるロゴの位置を変更します。
+            </ModalConfigDescription>
+            <SelectContainer>
+              <SelectInner>
+                {logoPosition === "left" ? "左" : "右"}
+                <img src="/images/components/arrow.svg" alt="選択する" />
+              </SelectInner>
+              <SelectHidden
+                onChange={(event) => {
+                  dispatch(
+                    actions.changeCanvasLogoPosition(
+                      event.target.value as "left" | "right"
+                    )
+                  );
+                }}
+              >
+                <option value="left">左</option>
+                <option value="right" selected>
+                  右
+                </option>
+              </SelectHidden>
+            </SelectContainer>
+          </ModalConfigSingleColumn>
+        </ModalConfig>
       </Modal>
       {isOpenPopup && (
         <Popup
