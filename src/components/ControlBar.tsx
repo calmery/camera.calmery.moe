@@ -19,6 +19,13 @@ const Container = styled.div`
   img {
     cursor: pointer;
     height: 16px;
+    vertical-align: top;
+  }
+`;
+
+const Group = styled.div`
+  img {
+    margin-left: ${Spacing.l}px;
   }
 `;
 
@@ -78,6 +85,7 @@ export const ControlBar: React.FC<{
 }> = ({ onClickHelpButton }) => {
   const [isOpenBetaMenu, setOpenBetaMenu] = useState(false);
   const [isOpenPopup, setOpenPopup] = useState(false);
+  const [isOpenSetting, setOpenSetting] = useState(false);
   const { push } = useRouter();
 
   return (
@@ -97,12 +105,20 @@ export const ControlBar: React.FC<{
           src="/images/components/beta.svg"
           alt="Beta"
         />
-        <img
-          id="tutorial-control-bar-usage"
-          src="/images/components/help.svg"
-          onClick={onClickHelpButton}
-          alt="ヘルプ"
-        />
+        <Group>
+          <img
+            id="tutorial-control-bar-usage"
+            src="/images/components/help.svg"
+            onClick={onClickHelpButton}
+            alt="ヘルプ"
+          />
+          <img
+            id="tutorial-control-bar-usage"
+            src="/images/components/setting.svg"
+            onClick={() => setOpenSetting(true)}
+            alt="設定"
+          />
+        </Group>
       </Container>
       <Modal
         visible={isOpenBetaMenu}
@@ -144,6 +160,12 @@ export const ControlBar: React.FC<{
         >
           ローカルストレージの内容を削除する
         </Button>
+      </Modal>
+      <Modal
+        visible={isOpenSetting}
+        onClickCloseButton={() => setOpenSetting(false)}
+      >
+        Setting
       </Modal>
       {isOpenPopup && (
         <Popup
