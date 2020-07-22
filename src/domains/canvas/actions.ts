@@ -317,6 +317,13 @@ const changeCanvasUserLayerEffectFilter = (
   payload: { effectFilter },
 });
 
+// Logo
+
+const changeCanvasLogoPosition = (logoPosition: "left" | "right") => ({
+  type: types.CANVAS_LOGO_CHANGE_POSITION,
+  payload: { logoPosition },
+});
+
 // Main
 
 export const actions = {
@@ -340,6 +347,7 @@ export const actions = {
   enableCollage,
   disableCollage,
   updateKey,
+  changeCanvasLogoPosition,
 };
 
 export const thunkActions = {

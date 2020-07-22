@@ -11,7 +11,7 @@ const MARGIN = 24;
 // Components
 
 export const CanvasLogo: React.FC = () => {
-  const { viewBoxWidth, viewBoxHeight } = useSelector(
+  const { viewBoxWidth, viewBoxHeight, logoPosition } = useSelector(
     ({ canvas }: State) => canvas
   );
 
@@ -29,7 +29,7 @@ export const CanvasLogo: React.FC = () => {
 
   return (
     <svg
-      x={viewBoxWidth - w - MARGIN}
+      x={logoPosition === "right" ? viewBoxWidth - w - MARGIN : MARGIN}
       y={viewBoxHeight - h - MARGIN}
       fill="none"
       height={h}

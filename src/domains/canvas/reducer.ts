@@ -65,6 +65,7 @@ export interface CanvasState {
   userFrames: CanvasUserFrame[];
   userLayers: (CanvasUserLayer | null)[];
   stickerLayers: CanvasLayer[];
+  logoPosition: "left" | "right";
   temporaries: {
     pointerOffsetX: number;
     pointerOffsetY: number;
@@ -98,6 +99,7 @@ const initialState: CanvasState = {
   isControlKey: false,
   userLayers: [],
   userFrames: [],
+  logoPosition: "right",
   temporaries: {
     pointerOffsetX: 0,
     pointerOffsetY: 0,
@@ -995,6 +997,12 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return state;
     }
+
+    case types.CANVAS_LOGO_CHANGE_POSITION:
+      return {
+        ...state,
+        ...action.payload,
+      };
 
     // Default
 
