@@ -246,8 +246,10 @@ export const ControlBar: React.FC<{
                   );
                 }}
               >
-                <option value="left">左</option>
-                <option value="right" selected>
+                <option value="left" selected={logoPosition === "left"}>
+                  左
+                </option>
+                <option value="right" selected={logoPosition === "right"}>
                   右
                 </option>
               </SelectHidden>

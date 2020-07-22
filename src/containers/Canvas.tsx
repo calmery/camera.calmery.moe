@@ -75,7 +75,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   const displayableRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  const { viewBoxWidth, viewBoxHeight } = canvas;
+  const { viewBoxWidth, viewBoxHeight, logoPosition } = canvas;
 
   // Events
 
@@ -194,7 +194,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       onCreatePreviewUrl!(dataUrl);
     })();
-  }, [preview, svgRef, viewBoxWidth, viewBoxHeight]);
+  }, [preview, svgRef, viewBoxWidth, viewBoxHeight, logoPosition]);
 
   // Render
 
