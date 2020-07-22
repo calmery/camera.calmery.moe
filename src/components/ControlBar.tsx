@@ -8,6 +8,8 @@ import { Button } from "./Button";
 import { Popup } from "./Popup";
 import { useRouter } from "next/router";
 import * as GA from "~/utils/google-analytics";
+import { actions } from "~/domains/canvas/actions";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   height: 16px;
@@ -96,6 +98,7 @@ const ModalConfigDescription = styled.div`
 export const ControlBar: React.FC<{
   onClickHelpButton?: () => void;
 }> = ({ onClickHelpButton }) => {
+  const dispatch = useDispatch();
   const [isOpenBetaMenu, setOpenBetaMenu] = useState(false);
   const [isOpenPopup, setOpenPopup] = useState(false);
   const [isOpenSetting, setOpenSetting] = useState(false);
@@ -182,7 +185,20 @@ export const ControlBar: React.FC<{
         visible={isOpenSetting}
         onClickCloseButton={() => setOpenSetting(false)}
       >
-        Setting
+        <select
+          onChange={(event) => {
+            dispatch(
+              actions.changeCanvasLogoPosition(
+                event.target.value as "left" | "right"
+              )
+            );
+          }}
+        >
+          <option value="left">左</option>
+          <option value="right" selected>
+            右
+          </option>
+        </select>
       </Modal>
       {isOpenPopup && (
         <Popup
