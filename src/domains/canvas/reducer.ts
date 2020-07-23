@@ -116,6 +116,12 @@ const initialState: CanvasState = {
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
+    case types.CANVAS_RESTORE:
+      return {
+        ...state,
+        ...action.payload,
+      };
+
     case types.CANVAS_CONTAINER_UPDATE_RECT: {
       const { x, y, width, height } = action.payload;
       const { userFrames } = state;

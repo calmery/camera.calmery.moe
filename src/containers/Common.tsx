@@ -5,6 +5,7 @@ import { actions as uiActions } from "~/domains/ui/actions";
 import { DeviceOrientation } from "~/components/DeviceOrientation";
 import { Loading } from "~/components/Loading";
 import { Popup } from "~/components/Popup";
+import { CanvasRestore } from "./CanvasRestore";
 
 export const Common = withRedux(() => {
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ export const Common = withRedux(() => {
       )}
       {loading > 0 && <Loading />}
       <DeviceOrientation />
+      <CanvasRestore />
     </>
   );
 });

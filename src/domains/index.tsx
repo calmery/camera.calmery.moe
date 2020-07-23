@@ -6,10 +6,13 @@ import {
   applyMiddleware,
   Store,
   AnyAction,
+  Middleware,
 } from "redux";
 import logger from "redux-logger";
 import reduxThunk, { ThunkDispatch } from "redux-thunk";
 import { NextPage, NextPageContext } from "next";
+import { Actions as CanvasActions } from "./canvas/actions";
+import * as canvasActionTypes from "./canvas/types";
 import canvas, { CanvasState } from "./canvas/reducer";
 import cropper, { CropperState } from "./cropper/reducer";
 import ui, { UiState } from "./ui/reducer";
@@ -19,6 +22,33 @@ export interface State {
   cropper: CropperState;
   ui: UiState;
 }
+
+// Persistence
+
+const persistenceMiddleware: Middleware<Record<string, unknown>, State> = (
+  store
+) => (next) => (action: CanvasActions) => {
+  const { canvas } = store.getState();
+
+  switch (action.type) {
+    case canvasActionTypes.CANVAS_COMPLETE:
+    case canvasActionTypes.CANVAS_ENABLE_COLLAGE:
+    case canvasActionTypes.CANVAS_DISABLE_COLLAGE:
+    case canvasActionTypes.CANVAS_STICKER_LAYER_ADD:
+    case canvasActionTypes.CANVAS_SRICKER_LAYER_REMOVE:
+    case canvasActionTypes.CANVAS_STICKER_LAYER_CHANGE_ORDER:
+    case canvasActionTypes.CANVAS_USER_LAYER_ADD:
+    case canvasActionTypes.CANVAS_USER_LAYER_REMOVE:
+    case canvasActionTypes.CANVAS_USER_LAYER_UPDATE_FILTER:
+    case canvasActionTypes.CANVAS_USER_LAYER_CHANGE_PRESET_FILTER:
+    case canvasActionTypes.CANVAS_USER_LAYER_CHANGE_EFFECT_FILTER:
+    case canvasActionTypes.CANVAS_USER_LAYER_UPDATE_CROP:
+    case canvasActionTypes.CANVAS_LOGO_CHANGE_POSITION:
+      localStorage.setItem("canvas", JSON.stringify(canvas));
+  }
+
+  next(action);
+};
 
 // Store
 
@@ -40,8 +70,8 @@ export const getOrCreateStore = (state?: State): Store<State> => {
     state,
     applyMiddleware(
       ...(process.env.NODE_ENV === "production"
-        ? [reduxThunk]
-        : [reduxThunk, logger])
+        ? [reduxThunk, persistenceMiddleware]
+        : [reduxThunk, persistenceMiddleware, logger])
     )
   );
 

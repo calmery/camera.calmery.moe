@@ -7,6 +7,7 @@ import { CanvasUserFilterType } from "~/types/CanvasUserFilterType";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
 import { PresetFilter } from "~/types/PresetFilter";
 import { EffectFilter } from "~/types/EffectFilter";
+import { CanvasState } from "./reducer";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ColorThief = require("~/externals/color-thief");
@@ -324,9 +325,17 @@ const changeCanvasLogoPosition = (logoPosition: "left" | "right") => ({
   payload: { logoPosition },
 });
 
+//
+
+const canvasRestore = (payload: Partial<CanvasState>) => ({
+  type: types.CANVAS_RESTORE,
+  payload,
+});
+
 // Main
 
 export const actions = {
+  canvasRestore,
   updateCanvasContainerRect,
   addCanvasStickerLayer,
   startCanvasStickerLayerTransform,
