@@ -16,7 +16,7 @@ import { Mixin } from "~/styles/mixin";
 import { Spacing } from "~/styles/spacing";
 import { Typography } from "~/styles/typography";
 import { withRedux } from "~/domains";
-import { thunkActions } from "~/domains/canvas/actions";
+import { thunkActions, actions } from "~/domains/canvas/actions";
 import { actions as uiActions } from "~/domains/ui/actions";
 import { getImageFile } from "~/utils/get-image-file";
 
@@ -189,6 +189,7 @@ const Index: NextPage = () => {
   // States
 
   const [isTermsAgreed, setTermsAgreed] = useState(false);
+  const [isExistingState, setExistingState] = useState(false);
   const [isShowTermsPopup, setShowTermsPopup] = useState(false);
   const [isInformationVisible, setInformationVisible] = useState(false);
   const [isSettingVisible, setSettingVisible] = useState(false);
@@ -199,6 +200,10 @@ const Index: NextPage = () => {
     if (localStorage.getItem("terms-of-service")) {
       setTermsAgreed(true);
     }
+
+    if (localStorage.getItem("canvas")) {
+      setExistingState(true);
+    }
   }, []);
 
   // Helper Functions
@@ -208,6 +213,9 @@ const Index: NextPage = () => {
     dispatch(uiActions.startLoading());
 
     try {
+      localStorage.removeItem("canvas");
+      dispatch(actions.canvasReset());
+
       await dispatch(thunkActions.addCanvasUserLayerFromFile(image, 0));
       push("/stickers");
     } catch (error) {
@@ -294,7 +302,12 @@ const Index: NextPage = () => {
             <Button primary onClickButton={handleOnClickStartButton}>
               画像を読み込んで始める！
             </Button>
-            <Button disabled>前回の続きから始める！</Button>
+            <Button
+              disabled={!isExistingState}
+              onClickButton={() => push("/stickers")}
+            >
+              前回の続きから始める！
+            </Button>
           </Buttons>
 
           <Footer>

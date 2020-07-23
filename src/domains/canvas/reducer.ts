@@ -116,6 +116,9 @@ const initialState: CanvasState = {
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
+    case types.CANVAS_REMOVE_EXISTING_STORE:
+      return initialState;
+
     case types.CANVAS_RESTORE:
       return {
         ...state,

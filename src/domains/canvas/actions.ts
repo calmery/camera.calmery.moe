@@ -332,10 +332,15 @@ const canvasRestore = (payload: Partial<CanvasState>) => ({
   payload,
 });
 
+const canvasReset = () => ({
+  type: types.CANVAS_REMOVE_EXISTING_STORE,
+});
+
 // Main
 
 export const actions = {
   canvasRestore,
+  canvasReset,
   updateCanvasContainerRect,
   addCanvasStickerLayer,
   startCanvasStickerLayerTransform,

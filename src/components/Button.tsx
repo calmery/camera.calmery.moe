@@ -61,6 +61,10 @@ type ButtonProps = {
 
 export const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
   const handleOnClick = useCallback(() => {
+    if (props.disabled) {
+      return;
+    }
+
     props.onClick && props.onClick();
     props.onClickButton && props.onClickButton();
   }, [props.onClick, props.onClickButton]);
