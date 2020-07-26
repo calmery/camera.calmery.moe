@@ -92,6 +92,7 @@ export const CanvasStickerLayerOperator: React.FC = () => {
     userLayers,
     userFrames,
   } = useSelector(({ canvas }: State) => canvas);
+  const entities = useSelector(({ entities }: State) => entities);
 
   // Events
 
@@ -121,7 +122,8 @@ export const CanvasStickerLayerOperator: React.FC = () => {
     <>
       {stickerLayers
         .slice(0, stickerLayers.length - 1)
-        .map(({ x, y, width, height, angle, scale }, i) => {
+        .map(({ x, y, entityId, angle, scale }, i) => {
+          const { width, height } = entities[entityId];
           const w = width * scale;
           const h = height * scale;
 
@@ -153,7 +155,8 @@ export const CanvasStickerLayerOperator: React.FC = () => {
           return null;
         }
 
-        const { x, y, width, height, angle, scale } = stickerLayer;
+        const { x, y, angle, scale, entityId } = stickerLayer;
+        const { width, height } = entities[entityId];
         const w = width * scale;
         const h = height * scale;
         const r = 12 * displayMagnification;
@@ -178,6 +181,7 @@ export const CanvasStickerLayerOperator: React.FC = () => {
 
               const userFrame = userFrames[i];
               const id = `canvas-sticker-layer-operator-${i}`;
+              const { width, height } = entities[userLayer.entityId];
 
               return (
                 <g key={i}>
@@ -216,11 +220,11 @@ export const CanvasStickerLayerOperator: React.FC = () => {
                           xmlnsXlink="http://www.w3.org/1999/xlink"
                         >
                           <svg
-                            width={userLayer.width * userLayer.croppedScale}
-                            height={userLayer.height * userLayer.croppedScale}
+                            width={width * userLayer.croppedScale}
+                            height={height * userLayer.croppedScale}
                             x={userLayer.croppedImageX}
                             y={userLayer.croppedImageY}
-                            viewBox={`0 0 ${userLayer.width} ${userLayer.height}`}
+                            viewBox={`0 0 ${width} ${height}`}
                             xmlns="http://www.w3.org/2000/svg"
                             xmlnsXlink="http://www.w3.org/1999/xlink"
                             overflow="visible"
@@ -230,8 +234,8 @@ export const CanvasStickerLayerOperator: React.FC = () => {
                               width="100%"
                               height="100%"
                               transform={`rotate(${userLayer.croppedAngle}, ${
-                                userLayer.width / 2
-                              }, ${userLayer.height / 2})`}
+                                width / 2
+                              }, ${height / 2})`}
                             />
                           </svg>
                         </svg>

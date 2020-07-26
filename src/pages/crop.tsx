@@ -154,6 +154,7 @@ const Crop: NextPage = () => {
     ({ canvas }: State) => canvas
   );
   const cropper = useSelector(({ cropper }: State) => cropper);
+  const entities = useSelector(({ entities }: State) => entities);
 
   // States
 
@@ -192,7 +193,8 @@ const Crop: NextPage = () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const userLayer = userLayers[i]!;
 
-      const { dataUrl, width, height, cropper } = userLayer;
+      const { entityId, cropper } = userLayer;
+      const { dataUrl, width, height } = entities[entityId];
 
       dispatch(canvasActions.startCanvasUserLayerCrop(i));
       dispatch(
@@ -289,13 +291,15 @@ const Crop: NextPage = () => {
                         return null;
                       }
 
+                      const { dataUrl } = entities[userLayer.entityId];
+
                       return (
                         <CropTargetImage
                           key={i}
                           onClick={() => handleOnChangeCropTargetImage(i)}
                           selected={temporaries.selectedUserLayerIndex === i}
                         >
-                          <img src={userLayer.dataUrl} alt="編集画像" />
+                          <img src={dataUrl} alt="編集画像" />
                         </CropTargetImage>
                       );
                     })}

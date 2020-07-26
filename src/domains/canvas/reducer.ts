@@ -553,7 +553,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
     case types.CANVAS_STICKER_LAYER_ADD: {
       const { stickerLayers } = state;
-      const { group, id, dataUrl, width, height } = action.payload;
+      const { entityId, group, id, width, height } = action.payload;
 
       GA.addCanvasStickerLayer(group, id);
 
@@ -562,7 +562,7 @@ export default (state = initialState, action: Actions): CanvasState => {
         stickerLayers: [
           ...stickerLayers,
           {
-            dataUrl,
+            entityId,
             width,
             height,
             x: 0,
@@ -674,12 +674,12 @@ export default (state = initialState, action: Actions): CanvasState => {
         displayableWidth,
         displayableHeight,
       } = state;
-      const { index, dataUrl, width, height, lightness } = action.payload;
+      const { entityId, index, lightness, width, height } = action.payload;
 
       GA.addCanvasUserLayer();
 
       userLayers[index] = {
-        dataUrl,
+        entityId,
         width,
         height,
         dominantColorLightness: lightness,

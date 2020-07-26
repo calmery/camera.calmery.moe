@@ -1,5 +1,6 @@
 import blueimpLoadImage from "blueimp-load-image";
 import { Dispatch } from "redux";
+import * as uuid from "uuid";
 import { CanvasUserFrameType } from "~/types/CanvasUserFrameType";
 import * as types from "./types";
 import { convertUrlToImage } from "./utils";
@@ -101,7 +102,7 @@ const addCanvasStickerLayer = (
   height: number
 ) => ({
   type: types.CANVAS_STICKER_LAYER_ADD,
-  payload: { group, id, dataUrl, width, height },
+  payload: { entityId: uuid.v4(), group, id, dataUrl, width, height },
 });
 
 const removeCanvasStickerLayer = () => ({
@@ -175,6 +176,7 @@ const addCanvasUserLayer = (
 ) => ({
   type: types.CANVAS_USER_LAYER_ADD,
   payload: {
+    entityId: uuid.v4(),
     index,
     dataUrl,
     width,

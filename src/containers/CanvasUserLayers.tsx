@@ -116,6 +116,7 @@ export const CanvasUserLayers = () => {
   const { isCollaging, userFrames, userLayers } = useSelector(
     ({ canvas }: State) => canvas
   );
+  const entities = useSelector(({ entities }: State) => entities);
 
   return (
     <>
@@ -125,6 +126,8 @@ export const CanvasUserLayers = () => {
         if (!userLayer) {
           return null;
         }
+
+        const { dataUrl, width, height } = entities[userLayer.entityId];
 
         return (
           <g mask={`url(#${getCanvasUserFrameId(i)})`} key={i}>
@@ -159,11 +162,11 @@ export const CanvasUserLayers = () => {
                 xmlnsXlink="http://www.w3.org/1999/xlink"
               >
                 <svg
-                  width={userLayer.width * userLayer.croppedScale}
-                  height={userLayer.height * userLayer.croppedScale}
+                  width={width * userLayer.croppedScale}
+                  height={height * userLayer.croppedScale}
                   x={userLayer.croppedImageX}
                   y={userLayer.croppedImageY}
-                  viewBox={`0 0 ${userLayer.width} ${userLayer.height}`}
+                  viewBox={`0 0 ${width} ${height}`}
                   xmlns="http://www.w3.org/2000/svg"
                   xmlnsXlink="http://www.w3.org/1999/xlink"
                   overflow="visible"
@@ -231,13 +234,13 @@ export const CanvasUserLayers = () => {
                   <g filter={`url(#${getCanvasUserLayerFilterId(i)})`}>
                     <g filter={`url(#${getCanvasUserLayerFilterEffectId(i)})`}>
                       <image
-                        xlinkHref={userLayer.dataUrl}
+                        xlinkHref={dataUrl}
                         filter={`url(#${getCanvasUserLayerFilterPresetId(i)})`}
                         width="100%"
                         height="100%"
                         transform={`rotate(${userLayer.croppedAngle}, ${
-                          userLayer.width / 2
-                        }, ${userLayer.height / 2})`}
+                          width / 2
+                        }, ${height / 2})`}
                       />
                     </g>
                   </g>

@@ -43,10 +43,13 @@ const Svg = styled.svg<{ isShiftKey: boolean; isControlKey: boolean }>`
 
 export const Cropper: React.FC = () => {
   const dispatch = useDispatch();
-  const { canvas, cropper } = useSelector(({ canvas, cropper }: State) => ({
-    canvas,
-    cropper,
-  }));
+  const { canvas, cropper, entities } = useSelector(
+    ({ canvas, cropper, entities }: State) => ({
+      canvas,
+      cropper,
+      entities,
+    })
+  );
   const { temporaries } = canvas;
   const {
     isCropperDragging,
@@ -199,7 +202,8 @@ export const Cropper: React.FC = () => {
       dispatch(canvasActions.startCanvasUserLayerCrop(i));
     }
 
-    const { dataUrl, width, height, cropper } = userLayer;
+    const { entityId, cropper } = userLayer;
+    const { dataUrl, width, height } = entities[entityId];
 
     dispatch(
       actions.initializeCropperImage({

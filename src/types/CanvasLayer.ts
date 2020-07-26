@@ -1,5 +1,5 @@
 export type CanvasLayer = {
-  dataUrl: string;
+  entityId: string;
   x: number;
   y: number;
   width: number;

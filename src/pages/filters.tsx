@@ -197,6 +197,7 @@ const Filters: NextPage = () => {
   const { temporaries, userLayers } = useSelector(
     ({ canvas }: State) => canvas
   );
+  const entities = useSelector(({ entities }: State) => entities);
   const ui = useSelector(({ ui }: State) => ui);
 
   // States
@@ -533,7 +534,10 @@ const Filters: NextPage = () => {
                             temporaries.selectedUserLayerFilterIndex === i
                           }
                         >
-                          <img src={userLayer.dataUrl} alt="編集画像" />
+                          <img
+                            src={entities[userLayer.entityId].dataUrl}
+                            alt="編集画像"
+                          />
                         </FilterTargetImage>
                       );
                     })}

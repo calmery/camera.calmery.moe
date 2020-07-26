@@ -3,12 +3,18 @@ import { useSelector } from "react-redux";
 import { State } from "~/domains";
 
 export const CanvasStickerLayers: React.FC = () => {
-  const { stickerLayers } = useSelector(({ canvas }: State) => canvas);
+  const { canvas, entities } = useSelector(({ canvas, entities }: State) => ({
+    canvas,
+    entities,
+  }));
+  const { stickerLayers } = canvas;
 
   return (
     <>
       {stickerLayers.map((stickerLayer, i) => {
-        const { dataUrl, angle, scale, x, y, width, height } = stickerLayer;
+        const { entityId, angle, scale, x, y } = stickerLayer;
+        const { dataUrl, width, height } = entities[entityId];
+
         const w = width * scale;
         const h = height * scale;
 
