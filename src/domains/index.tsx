@@ -15,11 +15,13 @@ import { Actions as CanvasActions } from "./canvas/actions";
 import * as canvasActionTypes from "./canvas/types";
 import canvas, { CanvasState } from "./canvas/reducer";
 import cropper, { CropperState } from "./cropper/reducer";
+import entities, { EntitiesState } from "./entities/reducer";
 import ui, { UiState } from "./ui/reducer";
 
 export interface State {
   canvas: CanvasState;
   cropper: CropperState;
+  entities: EntitiesState;
   ui: UiState;
 }
 
@@ -65,6 +67,7 @@ export const getOrCreateStore = (state?: State): Store<State> => {
     combineReducers({
       canvas,
       cropper,
+      entities,
       ui,
     }),
     state,
