@@ -128,40 +128,43 @@ const Stickers: NextPage = () => {
                 <StickersContainer>
                   <Horizontal>
                     <HorizontalInner>
-                      {APPENDABLE_STICKERS.map(({ name, urls, url }, group) => (
-                        <StickerContainer key={group}>
-                          <TitleContainer>
-                            <a
-                              href={url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <img
-                                src="/images/pages/stickers/line-store.svg"
-                                alt="LINE STORE"
-                              />
-                            </a>
-                            <Title>{name}</Title>
-                          </TitleContainer>
-                          <StickerList>
-                            {urls.map((url, id) => (
-                              <Sticker
-                                alt="スタンプ"
-                                src={url}
-                                key={id}
-                                onClick={() =>
-                                  // URL と合わせる
-                                  handleOnClickStickerImage(
-                                    group + 1,
-                                    id + 1,
-                                    url
-                                  )
-                                }
-                              />
-                            ))}
-                          </StickerList>
-                        </StickerContainer>
-                      ))}
+                      {APPENDABLE_STICKERS.map(
+                        ({ name, logo, urls, url }, group) => (
+                          <StickerContainer key={group}>
+                            <TitleContainer>
+                              {url ? (
+                                <a
+                                  href={url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <img src={logo} alt={name} />
+                                </a>
+                              ) : (
+                                <img src={logo} alt={name} />
+                              )}
+                              <Title>{name}</Title>
+                            </TitleContainer>
+                            <StickerList>
+                              {urls.map((url, id) => (
+                                <Sticker
+                                  alt="スタンプ"
+                                  src={url}
+                                  key={id}
+                                  onClick={() =>
+                                    // URL と合わせる
+                                    handleOnClickStickerImage(
+                                      group + 1,
+                                      id + 1,
+                                      url
+                                    )
+                                  }
+                                />
+                              ))}
+                            </StickerList>
+                          </StickerContainer>
+                        )
+                      )}
                     </HorizontalInner>
                   </Horizontal>
                 </StickersContainer>

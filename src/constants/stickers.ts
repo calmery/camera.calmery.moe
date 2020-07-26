@@ -1,6 +1,24 @@
 export const APPENDABLE_STICKERS = [
   {
+    name: "かるめりちゃんカメラ",
+    logo: "/images/pages/stickers/special-stickers.svg",
+    url: null,
+    urls: [
+      "https://static.calmery.moe/s/1/1.png",
+      "https://static.calmery.moe/s/1/2.png",
+      "https://static.calmery.moe/s/1/3.png",
+      "https://static.calmery.moe/s/1/1.png",
+      "https://static.calmery.moe/s/1/2.png",
+      "https://static.calmery.moe/s/1/3.png",
+      "https://static.calmery.moe/s/1/1.png",
+      "https://static.calmery.moe/s/1/2.png",
+      "https://static.calmery.moe/s/1/3.png",
+      "https://static.calmery.moe/s/1/1.png",
+    ],
+  },
+  {
     name: "かるめりちゃんスタンプ",
+    logo: "/images/pages/stickers/line-store.svg",
     url: "https://store.line.me/stickershop/product/6457012/ja",
     urls: [
       "https://static.calmery.moe/s/1/1.png",
@@ -23,6 +41,7 @@ export const APPENDABLE_STICKERS = [
   },
   {
     name: "かるめりちゃんスタンプ 2",
+    logo: "/images/pages/stickers/line-store.svg",
     url: "https://store.line.me/stickershop/product/9903456/ja",
     urls: [
       "https://static.calmery.moe/s/2/1.png",
