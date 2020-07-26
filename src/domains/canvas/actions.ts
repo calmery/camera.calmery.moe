@@ -338,9 +338,19 @@ const canvasReset = () => ({
   type: types.CANVAS_REMOVE_EXISTING_STORE,
 });
 
+const canvasHistoryBack = () => ({
+  type: types.CANVAS_HISTORY_BACK,
+});
+
+const canvasHistoryGo = () => ({
+  type: types.CANVAS_HISTORY_GO,
+});
+
 // Main
 
 export const actions = {
+  canvasHistoryGo,
+  canvasHistoryBack,
   canvasRestore,
   canvasReset,
   updateCanvasContainerRect,

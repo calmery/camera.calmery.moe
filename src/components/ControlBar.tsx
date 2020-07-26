@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Modal } from "~/components/Modal";
 import { State } from "~/domains";
 import { actions } from "~/domains/canvas/actions";
@@ -33,6 +33,11 @@ const LeftGroup = styled.div`
   position: absolute;
   top: 0;
   left: 0;
+  display: flex;
+
+  img {
+    margin-right: ${Spacing.l}px;
+  }
 `;
 
 const RightGroup = styled.div`
@@ -135,11 +140,33 @@ const SelectHidden = styled.select`
   font-size: 16px; // iOS で 16px 未満のフォントサイズのとき画面が拡大される
 `;
 
+const HistoryBack = styled.img<{ disabled?: boolean }>`
+  transform: scaleX(-1);
+
+  ${({ disabled }) =>
+    disabled
+      ? css`
+          opacity: 0.46;
+        `
+      : ""}
+`;
+
+const HistoryGo = styled.img<{ disabled?: boolean }>`
+  ${({ disabled }) =>
+    disabled
+      ? css`
+          opacity: 0.46;
+        `
+      : ""}
+`;
+
 export const ControlBar: React.FC<{
   onClickHelpButton?: () => void;
 }> = ({ onClickHelpButton }) => {
   const dispatch = useDispatch();
-  const { logoPosition } = useSelector(({ canvas }: State) => canvas);
+  const { logoPosition, histories, backedHistories } = useSelector(
+    ({ canvas }: State) => canvas
+  );
   const [isOpenBetaMenu, setOpenBetaMenu] = useState(false);
   const [isOpenPopup, setOpenPopup] = useState(false);
   const [isOpenSetting, setOpenSetting] = useState(false);
@@ -154,6 +181,18 @@ export const ControlBar: React.FC<{
               src="/images/close.svg"
               onClick={() => setOpenPopup(true)}
               alt="閉じる"
+            />
+            <HistoryBack
+              src="/images/components/next.svg"
+              onClick={() => dispatch(actions.canvasHistoryBack())}
+              alt="戻る"
+              disabled={!histories.length}
+            />
+            <HistoryGo
+              src="/images/components/next.svg"
+              onClick={() => dispatch(actions.canvasHistoryGo())}
+              alt="進む"
+              disabled={!backedHistories.length}
             />
           </LeftGroup>
           <img

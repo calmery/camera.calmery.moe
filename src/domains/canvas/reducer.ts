@@ -42,9 +42,35 @@ const checkAndResize = (width: number, height: number) => {
   };
 };
 
+const cloneHistoryState = (state: CanvasState) =>
+  JSON.parse(
+    JSON.stringify({
+      userLayers: state.userLayers,
+      userFrames: state.userFrames,
+      stickerLayers: state.stickerLayers,
+      logoPosition: state.logoPosition,
+      isCollaging: state.isCollaging,
+    })
+  );
+
+const saveState = (action: Actions, state: CanvasState) => {
+  const histories = state.histories;
+
+  delete state.histories;
+
+  console.log("Call", action.type);
+
+  return {
+    backedHistories: [],
+    histories: [...histories, cloneHistoryState(state)],
+  };
+};
+
 // Types
 
 export interface CanvasState {
+  backedHistories: Partial<CanvasState>[];
+  histories: Partial<CanvasState>[];
   viewBoxWidth: number;
   viewBoxHeight: number;
   styleTop: number;
@@ -79,6 +105,8 @@ export interface CanvasState {
 }
 
 const initialState: CanvasState = {
+  backedHistories: [],
+  histories: [],
   viewBoxWidth: 0,
   viewBoxHeight: 0,
   styleLeft: 0,
@@ -116,6 +144,40 @@ const initialState: CanvasState = {
 
 export default (state = initialState, action: Actions): CanvasState => {
   switch (action.type) {
+    case types.CANVAS_HISTORY_BACK: {
+      const histories = state.histories;
+
+      if (!histories.length) {
+        return state;
+      }
+
+      const nextState = histories.pop();
+
+      return {
+        ...state,
+        ...nextState,
+        histories,
+        backedHistories: [...state.backedHistories, cloneHistoryState(state)],
+      } as CanvasState;
+    }
+
+    case types.CANVAS_HISTORY_GO: {
+      const backedHistories = state.backedHistories;
+
+      if (!backedHistories.length) {
+        return state;
+      }
+
+      const nextState = backedHistories.pop();
+
+      return {
+        ...state,
+        ...nextState,
+        histories: [...state.histories, cloneHistoryState(state)],
+        backedHistories,
+      } as CanvasState;
+    }
+
     case types.CANVAS_REMOVE_EXISTING_STORE:
       return initialState;
 
@@ -199,6 +261,7 @@ export default (state = initialState, action: Actions): CanvasState => {
         return {
           ...state,
           ...styles,
+          ...saveState(action, state),
           viewBoxWidth: croppedWidth,
           viewBoxHeight: croppedHeight,
           isCollaging: false,
@@ -227,6 +290,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       return {
         ...state,
         ...styles,
+        ...saveState(action, state),
         viewBoxWidth: styles.styleWidth,
         viewBoxHeight: styles.styleHeight,
         isCollaging: false,
@@ -270,6 +334,7 @@ export default (state = initialState, action: Actions): CanvasState => {
       return {
         ...state,
         ...styles,
+        ...saveState(action, state),
         viewBoxWidth: frameWidth,
         viewBoxHeight: frameHeight,
         displayMagnification: frameWidth / styles.styleWidth,
@@ -313,6 +378,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         isStickerLayerTransforming: true,
         temporaries: {
           ...state.temporaries,
@@ -559,6 +625,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         stickerLayers: [
           ...stickerLayers,
           {
@@ -589,6 +656,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         stickerLayers: stickerLayers.slice(0, stickerLayers.length - 1),
       };
     }
@@ -599,6 +667,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         stickerLayers: [
           ...stickerLayers.filter((_, i) => i !== index),
           stickerLayers[index],
@@ -618,6 +687,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
         return {
           ...state,
+          ...saveState(action, state),
           isStickerLayerTransforming: true,
           stickerLayers,
           temporaries: {
@@ -642,6 +712,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         isStickerLayerDragging: true,
         temporaries: {
           ...state.temporaries,
@@ -658,6 +729,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         temporaries: {
           ...state.temporaries,
           selectedUserLayerFilterIndex: index,
@@ -728,6 +800,7 @@ export default (state = initialState, action: Actions): CanvasState => {
         return {
           ...state,
           ...styles,
+          ...saveState(action, state),
           viewBoxWidth: width,
           viewBoxHeight: height,
           displayMagnification: width / styles.styleWidth,
@@ -746,6 +819,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         userLayers,
       };
     }
@@ -760,6 +834,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         userLayers,
       };
     }
@@ -769,6 +844,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         temporaries: {
           ...state.temporaries,
           selectedUserLayerIndex: index,
@@ -805,6 +881,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
         return {
           ...state,
+          ...saveState(action, state),
           isUserLayerDragging: true,
           temporaries: {
             ...state.temporaries,
@@ -822,6 +899,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
         return {
           ...state,
+          ...saveState(action, state),
           isUserLayerDragging: true,
           temporaries: {
             ...state.temporaries,
@@ -844,6 +922,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         isUserLayerDragging: true,
         temporaries: {
           ...state.temporaries,
@@ -868,6 +947,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         userLayers,
       };
     }
@@ -886,6 +966,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         userLayers,
       };
     }
@@ -904,6 +985,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
       return {
         ...state,
+        ...saveState(action, state),
         userLayers,
       };
     }
@@ -982,6 +1064,7 @@ export default (state = initialState, action: Actions): CanvasState => {
           return {
             ...state,
             ...styles,
+            ...saveState(action, state),
             userLayers,
             userFrames: [
               {
@@ -1000,6 +1083,7 @@ export default (state = initialState, action: Actions): CanvasState => {
 
         return {
           ...state,
+          ...saveState(action, state),
           userLayers,
         };
       }
