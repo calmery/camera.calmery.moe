@@ -31,7 +31,7 @@ export interface CropperState {
   cropperScale: number;
   cropperScaleX: number;
   cropperScaleY: number;
-  imageUrl: string;
+  entityId: string;
   imageX: number;
   imageY: number;
   imageWidth: number;
@@ -78,7 +78,7 @@ const initialState: CropperState = {
   cropperScale: 1,
   cropperScaleX: 1,
   cropperScaleY: 1,
-  imageUrl: "",
+  entityId: "",
   imageX: 0,
   imageY: 0,
   imageWidth: 0,
@@ -111,7 +111,7 @@ const reducer = (state = initialState, action: Actions): CropperState => {
         imageY,
         imageScale,
         imageAngle,
-        url: imageUrl,
+        entityId,
         width: imageWidth,
         height: imageHeight,
         cropperWidth,
@@ -145,7 +145,7 @@ const reducer = (state = initialState, action: Actions): CropperState => {
         cropperScale,
         cropperScaleX,
         cropperScaleY,
-        imageUrl,
+        entityId,
         imageX,
         imageY,
         imageWidth,

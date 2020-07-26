@@ -194,12 +194,12 @@ const Crop: NextPage = () => {
       const userLayer = userLayers[i]!;
 
       const { entityId, cropper } = userLayer;
-      const { dataUrl, width, height } = entities[entityId];
+      const { width, height } = entities[entityId];
 
       dispatch(canvasActions.startCanvasUserLayerCrop(i));
       dispatch(
         actions.initializeCropperImage({
-          url: dataUrl,
+          entityId,
           width,
           height,
           ...cropper,

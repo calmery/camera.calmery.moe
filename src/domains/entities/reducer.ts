@@ -1,7 +1,7 @@
 import uuid from "uuid";
 import { Actions } from "./actions";
 import * as types from "./types";
-import { Actions as CanvasActions } from "../canvas/actions";
+import { Actions as CanvasActions, actions } from "../canvas/actions";
 import * as canvasActionsTypes from "../canvas/types";
 
 export type EntitiesState = {
@@ -22,6 +22,9 @@ const reducer = (
 
     // case types.ENTITIES_REMOVE:
     //   return state;
+
+    case types.ENTITIES_RESTORE:
+      return action.payload;
 
     case canvasActionsTypes.CANVAS_USER_LAYER_ADD:
     case canvasActionsTypes.CANVAS_STICKER_LAYER_ADD:

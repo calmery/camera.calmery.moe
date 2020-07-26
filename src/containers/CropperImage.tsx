@@ -7,34 +7,46 @@ import { CropperState } from "~/domains/cropper/reducer";
 const Image: React.FC<{
   cropper: CropperState;
   fill?: boolean;
-}> = ({ cropper, fill = false }) => (
-  <svg
-    width={cropper.imageWidth * cropper.imageScale}
-    height={cropper.imageHeight * cropper.imageScale}
-    x={cropper.imageX}
-    y={cropper.imageY}
-    viewBox={`0 0 ${cropper.imageWidth} ${cropper.imageHeight}`}
-    xmlns="http://www.w3.org/2000/svg"
-    xmlnsXlink="http://www.w3.org/1999/xlink"
-    overflow="visible"
-  >
-    <g
-      transform={`rotate(${cropper.imageAngle}, ${cropper.imageWidth / 2}, ${
-        cropper.imageHeight / 2
-      })`}
+}> = ({ cropper, fill = false }) => {
+  const entities = useSelector(({ entities }: State) => entities);
+
+  if (!entities[cropper.entityId]) {
+    return null;
+  }
+
+  return (
+    <svg
+      width={cropper.imageWidth * cropper.imageScale}
+      height={cropper.imageHeight * cropper.imageScale}
+      x={cropper.imageX}
+      y={cropper.imageY}
+      viewBox={`0 0 ${cropper.imageWidth} ${cropper.imageHeight}`}
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      overflow="visible"
     >
-      <image xlinkHref={cropper.imageUrl} width="100%" height="100%" />
-      {fill && (
-        <rect
+      <g
+        transform={`rotate(${cropper.imageAngle}, ${cropper.imageWidth / 2}, ${
+          cropper.imageHeight / 2
+        })`}
+      >
+        <image
+          xlinkHref={entities[cropper.entityId].dataUrl}
           width="100%"
           height="100%"
-          fill="#000"
-          fillOpacity={Constants.opacity}
         />
-      )}
-    </g>
-  </svg>
-);
+        {fill && (
+          <rect
+            width="100%"
+            height="100%"
+            fill="#000"
+            fillOpacity={Constants.opacity}
+          />
+        )}
+      </g>
+    </svg>
+  );
+};
 
 export const CropperImage: React.FC = () => {
   const cropper = useSelector(({ cropper }: State) => cropper);

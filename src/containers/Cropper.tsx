@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ResizeObserver from "resize-observer-polyfill";
 import styled, { css } from "styled-components";
@@ -50,6 +50,7 @@ export const Cropper: React.FC = () => {
       entities,
     })
   );
+  const [firstUpdate, setFirstUpdate] = useState(false);
   const { temporaries } = canvas;
   const {
     isCropperDragging,
@@ -203,11 +204,11 @@ export const Cropper: React.FC = () => {
     }
 
     const { entityId, cropper } = userLayer;
-    const { dataUrl, width, height } = entities[entityId];
+    const { width, height } = entities[entityId];
 
     dispatch(
       actions.initializeCropperImage({
-        url: dataUrl,
+        entityId,
         width,
         height,
         ...cropper,
@@ -216,6 +217,11 @@ export const Cropper: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (!firstUpdate) {
+      setFirstUpdate(true);
+      return;
+    }
+
     dispatch(
       canvasActions.updateCanvasUserLayerCrop(
         x,

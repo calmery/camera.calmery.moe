@@ -1,5 +1,6 @@
 import * as types from "./types";
 import { CursorPosition } from "~/utils/convert-event-to-cursor-positions";
+import { CropperState } from "./reducer";
 
 const updateDisplayableRect = ({
   x,
@@ -47,7 +48,7 @@ const changeCropperCropperFreeAspectRatio = () => ({
 // Images
 
 const initializeCropperImage = (payload: {
-  url: string;
+  entityId: string;
   width: number;
   height: number;
   cropperWidth: number;
@@ -87,6 +88,11 @@ const updateKey = (isControlKey: boolean, isShiftKey: boolean) => ({
   payload: { isControlKey, isShiftKey },
 });
 
+const restoreCropper = (payload: Partial<CropperState>) => ({
+  type: types.CROPPER_RESTORE,
+  payload,
+});
+
 export const actions = {
   updateDisplayableRect,
   startCropperCropperDrag,
@@ -98,6 +104,7 @@ export const actions = {
   tickCropper,
   completeCropper,
   updateKey,
+  restoreCropper,
 };
 
 export type Actions = ReturnType<typeof actions[keyof typeof actions]>;

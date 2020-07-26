@@ -30,7 +30,9 @@ export interface State {
 const persistenceMiddleware: Middleware<Record<string, unknown>, State> = (
   store
 ) => (next) => (action: CanvasActions) => {
-  const { canvas } = store.getState();
+  next(action);
+
+  const { canvas, entities } = store.getState();
 
   switch (action.type) {
     case canvasActionTypes.CANVAS_COMPLETE:
@@ -46,10 +48,15 @@ const persistenceMiddleware: Middleware<Record<string, unknown>, State> = (
     case canvasActionTypes.CANVAS_USER_LAYER_CHANGE_EFFECT_FILTER:
     case canvasActionTypes.CANVAS_USER_LAYER_UPDATE_CROP:
     case canvasActionTypes.CANVAS_LOGO_CHANGE_POSITION:
+    case canvasActionTypes.CANVAS_USER_LAYER_START_CROP:
       localStorage.setItem("canvas", JSON.stringify(canvas));
   }
 
-  next(action);
+  switch (action.type) {
+    case canvasActionTypes.CANVAS_STICKER_LAYER_ADD:
+    case canvasActionTypes.CANVAS_USER_LAYER_ADD:
+      localStorage.setItem("entities", JSON.stringify(entities));
+  }
 };
 
 // Store
