@@ -73,7 +73,7 @@ const StickerList = styled.div`
 `;
 
 const Sticker = styled.img`
-  width: 60px;
+  width: auto;
   height: 52px;
   cursor: pointer;
 `;
