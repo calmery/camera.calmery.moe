@@ -1,6 +1,32 @@
 export const APPENDABLE_STICKERS = [
   {
+    name: "",
+    imageUrl: "/images/pages/stickers/special.svg",
+    url: null,
+    urls: [
+      "https://static.calmery.moe/s/3/1.png",
+      "https://static.calmery.moe/s/3/2.png",
+      "https://static.calmery.moe/s/3/3.png",
+      "https://static.calmery.moe/s/3/4.png",
+      "https://static.calmery.moe/s/3/5.png",
+      "https://static.calmery.moe/s/3/6.png",
+      "https://static.calmery.moe/s/3/7.png",
+      "https://static.calmery.moe/s/3/8.png",
+      "https://static.calmery.moe/s/3/9.png",
+      "https://static.calmery.moe/s/3/10.png",
+      "https://static.calmery.moe/s/3/11.png",
+      "https://static.calmery.moe/s/3/12.png",
+      "https://static.calmery.moe/s/3/13.png",
+      "https://static.calmery.moe/s/3/14.png",
+      "https://static.calmery.moe/s/3/15.png",
+      "https://static.calmery.moe/s/3/16.png",
+      "https://static.calmery.moe/s/3/17.png",
+      "https://static.calmery.moe/s/3/18.png",
+    ],
+  },
+  {
     name: "かるめりちゃんスタンプ",
+    imageUrl: "/images/pages/stickers/line-store.svg",
     url: "https://store.line.me/stickershop/product/6457012/ja",
     urls: [
       "https://static.calmery.moe/s/1/1.png",
@@ -23,6 +49,7 @@ export const APPENDABLE_STICKERS = [
   },
   {
     name: "かるめりちゃんスタンプ 2",
+    imageUrl: "/images/pages/stickers/line-store.svg",
     url: "https://store.line.me/stickershop/product/9903456/ja",
     urls: [
       "https://static.calmery.moe/s/2/1.png",
