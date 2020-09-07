@@ -7,108 +7,108 @@ const isMobile = usParser.getDevice().type === "mobile";
 
 export const FIRST_LANDING_SCENARIOS = [
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     message: "ようこそ！かるめりちゃんカメラへ！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     message: "説明を担当する愛々璃（あめり）です！これからよろしくね！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/8.png",
+    characterImageUrl: "/images/stickers/1/8.png",
     message: "はじめに使い方を説明するね！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/8.png",
+    characterImageUrl: "/images/stickers/1/8.png",
     message: "ちょっと長いけど頑張って説明するからついてきて！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/19.png",
+    characterImageUrl: "/images/stickers/2/19.png",
     message: "まずは...",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/3.png",
+    characterImageUrl: "/images/stickers/1/3.png",
     message: "諸注意から！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/16.png",
+    characterImageUrl: "/images/stickers/1/16.png",
     message: "このアプリ、実は...",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/18.png",
+    characterImageUrl: "/images/stickers/2/18.png",
     message: "まだベータ版なの！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/6.png",
+    characterImageUrl: "/images/stickers/2/6.png",
     message: "だからもしかするとバグがあるかも...",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     emphasisElementId: "tutorial-control-bar-beta",
     message: "もしバグを見つけたらここをタップ！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/7.png",
+    characterImageUrl: "/images/stickers/1/7.png",
     emphasisElementId: "tutorial-control-bar-beta",
     message: "こういうバグを見つけたよって報告してね！\nお願い...！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/19.png",
+    characterImageUrl: "/images/stickers/2/19.png",
     message: "次は...",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/11.png",
+    characterImageUrl: "/images/stickers/1/11.png",
     message: "画面の説明をするね！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     emphasisElementId: "tutorial-control-bar-usage",
     message: "これはヘルプボタン！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     emphasisElementId: "tutorial-control-bar-usage",
     message: "もし何かわからないことがあればここをタップしてね！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/16.png",
+    characterImageUrl: "/images/stickers/1/16.png",
     emphasisElementId: "tutorial-control-bar-usage",
     message: "私が使い方を説明するよ！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     emphasisElementId: "tutorial-menu",
     message: "次はここ！メニュー！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     emphasisElementId: "tutorial-menu",
     message: "読み込んだ画像にスタンプをつけたりフィルターをかけたり...",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     emphasisElementId: "tutorial-menu",
     message: "...",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+    characterImageUrl: "/images/stickers/2/11.png",
     emphasisElementId: "tutorial-menu",
     message: "とにかく色んなことができるの...！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/19.png",
+    characterImageUrl: "/images/stickers/2/19.png",
     message: "次は...えーっと...",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/5.png",
+    characterImageUrl: "/images/stickers/2/5.png",
     message: "うん...！これで説明は終わりみたい！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/15.png",
+    characterImageUrl: "/images/stickers/2/15.png",
     message: "緊張したけどちゃんと説明できて良かった...",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/4.png",
+    characterImageUrl: "/images/stickers/2/4.png",
     message: "これからよろしくね！",
   },
 ];
@@ -117,22 +117,22 @@ export const FIRST_LANDING_SCENARIOS = [
 
 export const STICKERS_PAGE_WITH_IMAGE_SCENARIOS = [
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     emphasisElementId: "tutorial-canvas",
     message: "ここには読み込んだ画像、追加したスタンプが表示されるよ！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/8.png",
+    characterImageUrl: "/images/stickers/2/8.png",
     emphasisElementId: "tutorial-canvas",
     message: "画像を読み込んだら画面をタッチ！自由に動かしてみて！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+    characterImageUrl: "/images/stickers/2/11.png",
     emphasisElementId: "tutorial-stickers-images",
     message: "ここにあるスタンプをタップすると画面に追加されるよ！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+    characterImageUrl: "/images/stickers/2/11.png",
     emphasisElementId: "tutorial-stickers-images",
     message: "スタンプは今後も追加していく予定！お楽しみに！",
   },
@@ -142,27 +142,27 @@ export const STICKERS_PAGE_WITH_IMAGE_SCENARIOS = [
 
 export const TUNE_PAHE_WITH_IMAGE_SCENARIOS = [
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
+    characterImageUrl: "/images/stickers/2/17.png",
     emphasisElementId: "tutorial-canvas",
     message: "ここにはフィルターをかける画像が表示されているよ！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     emphasisElementId: "tutorial-filters-inputs",
     message: "ここがフィルターの値を変更するところ！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/15.png",
+    characterImageUrl: "/images/stickers/1/15.png",
     emphasisElementId: "tutorial-filters",
     message: "色んなフィルターを使って自分好みの画像にしちゃおう！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+    characterImageUrl: "/images/stickers/2/11.png",
     emphasisElementId: "tutorial-filters-images",
     message: "他の画像にフィルターをかけたい？",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+    characterImageUrl: "/images/stickers/2/11.png",
     emphasisElementId: "tutorial-filters-images",
     message: "ここでフィルターをかけたい画像をタップしてみて！",
   },
@@ -172,64 +172,64 @@ export const TUNE_PAHE_WITH_IMAGE_SCENARIOS = [
 
 export const CROP_PAGE_WITH_IMAGE_SCENARIOS = [
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
+    characterImageUrl: "/images/stickers/2/17.png",
     emphasisElementId: "tutorial-cropper",
     message: "ここにはクロップする画像が表示されているよ！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/5.png",
+    characterImageUrl: "/images/stickers/1/5.png",
     emphasisElementId: "tutorial-cropper",
     message: "画面をドラッグしてクロップ位置を調整したり...",
   },
   ...(isMobile
     ? [
         {
-          characterImageUrl: "https://static.calmery.moe/s/1/5.png",
+          characterImageUrl: "/images/stickers/1/5.png",
           emphasisElementId: "tutorial-cropper",
           message: "ピンチイン、ピンチアウトして画像の大きさを変えられるの！",
         },
       ]
     : [
         {
-          characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+          characterImageUrl: "/images/stickers/2/11.png",
           emphasisElementId: "tutorial-cropper",
           message:
             "Shift キーを押しながら画像をドラッグすると画像を回転できるの！",
         },
         {
-          characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+          characterImageUrl: "/images/stickers/2/11.png",
           emphasisElementId: "tutorial-cropper",
           message:
             "Control (Ctrl) キーを押しながら画像をドラッグすると大きさが変えられるよ！",
         },
       ]),
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/16.png",
+    characterImageUrl: "/images/stickers/1/16.png",
     emphasisElementId: "tutorial-crop-angle",
     message: "回した角度はここで確認！もうちょっと回してみる？",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     emphasisElementId: "tutorial-crop-aspect-ratios",
     message:
       "ここではアスペクト比を選べるよ！\n比率を保ったまま操作したいときに使ってね！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/4.png",
+    characterImageUrl: "/images/stickers/2/4.png",
     emphasisElementId: "tutorial-crop-target-images",
     message: "他の画像をクロップしたい？",
   },
   ...(isMobile
     ? [
         {
-          characterImageUrl: "https://static.calmery.moe/s/2/4.png",
+          characterImageUrl: "/images/stickers/2/4.png",
           emphasisElementId: "tutorial-crop-target-images",
           message: "ここでクロップしたい画像をタップしてみて！",
         },
       ]
     : [
         {
-          characterImageUrl: "https://static.calmery.moe/s/2/4.png",
+          characterImageUrl: "/images/stickers/2/4.png",
           emphasisElementId: "tutorial-crop-target-images",
           message: "ここでクロップしたい画像をクリックしてみて！",
         },
@@ -240,7 +240,7 @@ export const CROP_PAGE_WITH_IMAGE_SCENARIOS = [
 
 export const COLLAGES_PAGE_SCENARIOS = [
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/5.png",
+    characterImageUrl: "/images/stickers/2/5.png",
     emphasisElementId: "tutorial-frames-canvas-frames",
     message: "ここに色んなフレームが用意されているよ！",
   },
@@ -248,36 +248,36 @@ export const COLLAGES_PAGE_SCENARIOS = [
     ? []
     : [
         {
-          characterImageUrl: "https://static.calmery.moe/s/2/13.png",
+          characterImageUrl: "/images/stickers/2/13.png",
           emphasisElementId: "tutorial-canvas",
           message:
             "画像を回転させたいときは Shift キーを押しながら画像をドラッグ！",
         },
         {
-          characterImageUrl: "https://static.calmery.moe/s/2/13.png",
+          characterImageUrl: "/images/stickers/2/13.png",
           emphasisElementId: "tutorial-canvas",
           message:
             "大きさを変えたいときは Control (Ctrl) キーを押しながら画像をドラッグしてね！",
         },
         {
-          characterImageUrl: "https://static.calmery.moe/s/2/5.png",
+          characterImageUrl: "/images/stickers/2/5.png",
           emphasisElementId: "tutorial-frames-canvas-frames",
           message:
             "まずはフレームを選んで、それから画像を回転させたり大きさを変えてみてね！",
         },
       ]),
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/10.png",
+    characterImageUrl: "/images/stickers/1/10.png",
     emphasisElementId: "tutorial-frames-canvas-frames",
     message: "あれっ...もしかして...",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/18.png",
+    characterImageUrl: "/images/stickers/2/18.png",
     emphasisElementId: "tutorial-frames-canvas-frames",
     message: "使いたいフレームがない...！？",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/7.png",
+    characterImageUrl: "/images/stickers/1/7.png",
     emphasisElementId: "tutorial-control-bar-beta",
     message: "ここからこんなフレームが欲しい！ってリクエストを送ってみて！",
   },
@@ -287,22 +287,22 @@ export const COLLAGES_PAGE_SCENARIOS = [
 
 export const SAVE_PAGE_WITH_IMAGE_SCENARIOS = [
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/12.png",
+    characterImageUrl: "/images/stickers/1/12.png",
     emphasisElementId: "tutorial-save-image",
     message: "完成〜！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/11.png",
+    characterImageUrl: "/images/stickers/2/11.png",
     emphasisElementId: "tutorial-save-image",
     message: "画像を長押しすると保存できるよ！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/1/11.png",
+    characterImageUrl: "/images/stickers/1/11.png",
     emphasisElementId: "tutorial-save-image",
     message: "Twitter で「#かるめりちゃんカメラ」を付けてツイートしてみて！",
   },
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/3.png",
+    characterImageUrl: "/images/stickers/2/3.png",
     emphasisElementId: "tutorial-save-image",
     message: "使ってくれてありがとう！",
   },
@@ -312,7 +312,7 @@ export const SAVE_PAGE_WITH_IMAGE_SCENARIOS = [
 
 export const PAGE_WITHOUT_IMAGE_SCENARIOS = [
   {
-    characterImageUrl: "https://static.calmery.moe/s/2/17.png",
+    characterImageUrl: "/images/stickers/2/17.png",
     emphasisElementId: "tutorial-canvas",
     message: "まずはここをタップして画像を読み込んでみて！",
   },

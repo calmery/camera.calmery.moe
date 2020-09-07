@@ -73,7 +73,7 @@ const StickerList = styled.div`
 `;
 
 const Sticker = styled.img`
-  width: 60px;
+  width: auto;
   height: 52px;
   cursor: pointer;
 `;
@@ -129,7 +129,7 @@ const Stickers: NextPage = () => {
                   <Horizontal>
                     <HorizontalInner>
                       {APPENDABLE_STICKERS.map(
-                        ({ name, logo, urls, url }, group) => (
+                        ({ name, imageUrl, urls, url }, group) => (
                           <StickerContainer key={group}>
                             <TitleContainer>
                               {url ? (
@@ -138,10 +138,10 @@ const Stickers: NextPage = () => {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
-                                  <img src={logo} alt={name} />
+                                  <img src={imageUrl} alt={name} />
                                 </a>
                               ) : (
-                                <img src={logo} alt={name} />
+                                <img src={imageUrl} alt={name} />
                               )}
                               <Title>{name}</Title>
                             </TitleContainer>

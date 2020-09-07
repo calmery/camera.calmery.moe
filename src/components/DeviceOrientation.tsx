@@ -123,7 +123,7 @@ export const DeviceOrientation: React.FC = () => {
       <SpeechBubbleContainer>
         <SpeechBubble className="animate__bounceIn">
           <SpeechBubbleCharacterImage
-            src="https://static.calmery.moe/s/1/7.png"
+            src="/images/stickers/1/7.png"
             alt="キャラクター"
           />
           <SpeechBubbleMessage>

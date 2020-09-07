@@ -439,7 +439,7 @@ const Index: NextPage = () => {
       s
       {isShowTermsPopup && (
         <Popup
-          characterImageUrl="https://static.calmery.moe/s/2/17.png"
+          characterImageUrl="/images/stickers/2/17.png"
           onEnter={handleOnClickTermsAgreeButton}
           onCancel={handleOnClickTermsCancelButton}
           enterText="同意する"
