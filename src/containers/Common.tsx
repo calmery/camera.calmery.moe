@@ -19,7 +19,7 @@ export const Common = withRedux(() => {
     <>
       {isImageLoadError && (
         <Popup
-          characterImageUrl="https://static.calmery.moe/s/2/6.png"
+          characterImageUrl="/images/stickers/2/6.png"
           onEnter={handleOnClickResolveImageLoadError}
         >
           画像の読み込みに失敗しました...！

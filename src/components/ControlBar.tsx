@@ -259,7 +259,7 @@ export const ControlBar: React.FC<{
       </Modal>
       {isOpenPopup && (
         <Popup
-          characterImageUrl="https://static.calmery.moe/s/2/18.png"
+          characterImageUrl="/images/stickers/2/18.png"
           onEnter={() => {
             push("/");
           }}
