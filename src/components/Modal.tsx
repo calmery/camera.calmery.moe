@@ -159,7 +159,8 @@ const Background = styled.div<{ visible: boolean }>`
 const Body = styled.div<{ visible: boolean }>`
   ${AnimationKeyframes}
   ${Mixin.animation}
-  ${({ visible }) => (visible ? FadeInUp : FadeOutDown)}
+  ${({ visible }) =>
+    visible ? FadeInUp : FadeOutDown}
 
   background: ${Colors.white};
   box-shadow: ${Constants.boxShadow};
