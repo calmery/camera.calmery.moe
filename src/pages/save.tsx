@@ -36,8 +36,9 @@ const ButtonContainer = styled.div`
 // Components
 
 const Save: NextPage = () => {
-  const { pathname, push } = useRouter();
+  const { pathname } = useRouter();
   const canvas = useSelector(({ canvas }: State) => canvas);
+  const [cache, setCache] = useState<string>();
 
   // States
 
@@ -68,6 +69,19 @@ const Save: NextPage = () => {
   }, []);
 
   const handleOnClickShareButton = useCallback(async () => {
+    if (cache) {
+      const a = document.createElement("a");
+
+      const url = `${window.location.origin}/share/${cache}`;
+      a.href = `http://twitter.com/share?url=${url}&related=calmeryme&hashtags=%E3%81%8B%E3%82%8B%E3%82%81%E3%82%8A%E3%81%A1%E3%82%83%E3%82%93%E3%82%AB%E3%83%A1%E3%83%A9`;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+
+      a.click();
+
+      return;
+    }
+
     if (!previewUrl) {
       return;
     }
@@ -108,13 +122,15 @@ const Save: NextPage = () => {
       a.target = "_blank";
       a.rel = "noopener noreferrer";
 
+      setCache(data.id);
+
       a.click();
     } catch (_) {
       setImageUploadError(true);
     } finally {
       setIsImageUploading(false);
     }
-  }, [previewUrl]);
+  }, [previewUrl, cache]);
 
   // Render
 
@@ -155,7 +171,9 @@ const Save: NextPage = () => {
                   primary
                   onClickButton={handleOnClickShareButton}
                 >
-                  Twitter にシェアする！
+                  {isImageUploading
+                    ? "画像の準備をしているよ..."
+                    : "Twitter にシェアする！"}
                 </Button>
               </ButtonContainer>
             )}
