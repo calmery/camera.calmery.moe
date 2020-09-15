@@ -90,11 +90,16 @@ const Save: NextPage = () => {
     formData.append("image", file);
 
     try {
-      const { data } = await fetch("http://localhost:5000/camera/images", {
-        body: formData,
-        mode: "cors",
-        method: "POST",
-      }).then((r) => r.json());
+      const { data } = await fetch(
+        process.env.NODE_ENV === "production"
+          ? "https://api.calmery.moe/camera/images"
+          : "http://localhost:5000/camera/images",
+        {
+          body: formData,
+          mode: "cors",
+          method: "POST",
+        }
+      ).then((r) => r.json());
 
       const a = document.createElement("a");
 
