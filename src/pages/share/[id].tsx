@@ -1,43 +1,48 @@
 import { NextPage, NextPageContext } from "next";
 import React from "react";
-import * as cloudinary from "cloudinary-core";
 import Head from "next/head";
 
-const Share: NextPage<{ url: string }> = ({ url }) => {
+const Header: React.FC<{ ogImageUrl: string }> = ({ ogImageUrl }) => (
+  <Head>
+    <meta property="og:image" content={ogImageUrl} key="og_image" />
+    <meta property="og:image:height" content="630" key="og_image_height" />
+    <meta property="og:image:width" content="1200" key="og_image_width" />
+    <meta
+      name="twitter:card"
+      content="summary_large_image"
+      key="twitter_card"
+    />
+    <meta name="twitter:image" content={ogImageUrl} key="twitter_image" />
+  </Head>
+);
+
+const Share: NextPage<{
+  image_url: string;
+  og_image_url: string;
+}> = ({ image_url, og_image_url }) => {
   return (
     <>
-      <Head>
-        <meta key="og_image" property="og:image" content={url} />
-        <meta key="og_image_width" property="og:image:width" content="1200" />
-        <meta key="og_image_height" property="og:image:height" content="630" />
-        <meta key="twitter_image" name="twitter:image" content={url} />
-        <meta
-          key="twitter_card"
-          name="twitter:card"
-          content="summary_large_image"
-        />
-      </Head>
+      <Header ogImageUrl={og_image_url} />
     </>
   );
 };
 
 Share.getInitialProps = async ({ query }: NextPageContext) => {
-  const { id } = query;
+  const { data } = await fetch(
+    `${
+      process.env.NODE_ENV === "production"
+        ? "https://api.calmery.moe"
+        : "http://localhost:5000"
+    }/camera/images/${query.id}`
+  ).then<{
+    data: {
+      id: string;
+      image_url: string;
+      og_image_url: string;
+    };
+  }>((r) => r.json());
 
-  const c = new cloudinary.Cloudinary({ cloud_name: "calmery", secure: true });
-
-  return {
-    url: c.url(`camera/edited_images/${id}`, {
-      transformation: [
-        {
-          background: "#fff",
-          crop: "pad",
-          height: 630,
-          width: 1200,
-        },
-      ],
-    }),
-  };
+  return data;
 };
 
 export default Share;
