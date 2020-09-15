@@ -82,10 +82,27 @@ const FooterMenu = styled.div`
   }
 `;
 
+const NotFound = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Sawarabi Gothic";
+  font-size: 14px;
+  text-align: center;
+
+  img {
+    margin-bottom: ${Spacing.m}px;
+    height: 160px;
+  }
+`;
+
 const Share: NextPage<{
   image_url: string;
   og_image_url: string;
-}> = ({ image_url, og_image_url }) => {
+  notFound?: boolean;
+}> = ({ image_url, og_image_url, notFound = false }) => {
   const displayableRef = useRef<HTMLDivElement>(null);
   const { push } = useRouter();
   const [size, setSize] = useState<{ width: number; height: number }>();
@@ -140,12 +157,22 @@ const Share: NextPage<{
               height: size?.height,
             }}
           >
-            {size && <img src={image_url} alt="画像" />}
+            {size && !notFound && <img src={image_url} alt="画像" />}
+            {notFound && (
+              <NotFound>
+                <div>
+                  <div>
+                    <img src="/images/stickers/2/6.png" alt="スタンプ" />
+                  </div>
+                  ごめんなさい...見つかりませんでした...
+                </div>
+              </NotFound>
+            )}
           </Logo>
 
           <ButtonContainer>
             <Button primary onClickButton={handleOnClickStartButton}>
-              試してみる！
+              {notFound ? "トップに戻る" : "試してみる！"}
             </Button>
           </ButtonContainer>
 
@@ -189,15 +216,10 @@ Share.getInitialProps = async ({ query, res }: NextPageContext) => {
 
     return data;
   } catch (_) {
-    if (res) {
-      res.writeHead(404);
-      res.end();
-    }
-
-    // Dummy
     return {
       og_image_url: "",
       image_url: "",
+      notFound: true,
     };
   }
 };
