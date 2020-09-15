@@ -122,8 +122,6 @@ const Save: NextPage = () => {
 
   const isImageExists = userLayers.some((u) => u);
 
-  console.log(isImageUploading);
-
   return (
     <>
       <Page>
