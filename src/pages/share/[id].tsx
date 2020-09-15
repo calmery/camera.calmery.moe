@@ -169,24 +169,37 @@ const Share: NextPage<{
 };
 
 Share.getInitialProps = async ({ query, res }: NextPageContext) => {
-  const response = await fetch(
-    `${
-      process.env.NODE_ENV === "production"
-        ? "https://api.calmery.moe"
-        : "http://localhost:5000"
-    }/camera/images/${query.id}`
-  );
+  try {
+    const response = await fetch(
+      `${
+        process.env.NODE_ENV === "production"
+          ? "https://api.calmery.moe"
+          : "http://localhost:5000"
+      }/camera/images/${query.id}`
+    );
 
-  const {
-    data,
-  }: {
-    data: {
-      image_url: string;
-      og_image_url: string;
+    const {
+      data,
+    }: {
+      data: {
+        image_url: string;
+        og_image_url: string;
+      };
+    } = await response.json();
+
+    return data;
+  } catch (_) {
+    if (res) {
+      res.writeHead(404);
+      res.end();
+    }
+
+    // Dummy
+    return {
+      og_image_url: "",
+      image_url: "",
     };
-  } = await response.json();
-
-  return data;
+  }
 };
 
 export default Share;
