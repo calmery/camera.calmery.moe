@@ -11,6 +11,11 @@ const Share: NextPage<{ url: string }> = ({ url }) => {
         <meta key="og_image_width" property="og:image:width" content="1200" />
         <meta key="og_image_height" property="og:image:height" content="630" />
         <meta key="twitter_image" name="twitter:image" content={url} />
+        <meta
+          key="twitter_card"
+          name="twitter:card"
+          content="summary_large_image"
+        />
       </Head>
     </>
   );

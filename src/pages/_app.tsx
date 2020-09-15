@@ -73,7 +73,7 @@ class App extends NextApp {
           />
           <meta name="twitter:site" content="@calmeryme" />
           <meta name="twitter:creator" content="@calmeryme" />
-          <meta name="twitter:card" content="summary" />
+          <meta key="twitter_card" name="twitter:card" content="summary" />
           <meta
             name="twitter:image"
             content="https://camera.calmery.moe/images/ogp.jpg"
