@@ -19,6 +19,7 @@ import { withRedux, State } from "~/domains";
 import * as GA from "~/utils/google-analytics";
 import { Spacing } from "~/styles/spacing";
 import { Popup } from "~/components/Popup";
+import { UAParser } from "ua-parser-js";
 
 // Styles
 
@@ -69,6 +70,8 @@ const Save: NextPage = () => {
   }, []);
 
   const handleOnClickShareButton = useCallback(async () => {
+    const ua = new UAParser();
+
     if (cache) {
       const a = document.createElement("a");
 
@@ -77,7 +80,11 @@ const Save: NextPage = () => {
       a.target = "_blank";
       a.rel = "noopener noreferrer";
 
-      a.click();
+      if (ua.getBrowser().name === "Safari") {
+        window.location.href = `http://twitter.com/share?url=${url}&related=calmeryme&hashtags=%E3%81%8B%E3%82%8B%E3%82%81%E3%82%8A%E3%81%A1%E3%82%83%E3%82%93%E3%82%AB%E3%83%A1%E3%83%A9`;
+      } else {
+        a.click();
+      }
 
       return;
     }
@@ -124,7 +131,11 @@ const Save: NextPage = () => {
 
       setCache(data.id);
 
-      a.click();
+      if (ua.getBrowser().name === "Safari") {
+        window.location.href = `http://twitter.com/share?url=${url}&related=calmeryme&hashtags=%E3%81%8B%E3%82%8B%E3%82%81%E3%82%8A%E3%81%A1%E3%82%83%E3%82%93%E3%82%AB%E3%83%A1%E3%83%A9`;
+      } else {
+        a.click();
+      }
     } catch (_) {
       setImageUploadError(true);
     } finally {
