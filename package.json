@@ -2,6 +2,7 @@
   "dependencies": {
     "@sentry/browser": "5.22.3",
     "blueimp-load-image": "5.14.0",
+    "cloudinary-core": "2.11.2",
     "next": "9.5.3",
     "react": "16.13.1",
     "react-dom": "16.13.1",
