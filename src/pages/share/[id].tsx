@@ -172,7 +172,7 @@ const Share: NextPage<{
 
           <ButtonContainer>
             <Button primary onClickButton={handleOnClickStartButton}>
-              {notFound ? "トップに戻る" : "試してみる！"}
+              {notFound ? "トップに戻る" : "かるめりちゃんカメラを試してみる！"}
             </Button>
           </ButtonContainer>
 
