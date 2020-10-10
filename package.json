@@ -56,8 +56,18 @@
     "extends": [
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended",
-      "plugin:prettier/recommended",
-      "plugin:react/recommended"
+      "plugin:react/recommended",
+      "prettier"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "*.js"
+        ],
+        "rules": {
+          "@typescript-eslint/no-var-requires": "off"
+        }
+      }
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -118,9 +128,9 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "lint": "npm-run-all lint:*",
-    "lint:eslint": "eslint --ignore-path .gitignore --fix . --ext .ts --ext .tsx",
-    "lint:prettier": "prettier --ignore-path .gitignore --write \"**/*.{js,json,jsx,md,yml}\"",
+    "lint": "run-s lint:eslint lint:prettier",
+    "lint:eslint": "eslint --ext .js,.ts,.tsx --fix --ignore-path .gitignore .",
+    "lint:prettier": "prettier --ignore-path .gitignore --write .",
     "start": "next dev",
     "storybook": "start-storybook -p 6006 -c .storybook",
     "test": "jest --coverage"

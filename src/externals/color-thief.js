@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /*
  * Color Thief v2.0
  * by Lokesh Dhakar - http://www.lokeshdhakar.com
