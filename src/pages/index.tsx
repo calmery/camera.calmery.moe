@@ -319,9 +319,11 @@ const Index: NextPage = () => {
         onClickCloseButton={handleOnCloseInformationButton}
       >
         <ModalText>
-          <img
-            src="https://pbs.twimg.com/profile_banners/3086780643/1583232158/1500x500"
-            width="100%"
+          <Image
+            alt="かるめりちゃんカメラ"
+            src="/images/pages/index/calmery-chan-camera.jpg"
+            style={{ width: "100%" }}
+            webp
           />
         </ModalText>
         <ModalTitle>かるめりちゃんカメラって？</ModalTitle>

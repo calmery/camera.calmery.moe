@@ -8,16 +8,18 @@ const Img = styled.img`
 type ImageProps = {
   alt?: string;
   src: string;
+  style?: React.CSSProperties;
   webp?: boolean;
 };
 
 export const Image: React.FC<ImageProps> = ({
   alt,
   src,
+  style,
   webp = false,
 }: ImageProps) => (
   <picture>
     {webp && <source srcSet={`${src}.webp`} type="image/webp" />}
-    <Img src={src} alt={alt} />
+    <Img src={src} style={style} alt={alt} />
   </picture>
 );
