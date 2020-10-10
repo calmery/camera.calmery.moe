@@ -1,0 +1,10 @@
+# https://docs.github.com/ja/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+
+updates:
+  - directory: "/"
+    package-ecosystem: "npm"
+    schedule:
+      interval: "daily"
+    target-branch: "develop"
