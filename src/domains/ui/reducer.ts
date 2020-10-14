@@ -27,7 +27,7 @@ const initialState: UiState = {
   loading: 0,
 };
 
-export default (
+const reducer = (
   state = initialState,
   action: CanvasActions | Actions
 ): UiState => {
@@ -78,3 +78,5 @@ export default (
       return state;
   }
 };
+
+export default reducer;
