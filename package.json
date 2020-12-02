@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@sentry/browser": "5.25.0",
+    "@sentry/browser": "5.28.0",
     "blueimp-load-image": "5.14.0",
     "next": "9.5.5",
     "react": "16.13.1",
