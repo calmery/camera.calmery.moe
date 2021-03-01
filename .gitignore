@@ -189,3 +189,16 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+### Next.js
+
+# production
+/build
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# vercel
+.vercel

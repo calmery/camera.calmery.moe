@@ -4,6 +4,11 @@
     "url": "https://github.com/calmery-chan/camera.calmery.moe/issues"
   },
   "description": "Calmery-Chan Camera :camera:",
+  "dependencies": {
+    "next": "10.0.7",
+    "react": "17.0.1",
+    "react-dom": "17.0.1"
+  },
   "engines": {
     "node": ">=14.15.0 <15",
     "npm": ">=7.0.0 <8"
@@ -14,5 +19,10 @@
   "name": "camera.calmery.moe",
   "private": true,
   "repository": "github:calmery-chan/camera.calmery.moe",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
   "version": "1.0.0"
 }
