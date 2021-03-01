@@ -1,6 +1,7 @@
 import { Global, css } from "@emotion/react";
 import { AppProps } from "next/app";
 import React from "react";
+import "tailwindcss/tailwind.css";
 
 const global = css`
   html,
