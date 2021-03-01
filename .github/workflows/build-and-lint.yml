@@ -1,0 +1,35 @@
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.16.0
+      - uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          path: "**/node_modules"
+      - run: npm ci
+      - run: npx next build
+
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.16.0
+      - uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          path: "**/node_modules"
+      - run: npm ci
+      - run: npm run lint
+
+name: Build And Lint
+
+on:
+  push:
+    branches-ignore:
+      - master
