@@ -1,1 +1,18 @@
-{}
+{
+  "author": "Calmery <contact@calmery.me> (https://calmery.me/)",
+  "bugs": {
+    "url": "https://github.com/calmery-chan/camera.calmery.moe/issues"
+  },
+  "description": "Calmery-Chan Camera :camera:",
+  "engines": {
+    "node": ">=14.15.0 <15",
+    "npm": ">=7.0.0 <8"
+  },
+  "funding": "https://calmery.fanbox.cc/",
+  "homepage": "https://github.com/calmery-chan/camera.calmery.moe#readme",
+  "license": "MIT",
+  "name": "camera.calmery.moe",
+  "private": true,
+  "repository": "github:calmery-chan/camera.calmery.moe",
+  "version": "1.0.0"
+}
