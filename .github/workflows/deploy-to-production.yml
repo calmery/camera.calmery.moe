@@ -1,0 +1,57 @@
+jobs:
+  deploy:
+    env:
+      TZ: Asia/Tokyo
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.15.4
+      # https://github.com/actions/create-release/pull/11#issue-330958665
+      - id: tag_name
+        run: echo "::set-output name=body::$(date '+%Y%m%d-%H%M')"
+      - uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          path: "**/node_modules"
+      - run: npm ci
+      - run: npm i vercel -g
+      - id: deployment-action
+        uses: chrnorm/deployment-action@releases/v1
+        with:
+          environment: Production
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - id: vercel
+        run: vercel -b GITHUB_RELEASE_TAG_NAME=${{ steps.tag_name.outputs.body }} -b GITHUB_REPOSITORY=$GITHUB_REPOSITORY -b GITHUB_SHA=$GITHUB_SHA --prod -t $VERCEL_TOKEN > environment-url
+      - if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          deployment_id: ${{ steps.deployment-action.outputs.deployment_id }}
+          state: failure
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - id: environment-url
+        run: echo "::set-output name=body::$(cat environment-url)"
+      - uses: chrnorm/deployment-status@releases/v1
+        with:
+          deployment_id: ${{ steps.deployment-action.outputs.deployment_id }}
+          environment_url: ${{ steps.environment-url.outputs.body }}
+          state: success
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ steps.tag_name.outputs.body }}
+
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - master
