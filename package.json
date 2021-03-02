@@ -47,15 +47,13 @@
   "private": true,
   "repository": "github:calmery-chan/camera.calmery.moe",
   "scripts": {
-    "build": "next build",
-    "dev": "next dev",
     "fix": "run-s fix:eslint fix:prettier",
     "fix:eslint": "npm run lint:eslint -- --fix",
     "fix:prettier": "npm run lint:prettier -- --write",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .ts --ext .tsx --ignore-path .gitignore .",
     "lint:prettier": "prettier --check --ignore-path .gitignore .",
-    "start": "next start"
+    "watch": "next dev"
   },
   "version": "1.0.0"
 }
