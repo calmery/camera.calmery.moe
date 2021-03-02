@@ -6,6 +6,8 @@
   "description": "Calmery-Chan Camera :camera:",
   "dependencies": {
     "next": "10.0.7",
+    "next-i18next": "8.0.6",
+    "next-translate": "1.0.4",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   },

@@ -1,5 +1,6 @@
-const path = require("path");
 const SentryWebpackPlugin = require("@sentry/webpack-plugin");
+const nextTranslate = require("next-translate");
+const path = require("path");
 
 const {
   GITHUB_RELEASE_TAG_NAME,
@@ -60,11 +61,11 @@ const webpack = (config, options) => {
   return config;
 };
 
-module.exports = {
+module.exports = nextTranslate({
   env,
   poweredByHeader: false,
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
   trailingSlash: false,
   webpack,
-};
+});
