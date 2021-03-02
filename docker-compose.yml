@@ -1,0 +1,10 @@
+services:
+  next:
+    build: .
+    command: npm run watch
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+
+version: "3"
