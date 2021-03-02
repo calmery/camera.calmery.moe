@@ -1,6 +1,7 @@
 const path = require("path");
 
 // Reference: https://vercel.com/docs/environment-variables#system-environment-variables
+// The Environment that the app is deployed an running on. The value can be either `production`, `preview`, or `development`.
 const env = {
   VERCEL_ENV: process.env.VERCEL_ENV,
 };
