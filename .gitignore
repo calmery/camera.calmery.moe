@@ -202,3 +202,8 @@ $RECYCLE.BIN/
 
 # vercel
 .vercel
+
+### Others
+
+next.config.js
+
