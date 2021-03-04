@@ -34,6 +34,7 @@
     "husky": "4.3.8",
     "lint-staged": "10.5.4",
     "npm-run-all": "4.1.5",
+    "parcel": "2.0.0-nightly.614",
     "postcss": "8.2.6",
     "prettier": "2.2.1",
     "tailwindcss": "2.0.3",
@@ -50,14 +51,16 @@
   "private": true,
   "repository": "github:calmery-chan/camera.calmery.moe",
   "scripts": {
-    "build": "next build",
+    "build": "npm run build:configuration && next build",
+    "build:configuration": "parcel build next.config.ts --dist-dir . --no-source-maps",
     "fix": "run-s fix:eslint fix:prettier",
     "fix:eslint": "npm run lint:eslint -- --fix",
     "fix:prettier": "npm run lint:prettier -- --write",
+    "install": "npm run build:configuration",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .ts --ext .tsx --ignore-path .gitignore .",
     "lint:prettier": "prettier --check --ignore-path .gitignore .",
-    "watch": "next dev"
+    "watch": "npm run build:configuration && next dev"
   },
   "version": "1.0.0"
 }
