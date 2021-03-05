@@ -1,5 +1,7 @@
 import { Global, css } from "@emotion/react";
 import { AppProps } from "next/app";
+import Head from "next/head";
+import { useRouter } from "next/router";
 import React from "react";
 import "~/utils/sentry";
 import "tailwindcss/tailwind.css";
@@ -24,8 +26,22 @@ const global = css`
 `;
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const { pathname } = useRouter();
+
   return (
     <>
+      <Head>
+        <link
+          rel="canonical"
+          href={
+            process.env.NODE_ENV === "production"
+              ? process.env.VERCEL_ENV === "production"
+                ? `https://camera.calmery.moe${pathname}`
+                : `https://camera-calmery-moe-calmery-chan.vercel.app${pathname}`
+              : pathname
+          }
+        />
+      </Head>
       <Global styles={global} />
       <Component {...pageProps} />
     </>
