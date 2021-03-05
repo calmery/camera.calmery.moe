@@ -61,7 +61,7 @@ const webpack = (config: any, options: any) => {
   return config;
 };
 
-module.exports = {
+export default {
   env,
   i18n: {
     defaultLocale,
