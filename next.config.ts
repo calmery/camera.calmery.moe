@@ -70,6 +70,7 @@ module.exports = {
   poweredByHeader: false,
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
+  target: "serverless",
   trailingSlash: false,
   webpack,
 };
