@@ -1,6 +1,6 @@
 import _rosetta from "rosetta";
-import { en } from "./en";
-import { ja } from "./ja";
+import en from "./en.json";
+import ja from "./ja.json";
 
 /* --- Configuration --- */
 
