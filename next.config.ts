@@ -1,6 +1,6 @@
 import * as path from "path";
 import SentryWebpackPlugin from "@sentry/webpack-plugin";
-import nextTranslate from "next-translate";
+import { defaultLocale, locales } from "./src/locales";
 
 const {
   GITHUB_RELEASE_TAG_NAME,
@@ -61,11 +61,15 @@ const webpack = (config: any, options: any) => {
   return config;
 };
 
-module.exports = (nextTranslate as any)({
+module.exports = {
   env,
+  i18n: {
+    defaultLocale,
+    locales,
+  },
   poweredByHeader: false,
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
   trailingSlash: false,
   webpack,
-});
+};
