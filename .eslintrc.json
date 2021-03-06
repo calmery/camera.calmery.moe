@@ -24,6 +24,7 @@
         }
       }
     ],
+    "react/prop-types": "off",
     "unused-imports/no-unused-imports": "error"
   },
   "settings": {
