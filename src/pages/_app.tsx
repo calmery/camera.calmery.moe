@@ -6,6 +6,18 @@ import React from "react";
 import "~/utils/sentry";
 import "tailwindcss/tailwind.css";
 
+const getOrigin = () => {
+  if (process.env.NODE_ENV !== "production") {
+    return "http://localhost:3000";
+  }
+
+  if (process.env.VERCEL_ENV !== "production") {
+    return "https://camera-calmery-moe-calmery-chan.vercel.app";
+  }
+
+  return "https://camera.calmery.moe";
+};
+
 const global = css`
   html,
   body {
@@ -31,16 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <link
-          rel="canonical"
-          href={
-            process.env.NODE_ENV === "production"
-              ? process.env.VERCEL_ENV === "production"
-                ? `https://camera.calmery.moe${pathname}`
-                : `https://camera-calmery-moe-calmery-chan.vercel.app${pathname}`
-              : pathname
-          }
-        />
+        <link rel="canonical" href={`${getOrigin()}${pathname}`} />
       </Head>
       <Global styles={global} />
       <Component {...pageProps} />
