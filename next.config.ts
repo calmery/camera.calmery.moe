@@ -6,9 +6,10 @@ const {
   GITHUB_RELEASE_TAG_NAME,
   GITHUB_REPOSITORY,
   GITHUB_SHA,
-  NEXT_PUBLIC_SENTRY_DSN: SENTRY_DSN,
   NODE_ENV,
+  ORIGIN,
   SENTRY_AUTH_TOKEN,
+  SENTRY_DSN,
   SENTRY_ORG,
   SENTRY_PROJECT,
   VERCEL_ENV,
@@ -17,6 +18,8 @@ const {
 // Reference: https://vercel.com/docs/environment-variables#system-environment-variables
 // The Environment that the app is deployed an running on. The value can be either `production`, `preview`, or `development`.
 const env = {
+  ORIGIN,
+  SENTRY_DSN,
   VERCEL_ENV,
 };
 

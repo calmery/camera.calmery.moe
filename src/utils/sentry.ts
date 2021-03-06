@@ -18,7 +18,7 @@ Sentry.init({
     console.error(event);
     return null;
   },
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  dsn: process.env.SENTRY_DSN,
   environment,
   ...(typeof window === "undefined"
     ? {}

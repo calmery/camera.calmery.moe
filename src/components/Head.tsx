@@ -9,10 +9,7 @@ export const Head: React.FC = ({ children }) => {
 
   return (
     <_Head>
-      <link
-        rel="canonical"
-        href={`${process.env.NEXT_PUBLIC_ORIGIN}${pathname}`}
-      />
+      <link rel="canonical" href={`${process.env.ORIGIN}${pathname}`} />
       {children}
     </_Head>
   );
