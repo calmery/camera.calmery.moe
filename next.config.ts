@@ -1,8 +1,11 @@
 import * as path from "path";
 import SentryWebpackPlugin from "@sentry/webpack-plugin";
+import { TransformOptions } from "esbuild"; // esbuild-loader が依存しているため存在する
 import { build } from "next/dist/build/webpack/config";
 import { NextConfig } from "next/dist/next-server/server/config";
+import { RuleSetRule } from "webpack"; // esbuild-loader が依存しているため存在する
 import { defaultLocale, locales } from "./src/locales";
+import tsconfigJson from "./tsconfig.json";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
@@ -30,11 +33,29 @@ const env = {
   VERCEL_ENV,
 };
 
-const webpack: typeof build = (config, options) => {
+const webpack: typeof build = (config, { isServer }) => {
   config.resolve.alias["~"] = path.resolve(__dirname, "src");
 
-  if (!options.isServer) {
+  if (!isServer) {
     config.resolve.alias["@sentry/node"] = "@sentry/react";
+  }
+
+  // 開発中のみ使用するため TerserPlugin の置き換えは必要ない
+  if (!process.env.CI && NODE_ENV !== "production") {
+    const rule = config.module.rules.find(
+      (rule: RuleSetRule) =>
+        rule.use && rule.test instanceof RegExp && rule.test.test(".js")
+    );
+
+    if (rule) {
+      const options: TransformOptions = {
+        loader: "tsx",
+        tsconfigRaw: JSON.stringify(tsconfigJson),
+      };
+
+      rule.use.loader = "esbuild-loader";
+      rule.use.options = options;
+    }
   }
 
   if (
