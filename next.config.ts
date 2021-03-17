@@ -1,9 +1,9 @@
 import * as path from "path";
 import SentryWebpackPlugin from "@sentry/webpack-plugin";
-import { TransformOptions } from "esbuild"; // esbuild-loader が依存しているため存在する
+import { TransformOptions } from "esbuild";
 import { build } from "next/dist/build/webpack/config";
 import { NextConfig } from "next/dist/next-server/server/config";
-import { RuleSetRule } from "webpack"; // esbuild-loader が依存しているため存在する
+import { RuleSetRule } from "webpack";
 import { defaultLocale, locales } from "./src/locales";
 import tsconfigJson from "./tsconfig.json";
 
