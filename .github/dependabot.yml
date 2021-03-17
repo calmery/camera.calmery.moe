@@ -1,10 +1,14 @@
-# https://docs.github.com/ja/github/administering-a-repository/configuration-options-for-dependency-updates
-
-version: 2
+# https://docs.github.com/en/github/administering-a-repository/configuration-options-for-dependency-updates
 
 updates:
-  - directory: "/"
-    package-ecosystem: "npm"
+  - directory: /
+    ignore:
+      - dependency-name: husky
+        versions:
+          - ">=5.0.0"
+    package-ecosystem: npm
     schedule:
-      interval: "weekly"
-    target-branch: "develop"
+      interval: monthly
+    target-branch: develop
+
+version: 2
