@@ -1,5 +1,6 @@
 import * as path from "path";
 import SentryWebpackPlugin from "@sentry/webpack-plugin";
+import { NextConfig } from "next/dist/next-server/server/config";
 import { defaultLocale, locales } from "./src/locales";
 
 const {
@@ -64,11 +65,16 @@ const webpack = (config: any, options: any) => {
   return config;
 };
 
-export default {
+const configuration: NextConfig = {
   env,
+  future: {
+    excludeDefaultMomentLocales: false,
+    strictPostcssConfiguration: false,
+    webpack5: false,
+  },
   i18n: {
     defaultLocale,
-    locales,
+    locales: locales.slice(),
   },
   poweredByHeader: false,
   productionBrowserSourceMaps: true,
@@ -77,3 +83,5 @@ export default {
   trailingSlash: false,
   webpack,
 };
+
+export default configuration;
