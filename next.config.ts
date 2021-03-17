@@ -1,7 +1,13 @@
 import * as path from "path";
 import SentryWebpackPlugin from "@sentry/webpack-plugin";
+import { build } from "next/dist/build/webpack/config";
 import { NextConfig } from "next/dist/next-server/server/config";
 import { defaultLocale, locales } from "./src/locales";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: !!process.env.ANALYZE,
+});
 
 const {
   GITHUB_RELEASE_TAG_NAME,
@@ -24,7 +30,7 @@ const env = {
   VERCEL_ENV,
 };
 
-const webpack = (config: any, options: any) => {
+const webpack: typeof build = (config, options) => {
   config.resolve.alias["~"] = path.resolve(__dirname, "src");
 
   if (!options.isServer) {
@@ -70,7 +76,7 @@ const configuration: NextConfig = {
   future: {
     excludeDefaultMomentLocales: false,
     strictPostcssConfiguration: false,
-    webpack5: false,
+    webpack5: true,
   },
   i18n: {
     defaultLocale,
@@ -84,4 +90,4 @@ const configuration: NextConfig = {
   webpack,
 };
 
-export default configuration;
+export default withBundleAnalyzer(configuration);
