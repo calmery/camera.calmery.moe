@@ -93,6 +93,7 @@ const webpack: typeof build = (config, { isServer }) => {
 };
 
 const configuration: NextConfig = {
+  distDir: path.relative(__dirname, `${process.cwd()}/build`),
   env,
   future: {
     excludeDefaultMomentLocales: false,

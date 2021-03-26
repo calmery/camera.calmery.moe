@@ -1,5 +1,8 @@
 {
   "author": "Calmery <contact@calmery.me> (https://calmery.me/)",
+  "bin": {
+    "camera": "bin/camera.js"
+  },
   "bugs": {
     "url": "https://github.com/calmery-chan/camera.calmery.moe/issues"
   },
