@@ -4,7 +4,7 @@
     "camera": "bin/camera.js"
   },
   "bugs": {
-    "url": "https://github.com/calmery-chan/camera.calmery.moe/issues"
+    "url": "https://github.com/calmery-chan/camera/issues"
   },
   "description": "Calmery-Chan Camera :camera:",
   "dependencies": {
@@ -57,11 +57,11 @@
     "npm": ">=7.0.0 <8"
   },
   "funding": "https://calmery.fanbox.cc/",
-  "homepage": "https://github.com/calmery-chan/camera.calmery.moe#readme",
+  "homepage": "https://github.com/calmery-chan/camera#readme",
   "license": "MIT",
-  "name": "camera.calmery.moe",
+  "name": "@calmery-chan/camera",
   "private": true,
-  "repository": "github:calmery-chan/camera.calmery.moe",
+  "repository": "github:calmery-chan/camera",
   "scripts": {
     "build": "npm run build:configuration && next build",
     "build:configuration": "parcel build next.config.ts --dist-dir . --no-source-maps",
