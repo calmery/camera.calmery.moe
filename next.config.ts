@@ -94,6 +94,7 @@ const webpack: typeof build = (config, { isServer }) => {
 
 const configuration: NextConfig = {
   env,
+  experimental: {},
   future: {
     excludeDefaultMomentLocales: false,
     strictPostcssConfiguration: false,
