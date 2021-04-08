@@ -60,8 +60,10 @@
   "private": true,
   "repository": "github:calmery-chan/camera.calmery.moe",
   "scripts": {
-    "build": "npm run build:configuration && next build",
+    "build": "run-s build:configuration build:next build:sitemap",
     "build:configuration": "parcel build next.config.ts --dist-dir . --no-source-maps",
+    "build:next": "next build",
+    "build:sitemap": "node scripts/generate-sitemap.js",
     "fix": "run-s fix:eslint fix:prettier",
     "fix:eslint": "npm run lint:eslint -- --fix",
     "fix:prettier": "npm run lint:prettier -- --write",
