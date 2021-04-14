@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: 14.16.0
+          node-version: 14.16.1
       # https://github.com/actions/create-release/pull/11#issue-330958665
       - id: tag_name
         run: echo "::set-output name=body::$(date '+%Y%m%d-%H%M')"
