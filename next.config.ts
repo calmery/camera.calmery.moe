@@ -96,9 +96,9 @@ const configuration: NextConfig = {
   env,
   experimental: {},
   future: {
-    excludeDefaultMomentLocales: false,
-    strictPostcssConfiguration: false,
-    webpack5: false,
+    excludeDefaultMomentLocales: true,
+    strictPostcssConfiguration: true,
+    webpack5: true,
   },
   i18n: {
     defaultLocale,
