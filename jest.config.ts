@@ -1,5 +1,10 @@
 export default {
-  collectCoverageFrom: ["**/*.{ts,tsx}", "!**/*.d.ts", "!**/node_modules/**"],
+  collectCoverageFrom: [
+    "**/*.{ts,tsx}",
+    "!**/*.d.ts",
+    "!**/node_modules/**",
+    "!src/pages/_*.tsx",
+  ],
   moduleNameMapper: {
     "^~/(.+)": "<rootDir>/src/$1",
   },
