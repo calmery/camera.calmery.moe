@@ -3,6 +3,7 @@ export default {
     "**/*.{ts,tsx}",
     "!**/*.d.ts",
     "!**/node_modules/**",
+    "!*.{js,ts}",
     "!src/pages/_*.tsx",
   ],
   moduleNameMapper: {
