@@ -12,6 +12,13 @@
 
 ## Usage
 
+```
+$ brew install puma/puma/puma-dev
+$ sudo puma-dev -setup
+$ puma-dev -install
+$ echo 3000 > ~/.puma-dev/calmery
+```
+
 Install Node.js v14.16.1 and npm 6.14.12.
 
 ```bash
