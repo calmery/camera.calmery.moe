@@ -12,14 +12,7 @@
 
 ## Usage
 
-```
-$ brew install puma/puma/puma-dev
-$ sudo puma-dev -setup
-$ puma-dev -install
-$ echo 3000 > ~/.puma-dev/calmery
-```
-
-Install Node.js v14.16.1 and npm 6.14.12.
+Install Node.js v14.16.1.
 
 ```bash
 $ npm ci
@@ -30,6 +23,24 @@ $ npm run build
 $ npm run fix
 $ npm run lint
 $ npm run watch
+```
+
+### corepack
+
+See "[How to Install](https://github.com/nodejs/corepack#how-to-install)" section of [nodejs/corepack](https://github.com/nodejs/corepack).
+
+```
+$ corepack enable npm
+```
+
+### puma-dev
+
+```
+$ brew install puma/puma/puma-dev
+$ sudo puma-dev -setup
+$ puma-dev -install
+$ echo 3000 > ~/.puma-dev/calmery
+$ open http://calmery.test/
 ```
 
 ## Notes

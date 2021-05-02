@@ -63,6 +63,7 @@
   "homepage": "https://github.com/calmery-chan/camera.calmery.moe#readme",
   "license": "MIT",
   "name": "camera.calmery.moe",
+  "packageManager": "npm@7.11.2",
   "private": true,
   "repository": "github:calmery-chan/camera.calmery.moe",
   "scripts": {
