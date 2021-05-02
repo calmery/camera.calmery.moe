@@ -10,6 +10,7 @@ jobs:
         with:
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
           path: "**/node_modules"
+      - run: npm i npm@7.11.2 -g
       - run: npm ci
       - run: npx next build
 
@@ -24,6 +25,7 @@ jobs:
         with:
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
           path: "**/node_modules"
+      - run: npm i npm@7.11.2 -g
       - run: npm ci
       - run: npm run lint
 
@@ -38,6 +40,7 @@ jobs:
         with:
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
           path: "**/node_modules"
+      - run: npm i npm@7.11.2 -g
       - run: npm ci
       - run: npm test -- --ci
 
