@@ -196,6 +196,12 @@ const Index: NextPage = () => {
   // Hooks
 
   useEffect(() => {
+    fetch(
+      process.env.NODE_ENV === "production"
+        ? "https://api.calmery.moe"
+        : "http://localhost:5000"
+    );
+
     if (localStorage.getItem("terms-of-service")) {
       setTermsAgreed(true);
     }
