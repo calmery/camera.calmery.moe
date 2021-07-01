@@ -18,7 +18,7 @@
     "@emotion/react": "11.4.0",
     "@next/bundle-analyzer": "10.2.0",
     "@sentry/node": "6.3.6",
-    "@sentry/react": "6.3.6",
+    "@sentry/react": "6.8.0",
     "@sentry/tracing": "6.3.6",
     "@sentry/webpack-plugin": "1.15.1",
     "@testing-library/jest-dom": "5.12.0",
