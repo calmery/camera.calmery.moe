@@ -92,17 +92,11 @@ const webpack: typeof build = (config, { isServer }) => {
   return config;
 };
 
-const configuration: NextConfig = {
+const configuration: Omit<NextConfig, "experimental" | "future"> & {
+  experimental?: NextConfig["experimental"];
+  future?: NextConfig["future"];
+} = {
   env,
-  experimental: {
-    turboMode: true,
-    reactRoot: false,
-  },
-  future: {
-    excludeDefaultMomentLocales: true,
-    strictPostcssConfiguration: true,
-    webpack5: true,
-  },
   i18n: {
     defaultLocale,
     locales: locales.slice(),
