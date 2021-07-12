@@ -78,6 +78,7 @@
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .ts --ext .tsx --ignore-path .gitignore .",
     "lint:prettier": "prettier --check --ignore-path .gitignore .",
+    "prepare": "husky install",
     "test": "jest --coverage",
     "watch": "npm run build:configuration && next dev"
   },
