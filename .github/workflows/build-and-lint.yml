@@ -1,37 +1,53 @@
 jobs:
   build:
+    needs: setup
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
-          node-version: 14.16.1
+          cache: npm
+          node-version: "14.17.3"
       - uses: actions/cache@v2
         with:
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
           path: "**/node_modules"
-      - run: npm i npm@7.11.2 -g
-      - run: npm ci
-      - run: npx next build
+      - run: "npx next build"
 
   lint:
+    needs: setup
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
-          node-version: 14.16.1
+          cache: npm
+          node-version: "14.17.3"
       - uses: actions/cache@v2
         with:
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
           path: "**/node_modules"
-      - run: npm i npm@7.11.2 -g
-      - run: npm ci
-      - run: npm run lint
+      - run: "npm run lint"
 
-name: Build And Lint
+  setup:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          cache: npm
+          node-version: "14.17.3"
+      - uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          path: "**/node_modules"
+      - run: "npm i corepack -g"
+      - run: "corepack enable npm"
+      - run: "npm ci"
+
+name: "Build And Lint"
 
 on:
   push:
     branches-ignore:
-      - master
+      - main
