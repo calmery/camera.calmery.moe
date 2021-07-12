@@ -1,5 +1,5 @@
 module.exports = {
-  darkMode: false, // or 'media' or 'class'
+  darkMode: "class",
   mode: "jit",
   plugins: [],
   purge: ["./src/**/*.tsx"],
