@@ -1,6 +1,6 @@
 module.exports = {
   darkMode: "class",
-  mode: "jit",
+  mode: process.env.NODE_ENV !== "production" ? "jit" : undefined,
   plugins: [],
   purge: ["./src/**/*.tsx"],
   theme: {
