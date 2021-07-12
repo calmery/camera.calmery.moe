@@ -2,7 +2,6 @@ import _Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import "~/utils/sentry";
-import "tailwindcss/tailwind.css";
 
 export const Head: React.FC = ({ children }) => {
   const { pathname } = useRouter();
