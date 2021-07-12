@@ -12,7 +12,7 @@ jobs:
         with:
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
           path: "**/node_modules"
-      - run: "npx next build"
+      - run: "npm run build"
 
   lint:
     needs: setup
@@ -27,6 +27,7 @@ jobs:
         with:
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
           path: "**/node_modules"
+      - run: "npm run build:configuration"
       - run: "npm run lint"
 
   setup:
