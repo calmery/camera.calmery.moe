@@ -38,6 +38,9 @@ const webpack: typeof build = (config, { isServer }) => {
 
   if (!isServer) {
     config.resolve.alias["@sentry/node"] = "@sentry/react";
+
+    // ModuleNotFoundError: Module not found: Error: Can't resolve 'fs'
+    config.resolve.fallback.fs = false;
   }
 
   // 開発中のみ使用するため TerserPlugin の置き換えは必要ない
