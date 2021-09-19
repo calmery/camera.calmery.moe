@@ -1,0 +1,26 @@
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.14.0
+      - run: "deno run -A https://deno.land/x/aleph/install.ts"
+      - run: "aleph build"
+
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.14.0
+      - run: "deno lint --config ./deno.json"
+
+name: "Build And Lint"
+
+on:
+  push:
+    branches-ignore:
+      - main
