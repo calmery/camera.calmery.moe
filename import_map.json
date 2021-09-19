@@ -1,6 +1,6 @@
 {
   "imports": {
-    "~/": "./",
+    "~/": "./src/",
     "aleph/": "https://deno.land/x/aleph@v0.3.0-beta.15/",
     "aleph/types": "https://deno.land/x/aleph@v0.3.0-beta.15/types.d.ts",
     "aleph/web": "https://deno.land/x/aleph@v0.3.0-beta.15/framework/core/mod.ts",
