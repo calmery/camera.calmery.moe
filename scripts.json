@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build": "aleph build",
+    "dev": "aleph dev",
+    "fmt": "deno fmt --config ./deno.json",
+    "lint": "deno lint --config ./deno.json"
+  }
+}
