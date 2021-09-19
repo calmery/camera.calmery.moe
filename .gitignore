@@ -73,4 +73,5 @@ $RECYCLE.BIN/
 ### Others
 
 .aleph/
+dist/
 
