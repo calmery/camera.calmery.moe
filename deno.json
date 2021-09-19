@@ -1,0 +1,12 @@
+{
+  "fmt": {
+    "files": {
+      "exclude": ["./.aleph/", "./.git/", "./dist/"]
+    }
+  },
+  "lint": {
+    "files": {
+      "exclude": ["./.aleph/", "./.git/", "./dist/"]
+    }
+  }
+}
