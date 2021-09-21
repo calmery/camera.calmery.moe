@@ -7,7 +7,7 @@ jobs:
         with:
           deno-version: v1.14.0
       - run: "deno install -qAn vr https://deno.land/x/velociraptor@1.2.0/cli.ts"
-      - run: "deno run -A https://deno.land/x/aleph/install.ts"
+      - run: "deno run -A https://deno.land/x/aleph@v0.3.0-beta.17/install.ts"
       - run: "vr build"
 
   lint:
