@@ -1,4 +1,6 @@
+import { css } from "@emotion/css";
 import { useDeno } from "aleph/react";
+import clsx from "clsx";
 import React from "react";
 import Logo from "~/components/logo.tsx";
 import useCounter from "~/lib/useCounter.ts";
@@ -8,7 +10,7 @@ export default function Home() {
   const version = useDeno(() => Deno.version.deno);
 
   return (
-    <div className="page">
+    <div className={clsx("page", css`background: black;`)}>
       <head>
         <title>Hello World - Aleph.js</title>
         <link rel="stylesheet" href="../styles/tailwind.css" />
