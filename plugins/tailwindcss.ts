@@ -36,6 +36,10 @@ const state = {
 export default <Plugin> {
   name: "tailwindcss",
   async setup(aleph: Aleph & { config: RequiredConfig }) {
+    if (!!Deno.env.get("CI")) {
+      return;
+    }
+
     const inputFilePath = await makeTempCssFile();
     const outputFilePath = await makeTempCssFile();
 
