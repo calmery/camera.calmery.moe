@@ -11,7 +11,7 @@ export default function Home() {
     <div className="page">
       <head>
         <title>Hello World - Aleph.js</title>
-        <link rel="stylesheet" href="../style/index.css" />
+        <link rel="stylesheet" href="../styles/tailwind.css" />
       </head>
       <p className="logo">
         <Logo />

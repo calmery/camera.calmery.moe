@@ -1,4 +1,5 @@
 import type { Config } from "aleph/types.d.ts";
+import tailwindcss from "./plugins/tailwindcss.ts";
 
 export default <Config> {
   build: {
@@ -8,4 +9,5 @@ export default <Config> {
     defaultLocale: "ja",
     locales: ["en", "ja"],
   },
+  plugins: [tailwindcss("./styles/tailwind.css")],
 };
