@@ -9,5 +9,5 @@ export default <Config> {
     defaultLocale: "ja",
     locales: ["en", "ja"],
   },
-  plugins: [tailwindcss("./styles/tailwind.css")],
+  plugins: [tailwindcss],
 };

@@ -4,6 +4,7 @@
     "aleph/": "https://deno.land/x/aleph@v0.3.0-beta.19/",
     "aleph/react": "https://deno.land/x/aleph@v0.3.0-beta.19/framework/react/mod.ts",
     "clsx": "https://esm.sh/clsx@1.1.1",
+    "fmt/colors": "https://deno.land/std@0.110.0/fmt/colors.ts",
     "path": "https://deno.land/std@0.110.0/path/mod.ts",
     "react": "https://esm.sh/react@17.0.2",
     "react-dom": "https://esm.sh/react-dom@17.0.2",

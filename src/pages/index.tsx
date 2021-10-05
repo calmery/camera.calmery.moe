@@ -2,7 +2,6 @@ import { css } from "@emotion/css";
 import { useDeno } from "aleph/react";
 import clsx from "clsx";
 import React from "react";
-import Logo from "~/components/logo.tsx";
 import useCounter from "~/lib/useCounter.ts";
 
 export default function Home() {
@@ -13,15 +12,11 @@ export default function Home() {
     <div className={clsx("page", css`background: black;`)}>
       <head>
         <title>Hello World - Aleph.js</title>
-        <link rel="stylesheet" href="../styles/tailwind.css" />
       </head>
-      <p className="logo">
-        <Logo />
-      </p>
       <h1>
         Welcome to use <strong>Aleph.js</strong>!
       </h1>
-      <p className="links">
+      <p>
         <a href="https://alephjs.org" target="_blank">Website</a>
         <span></span>
         <a href="https://alephjs.org/docs/get-started" target="_blank">
@@ -32,14 +27,14 @@ export default function Home() {
         <span></span>
         <a href="https://github.com/alephjs/aleph.js" target="_blank">Github</a>
       </p>
-      <div className="counter">
+      <div>
         <span>Counter:</span>
         {isSyncing && <em>...</em>}
         {!isSyncing && <strong>{count}</strong>}
         <button onClick={decrease}>-</button>
         <button onClick={increase}>+</button>
       </div>
-      <p className="copyinfo">Built by Aleph.js in Deno {version}</p>
+      <p>Built by Aleph.js in Deno {version}</p>
     </div>
   );
 }
