@@ -51,44 +51,50 @@ export default <Plugin> {
     );
     log("created", `'${inputFilePath}'`);
 
-    // Output
-
-    watch(outputFilePath, (string) => {
-      state.css = string;
-      log("updated", `'${outputFilePath}'`);
-    });
-
     // Events
 
     aleph.onRender(({ html }) => {
       html.head.push(`<style>${state.css}</style>`);
     });
 
-    // Run
+    // Helper Functions
 
-    Deno.run({
-      cmd: [
-        "tailwindcss",
-        "build",
-        "--input",
-        inputFilePath,
-        "--output",
-        outputFilePath,
-        "--purge",
-        path.resolve(
-          aleph.workingDir,
-          path.isAbsolute(aleph.config.srcDir)
-            ? `.${aleph.config.srcDir}`
-            : aleph.config.srcDir,
-          "./**/*.tsx",
-        ),
-        "--watch",
-      ].concat(aleph.mode === "production" ? ["--minify"] : []),
-      env: {
-        NODE_ENV: aleph.mode,
-      },
-      stdout: "null",
-      stderr: "null",
-    });
+    const build = (watch: boolean) => {
+      return Deno.run({
+        cmd: [
+          "tailwindcss",
+          "build",
+          "--input",
+          inputFilePath,
+          "--output",
+          outputFilePath,
+          "--purge",
+          path.resolve(
+            aleph.workingDir,
+            path.isAbsolute(aleph.config.srcDir)
+              ? `.${aleph.config.srcDir}`
+              : aleph.config.srcDir,
+            "./**/*.tsx",
+          ),
+          watch ? "--watch" : "--minify",
+        ],
+        stdout: watch ? "null" : "piped",
+        stderr: "null",
+      });
+    };
+
+    // Main
+
+    state.css = new TextDecoder().decode(await build(false).output());
+    log("updated", `'${outputFilePath}'`);
+
+    if (aleph.mode === "development") {
+      watch(outputFilePath, (string) => {
+        state.css = string;
+        log("updated", `'${outputFilePath}'`);
+      });
+
+      build(true);
+    }
   },
 };
