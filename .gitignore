@@ -73,5 +73,6 @@ $RECYCLE.BIN/
 ### Others
 
 .aleph/
+.vercel/
 dist/
 
