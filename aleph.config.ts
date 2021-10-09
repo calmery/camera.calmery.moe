@@ -1,4 +1,5 @@
 import type { Config } from "aleph/types.d.ts";
+import emotion from "./plugins/emotion.ts";
 import tailwindcss from "./plugins/tailwindcss.ts";
 
 export default <Config> {
@@ -9,5 +10,5 @@ export default <Config> {
     defaultLocale: "ja",
     locales: ["en", "ja"],
   },
-  plugins: [tailwindcss],
+  plugins: [emotion, tailwindcss],
 };

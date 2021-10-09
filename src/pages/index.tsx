@@ -1,4 +1,4 @@
-import { css } from "@emotion/css";
+import { css } from "@emotion/react";
 import { useDeno } from "aleph/react";
 import clsx from "clsx";
 import React from "react";
@@ -9,7 +9,11 @@ export default function Home() {
   const version = useDeno(() => Deno.version.deno);
 
   return (
-    <div className={clsx("page", css`background: black;`)}>
+    <div
+      className={clsx("page", css`background: black;`)}
+      // @ts-ignore
+      css={css`color: white;`}
+    >
       <head>
         <title>Hello World - Aleph.js</title>
       </head>
