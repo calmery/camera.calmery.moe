@@ -6,7 +6,6 @@
   "editor.formatOnSave": true,
   "files.exclude": {
     ".aleph": true,
-    ".github": true,
     "dist": true
   }
 }
