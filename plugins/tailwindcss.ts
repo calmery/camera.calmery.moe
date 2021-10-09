@@ -62,6 +62,7 @@ export default <Plugin> {
     const build = (watch: boolean) => {
       return Deno.run({
         cmd: [
+          "npx",
           "tailwindcss",
           "build",
           "--input",

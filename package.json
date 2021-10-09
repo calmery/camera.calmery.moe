@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^2.2.16"
+  },
+  "engines": {
+    "node": "^16.11.0",
+    "npm": "^8.0.0"
+  },
+  "packageManager": "npm@^8.0.0"
+}
