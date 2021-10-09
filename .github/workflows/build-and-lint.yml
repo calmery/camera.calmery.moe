@@ -6,8 +6,12 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.14.0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
       - run: "deno install -qAn vr https://deno.land/x/velociraptor@1.2.0/cli.ts"
       - run: "deno run -A https://deno.land/x/aleph@v0.3.0-beta.17/install.ts"
+      - run: "npm i -g tailwindcss"
       - run: "vr build"
 
   lint:
