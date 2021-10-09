@@ -79,14 +79,15 @@ export default <Plugin> {
           ),
           watch ? "--watch" : "--minify",
         ],
-        stdout: watch ? "null" : "piped",
+        stdout: "null",
         stderr: "null",
       });
     };
 
     // Main
 
-    state.css = new TextDecoder().decode(await build(false).output());
+    await build(false).status();
+    state.css = new TextDecoder().decode(await Deno.readFile(outputFilePath));
     log("updated", `'${outputFilePath}'`);
 
     if (aleph.mode === "development") {
