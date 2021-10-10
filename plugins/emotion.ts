@@ -1,10 +1,9 @@
-import createCache from "@emotion/cache";
-import { CacheProvider } from "@emotion/react";
-import createEmotionServer from "@emotion/server/create-instance";
-import type { Plugin } from "aleph/types.d.ts";
+import type { Aleph, Plugin } from "aleph/types.d.ts";
+import type { RequiredConfig } from "aleph/server/config.ts";
 import * as colors from "fmt/colors";
 import * as React from "react";
 import { renderToString } from "react-dom/server";
+import * as path from "path";
 
 // Helper Functions
 
@@ -22,34 +21,54 @@ const state: { styles: { [key: string]: string } } = {
 
 export default <Plugin> {
   name: "emotion",
-  async setup(aleph) {
-    const cache = createCache({ key: "aleph" });
-    const { extractCriticalToChunks, constructStyleTagsFromChunks } =
-      createEmotionServer(cache);
+  async setup(aleph: Aleph & { config: RequiredConfig }) {
+    const pluginDirectory = path.resolve(
+      aleph.workingDir,
+      "./plugins/emotion/",
+    );
+
+    Deno.run({
+      cmd: [
+        "npx",
+        "webpack",
+        "--config",
+        path.resolve(pluginDirectory, "./webpack.config.js"),
+        "--watch",
+      ],
+      env: {
+        ALEPH_SOURCE_DIRECTORY: aleph.workingDir + aleph.config.srcDir,
+        ALEPH_WORKING_DIRECTORY: aleph.workingDir,
+        ALEPH_MODE: aleph.mode,
+      },
+      stderr: "null",
+      stdout: "null",
+    });
+
+    log("webpack started");
 
     aleph.onTransform(/pages\/.+\.tsx$/, async ({ module }) => {
       const { specifier } = module;
-
-      // `@emotion/babel-preset-css-prop` などが使用できないためか、正常に動作しない
-      const styles = constructStyleTagsFromChunks(
-        extractCriticalToChunks(renderToString(
-          React.createElement(
-            CacheProvider,
-            { value: cache },
-            React.createElement(
-              (await import(`../src${specifier}`)).default,
-            ),
-          ),
-        )),
+      const styles = new TextDecoder().decode(
+        await Deno.run({
+          cmd: [
+            "node",
+            path.resolve(pluginDirectory, `./output${specifier}.js`),
+          ],
+          stdout: "piped",
+        }).output(),
       );
 
-      log(styles);
+      log("extracted", specifier);
 
       state.styles[specifier] = styles;
     });
 
-    aleph.onRender(({ html, path }) => {
-      html.head.push(`${Object.values(state.styles).join("")}`);
+    aleph.onRender(({ html }) => {
+      html.head.push(
+        `<style data-emotion ssr>${
+          Object.values(state.styles).join("")
+        }</style>`,
+      );
     });
   },
 };

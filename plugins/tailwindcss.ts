@@ -54,7 +54,7 @@ export default <Plugin> {
     // Events
 
     aleph.onRender(({ html }) => {
-      html.head.push(`<style>${state.css}</style>`);
+      html.head.push(`<style data-tailwindcss ssr>${state.css}</style>`);
     });
 
     // Helper Functions

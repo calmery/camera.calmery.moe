@@ -195,4 +195,6 @@ $RECYCLE.BIN/
 
 .aleph/
 dist/
+plugins/emotion/entries/pages/**/*.js
+plugins/emotion/output/pages/**/*.js
 

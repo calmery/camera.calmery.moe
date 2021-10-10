@@ -10,5 +10,5 @@ export default <Config> {
     defaultLocale: "ja",
     locales: ["en", "ja"],
   },
-  plugins: [emotion, tailwindcss],
+  plugins: [emotion],
 };
