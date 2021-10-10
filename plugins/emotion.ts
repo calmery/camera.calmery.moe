@@ -29,6 +29,8 @@ export default <Plugin> {
 
     aleph.onTransform(/pages\/.+\.tsx$/, async ({ module }) => {
       const { specifier } = module;
+
+      // `@emotion/babel-preset-css-prop` などが使用できないためか、正常に動作しない
       const styles = constructStyleTagsFromChunks(
         extractCriticalToChunks(renderToString(
           React.createElement(
