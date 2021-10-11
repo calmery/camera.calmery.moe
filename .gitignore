@@ -22,7 +22,8 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -195,6 +196,3 @@ $RECYCLE.BIN/
 
 .aleph/
 dist/
-plugins/emotion/entries/pages/**/*.js
-plugins/emotion/output/pages/**/*.js
-
