@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@calmery-chan/aleph-plugin-emotion": "1.0.1",
+    "@calmery-chan/aleph-plugin-tailwindcss": "1.0.0",
     "clsx": "1.1.1",
     "tailwindcss": "2.2.16"
   },
