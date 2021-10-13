@@ -8,8 +8,5 @@
     ".aleph": true,
     "dist": true,
     "node_modules": true
-  },
-  "deno.suggest.imports.hosts": {
-    "https://esm.sh": false
   }
 }
