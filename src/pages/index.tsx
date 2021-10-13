@@ -1,6 +1,5 @@
-import { css } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 import React from "react";
-import clsx from "clsx";
 import { useDeno } from "aleph/react";
 
 export default function Home() {
@@ -8,7 +7,7 @@ export default function Home() {
 
   return (
     <div
-      className={clsx(css`color: white;`, "bg-black")}
+      className={cx(css`color: white;`, "bg-black")}
     >
       Hello World
     </div>
