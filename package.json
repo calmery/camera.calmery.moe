@@ -1,7 +1,6 @@
 {
   "devDependencies": {
-    "@calmery-chan/aleph-plugin-emotion": "1.1.1",
-    "@calmery-chan/aleph-plugin-tailwindcss": "1.1.0"
+    "@calmery-chan/aleph-plugin-emotion": "1.1.1"
   },
   "engines": {
     "node": "16.11.0",
