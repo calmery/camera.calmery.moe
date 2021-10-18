@@ -17,22 +17,20 @@ export const restful = ({
   get?: APIHandler;
   post?: APIHandler;
   put?: APIHandler;
-}) => {
-  const handler: APIHandler = async (context) => {
+}): APIHandler => {
+  return (context) => {
     const { request, response } = context;
 
     if (request.method === "GET" && get) {
-      await get(context);
+      return get(context);
     } else if (request.method === "DELETE" && _delete) {
-      await _delete(context);
+      return _delete(context);
     } else if (request.method === "POST" && post) {
-      await post(context);
+      return post(context);
     } else if (request.method === "PUT" && put) {
-      await put(context);
-    } else {
-      response.status = 404;
+      return put(context);
     }
-  };
 
-  return handler;
+    response.status = 404;
+  };
 };
