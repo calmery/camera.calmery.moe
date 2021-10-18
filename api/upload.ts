@@ -1,12 +1,15 @@
-import type { APIHandler } from "aleph/types.d.ts";
+import { json, restful } from "../utils/api.ts";
 
-export const handler: APIHandler = async ({ request, response }) => {
-  const formData = await request.formData();
+export const handler = restful({
+  async post({ request, response }) {
+    const formData = await request.formData();
+    const file = formData.get("file");
 
-  const file = formData.get("file") as File;
-  const buffer = await file.arrayBuffer();
+    if (!(file instanceof File)) {
+      response.status = 400;
+      return;
+    }
 
-  response.json({
-    file: file.name,
-  });
-};
+    json<{ name: string }>(response, { name: file.name });
+  },
+});
