@@ -1,12 +1,24 @@
 {
   "fmt": {
     "files": {
-      "exclude": ["./.aleph/", "./.git/", "./dist/", "./node_modules/"]
+      "exclude": [
+        "./.aleph/",
+        "./.git/",
+        "./.vercel/",
+        "./dist/",
+        "./node_modules/"
+      ]
     }
   },
   "lint": {
     "files": {
-      "exclude": ["./.aleph/", "./.git/", "./dist/", "./node_modules/"]
+      "exclude": [
+        "./.aleph/",
+        "./.git/",
+        "./.vercel/",
+        "./dist/",
+        "./node_modules/"
+      ]
     }
   }
 }
