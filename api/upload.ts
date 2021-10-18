@@ -5,7 +5,11 @@ export const handler = restful({
     const formData = await request.formData();
     const file = formData.get("file");
 
-    if (!(file instanceof File)) {
+    if (
+      !(file instanceof File &&
+        file.size <= 5120 * 1024 &&
+        file.type.startsWith("image/"))
+    ) {
       response.status = 400;
       return;
     }
