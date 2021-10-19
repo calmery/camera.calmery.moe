@@ -1,4 +1,4 @@
-import { json, restful } from "../utils/api.ts";
+import { json, restful, status } from "../utils/api.ts";
 
 export const handler = restful({
   async post({ request, response }) {
@@ -10,7 +10,7 @@ export const handler = restful({
         file.size <= 5120 * 1024 &&
         file.type.startsWith("image/"))
     ) {
-      response.status = 400;
+      status(response, 400);
       return;
     }
 

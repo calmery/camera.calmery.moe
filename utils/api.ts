@@ -34,3 +34,10 @@ export const restful = ({
     response.status = 404;
   };
 };
+
+export const status = (
+  response: APIContext["response"],
+  statusCode: number,
+) => {
+  response.status = statusCode;
+};
