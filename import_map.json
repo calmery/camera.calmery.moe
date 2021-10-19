@@ -1,9 +1,12 @@
 {
   "imports": {
     "@emotion/css": "https://esm.sh/@emotion/css@11.1.3",
+    "@reduxjs/toolkit": "https://esm.sh/@reduxjs/toolkit@1.6.2",
     "aleph/": "https://deno.land/x/aleph@v0.3.0-beta.19/",
     "aleph/react": "https://deno.land/x/aleph@v0.3.0-beta.19/framework/react/mod.ts",
     "react": "https://esm.sh/react@17.0.2",
+    "react-redux": "https://esm.sh/react-redux@7.2.5",
+    "redux": "https://esm.sh/redux@4.1.1",
     "~/": "./"
   }
 }

@@ -1,10 +1,16 @@
 {
   "devDependencies": {
-    "@calmery-chan/aleph-plugin-emotion": "2.0.0"
+    "@calmery-chan/aleph-plugin-emotion": "2.0.0",
+    "@reduxjs/toolkit": "1.6.2",
+    "react-redux": "7.2.5",
+    "redux": "4.1.1"
   },
   "engines": {
     "node": "16.11.0",
     "npm": "8.0.0"
   },
-  "packageManager": "npm@8.0.0"
+  "packageManager": "npm@8.0.0",
+  "dependencies": {
+    "tailwindcss": "2.2.17"
+  }
 }
