@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CanvasResizableContainer } from "~/components/Canvas/ResizableContainer";
 import type { Rect } from "~/types/Rect";
 
-const Canvas = () => {
+export const Canvas = () => {
   const [rect, setRect] = useState<Rect>();
 
   return (
@@ -20,5 +20,3 @@ const Canvas = () => {
     </CanvasResizableContainer>
   );
 };
-
-export default Canvas;

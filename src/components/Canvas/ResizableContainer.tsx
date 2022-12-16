@@ -38,7 +38,10 @@ export const CanvasResizableContainer = ({
   }, [containerRef, onResize]);
 
   return (
-    <section className={classNames("h-full", "w-full")} ref={containerRef}>
+    <section
+      className={classNames("h-full", "w-full", "z-0")}
+      ref={containerRef}
+    >
       {children}
     </section>
   );
