@@ -16,5 +16,9 @@
   "devDependencies": {
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.7"
-  }
+  },
+  "engines": {
+    "node": ">=18.12.1 <19.0.0"
+  },
+  "packageManager": "npm@9.2.0"
 }
