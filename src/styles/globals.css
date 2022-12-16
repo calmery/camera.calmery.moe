@@ -5,5 +5,5 @@
 html,
 body,
 #__next {
-  @apply h-full;
+  @apply h-full select-none;
 }
