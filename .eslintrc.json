@@ -5,8 +5,10 @@
     "plugin:import/typescript",
     "prettier"
   ],
+  "plugins": ["classnames"],
   "root": true,
   "rules": {
+    "classnames/prefer-classnames-function": 2,
     "import/order": [
       "error",
       {

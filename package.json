@@ -12,6 +12,7 @@
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.7",
     "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-classnames": "0.2.1",
     "eslint-plugin-import": "2.26.0",
     "husky": "8.0.2",
     "is-ci": "3.0.1",
