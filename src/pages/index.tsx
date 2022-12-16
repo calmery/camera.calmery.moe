@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import Canvas from "~/components/Canvas";
 
 const Index = () => {
   return (
@@ -8,7 +9,7 @@ const Index = () => {
       <menu className="shrink-0" type="toolbar">
         Menu
       </menu>
-      <section className="h-full">Hello world</section>
+      <Canvas />
       <nav className="shrink-0">Nav</nav>
     </div>
   );
