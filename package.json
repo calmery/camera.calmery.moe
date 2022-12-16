@@ -29,7 +29,7 @@
     "dev": "next dev",
     "lint": "run-p lint:*",
     "lint:next": "next lint --dir ./src/",
-    "lint:prettier": "prettier --check --ignore-path .gitignore --loglevel warn .",
+    "lint:prettier": "prettier --check --loglevel warn .",
     "prepare": "is-ci || husky install",
     "start": "next start",
     "upgrade-interactive": "npm-check --update"
