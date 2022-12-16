@@ -8,7 +8,9 @@
     "@types/node": "18.11.15",
     "@types/react": "18.0.26",
     "eslint": "8.29.0",
-    "eslint-config-next": "13.0.7"
+    "eslint-config-next": "13.0.7",
+    "husky": "8.0.2",
+    "lint-staged": "13.1.0"
   },
   "engines": {
     "node": ">=18.12.1 <19.0.0"
@@ -20,6 +22,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
+    "prepare": "husky install",
     "start": "next start"
   },
   "version": "0.1.0"
