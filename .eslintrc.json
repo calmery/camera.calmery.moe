@@ -1,3 +1,0 @@
-{
-  "extends": ["@calmery-chan", "next", "next/core-web-vitals"]
-}
