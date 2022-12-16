@@ -1,0 +1,53 @@
+jobs:
+  build:
+    needs: setup
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: "18.12.1"
+      - uses: actions/cache@v3
+        with:
+          key: "${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}"
+          path: "**/node_modules"
+      - run: "cp .env.example .env"
+      - run: "npm run build"
+
+  lint:
+    needs: setup
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: "18.12.1"
+      - uses: actions/cache@v3
+        with:
+          key: "${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}"
+          path: "**/node_modules"
+      - run: "npm run lint"
+
+  setup:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: "18.12.1"
+      - uses: actions/cache@v3
+        with:
+          key: "${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}"
+          path: "**/node_modules"
+      - run: "corepack enable npm"
+      - run: "npm ci"
+
+name: "Build and lint"
+
+on:
+  push:
+    branches-ignore:
+      - main
