@@ -6,11 +6,16 @@ const Index = () => {
     <div
       className={classNames("flex", "flex-col", "h-full", "justify-between")}
     >
-      <menu className="shrink-0" type="toolbar">
+      <menu
+        className={classNames("backdrop-blur", "shrink-0", "z-10")}
+        type="toolbar"
+      >
         Menu
       </menu>
-      <Canvas />
-      <nav className="shrink-0">Nav</nav>
+      <div className={classNames("h-full", "z-0")}>
+        <Canvas />
+      </div>
+      <nav className={classNames("backdrop-blur", "shrink-0", "z-10")}>Nav</nav>
     </div>
   );
 };
