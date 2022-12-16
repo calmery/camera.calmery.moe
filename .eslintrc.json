@@ -8,7 +8,8 @@
   "plugins": ["classnames"],
   "root": true,
   "rules": {
-    "classnames/prefer-classnames-function": 2,
+    "classnames/prefer-classnames-function": "error",
+    "import/no-named-as-default-member": "off",
     "import/order": [
       "error",
       {
