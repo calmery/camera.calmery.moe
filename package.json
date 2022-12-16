@@ -21,6 +21,7 @@
   "engines": {
     "node": ">=18.12.1 <19.0.0"
   },
+  "license": "GPL-3.0",
   "name": "camera.calmery.moe",
   "packageManager": "npm@9.2.0",
   "private": true,
