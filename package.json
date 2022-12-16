@@ -16,7 +16,7 @@
     "@calmery-chan/eslint-config": "1.0.1",
     "@emotion/babel-preset-css-prop": "11.2.0",
     "@emotion/react": "11.4.0",
-    "@next/bundle-analyzer": "11.0.1",
+    "@next/bundle-analyzer": "13.0.7",
     "@sentry/node": "6.9.0",
     "@sentry/react": "6.9.0",
     "@sentry/tracing": "6.9.0",
