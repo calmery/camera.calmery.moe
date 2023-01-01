@@ -1,19 +1,19 @@
 {
   "dependencies": {
     "classnames": "2.3.2",
-    "i18next": "22.4.5",
-    "next": "13.0.7",
+    "i18next": "22.4.6",
+    "next": "13.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-i18next": "12.1.1",
-    "type-fest": "3.4.0"
+    "type-fest": "3.5.0"
   },
   "devDependencies": {
-    "@types/node": "18.11.15",
+    "@types/node": "18.11.18",
     "@types/react": "18.0.26",
     "autoprefixer": "10.4.13",
-    "eslint": "8.29.0",
-    "eslint-config-next": "13.0.7",
+    "eslint": "8.31.0",
+    "eslint-config-next": "13.1.1",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-classnames": "0.2.1",
     "eslint-plugin-import": "2.26.0",
